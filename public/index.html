@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Ionic App</title>
+    <title>Papillon</title>
 
     <base href="/" />
 
@@ -16,15 +16,19 @@
 
     <link rel="shortcut icon" type="image/png" href="<%= BASE_URL %>assets/icon/favicon.png" />
 
+    <link rel="manifest" href="manifest.webmanifest" />
+
     <!-- add to homescreen for ios -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="Ionic App" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="Pronote+" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="apple-touch-icon" href="<%= BASE_URL %>assets/icon/icon.png" />
   </head>
 
   <body>
     <div id="app"></div>
   </body>
 
+  <script type="text/javascript" src="/js/papillon.js"></script>
 </html>
 

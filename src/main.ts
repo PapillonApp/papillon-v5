@@ -22,6 +22,7 @@ import '@ionic/vue/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import './theme/fixes.css';
 
 const app = createApp(App)
   .use(IonicVue)
@@ -30,3 +31,6 @@ const app = createApp(App)
 router.isReady().then(() => {
   app.mount('#app');
 });
+
+// Global vars in Vue
+app.config.globalProperties.$rn = new Date;

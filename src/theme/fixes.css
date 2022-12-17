@@ -1,0 +1,27 @@
+.datetimeModal.ios .ion-page ion-content {
+    --background: var(--ion-item-background) !important;
+    overflow: hidden;
+}
+
+.datetimeModal.ios ion-datetime {
+    --background: var(--ion-item-background) !important;
+}
+
+ion-item.animated {
+    animation-name: elementShow;
+    animation-duration: 0.25s;
+    animation-timing-function: cubic-bezier(0,0,0,1);
+    animation-fill-mode: forwards;
+    filter: opacity(0);
+}
+
+@keyframes elementShow {
+    0% {
+        transform: translateY(10px);
+        filter: opacity(0);
+    }
+    100% {
+        transform: translateY(0);
+        filter: opacity(1);
+    }
+}

@@ -1,0 +1,45 @@
+{
+    "short_name": "Papillon",
+    "name": "Papillon - L'app de vie scolaire",
+    "background_color": "#29947A",
+    "icons": [
+      {
+        "src": "/assets/icon/android-180.png",
+        "type": "image/png",
+        "sizes": "180x180"
+      },
+      {
+        "src": "/assets/icon/android-512.png",
+        "type": "image/png",
+        "sizes": "512x512",
+        "purpose": "any"
+      },
+      {
+        "src": "/assets/icon/maskable_icon_x512.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "maskable"
+      }
+    ],
+    "id": "/?source=pwa",
+    "start_url": "/?source=pwa",
+    "display": "standalone",
+    "scope": "/",
+    "shortcuts": [
+      {
+        "name": "Mon emploi du temps",
+        "short_name": "Emploi du temps",
+        "description": "Consultez vos cours de la semaine",
+        "url": "/timetable?source=pwa",
+        "icons": [{ "src": "/assets/shortcuts/timetable.png", "sizes": "192x192" }]
+      },
+      {
+        "name": "Mon travail à faire",
+        "short_name": "Devoirs",
+        "description": "Consultez vos devoirs à faire",
+        "url": "/homework?source=pwa",
+        "icons": [{ "src": "/assets/shortcuts/homework.png", "sizes": "192x192" }]
+      }
+    ],
+    "description": "Un client alternatif pour un accès plus simple a l'école"
+}
