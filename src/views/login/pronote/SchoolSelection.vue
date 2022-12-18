@@ -1,11 +1,16 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail } from '@ionic/vue';
+    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal } from '@ionic/vue';
+
+    import cas_list from '/src/ent_list.json';
 
     import axios from 'axios';
     import $ from "jquery";
     
     import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp } from 'ionicons/icons';
+
+    import { Dialog } from '@capacitor/dialog';
+    import { Toast } from '@capacitor/toast';
 
     export default defineComponent({
         name: 'FolderPage',
@@ -15,6 +20,7 @@
             IonList,
             IonIcon,
             IonSearchbar,
+            IonModal
         },
         setup() {
             return { 
@@ -78,7 +84,9 @@
                     this.findEstablishments(lat, lon)
                 })
                 .catch(error => {
-                    console.error(error);
+                    Toast.show({
+                        text: `Une erreur s'est produite. : pronote/SchoolSelection.getPostal().fail()`,
+                    });
                 })
             },
             findEstablishments(lat, lon) {
@@ -123,22 +131,113 @@
                             this.isLoading = false;
                         }, 200);
                     })
+                    .fail((error) => {
+                        Toast.show({
+                            text: `Une erreur s'est produite. : pronote/SchoolSelection.findEstablishments().fail()`,
+                        });
+                    });
             },
             clearEtabs() {
                 this.etabs = [];
                 this.etabsEmpty = true;
-            }
+            },
+            async URLLogin() {
+                const { value, cancelled } = await Dialog.prompt({
+                    title: 'Connexion avec une URL Pronote',
+                    message: `Entrez l'URL Pronote fournie par votre établissement.`,
+                });
+
+                if(!cancelled) {
+                    this.loginToEtab(value);
+                }
+            },
+            loginToEtab(url) {
+                // lowercase url
+                url = url.toLowerCase();
+                let etab = url.toLowerCase();
+
+                // start loading
+                this.isLoading = true;
+
+                // get ENT
+                axios.get(`https://api.androne.dev/papillon-v4/redirect.php?url=${encodeURIComponent(etab)}`)
+                .then(response => {
+                    // end loading
+                    this.isLoading = false;
+
+                    let resp = response.data.url;
+                    let cas_host = resp.split('/')[2];
+                    cas_host = cas_host.split('/')[0] || cas_host;
+                    console.log(cas_host);
+                    if(cas_host.includes("index-education.net")) {
+                        cas_host = "index-education.net";
+                    }
+                    // more toutatice weird stuff
+                    if(cas_host.includes("pronote.toutatice.fr")) {
+                        cas_host = "www.toutatice.fr";
+                    }
+                    console.log(cas_host);
+                    
+                    
+                    let all_cas_same_host = cas_list.filter(cas => cas.url == cas_host);
+
+                    let cas = all_cas_same_host[0];
+                    if (all_cas_same_host.length == 0) {
+                        // no CAS for this host
+                        Toast.show({
+                            text: `Aucun CAS trouvé pour ${cas_host}.`,
+                        });
+                    }
+                    else if (all_cas_same_host.length >= 1) {
+                        // only one CAS for this host
+                        cas = all_cas_same_host[0].py;
+                    }
+
+                    console.log(url);
+
+                    // TODO: Vérifier si ca fonctionne pour toutatice
+                    if(url == resp && url.includes("index-education.net")) {
+                        // car toutatice est chelou
+                        this.loginToEtab(url.replace("index-education.net", "pronote.toutatice.fr"));
+                    }
+                    else {
+                        if(!etab.includes("eleve.html")) {
+                            if(etab.includes("/pronote/")) {
+                                etab = etab + "eleve.html";
+                            }
+                            else {
+                                etab = etab + "/" + "eleve.html";
+                            }
+                        }
+                        
+                        // put etab to lowercase
+                        etab = etab.toLowerCase();
+
+                        this.etabUrl = etab;
+                        this.etabCas = cas;
+
+                        this.$refs.loginModal.$el.present()
+                    }
+                });
+            },
+            dismiss() {
+                this.$refs.loginModal.$el.dismiss();
+            },
         },
         data() {
             return {
+                presentingElement: null,
                 terms: "",
                 foundCity: "",
                 etabsEmpty: true,
                 locationFailed: false,
                 etabs: [],
                 isLoading: false,
+                etabUrl: "",
+                etabCas: "",
+                etabName: "",
             }
-        },
+        }
     });
 </script>
 
@@ -167,7 +266,7 @@
                 </ion-label>
             </ion-list-header>
 
-            <ion-item button detail="true" v-for="(etab, index) in etabs" v-bind:key="index">
+            <ion-item button detail="true" v-for="(etab, index) in etabs" v-bind:key="index" @click="loginToEtab(etab.url)">
                 <ion-icon class="icon" slot="start" :ios="schoolOutline" :md="schoolSharp"></ion-icon>
                 <ion-label>
                     <h2>{{ etab.nomEtab }}</h2>
@@ -199,7 +298,7 @@
                 </ion-label>
             </ion-list-header>
 
-            <ion-item button>
+            <ion-item button @click="URLLogin()">
                 <ion-icon class="icon" slot="start" :ios="linkOutline" :md="linkSharp"></ion-icon>
                 <ion-label>
                     <h2>Se connecter avec une URL</h2>
@@ -217,12 +316,108 @@
         </ion-list>
 
         <br/><br/>
-        
+
+        <ion-modal ref="loginModal" trigger="open-loginModal" :swipeToClose="true">
+            <ion-header>
+                <ion-toolbar>
+                    <ion-title>Se connecter</ion-title>
+                    <ion-buttons slot="end">
+                    <ion-button @click="dismiss()">Fermer</ion-button>
+                    </ion-buttons>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <div class="loginPage">
+                    
+                    <div class="loginIntro">
+                        <img src="assets/welcome/pronote_logo.png" alt="Pronote Logo" class="logo"/>
+                        <p>Vous souhaitez vous connecter à <B>Pronote</B> avec l'ENT <B>{{etabCas}}</B> à l'aide de Papillon.</p>
+                    </div>
+
+                    <div class="loginForm">
+                        <input type="text" placeholder="Identifiant" class="loginInput"/>
+                        <input type="password" placeholder="Mot de passe" class="loginInput"/><br/>
+
+                        <button class="loginButton">Se connecter</button>
+                    </div>
+
+                    <div class="loginConditions">
+                        Vos données ne sont pas stockées sur nos serveurs. En vous connectant, vous acceptez les <a href="https://papillon.app/conditions">conditions d'utilisation</a> de Papillon.
+                    </div>
+
+                </div>
+            </ion-content>
+        </ion-modal> 
     </ion-content>
 </template>
   
 <style scoped>
     .ios .icon {
         opacity: 50%;
+    }
+
+    .loginPage {
+        background-color: #ffffff;
+        color: #000;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .loginPage * {
+        font-family: sans-serif !important;
+        margin: 0;
+    }
+
+    .loginIntro {
+        padding: 20px;
+        text-align: center;
+        border-bottom: 1px solid #e5e5e5;
+    } 
+    
+    .loginIntro .logo {
+        height: 48px;
+        width: 48px;
+    }
+
+    .loginIntro p {
+        margin-top: 5px;
+    }
+
+    .loginConditions {
+        padding: 20px;
+        text-align: center;
+        font-size: 12px;
+        color: #999999;
+    }
+
+    .loginForm {
+        padding: 20px;
+    }
+
+    .loginInput {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #55555555;
+        background: none;
+        border-radius: 0px;
+        margin-bottom: 10px;
+    }
+
+    .loginInput:focus {
+        border: 1px solid #0066ff;
+        outline: 3px solid #0066ff22;
+    }
+
+    .loginButton {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #0044ff;
+        border-radius: 0px;
+        background-color: #0066ff;
+        color: #ffffff;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
     }
 </style>

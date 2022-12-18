@@ -1,0 +1,254 @@
+[
+    {
+      "name": "Académie de Rennes",
+      "cas": "toutatice",
+      "url": "www.toutatice.fr",
+      "py": "ac_rennes"
+    },
+    {
+      "name": "Académie d`Orléans-Tours",
+      "cas": "ac-orleans-tours",
+      "url": "ent.netocentre.fr",
+      "py": "ac_orleans_tours"
+    },
+    {
+      "name": "Académie de Besançon",
+      "cas": "ac-besancon",
+      "url": "cas.eclat-bfc.fr",
+      "py": "eclat_bfc"
+    },
+    {
+      "name": "Académie de Bordeaux",
+      "cas": "ac-bordeaux",
+      "url": "mon.lyceeconnecte.fr",
+      "py": "lyceeconnecte_aquitaine"
+    },
+    {
+      "name": "Académie de Bordeaux 2",
+      "cas": "ac-bordeaux2",
+      "url": "ent2d.ac-bordeaux.fr",
+      "py": "ent2d_bordeaux"
+    },
+    {
+      "name": "Académie de Caen",
+      "cas": "ac-caen",
+      "url": "fip.itslearning.com",
+      "py": ""
+    },
+    {
+      "name": "Académie de Clermont-Ferrand",
+      "cas": "ac-clermont",
+      "url": "cas.ent.auvergnerhonealpes.fr",
+      "py": ""
+    },
+    {
+      "name": "Académie de Dijon",
+      "cas": "ac-dijon",
+      "url": "cas.eclat-bfc.fr",
+      "py": "eclat_bfc"
+    },
+    {
+      "name": "Académie de Grenoble",
+      "cas": "ac-grenoble",
+      "url": "cas.ent.auvergnerhonealpes.fr",
+      "py": "ent_auvergnerhonealpe"
+    },
+    {
+      "name": "Académie de la Loire",
+      "cas": "cybercolleges42",
+      "url": "cas.cybercolleges42.fr",
+      "py": ""
+    },
+    {
+      "name": "Académie de Lille (SavoirsNumériques)",
+      "cas": "ac-lille",
+      "url": "cas.savoirsnumeriques62.fr",
+      "py": ""
+    },
+    {
+      "name": "Académie de Lille (Teleservices)",
+      "cas": "ac-lille2",
+      "url": "teleservices.ac-lille.fr",
+      "py": ""
+    },
+    {
+      "name": "Académie de Limoges",
+      "cas": "ac-limoges",
+      "url": "mon.lyceeconnecte.fr",
+      "py": "lyceeconnecte_aquitaine"
+    },
+    {
+      "name": "Académie de Lyon",
+      "cas": "ac-lyon",
+      "url": "cas.ent.auvergnerhonealpes.fr",
+      "py": "ac_lyon"
+    },
+    {
+      "name": "Académie de Marseille",
+      "cas": "atrium-sud",
+      "url": "www.atrium-sud.fr",
+      "py": "atrium_sud"
+    },
+    {
+      "name": "Académie de Montpellier",
+      "cas": "ac-montpellier",
+      "url": "cas.mon-ent-occitanie.fr",
+      "py": "occitanie_toulouse"
+    },
+    {
+      "name": "Académie de Nancy-Metz",
+      "cas": "ac-nancy-metz",
+      "url": "cas.monbureaunumerique.fr",
+      "py": "monbureaunumerique"
+    },
+    {
+      "name": "Académie de Nantes",
+      "cas": "ac-nantes",
+      "url": "cas3.e-lyco.fr",
+      "py": "ent_elyco"
+    },
+    {
+      "name": "Académie de Poitiers",
+      "cas": "ac-poitiers",
+      "url": "mon.lyceeconnecte.fr",
+      "py": "ac_poitiers"
+    },
+    {
+      "name": "Académie de Reims",
+      "cas": "ac-reims",
+      "url": "cas.monbureaunumerique.fr",
+      "py": "ac_reims"
+    },
+    {
+      "name": "Académie de Rouen (Arsene76)",
+      "cas": "arsene76",
+      "url": "cas.arsene76.fr",
+      "py": "cas_arsene76"
+    },
+    {
+      "name": "Académie de Rouen",
+      "cas": "ac-rouen",
+      "url": "connexion.l-educdenormandie.fr/",
+      "py": "l_normandie"
+    },
+    {
+      "name": "Académie de Strasbourg",
+      "cas": "ac-strasbourg",
+      "url": "cas.monbureaunumerique.fr",
+      "py": "monbureaunumerique"
+    },
+    {
+      "name": "Académie de Toulouse",
+      "cas": "ac-toulouse",
+      "url": "cas.mon-ent-occitanie.fr",
+      "py": "occitanie_toulouse"
+    },
+    {
+      "name": "Académie du Val-d`Oise",
+      "cas": "ac-valdoise",
+      "url": "cas.moncollege.valdoise.fr",
+      "py": "val_doise"
+    },
+    {
+      "name": "ENT Agora 06 (Nice)",
+      "cas": "agora06",
+      "url": "cas.agora06.fr",
+      "py": "cas_agora06"
+    },
+    {
+      "name": "ENT Haute-Garonne",
+      "cas": "haute-garonne",
+      "url": "cas.ecollege.haute-garonne.fr",
+      "py": "ecollege_haute_garonne"
+    },
+    {
+      "name": "ENT Hauts-de-France",
+      "cas": "hdf",
+      "url": "enthdf.fr",
+      "py": "ent_hdf"
+    },
+    {
+      "name": "ENT La Classe (Lyon)",
+      "cas": "laclasse",
+      "url": "www.laclasse.com",
+      "py": "laclasse_lyon"
+    },
+    {
+      "name": "ENT Lycee Connecte (Nouvelle-Aquitaine)",
+      "cas": "lyceeconnecte",
+      "url": "mon.lyceeconnecte.fr",
+      "py": "lyceeconnecte_aquitaine"
+    },
+    {
+      "name": "ENT Seine-et-Marne",
+      "cas": "seine-et-marne",
+      "url": "ent77.seine-et-marne.fr",
+      "py": "ent77"
+    },
+    {
+      "name": "ENT Somme",
+      "cas": "somme",
+      "url": "college.entsomme.fr",
+      "py": "ent_somme"
+    },
+    {
+      "name": "ENT Portail Famille (Orleans Tours)",
+      "cas": "portail-famille",
+      "url": "seshat.ac-orleans-tours.fr:8443",
+      "py": "ac_orleans_tours"
+    },
+    {
+      "name": "ENT Île de France",
+      "cas": "iledefrance",
+      "url": "ent.iledefrance.fr",
+      "py": "ile_de_france"
+    },
+    {
+      "name": "ENT Mon collège Essonne",
+      "cas": "moncollege-essonne",
+      "url": "www.moncollege-ent.essonne.fr",
+      "py": "ent_essonne"
+    },
+    {
+      "name": "ENT Paris Classe Numerique",
+      "cas": "parisclassenumerique",
+      "url": "ent.parisclassenumerique.fr",
+      "py": "paris_classe_numerique"
+    },
+    {
+      "name": "ENT Lycee Jean Renoir Munich",
+      "cas": "ljr-munich",
+      "url": "cas.kosmoseducation.com",
+      "py": "cas_kosmos"
+    },
+    {
+      "name": "ENT L`Eure en Normandie",
+      "cas": "eure-normandie",
+      "url": "cas.ent27.fr",
+      "py": "cas_ent27"
+    },
+    {
+      "name": "ENT Mon Bureau Numérique via EduConnect",
+      "cas": "monbureaunumerique-educonnect",
+      "url": "cas.monbureaunumerique.fr",
+      "py": "monbureaunumerique"
+    },
+    {
+      "name": "ENT Auvergne Rhone Alpes via EduConnect",
+      "cas": "auvergnerhonealpes-educonnect",
+      "url": "cas.ent.auvergnerhonealpes.fr",
+      "py": "ent_auvergnerhonealpe"
+    },
+        {
+      "name": "ENT l'Éduc de Normandie via EduConnect",
+      "cas": "educ-normandie",
+      "url": "connexion.l-educdenormandie.fr",
+      "py": "educ-normandie"
+    },
+    {
+      "name": "Pas d'ENT",
+      "cas": "",
+      "url": "index-education.net",
+      "py": ""
+    }
+]

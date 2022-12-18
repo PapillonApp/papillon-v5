@@ -1,5 +1,5 @@
 <template>
-    <ion-nav :root="component"></ion-nav>
+    <ion-nav :root="component" ref="page"></ion-nav>
 </template>
   
 <script lang="ts">
