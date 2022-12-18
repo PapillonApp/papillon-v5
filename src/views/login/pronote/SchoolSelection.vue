@@ -223,6 +223,59 @@
             dismiss() {
                 this.$refs.loginModal.$el.dismiss();
             },
+            login() {
+                const API = this.$api;
+
+                let username = this.$refs.user.value;
+                let password = this.$refs.pass.value;
+                let cas = this.etabCas;
+                let url = this.etabUrl;
+
+                var myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+                
+                var urlencoded = new URLSearchParams();
+                urlencoded.append("url", url);
+                urlencoded.append("ent", cas);
+                urlencoded.append("username", username);
+                urlencoded.append("password", password);
+
+                var requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: urlencoded,
+                    redirect: 'follow'
+                };
+
+                fetch(API + "/generatetoken", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log(result);
+
+                        if(!result.token) {
+                            if(result.error ==  "Fail to connect with EduConnect : probably wrong login information") {
+                                Toast.show({
+                                    text: "Identifiants incorrects.",
+                                });
+                            }
+                            else {
+                                Toast.show({
+                                    text: "Une erreur s'est produite.",
+                                });
+                            }
+                        }
+                        else {
+                            let token = result.token;
+
+                            // save token
+                            localStorage.token = token;
+                            localStorage.loggedIn = true;
+
+                            // go to home
+                            this.$router.push("/");
+                        }
+                    });
+            }
         },
         data() {
             return {
@@ -335,10 +388,10 @@
                     </div>
 
                     <div class="loginForm">
-                        <input type="text" placeholder="Identifiant" class="loginInput"/>
-                        <input type="password" placeholder="Mot de passe" class="loginInput"/><br/>
+                        <input ref="user" type="text" placeholder="Identifiant" class="loginInput"/>
+                        <input ref="pass" type="password" placeholder="Mot de passe" class="loginInput"/><br/>
 
-                        <button class="loginButton">Se connecter</button>
+                        <button @click="login" class="loginButton">Se connecter</button>
                     </div>
 
                     <div class="loginConditions">

@@ -34,3 +34,4 @@ router.isReady().then(() => {
 
 // Global vars in Vue
 app.config.globalProperties.$rn = new Date;
+app.config.globalProperties.$api = "https://python.api.just-tryon.tech";

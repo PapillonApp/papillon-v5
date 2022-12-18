@@ -8,6 +8,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/timetable',
+    name: 'Timetable',
     component: () => import ('../views/TimetableView.vue')
   }
 ]
@@ -29,14 +30,11 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from) => {
-  if (
-    // make sure the user is authenticated
-    !localStorage.loggedIn &&
-    // ❗️ Avoid an infinite redirect
-    to.name !== 'Login'
-  ) {
-    // redirect the user to the login page
+  if (!localStorage.loggedIn && to.name !== 'Login') {
     return { name: 'Login' }
+  }
+  else if (localStorage.loggedIn && to.name === 'Login') {
+    return { name: 'Timetable' }
   }
 })
 
