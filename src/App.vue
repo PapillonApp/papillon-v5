@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { IonApp, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonSplitPane } from '@ionic/vue';
+  import { IonApp, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonSplitPane, toastController } from '@ionic/vue';
   import { defineComponent, ref } from 'vue';
   import { useRoute } from 'vue-router';
 
@@ -9,6 +9,8 @@
     calendarOutline, 
     calendarSharp
   } from 'ionicons/icons';
+
+
 
   export default defineComponent({
     name: 'App',
@@ -63,33 +65,67 @@
             isSelected: (url: string) => url === route.path ? 'selected' : ''
         }
     },
-    mounted() {
-        // user data model type
-        interface UserData {
-            student: {
-                name: string,
-                avatar: string,
-                contact: {
-                    email: string,
-                    phone: string
-                }
-            },
-            class: {
-                name: string,
-                school: string
-            }
+    methods: {
+        async presentToast(msg: string) {
+            const toast = await toastController.create({
+                message: msg,
+                duration: 2000,
+                position: "bottom"
+            });
+
+            await toast.present();
+        },
+        getUserData() {
+          // user data model type
+          interface UserData {
+              student: {
+                  name: string,
+                  avatar: string,
+                  contact: {
+                      email: string,
+                      phone: string
+                  }
+              },
+              class: {
+                  name: string,
+                  school: string
+              }
+          }
+
+          // get user data
+          GetUser.default().then((data: UserData) => {
+              // add to localStorage
+              localStorage.setItem('userData', JSON.stringify(data));
+
+              // set user data
+              this.userName = data.student.name ;
+              this.userClass = data.class.name;
+              this.userSchool = data.class.school;
+          });
         }
+    },
+    mounted() {
+        // user data
+        this.getUserData();
 
-        // get user data
-        GetUser.default().then((data: UserData) => {
-            // add to localStorage
-            localStorage.setItem('userData', JSON.stringify(data));
-
-            // set user data
-            this.userName = data.student.name ;
-            this.userClass = data.class.name;
-            this.userSchool = data.class.school;
+        // when token is updated
+        window.addEventListener('tokenUpdated', () => {
+            this.getUserData();
         });
+
+        // check if online
+        window.addEventListener('online', () => {
+            this.presentToast("Vous êtes maintenant reconnecté à Internet");
+        });
+
+        // check if offline
+        window.addEventListener('offline', () => {
+            this.presentToast("Vous êtes plus connecté à Internet");
+        });
+
+        if(!window.navigator.onLine) {
+            this.presentToast("Vous êtes hors connexion.");
+        }
     }
   });
 </script>
