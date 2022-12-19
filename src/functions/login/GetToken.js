@@ -41,6 +41,9 @@ function getPronoteLogin() {
             // save token
             localStorage.setItem('token', result.token);
 
+            // empty localstorage cache
+            localStorage.setItem('TimetableCache', JSON.stringify([]));
+
             // broadcast event to document
             document.dispatchEvent(new CustomEvent('tokenUpdated'));
         }
