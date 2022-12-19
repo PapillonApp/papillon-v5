@@ -9,7 +9,6 @@ Ils sont *en théorie* sénsés détecter le service utilisé et rendre les donn
 Pour le moment, seul Pronote est proposé : les données sont donc faites pour Pronote.
 
 ## Quels sont les schémas à rendre
-<<<<<<< HEAD
 ### Utilisateur (`GetUserData.js`)
 ``` ts
 interface UserData {
@@ -31,11 +30,6 @@ interface UserData {
 ### Emploi du temps (`GetTimetable.js`)
 ``` ts
 interface Timetable {
-=======
-### Emploi du temps (`GetTimetable.js`)
-``` js
-{
->>>>>>> 30fadcd9eaaab7d470d9002049fdc1d2425048e9
     course: {
         id: number // integer (e.g. 415987521987151)
         color: string // hex (e.g. "#0066ff")
