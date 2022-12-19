@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal } from '@ionic/vue';
+    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, toastController } from '@ionic/vue';
 
     import cas_list from '/src/ent_list.json';
 
@@ -10,7 +10,6 @@
     import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp } from 'ionicons/icons';
 
     import { Dialog } from '@capacitor/dialog';
-    import { Toast } from '@capacitor/toast';
 
     export default defineComponent({
         name: 'FolderPage',
@@ -37,6 +36,15 @@
             }
         },
         methods: {
+            async presentToast(msg) {
+                const toast = await toastController.create({
+                message: msg,
+                duration: 1500,
+                position: "bottom"
+                });
+
+                await toast.present();
+            },
             decodeEntities(encodedString) {
                 var translate_re = /&(nbsp|amp|quot|lt|gt);/g;
                 var translate = {
@@ -84,9 +92,7 @@
                     this.findEstablishments(lat, lon)
                 })
                 .catch(error => {
-                    Toast.show({
-                        text: `Une erreur s'est produite. : pronote/SchoolSelection.getPostal().fail()`,
-                    });
+                    this.presentToast(`Une erreur s'est produite. : pronote/SchoolSelection.getPostal().fail()`)
                 })
             },
             findEstablishments(lat, lon) {
@@ -132,9 +138,7 @@
                         }, 200);
                     })
                     .fail((error) => {
-                        Toast.show({
-                            text: `Une erreur s'est produite. : pronote/SchoolSelection.findEstablishments().fail()`,
-                        });
+                        this.presentToast(`Une erreur s'est produite. : pronote/SchoolSelection.findEstablishments().fail()`)
                     });
             },
             clearEtabs() {
@@ -184,9 +188,7 @@
                     let cas = all_cas_same_host[0];
                     if (all_cas_same_host.length == 0) {
                         // no CAS for this host
-                        Toast.show({
-                            text: `Aucun CAS trouvé pour ${cas_host}.`,
-                        });
+                        this.presentToast(`Aucun CAS trouvé pour ${cas_host}.`)
                     }
                     else if (all_cas_same_host.length >= 1) {
                         // only one CAS for this host
@@ -247,6 +249,8 @@
                     redirect: 'follow'
                 };
 
+                this.presentToast("Connexion en cours...")
+
                 fetch(API + "/generatetoken", requestOptions)
                     .then(response => response.json())
                     .then(result => {
@@ -254,14 +258,16 @@
 
                         if(!result.token) {
                             if(result.error ==  "Fail to connect with EduConnect : probably wrong login information") {
-                                Toast.show({
-                                    text: "Identifiants incorrects.",
-                                });
+                                this.presentToast("Identifiants incorrects.")
+                            }
+                            else if(result == "missingusername") {
+                                this.presentToast("Veuillez entrer un identifiant.")
+                            }
+                            else if(result == "missingpassword") {
+                                this.presentToast("Veuillez entrer un mot de passe.")
                             }
                             else {
-                                Toast.show({
-                                    text: "Une erreur s'est produite.",
-                                });
+                                this.presentToast("Une erreur s'est produite.")
                             }
                         }
                         else {
@@ -270,9 +276,16 @@
                             // save token
                             localStorage.token = token;
                             localStorage.loggedIn = true;
+                            localStorage.loginData = JSON.stringify({
+                                username: username,
+                                password: password,
+                                cas: cas,
+                                url: url,
+                            });
+                            localStorage.loginService = "pronote";
 
                             // go to home
-                            this.$router.push("/");
+                            location.href = "/";
                         }
                     });
             }
@@ -458,16 +471,16 @@
     }
 
     .loginInput:focus {
-        border: 1px solid #0066ff;
+        border: 1px solid #009c34;
         outline: 3px solid #0066ff22;
     }
 
     .loginButton {
         width: 100%;
         padding: 10px;
-        border: 1px solid #0044ff;
+        border: 1px solid #009c34;
         border-radius: 0px;
-        background-color: #0066ff;
+        background-color: #009c34;
         color: #ffffff;
         font-weight: bold;
         font-size: 16px;

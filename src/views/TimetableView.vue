@@ -6,6 +6,8 @@
 
   import CoursElement from '@/components/timetable/CoursElement.vue';
 
+  import GetTimetable from '@/functions/fetch/GetTimetable.js';
+
   export default defineComponent({
     name: 'FolderPage',
     components: {
@@ -52,7 +54,8 @@
     data() {
         return {
             rnButtonString: this.createDateString(this.$rn),
-            rnCalendarString: this.$rn.toISOString().split('T')[0]
+            rnCalendarString: this.$rn.toISOString().split('T')[0],
+            timetable: []
         }
     },
     mounted() {
@@ -62,6 +65,11 @@
         // on rnChanged, update rnButtonString
         document.addEventListener('rnChanged', (e) => {
             this.rnButtonString = this.createDateString(e.detail);
+        });
+
+        // get timetable data
+        GetTimetable(this.$rn).then((timetable) => {
+            this.timetable = timetable;
         });
     }
   });
@@ -96,16 +104,14 @@
         </ion-header>
       
         <IonList>
-            <!-- repeat 20 times -->
-            <div v-for="j in 20" :key="j">
-                <CoursElement v-for="i in 9" :key="i"
-                    :subject="'Cours de test ' + (i + (j-1)*9)"
-                    teacher="M. Test"
-                    :room="'Salle A' + j + i"
-                    :start="`${i+10}:00`"
-                    :end="`${i+10}:30`"
-                />
-            </div>
+
+          <CoursElement v-for="cours in timetable" :key="cours.id"
+            :subject="cours.data.subject"
+            :teacher="cours.data.teacher"
+            :room="cours.data.room"
+            :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
+            :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
+          />
 
         </IonList>
 
@@ -114,7 +120,7 @@
             <ion-toolbar>
               <ion-title>Sélection de la date</ion-title>
               <ion-buttons slot="end">
-                <ion-button @click="confirmRnInput()">Done</ion-button>
+                <ion-button @click="confirmRnInput()">Terminé</ion-button>
               </ion-buttons>
             </ion-toolbar>
           </ion-header>

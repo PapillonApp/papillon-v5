@@ -12,7 +12,7 @@
         return {
           component: LoginView,
         };
-      },
+      }
     };
 </script>
 

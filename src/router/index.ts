@@ -30,11 +30,8 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from) => {
-  if (!localStorage.loggedIn && to.name !== 'Login') {
+  if (localStorage.loggedIn !== "true" && to.name !== 'Login') {
     return { name: 'Login' }
-  }
-  else if (localStorage.loggedIn && to.name === 'Login') {
-    return { name: 'Timetable' }
   }
 })
 

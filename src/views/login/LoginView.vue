@@ -29,32 +29,59 @@
             }
         },
         methods: {
-            openActions() {
-                const showActions = async () => {
-                const result = await ActionSheet.showActions({
-                    title: 'Photo Options',
-                    message: 'Select an option to perform',
-                    options: [
-                    {
-                        title: 'Upload',
-                    },
-                    {
-                        title: 'Share',
-                    },
-                    {
-                        title: 'Remove',
-                        style: ActionSheetButtonStyle.Destructive,
-                    },
-                    ],
-                });
+            login() {
+                const API = this.$api;
+                let loginData = JSON.parse(localStorage.loginData);
 
-                console.log('Action Sheet result:', result);
+                let username = loginData.username;
+                let password = loginData.password;
+                let url = loginData.url;
+                let cas = loginData.cas;
+
+                var myHeaders = new Headers();
+                myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+                        
+                var urlencoded = new URLSearchParams();
+                urlencoded.append("url", url);
+                urlencoded.append("ent", cas);
+                urlencoded.append("username", username);
+                urlencoded.append("password", password);
+
+                var requestOptions = {
+                    method: 'POST',
+                    headers: myHeaders,
+                    body: urlencoded,
+                    redirect: 'follow'
                 };
-            }
+
+                fetch(API + "/generatetoken", requestOptions)
+                    .then(response => response.json())
+                    .then(result => {
+                    if(result !== "notfound" && result !== "expired") {
+                        localStorage.token = result.token;
+                        localStorage.loggedIn = true;
+
+                        // go to home page
+                        location.href = "/";
+                    }
+                    else {
+                        localStorage.loggedIn = false;
+                        localStorage.loginData = [];
+
+                        // go to login page
+                        location.href = "/login";
+                    }
+                    });
+                },
         },
         data() {
             return {
                 SchoolSelection: SchoolSelection,
+            }
+        },
+        mounted() {
+            if(localStorage.loginData !== undefined && localStorage.loginData !== []) {
+                this.login();
             }
         }
     });
