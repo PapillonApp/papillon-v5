@@ -285,7 +285,7 @@
                             localStorage.loginService = "pronote";
 
                             // go to home
-                            location.href = "/";
+                            window.location.replace("/");
                         }
                     });
             }

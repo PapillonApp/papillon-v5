@@ -9,7 +9,7 @@ function getToken() {
 function getPronoteLogin() {
     // gather vars
     const API = app.config.globalProperties.$api;
-    let loginData = localStorage.getItem('loginData');
+    let loginData = JSON.parse(localStorage.getItem('loginData'));
 
     // get username and password
     let username = loginData.username;
@@ -46,7 +46,7 @@ function getPronoteLogin() {
         }
         else {
             // redirect to login page
-            window.location.href = "/login";
+            console.log(result);
         }
     });
 }
