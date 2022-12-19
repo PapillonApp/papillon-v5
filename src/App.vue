@@ -3,6 +3,8 @@
   import { defineComponent, ref } from 'vue';
   import { useRoute } from 'vue-router';
 
+  const GetUser = require('./functions/fetch/GetUserData');
+
   import { 
     calendarOutline, 
     calendarSharp
@@ -61,36 +63,32 @@
             isSelected: (url: string) => url === route.path ? 'selected' : ''
         }
     },
-    methods: {
-        getUserData() {
-            if(localStorage.loggedIn) {
-                fetch("https://python.api.just-tryon.tech/user?token="+localStorage.token)
-                    .then(response => response.json())
-                    .then(result => {
-                        if(result !== "notfound" && result !== "expired") {
-                            localStorage.userData = JSON.stringify(result);
-                            
-                            document.dispatchEvent(new CustomEvent('userDataUpdated'));
-                        }
-                        else {
-                            localStorage.loggedIn = false;
-
-                            // go to login page
-                            location.href = "/login";
-                        }
-                    })
+    mounted() {
+        // user data model type
+        interface UserData {
+            student: {
+                name: string,
+                avatar: string,
+                contact: {
+                    email: string,
+                    phone: string
+                }
+            },
+            class: {
+                name: string,
+                school: string
             }
         }
-    },
-    mounted() {
-        this.getUserData();
 
-        document.addEventListener('userDataUpdated', () => {
-            this.userData = JSON.parse(localStorage.userData);
+        // get user data
+        GetUser.default().then((data: UserData) => {
+            // add to localStorage
+            localStorage.setItem('userData', JSON.stringify(data));
 
-            this.userName = JSON.parse(localStorage.userData).name;
-            this.userClass = JSON.parse(localStorage.userData).class;
-            this.userSchool = JSON.parse(localStorage.userData).establishment;
+            // set user data
+            this.userName = data.student.name ;
+            this.userClass = data.class.name;
+            this.userSchool = data.class.school;
         });
     }
   });

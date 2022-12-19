@@ -3,6 +3,7 @@ import axios from 'axios';
 
 // vars
 import { app } from '@/main.ts'
+import GetToken from '@/functions/login/GetToken.js';
 
 // main function
 async function getTimetable(date) {
@@ -25,10 +26,11 @@ function getPronoteTimetable(date) {
     const dayString = dayRequest.toISOString().split('T')[0];
 
     // construct url (date is a TEST date)
-    let URL = `${API}/timetable?dateString=2022-12-01&token=${token}`;
+    let URL = `${API}/timetable?dateString=${dayString}&token=${token}`;
 
     // get timetable from API
-    return axios.get(URL).then((response) => {
+    return axios.get(URL)
+    .then((response) => {
         // get timetable
         let timetable = response.data;
 
@@ -37,6 +39,19 @@ function getPronoteTimetable(date) {
 
         // return timetable
         return timetable;
+    })
+    .catch((error) => {
+        if (error.response) {
+            // check if "notfound" or "expired"
+            if (error.response.data == "notfound") {
+                // get new token
+                GetToken();
+            }
+            else if (error.response.data == "expired") {
+                // get new token
+                GetToken();
+            }
+        }
     });
 }
 

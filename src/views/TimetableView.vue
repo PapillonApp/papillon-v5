@@ -71,6 +71,20 @@
         GetTimetable(this.$rn).then((timetable) => {
             this.timetable = timetable;
         });
+
+        // on rnChanged, get new timetable data
+        document.addEventListener('rnChanged', (e) => {
+            GetTimetable(e.detail).then((timetable) => {
+                this.timetable = timetable;
+            });
+        });
+
+        // on token changed, get new timetable data
+        document.addEventListener('tokenUpdated', (e) => {
+            GetTimetable(this.$rn).then((timetable) => {
+                this.timetable = timetable;
+            });
+        });
     }
   });
 </script>
