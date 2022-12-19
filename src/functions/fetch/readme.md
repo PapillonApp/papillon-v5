@@ -9,8 +9,8 @@ Ils sont *en théorie* sénsés détecter le service utilisé et rendre les donn
 Pour le moment, seul Pronote est proposé : les données sont donc faites pour Pronote.
 
 ## Quels sont les schémas à rendre
-### `GetTimetable.js`
-``` json
+### Emploi du temps (`GetTimetable.js`)
+``` js
 {
     course: {
         id // integer (e.g. 415987521987151)
