@@ -105,8 +105,10 @@
         }
     },
     mounted() {
-        // user data
-        this.getUserData();
+        // user data if logged in
+        if(localStorage.loggedIn) {
+            this.getUserData();
+        }
 
         // when token is updated
         window.addEventListener('tokenUpdated', () => {

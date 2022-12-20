@@ -81,7 +81,7 @@
         },
         mounted() {
             if(localStorage.loginData !== undefined && localStorage.loginData !== []) {
-                this.login();
+                // this.login();
             }
         }
     });
