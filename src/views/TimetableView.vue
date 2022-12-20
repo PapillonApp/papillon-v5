@@ -59,10 +59,25 @@
         confirmRnInput() {
             this.$refs.rnPickerModal.$el.dismiss();
         },
+        editTimetable(timetable) {
+            // Check if there's 2 lessons starting at the same time
+            for (let i = 0; i < timetable.length; i++) {
+                if(timetable[i+1] !== undefined) {
+                    let first = timetable[i].time.start.toISOString();
+                    let second = timetable[i+1].time.start.toISOString();
+
+                    if(first == second) {
+                        timetable[i+1].course.sameTime = true;
+                    }
+                }
+            }
+            
+            return timetable;
+        },
         getTimetables() {
             // get timetable for rn
             GetTimetable(this.$rn).then((timetable) => {
-                this.timetable = timetable;
+                this.timetable = this.editTimetable(timetable);
                 this.loadedrnButtonString = this.createDateString(this.$rn);
 
                 if(this.shouldResetSwiper) {
@@ -74,16 +89,27 @@
             // get timetable for yesterday
             let yesterdayRN = new Date(this.$rn) - 86400000;
             GetTimetable(yesterdayRN).then((timetable) => {
-                this.yesterday = timetable;
+                this.yesterday = this.editTimetable(timetable);
             });
 
             // get timetable for tomorrow
             let tomorrowRN = new Date(this.$rn);
             tomorrowRN.setDate(tomorrowRN.getDate() + 1);
             GetTimetable(tomorrowRN).then((timetable) => {
-                this.tomorrow = timetable;
+                this.tomorrow = this.editTimetable(timetable);
             });
-        }
+        },
+        handleRefresh(event) {
+            // get new timetable data
+            this.getTimetables();
+
+            // stop refresh when this.timetable is updated
+            this.$watch('timetable', () => {
+                setTimeout(() => {
+                    event.target.complete();
+                }, 200);
+            });
+        },
     },
     data() {
         return {
@@ -178,14 +204,18 @@
       </ion-header>
       
       <ion-content :fullscreen="true">
+        <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+            <ion-refresher-content></ion-refresher-content>
+          </ion-refresher>
+
         <ion-header collapse="condense">
-          <ion-toolbar>
-            <ion-title size="large">Emploi du temps</ion-title>
-          </ion-toolbar>
+            <ion-toolbar>
+                <ion-title size="large">Ma journée</ion-title>
+            </ion-toolbar>
         </ion-header>
       
         <swiper initialSlide="1" ref="swiper">
-            <swiper-slide>
+            <swiper-slide class="swiper-slide">
                 <IonList>
                     <CoursElement v-for="cours in yesterday" :key="cours.id"
                         :subject="cours.data.subject"
@@ -193,6 +223,10 @@
                         :room="cours.data.room"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
+                        :color="cours.course.color"
+                        :sameTime="cours.course.sameTime"
+                        :status="cours.status.status"
+                        :isCancelled="cours.status.isCancelled"
                     />
 
                     <IonItem v-if="yesterday.length == 0">
@@ -212,6 +246,10 @@
                         :room="cours.data.room"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
+                        :color="cours.course.color"
+                        :sameTime="cours.course.sameTime"
+                        :status="cours.status.status"
+                        :isCancelled="cours.status.isCancelled"
                     />
 
                     <IonItem v-if="timetable.length == 0">
@@ -231,6 +269,10 @@
                         :room="cours.data.room"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
+                        :color="cours.course.color"
+                        :sameTime="cours.course.sameTime"
+                        :status="cours.status.status"
+                        :isCancelled="cours.status.isCancelled"
                     />
 
                     <IonItem v-if="tomorrow.length == 0">
@@ -270,26 +312,7 @@
 </template>
   
 <style scoped>
-    /* show rnInput picker but hide it */
-    #rnInput {
-        -webkit-appearance: none;
-        font-weight: 400;
-        font-size: 16px;
-        color: var(--ion-color-primary);
-        background: rgba(var(--ion-color-primary-rgb), 0.1);
-        border: none;
-        border-radius: 7px;
-        text-align: center;
-        padding: 5px 10px !important;
-
-        margin-right: 5px;
-
-        /* fit content */
-        width: auto;
-    }
-
-    /* hide calendar icon */
-    #rnInput::-webkit-calendar-picker-indicator {
-        display: none;
+    .swiper-slide {
+        /* min-height: 70vh; */
     }
 </style>

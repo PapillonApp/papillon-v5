@@ -23,10 +23,8 @@
         IonItem, 
         IonLabel, 
         IonList, 
-        IonListHeader, 
         IonMenu, 
-        IonMenuToggle, 
-        IonNote, 
+        IonMenuToggle,
         IonRouterOutlet, 
         IonSplitPane,
     },
@@ -37,6 +35,7 @@
             userName: "",
             userClass: "",
             userSchool: "",
+            userAvatar: ""
         }
     },
     setup() {
@@ -78,32 +77,33 @@
             await toast.present();
         },
         getUserData() {
-          // user data model type
-          interface UserData {
-              student: {
-                  name: string,
-                  avatar: string,
-                  contact: {
-                      email: string,
-                      phone: string
-                  }
-              },
-              class: {
-                  name: string,
-                  school: string
-              }
-          }
+            // user data model type
+            interface UserData {
+                student: {
+                    name: string,
+                    avatar: string,
+                    contact: {
+                        email: string,
+                        phone: string
+                    }
+                },
+                class: {
+                    name: string,
+                    school: string
+                }
+            }
 
-          // get user data
-          GetUser.default().then((data: UserData) => {
-              // add to localStorage
-              localStorage.setItem('userData', JSON.stringify(data));
+            // get user data
+            GetUser.default().then((data: UserData) => {
+                // add to localStorage
+                localStorage.setItem('userData', JSON.stringify(data));
 
-              // set user data
-              this.userName = data.student.name ;
-              this.userClass = data.class.name;
-              this.userSchool = data.class.school;
-          });
+                // set user data
+                this.userName = data.student.name ;
+                this.userClass = data.class.name;
+                this.userSchool = data.class.school;
+                this.userAvatar = data.student.avatar;
+            });
         }
     },
     mounted() {
@@ -137,6 +137,12 @@
         if(!window.navigator.onLine) {
             this.presentToast("Vous êtes hors connexion.");
         }
+
+        // when avatar is loaded
+        (this.$refs['avatar'] as any).addEventListener('error', () => {
+            // replace with /assets/default.png
+            (this.$refs['avatar'] as any).src = "/assets/default.png";
+        });
     }
   });
 </script>
@@ -145,11 +151,19 @@
   <ion-app>
     <ion-split-pane content-id="main-content">
       <ion-menu content-id="main-content" type="overlay" v-if="loggedIn">
+        <ion-header>
+          <ion-toolbar>
+            <div class="userItem">
+              <img class="avatar" :src="userAvatar" ref="avatar"/>
+              <div class="userData">
+                <h3>{{userName}}</h3>
+                <p>{{userClass}} • {{userSchool}}</p>
+              </div>
+            </div>
+          </ion-toolbar>
+        </ion-header>
         <ion-content>
-          <ion-list id="inbox-list">
-            <ion-list-header>{{userName}}</ion-list-header>
-            <ion-note>{{userSchool}} - {{userClass}}</ion-note>
-  
+          <ion-list id="inbox-list">  
             <ion-menu-toggle auto-hide="false" v-for="(p, i) in appPages" :key="i">
               <ion-item @click="selectedIndex = i" router-direction="root" :router-link="p.url" lines="none" detail="false" class="hydrated" :class="{ selected: selectedIndex === i }">
                 <ion-icon slot="start" :ios="p.iosIcon" :md="p.mdIcon"></ion-icon>
@@ -165,6 +179,63 @@
 </template>
 
 <style scoped>
+    .userItem {
+        display: flex;
+        padding: 10px 12px;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .userItem * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .userItem .avatar {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .userData {
+        width: calc(100% - 12px - 42px);
+    }
+
+    .userItem h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 1px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .userItem p {
+        font-size: 14px;
+        color: #8f8f8f;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .md .userItem {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-top: 32px;
+        padding: 16px 16px;
+    }
+
+    .md .userItem h3 {
+        font-size: 20px;
+    }
+
+    .md .userData {
+        width: calc(100%);
+    }
+
     ion-menu ion-content {
     --background: var(--ion-item-background, var(--ion-background-color, #fff));
     }
@@ -172,12 +243,12 @@
     ion-menu.md ion-content {
     --padding-start: 8px;
     --padding-end: 8px;
-    --padding-top: 20px;
+    --padding-top: 8px;
     --padding-bottom: 20px;
     }
 
     ion-menu.md ion-list {
-    padding: 20px 0;
+    padding: 0px 0;
     }
 
     ion-menu.md ion-note {
@@ -237,7 +308,7 @@
     }
 
     ion-menu.ios ion-list {
-    padding: 20px 0 0 0;
+    padding: 8px 0 0 0;
     }
 
     ion-menu.ios ion-note {

@@ -13,7 +13,7 @@ StatusBar.setOverlaysWebView({ overlay: true });
 function setStatusBarStyle() {
   if (isDarkMode) {
     StatusBar.setStyle({style: Style.Dark});
-    StatusBar.setBackgroundColor({color: "#12121200"});
+    StatusBar.setBackgroundColor({color: "#14131600"});
   }
   else {
     StatusBar.setStyle({style: Style.Light});

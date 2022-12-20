@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
     import { defineComponent } from 'vue';
     import { IonItem, IonLabel } from '@ionic/vue';
 
@@ -28,25 +28,58 @@
             end: {
                 type: String,
                 required: false
+            },
+            color: {
+                type: String,
+                required: false,
+                default: "var(--ion-color-primary)"
+            },
+            isCancelled: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            status: {
+                type: String,
+                required: false,
+                default: "normal"
+            },
+            sameTime: {
+                type: Boolean,
+                required: false,
+                default: false
+            }
+        },
+        data() {
+            return { 
+                classes: "",
             }
         },
         setup() {
             return { }
+        },
+        mounted() {
+            return false
         }
     });
 </script>
 
 <template>
-    <ion-item>
-        <ion-label slot="start" class="TimeLabel">
-            <h1 class="CoursStart">{{start}}</h1>
-            <p>{{end}}</p>
+    <ion-item-divider class="divider" color="light" v-if="!isCancelled">
+        <ion-label>
+            {{start}}
         </ion-label>
+    </ion-item-divider>
+
+    <ion-item button lines="none" :class="classes" v-if="!isCancelled">
+        <div class="CoursColor" slot="start" :style="`background: ${color};`"></div>
 
         <ion-label>
-            <h1 class="CoursName">{{subject}}</h1>
+            <h3 class="CoursName">{{subject}}</h3>
             <p>avec {{teacher}} - salle {{room}}</p>
         </ion-label>
+
+        <ion-chip class="chip" outline="true" v-if="status">{{status}}</ion-chip>
     </ion-item>
 </template>
 
@@ -65,5 +98,26 @@
     .CoursName, .CoursStart {
         font-weight: 600;
         font-size: 1em;
+    }
+
+    .CoursColor {
+        width: 3px;
+        height: 50px;
+
+        border-radius: 300px;
+        margin-right: 13px !important;
+    }
+
+    .md .CoursColor {
+        border-radius: 0;
+        width: 2px;
+    }
+
+    .divider.md {
+        background: none; 
+    }
+
+    .divider.md ion-label {
+        margin: 0;
     }
 </style>
