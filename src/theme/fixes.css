@@ -25,3 +25,7 @@ ion-item.animated {
         filter: opacity(1);
     }
 }
+
+.md.toolbar-title-default:first-child {
+    padding-top: 32px !important;
+}

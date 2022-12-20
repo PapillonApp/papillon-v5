@@ -5,6 +5,8 @@
 
   const GetUser = require('./functions/fetch/GetUserData');
 
+  import { SplashScreen } from '@capacitor/splash-screen';
+
   import { 
     calendarOutline, 
     calendarSharp
@@ -105,6 +107,13 @@
         }
     },
     mounted() {
+        // hide splash screen when dom is loaded
+        this.$nextTick(function () {
+            setTimeout(() => {
+                SplashScreen.hide();
+            }, 100);
+        })
+
         // user data if logged in
         if(localStorage.loggedIn) {
             this.getUserData();
