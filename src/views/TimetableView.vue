@@ -1,6 +1,6 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher } from '@ionic/vue';
   
   import { calendarOutline, calendarSharp, todayOutline, todaySharp } from 'ionicons/icons';
 
@@ -10,6 +10,8 @@
   import CoursElement from '@/components/timetable/CoursElement.vue';
 
   import GetTimetable from '@/functions/fetch/GetTimetable.js';
+  
+  import { DatePickerPluginInterface } from "@capacitor-community/date-picker";
 
   export default defineComponent({
     name: 'FolderPage',
@@ -27,6 +29,7 @@
         IonDatetime,
         Swiper,
         SwiperSlide,
+        IonRefresher
     },
     setup() {
         return { 
@@ -108,6 +111,44 @@
                 }, 200);
             });
         },
+        openCoursModal(cours) {
+            // calculate length
+            let len = cours.time.end - cours.time.start;
+            len = (len / 60000) + " min";
+
+            // put len in hours if it's longer than 60 minutes
+            if(len.split(' ')[0] > 59) {
+                let hours = parseInt(len.split(' ')[0] / 60);
+                let minutes = parseInt(len.split(' ')[0] % 60);
+
+                // add leading 0 if minutes is less than 10
+                if(minutes < 10) {
+                    minutes = "0" + minutes;
+                }
+
+                len = `${hours} h ${minutes} min`;
+            }
+
+            let status = cours.status.status;
+
+            // set status if it's undefined
+            if(status == undefined) {
+                status = "Le cours se déroule normalement";
+            }
+
+            // set selectedCourse
+            this.selectedCourse = {
+                name: cours.data.subject,
+                teacher: cours.data.teacher,
+                room: cours.data.room,
+                start: cours.time.start.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                length: len,
+                status: status
+            }
+
+            // open cours modal
+            this.$refs.coursModal.$el.present(cours);
+        }
     },
     data() {
         return {
@@ -118,6 +159,14 @@
             yesterday: [],
             tomorrow: [],
             shouldResetSwiper: false,
+            selectedCourse: {
+                name: '',
+                teacher: '',
+                room: '',
+                start: '',
+                length: '',
+                status: '',
+            }
         }
     },
     mounted() {
@@ -174,7 +223,7 @@
                     // reset swiper
                     this.shouldResetSwiper = true;
                 }
-            }, 100);
+            }, 200);
         });
     }
   });
@@ -247,6 +296,7 @@
                         :sameTime="cours.course.sameTime"
                         :status="cours.status.status"
                         :isCancelled="cours.status.isCancelled"
+                        @open="openCoursModal(cours)"
                     />
 
                     <div class="NoCours" v-if="timetable.length == 0">
@@ -289,16 +339,75 @@
             </ion-toolbar>
           </ion-header>
           <ion-content>
-          <IonDatetime 
-            presentation="date"
-            ref="rnInput"
-            size="cover"
-            :value="rnCalendarString"
-            :firstDayOfWeek="1"
-            @ionChange="rnInputChanged()"
-          >
-          </IonDatetime>
+            <IonDatetime 
+                presentation="date"
+                ref="rnInput"
+                size="cover"
+                :value="rnCalendarString"
+                :firstDayOfWeek="1"
+                @ionChange="rnInputChanged()"
+            >
+            </IonDatetime>
           </ion-content>
+        </IonModal>
+
+        <IonModal ref="coursModal" :keep-contents-mounted="true" :initial-breakpoint="0.6" :breakpoints="[0, 0.6, 0.9]" :handle="true" :swipeToClose="true">
+            <ion-header>
+              <ion-toolbar>
+                <ion-title>Cours</ion-title>
+              </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-list>
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">history_edu</span>
+                        <ion-label>
+                            <p>Nom de la matière</p>
+                            <h3>{{selectedCourse.name}}</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">face</span>
+                        <ion-label>
+                            <p>Professeur</p>
+                            <h3>{{selectedCourse.teacher}}</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">meeting_room</span>
+                        <ion-label>
+                            <p>Salle de cours</p>
+                            <h3>{{selectedCourse.room}}</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">schedule</span>
+                        <ion-label>
+                            <p>Heure de début</p>
+                            <h3>{{selectedCourse.start}}</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">pending_actions</span>
+                        <ion-label>
+                            <p>Temps de cours</p>
+                            <h3>{{selectedCourse.length}}</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">info</span>
+                        <ion-label>
+                            <p>Statut</p>
+                            <h3>{{selectedCourse.status}}</h3>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-content>
         </IonModal>
       </ion-content>
     </ion-page>

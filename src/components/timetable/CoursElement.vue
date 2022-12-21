@@ -1,12 +1,14 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel } from '@ionic/vue';
+    import { IonItem, IonLabel, IonChip, IonItemDivider } from '@ionic/vue';
 
     export default defineComponent({
         name: 'CoursElement',
         components: {
             IonItem,
-            IonLabel
+            IonLabel,
+            IonChip,
+            IonItemDivider
         },
         props: {
             subject: {
@@ -66,12 +68,12 @@
 
 <template>
     <ion-item-divider class="divider" color="light" v-if="!isCancelled">
-        <ion-label>
+        <ion-label class="divider_label">
             {{start}}
         </ion-label>
     </ion-item-divider>
 
-    <ion-item button lines="none" :class="classes" v-if="!isCancelled">
+    <ion-item button lines="none" :class="classes" v-if="!isCancelled" @click="$emit('open')">
         <div class="CoursColor" slot="start" :style="`background: ${color};`"></div>
 
         <ion-label>
@@ -119,5 +121,11 @@
 
     .divider.md ion-label {
         margin: 0;
+    }
+
+    .divider_label {
+        font-family: 'Papillon', sans-serif;
+        font-weight: 500;
+        font-size: 18px;
     }
 </style>

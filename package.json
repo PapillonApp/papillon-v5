@@ -10,12 +10,14 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@capacitor-community/date-picker": "^0.2.3",
     "@capacitor/action-sheet": "^4.1.0",
     "@capacitor/app": "^4.1.1",
     "@capacitor/core": "4.6.1",
     "@capacitor/dialog": "^4.1.0",
     "@capacitor/haptics": "^4.1.0",
     "@capacitor/keyboard": "^4.1.0",
+    "@capacitor/preferences": "^4.0.2",
     "@capacitor/splash-screen": "^4.1.2",
     "@capacitor/status-bar": "^4.1.1",
     "@capacitor/toast": "^4.1.0",

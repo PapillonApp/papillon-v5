@@ -152,12 +152,14 @@
       <ion-menu content-id="main-content" type="overlay" v-if="loggedIn">
         <ion-header>
           <ion-toolbar>
-            <div class="userItem">
-              <img class="avatar" :src="userAvatar" ref="avatar"/>
-              <div class="userData">
-                <h3>{{userName}}</h3>
-                <p>{{userClass}} • {{userSchool}}</p>
-              </div>
+            <div class="userItem" :style="`background-image: url('${userAvatar}');`">
+                <div class="userItem_content">
+                    <img class="avatar" :src="userAvatar" ref="avatar"/>
+                    <div class="userData">
+                        <h3>{{userName}}</h3>
+                        <p>{{userClass}} • {{userSchool}}</p>
+                    </div>
+                </div>
             </div>
           </ion-toolbar>
         </ion-header>
@@ -180,14 +182,29 @@
 <style scoped>
     .userItem {
         display: flex;
-        padding: 10px 12px;
-        gap: 12px;
+        padding: 0px;
         align-items: center;
+
+        background-size: cover;
+        background-position: center;
     }
 
     .userItem * {
         margin: 0;
         padding: 0;
+    }
+
+    .userItem_content {
+        width: 100%;
+
+        display: flex;
+        padding: 10px 12px;
+        gap: 12px;
+        align-items: center;
+
+        background-color: #00000080;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     }
 
     .userItem .avatar {
@@ -213,26 +230,38 @@
 
     .userItem p {
         font-size: 14px;
-        color: #8f8f8f;
+        color: #888;
         width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
-    .md .userItem {
+    .md .userItem_content {
         flex-direction: column;
         align-items: flex-start;
-        margin-top: 32px;
         padding: 16px 16px;
+        color: #fff;
     }
 
     .md .userItem h3 {
         font-size: 20px;
     }
 
+    .md .userItem p {
+        color: #ffffff99;
+    }
+
     .md .userData {
         width: calc(100%);
+    }
+
+    .ios .userItem {
+        background-image: none !important;
+    }
+
+    .ios .userItem_content {
+        background-color: #ffffff00;
     }
 
     ion-menu ion-content {

@@ -10,12 +10,12 @@ const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme
 import { StatusBar, Style } from '@capacitor/status-bar';
 
 function setStatusBarStyle() {
+  StatusBar.setStyle({style: Style.Default})
+
   if (isDarkMode) {
-    StatusBar.setStyle({style: Style.Dark});
-    StatusBar.setBackgroundColor({color: "#141316"});
+    StatusBar.setBackgroundColor({color: "#181B1C"});
   }
   else {
-    StatusBar.setStyle({style: Style.Light});
     StatusBar.setBackgroundColor({color: "#ffffff"});
   }
 }
@@ -26,7 +26,7 @@ import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
 function setNavigationBarStyle() {
   if (isDarkMode) {
     NavigationBar.setColor({
-        color: "#121212",
+        color: "#131516",
         darkButtons: false
     });
   }

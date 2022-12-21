@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, toastController } from '@ionic/vue';
+    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, toastController, IonListHeader, IonSpinner } from '@ionic/vue';
 
     import cas_list from '/src/ent_list.json';
 
@@ -19,7 +19,9 @@
             IonList,
             IonIcon,
             IonSearchbar,
-            IonModal
+            IonModal,
+            IonListHeader,
+            IonSpinner
         },
         setup() {
             return { 
@@ -36,11 +38,12 @@
             }
         },
         methods: {
-            async presentToast(msg) {
+            async presentToast(msg, color, notDismissable) {
                 const toast = await toastController.create({
-                message: msg,
-                duration: 2000,
-                position: "bottom"
+                    message: msg,
+                    duration: 2000,
+                    position: "bottom",
+                    color: color
                 });
 
                 await toast.present();
@@ -92,7 +95,7 @@
                     this.findEstablishments(lat, lon)
                 })
                 .catch(error => {
-                    this.presentToast(`Une erreur s'est produite. : pronote/SchoolSelection.getPostal().fail()`)
+                    this.presentToast(`Une erreur s'est produite. : pronote/SchoolSelection.getPostal().fail()`, "danger")
                 })
             },
             findEstablishments(lat, lon) {
@@ -138,7 +141,7 @@
                         }, 200);
                     })
                     .fail((error) => {
-                        this.presentToast(`Une erreur s'est produite. : pronote/SchoolSelection.findEstablishments().fail()`)
+                        this.presentToast(`Une erreur s'est produite. : pronote/SchoolSelection.findEstablishments().fail()`, "danger")
                     });
             },
             clearEtabs() {
@@ -188,7 +191,7 @@
                     let cas = all_cas_same_host[0];
                     if (all_cas_same_host.length == 0) {
                         // no CAS for this host
-                        this.presentToast(`Aucun CAS trouvé pour ${cas_host}.`)
+                        this.presentToast(`Aucun CAS trouvé pour ${cas_host}.`, "danger")
                     }
                     else if (all_cas_same_host.length >= 1) {
                         // only one CAS for this host
@@ -249,7 +252,7 @@
                     redirect: 'follow'
                 };
 
-                this.presentToast("Connexion en cours...")
+                this.presentToast("Connexion en cours...", "dark", true)
 
                 fetch(API + "/generatetoken", requestOptions)
                     .then(response => response.json())
@@ -258,16 +261,16 @@
 
                         if(!result.token) {
                             if(result.error ==  "Fail to connect with EduConnect : probably wrong login information") {
-                                this.presentToast("Identifiants incorrects.")
+                                this.presentToast("Identifiants incorrects.", "danger")
                             }
                             else if(result == "missingusername") {
-                                this.presentToast("Veuillez entrer un identifiant.")
+                                this.presentToast("Veuillez entrer un identifiant.", "danger")
                             }
                             else if(result == "missingpassword") {
-                                this.presentToast("Veuillez entrer un mot de passe.")
+                                this.presentToast("Veuillez entrer un mot de passe.", "danger")
                             }
                             else {
-                                this.presentToast("Une erreur s'est produite.")
+                                this.presentToast("Une erreur s'est produite.", "danger")
                             }
                         }
                         else {

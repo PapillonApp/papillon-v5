@@ -10,10 +10,6 @@ const config: CapacitorConfig = {
       "launchAutoHide": false,
     }
   },
-  /* server: {
-    url: "http://192.168.1.22:8100",
-    cleartext: true
-  }, */
 };
 
 export default config;
