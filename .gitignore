@@ -31,3 +31,5 @@ npm-debug.log*
 /plugins
 /www
 /android
+
+capacitor.config.ts
