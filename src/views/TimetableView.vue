@@ -25,8 +25,6 @@
         IonModal,
         CoursElement,
         IonDatetime,
-        IonIcon,
-        IonItem,
         Swiper,
         SwiperSlide,
     },
@@ -184,18 +182,19 @@
 
 <template>
     <ion-page ref="page">
-      <ion-header>
+      <ion-header class="AppHeader">
         <ion-toolbar>
 
           <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
+            <ion-menu-button color="dark" mode="md"></ion-menu-button>
           </ion-buttons>
 
-          <ion-title>Ma journée</ion-title>
+          <ion-title mode="md">Ma journée</ion-title>
 
           <ion-buttons slot="end">
-            <ion-button id="rnPickerModalButton">
-              <ion-icon slot="start" :icon="calendarOutline" :ios="calendarOutline" :md="calendarSharp"></ion-icon>
+            <ion-button color="dark" mode="md" id="rnPickerModalButton">
+              <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
+
               {{ rnButtonString }}
             </ion-button>
           </ion-buttons>
@@ -229,13 +228,11 @@
                         :isCancelled="cours.status.isCancelled"
                     />
 
-                    <IonItem v-if="yesterday.length == 0">
-                        <IonIcon slot="start" :icon="todayOutline" :ios="todayOutline" :md="todaySharp"></IonIcon>
-                        <ion-label>
-                            <h2>Pas de cours pour cette journée</h2>
-                            <p>Réesayez un autre jour</p>
-                        </ion-label>
-                    </IonItem>
+                    <div class="NoCours" v-if="yesterday.length == 0">
+                        <span class="material-symbols-outlined mdls">upcoming</span>
+                        <h2>Pas de cours enregistrés pour cette journée</h2>
+                        <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
+                    </div>
                 </IonList>
             </swiper-slide>
             <swiper-slide>
@@ -252,13 +249,11 @@
                         :isCancelled="cours.status.isCancelled"
                     />
 
-                    <IonItem v-if="timetable.length == 0">
-                        <IonIcon slot="start" :icon="todayOutline" :ios="todayOutline" :md="todaySharp"></IonIcon>
-                        <ion-label>
-                            <h2>Pas de cours pour cette journée</h2>
-                            <p>Réesayez un autre jour</p>
-                        </ion-label>
-                    </IonItem>
+                    <div class="NoCours" v-if="timetable.length == 0">
+                        <span class="material-symbols-outlined mdls">upcoming</span>
+                        <h2>Pas de cours enregistrés pour cette journée</h2>
+                        <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
+                    </div>
                 </IonList>
             </swiper-slide>
             <swiper-slide>
@@ -275,13 +270,11 @@
                         :isCancelled="cours.status.isCancelled"
                     />
 
-                    <IonItem v-if="tomorrow.length == 0">
-                        <IonIcon slot="start" :icon="todayOutline" :ios="todayOutline" :md="todaySharp"></IonIcon>
-                        <ion-label>
-                            <h2>Pas de cours pour cette journée</h2>
-                            <p>Réesayez un autre jour</p>
-                        </ion-label>
-                    </IonItem>
+                    <div class="NoCours" v-if="tomorrow.length == 0">
+                        <span class="material-symbols-outlined mdls">upcoming</span>
+                        <h2>Pas de cours enregistrés pour cette journée</h2>
+                        <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
+                    </div>
                 </IonList>
             </swiper-slide>
         </swiper>
@@ -314,5 +307,40 @@
 <style scoped>
     .swiper-slide {
         /* min-height: 70vh; */
+    }
+
+    .NoCours {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding: 20px 50px;
+    }
+
+    .NoCours * {
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
+
+    .NoCours .mdls {
+        font-size: 36px;
+        margin-bottom: 14px;
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 36;
+    }
+
+    .NoCours h2 {
+        font-size: 24px;
+        line-height: 24px;
+        font-weight: 600;
+    }
+
+    .NoCours p {
+        font-size: 16px;
+        line-height: 16px;
+        font-weight: 400;
+        margin-top: 10px;
+        opacity: 50%;
     }
 </style>

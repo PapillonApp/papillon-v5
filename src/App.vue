@@ -45,7 +45,7 @@
             title: 'Emploi du temps',
             url: '/timetable',
             iosIcon: calendarOutline,
-            mdIcon: calendarSharp
+            mdIcon: calendarSharp,
             }
         ];
         const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
@@ -117,6 +117,11 @@
         // user data if logged in
         if(localStorage.loggedIn) {
             this.getUserData();
+
+            (this.$refs['avatar'] as any).addEventListener('error', () => {
+                // replace with /assets/default.png
+                (this.$refs['avatar'] as any).src = "/assets/default.png";
+            });
         }
 
         // when token is updated
@@ -137,12 +142,6 @@
         if(!window.navigator.onLine) {
             this.presentToast("Vous êtes hors connexion.");
         }
-
-        // when avatar is loaded
-        (this.$refs['avatar'] as any).addEventListener('error', () => {
-            // replace with /assets/default.png
-            (this.$refs['avatar'] as any).src = "/assets/default.png";
-        });
     }
   });
 </script>
@@ -162,10 +161,10 @@
             </div>
           </ion-toolbar>
         </ion-header>
-        <ion-content>
+        <ion-content mode="md">
           <ion-list id="inbox-list">  
             <ion-menu-toggle auto-hide="false" v-for="(p, i) in appPages" :key="i">
-              <ion-item @click="selectedIndex = i" router-direction="root" :router-link="p.url" lines="none" detail="false" class="hydrated" :class="{ selected: selectedIndex === i }">
+              <ion-item mode="md" @click="selectedIndex = i" router-direction="root" :router-link="p.url" lines="none" detail="false" class="hydrated" :class="{ selected: selectedIndex === i }">
                 <ion-icon slot="start" :ios="p.iosIcon" :md="p.mdIcon"></ion-icon>
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
@@ -279,6 +278,10 @@
     color: #757575;
 
     min-height: 26px;
+    }
+
+    ion-item * {
+        font-family: 'Papillon', sans-serif !important;
     }
 
     ion-menu.md ion-item {

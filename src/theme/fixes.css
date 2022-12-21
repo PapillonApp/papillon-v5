@@ -26,6 +26,6 @@ ion-item.animated {
     }
 }
 
-.md.toolbar-title-default:first-child {
-    padding-top: 28px !important;
+.md .AppHeader {
+    padding-top: 30px !important;
 }
