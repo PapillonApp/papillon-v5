@@ -8,16 +8,15 @@ const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme
 
 // Status bar
 import { StatusBar, Style } from '@capacitor/status-bar';
-StatusBar.setOverlaysWebView({ overlay: true });
 
 function setStatusBarStyle() {
   if (isDarkMode) {
     StatusBar.setStyle({style: Style.Dark});
-    StatusBar.setBackgroundColor({color: "#14131600"});
+    StatusBar.setBackgroundColor({color: "#141316"});
   }
   else {
     StatusBar.setStyle({style: Style.Light});
-    StatusBar.setBackgroundColor({color: "#ffffff00"});
+    StatusBar.setBackgroundColor({color: "#ffffff"});
   }
 }
 

@@ -25,7 +25,3 @@ ion-item.animated {
         filter: opacity(1);
     }
 }
-
-.md .AppHeader {
-    padding-top: 30px !important;
-}

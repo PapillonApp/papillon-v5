@@ -7,19 +7,13 @@ const config: CapacitorConfig = {
   bundledWebRuntime: false,
   plugins: {
     "SplashScreen": {
-      "launchShowDuration": 3000,
       "launchAutoHide": false,
-      "backgroundColor": "#ffffffff",
-      "androidSplashResourceName": "ic_launcher",
-      "androidScaleType": "CENTER_CROP",
-      "androidSpinnerStyle": "large",
-      "iosSpinnerStyle": "small",
-      "spinnerColor": "#999999",
-      "showSpinner": true,
-      "splashFullScreen": true,
-      "splashImmersive": true
     }
-  }
+  },
+  /* server: {
+    url: "http://192.168.1.22:8100",
+    cleartext: true
+  }, */
 };
 
 export default config;
