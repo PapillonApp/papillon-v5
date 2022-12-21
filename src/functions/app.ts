@@ -1,5 +1,6 @@
 // Imports
 // import { app } from '@/main.ts'
+import { Capacitor } from '@capacitor/core';
 
 // Constantes
 
@@ -38,12 +39,14 @@ function setNavigationBarStyle() {
   }
 }
 
-// Constantly check for dark mode
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-    setStatusBarStyle();
-    setNavigationBarStyle();
-});
+if (Capacitor.isNativePlatform()) {
+  // Constantly check for dark mode
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      setStatusBarStyle();
+      setNavigationBarStyle();
+  });
 
-// Set status bar and navigation bar style
-setStatusBarStyle();
-setNavigationBarStyle();
+  // Set status bar and navigation bar style
+  setStatusBarStyle();
+  setNavigationBarStyle();
+}

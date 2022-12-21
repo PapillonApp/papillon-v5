@@ -1,6 +1,6 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel } from '@ionic/vue';
   
   import { calendarOutline, calendarSharp, todayOutline, todaySharp } from 'ionicons/icons';
 
@@ -17,6 +17,7 @@
     name: 'FolderPage',
     components: {
         IonButtons,
+        IonButton,
         IonContent,
         IonHeader,
         IonMenuButton,
@@ -29,7 +30,10 @@
         IonDatetime,
         Swiper,
         SwiperSlide,
-        IonRefresher
+        IonRefresher,
+        IonRefresherContent,
+        IonItem,
+        IonLabel,
     },
     setup() {
         return { 
@@ -231,8 +235,8 @@
 
 <template>
     <ion-page ref="page">
-      <ion-header class="AppHeader">
-        <ion-toolbar>
+      <IonHeader class="AppHeader">
+        <IonToolbar>
 
           <ion-buttons slot="start">
             <ion-menu-button color="dark" mode="md"></ion-menu-button>
@@ -248,21 +252,21 @@
             </ion-button>
           </ion-buttons>
 
-        </ion-toolbar>
-      </ion-header>
+        </IonToolbar>
+      </IonHeader>
       
       <ion-content :fullscreen="true">
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
           </ion-refresher>
 
-        <ion-header collapse="condense">
-            <ion-toolbar>
+        <IonHeader collapse="condense">
+            <IonToolbar>
                 <ion-title size="large">Ma journée</ion-title>
-            </ion-toolbar>
-        </ion-header>
+            </IonToolbar>
+        </IonHeader>
       
-        <swiper initialSlide="1" ref="swiper">
+        <swiper :initialSlide="1" ref="swiper">
             <swiper-slide class="swiper-slide">
                 <IonList>
                     <CoursElement v-for="cours in yesterday" :key="cours.id"
@@ -330,14 +334,14 @@
         </swiper>
 
         <IonModal ref="rnPickerModal" trigger="rnPickerModalButton" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
-          <ion-header>
-            <ion-toolbar>
+          <IonHeader>
+            <IonToolbar>
               <ion-title>Sélection de la date</ion-title>
               <ion-buttons slot="end">
                 <ion-button @click="confirmRnInput()">Terminé</ion-button>
               </ion-buttons>
-            </ion-toolbar>
-          </ion-header>
+            </IonToolbar>
+          </IonHeader>
           <ion-content>
             <IonDatetime 
                 presentation="date"
@@ -351,12 +355,12 @@
           </ion-content>
         </IonModal>
 
-        <IonModal ref="coursModal" :keep-contents-mounted="true" :initial-breakpoint="0.6" :breakpoints="[0, 0.6, 0.9]" :handle="true" :swipeToClose="true">
-            <ion-header>
-              <ion-toolbar>
+        <IonModal ref="coursModal" :keep-contents-mounted="true" :initial-breakpoint="0.6" :breakpoints="[0, 0.6, 0.9]" :handle="true" :canDismiss="true">
+            <IonHeader>
+              <IonToolbar>
                 <ion-title>Cours</ion-title>
-              </ion-toolbar>
-            </ion-header>
+              </IonToolbar>
+            </IonHeader>
             <ion-content>
                 <ion-list>
                     <ion-item>
