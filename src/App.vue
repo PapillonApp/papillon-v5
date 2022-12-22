@@ -9,7 +9,9 @@
 
   import { 
     calendarOutline, 
-    calendarSharp
+    calendarSharp,
+    cogOutline,
+    settingsSharp
   } from 'ionicons/icons';
 
 
@@ -44,11 +46,17 @@
         const selectedIndex = ref(0);
         const appPages = [
             {
-            title: 'Emploi du temps',
-            url: '/timetable',
-            iosIcon: calendarOutline,
-            mdIcon: calendarSharp,
-            }
+                title: 'Emploi du temps',
+                url: '/timetable',
+                iosIcon: calendarOutline,
+                mdIcon: calendarSharp,
+            },
+            {
+                title: 'Paramètres',
+                url: '/settings',
+                iosIcon: cogOutline,
+                mdIcon: settingsSharp,
+            },
         ];
         const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
         
@@ -113,7 +121,7 @@
         this.$nextTick(function () {
             setTimeout(() => {
                 SplashScreen.hide();
-            }, 100);
+            }, 300);
         })
 
         // user data if logged in

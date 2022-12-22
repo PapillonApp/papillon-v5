@@ -10,8 +10,6 @@
   import CoursElement from '@/components/timetable/CoursElement.vue';
 
   import GetTimetable from '@/functions/fetch/GetTimetable.js';
-  
-  import { DatePickerPluginInterface } from "@capacitor-community/date-picker";
 
   export default defineComponent({
     name: 'FolderPage',
@@ -197,7 +195,6 @@
 
         // detect swiper slide change
         let swiper = this.$refs.swiper.$el.swiper;
-        console.log(swiper);
 
         swiper.on('touchEnd', () => {
             setTimeout(() => {

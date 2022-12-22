@@ -10,7 +10,12 @@ const routes: Array<RouteRecordRaw> = [
     path: '/timetable',
     name: 'Timetable',
     component: () => import ('../views/TimetableView.vue')
-  }
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import ('../views/SettingsView.vue')
+  },
 ]
 
 const loginRoutes = [

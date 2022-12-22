@@ -4,6 +4,9 @@
     
     import { logoDiscord, logoGithub, bugOutline, bugSharp, informationCircleOutline, informationCircleSharp } from 'ionicons/icons';
 
+    import {version} from '/package'
+    import { Capacitor } from '@capacitor/core';
+
     import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
 
     import SchoolSelection from './pronote/SchoolSelection.vue';
@@ -78,6 +81,8 @@
         data() {
             return {
                 SchoolSelection: SchoolSelection,
+                appVersion: version,
+                appPlatform: Capacitor.getPlatform(),
             }
         },
         mounted() {
@@ -184,10 +189,13 @@
             <ion-item button href="https://pronote.plus/assets/terms_privacy_23112022_rev0.pdf">
                 <ion-icon class="icon" slot="start" :ios="informationCircleOutline" :md="informationCircleSharp"></ion-icon>
                 <ion-label>
-                    Mentions légales
+                    <h2>Mentions légales</h2>
+                    <p>(C) 2022 PapillonApp - version {{appVersion}}-{{appPlatform}}</p>
                 </ion-label>
             </ion-item>
         </ion-list>
+
+        
       </ion-content>
 </template>
   
