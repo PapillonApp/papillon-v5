@@ -226,6 +226,10 @@
                 }
             }, 200);
         });
+
+        // test
+        // get date for 8/12/2022
+        let date = new Date(2022, 11, 16);
     }
   });
 </script>

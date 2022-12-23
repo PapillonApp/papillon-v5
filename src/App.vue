@@ -8,10 +8,12 @@
   import { SplashScreen } from '@capacitor/splash-screen';
 
   import { 
-    calendarOutline, 
-    calendarSharp,
-    cogOutline,
-    settingsSharp
+      calendarOutline,
+      calendarSharp,
+      cogOutline,
+      settingsSharp,
+      bookOutline,
+      bookSharp,
   } from 'ionicons/icons';
 
 
@@ -50,6 +52,12 @@
                 url: '/timetable',
                 iosIcon: calendarOutline,
                 mdIcon: calendarSharp,
+            },
+            {
+                title: 'Travail à faire',
+                url: '/homework',
+                iosIcon: bookOutline,
+                mdIcon: bookSharp,
             },
             {
                 title: 'Paramètres',
@@ -338,7 +346,7 @@
     }
 
     ion-menu.md ion-item ion-icon {
-    color: #616e7e;
+    color: var(--color);
     }
 
     ion-menu.md ion-item ion-label {
@@ -395,6 +403,20 @@
     }
 
     ion-item.selected {
-    --color: var(--ion-color-primary);
+        --color: var(--ion-color-primary);
+    }
+
+    ion-item.selected:hover {
+        background: rgba(var(--ion-color-primary-rgb), 0.1);
+        cursor: pointer;
+    }
+
+    ion-menu-toggle ion-item:not(.selected) {
+        --color: var(--ion-color-medium-shade);
+    }
+
+    ion-menu-toggle ion-item:not(.selected):hover {
+        opacity: 0.75;
+        cursor: pointer;
     }
 </style>

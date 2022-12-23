@@ -12,6 +12,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import ('../views/TimetableView.vue')
   },
   {
+    path: '/homework',
+    name: 'Homework',
+    component: () => import ('../views/HomeworkView.vue')
+  },
+  {
     path: '/settings',
     name: 'Settings',
     component: () => import ('../views/SettingsView.vue')
