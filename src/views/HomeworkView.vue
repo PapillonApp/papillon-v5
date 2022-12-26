@@ -209,6 +209,13 @@ export default defineComponent({
                                 <h2>{{ homework.homework.content }}</h2>
                             </ion-label>
                         </ion-item>
+
+                        <ion-item v-if="yesterday.length == 0">
+                            <span class="material-symbols-outlined mdls" slot="start">no_backpack</span>
+                            <ion-label>
+                                <p>Aucun travail à faire</p>
+                            </ion-label>
+                        </ion-item>
                     </ion-list>
                 </swiper-slide>
                 <swiper-slide>
@@ -219,6 +226,14 @@ export default defineComponent({
                                 <h2>{{ homework.homework.content }}</h2>
                             </ion-label>
                         </ion-item>
+
+                        <ion-item v-if="timetable.length == 0">
+                            <span class="material-symbols-outlined mdls" slot="start">no_backpack</span>
+                            <ion-label>
+                                <h3>Aucun travail à faire</h3>
+                                <p>Essayez de changer de date pour consulter vos devoirs...</p>
+                            </ion-label>
+                        </ion-item>
                     </ion-list>
                 </swiper-slide>
                 <swiper-slide>
@@ -227,6 +242,13 @@ export default defineComponent({
                             <ion-label>
                                 <p>{{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
+                            </ion-label>
+                        </ion-item>
+
+                        <ion-item v-if="tomorrow.length == 0">
+                            <span class="material-symbols-outlined mdls" slot="start">no_backpack</span>
+                            <ion-label>
+                                <p>Aucun travail à faire</p>
                             </ion-label>
                         </ion-item>
                     </ion-list>

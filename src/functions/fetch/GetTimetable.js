@@ -75,6 +75,15 @@ function getPronoteTimetable(date) {
                     GetToken();
                 }
             }
+
+            if(error.code == "ERR_NETWORK") {
+                // return empty timetable in promise
+                return new Promise((resolve, reject) => {
+                    resolve({
+                        error: "ERR_NETWORK"
+                    });
+                });
+            }
         });
     }
 }

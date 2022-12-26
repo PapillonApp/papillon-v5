@@ -12,7 +12,7 @@ function getUser() {
 }
 
 // pronote : get user
-function getPronoteUser() {
+async function getPronoteUser() {
     // gather vars
     const API = app.config.globalProperties.$api;
 
@@ -22,15 +22,14 @@ function getPronoteUser() {
     // construct url
     let URL = `${API}/user?token=${token}`;
 
-    // check if user is cached
-    let cacheSearch = JSON.parse(localStorage.getItem('UserCache')) || [];
-    cacheSearch = cacheSearch.filter((element) => {
-        return element.token == token;
-    });
-    if (cacheSearch.length > 0) {
-        // return cached user in promise
+    // check if user is in cache
+    let cache = JSON.parse(localStorage.getItem('UserCache')) || [];
+    if (cache.user) {
+        // get user
+        let user = JSON.parse(cache.user);
+
+        // return user in promise
         return new Promise((resolve, reject) => {
-            let user = JSON.parse(cacheSearch[0].user);
             resolve(constructPronoteUser(user));
         });
     }
@@ -38,16 +37,47 @@ function getPronoteUser() {
         // get user from API
         return axios.get(URL)
             .then((response) => {
+                if (response == "notfound" || response == "expired") {
+                    // get new token
+                    GetToken();
+                }
+
                 // get user
                 let user = response.data;
 
                 // save in cache
                 let cache = JSON.parse(localStorage.getItem('UserCache')) || [];
-                let cacheElement = {
-                    token: token,
+                cache = {
                     user: JSON.stringify(response.data)
-                };
-                cache.push(cacheElement);
+                };    
+
+                // cache avatar
+                let avatar = response.data.profile_picture;
+
+                // download avatar
+                let url = `https://cors-anywhere.herokuapp.com/` + avatar;
+                axios.get(url, { responseType: 'blob' })
+                    .then((response) => {
+                        // get blob
+                        let blob = response.data;
+
+                        // create reader
+                        let reader = new FileReader();
+                        reader.readAsDataURL(blob);
+
+                        // read blob
+                        reader.onloadend = function () {
+                            // get base64
+                            let base64 = reader.result;
+
+                            // save in cache
+                            let avatarURL = `${base64}`;
+
+                            // save in cache
+                            localStorage.setItem('avatarCache', avatarURL);
+                        }
+                    });
+
                 localStorage.setItem('UserCache', JSON.stringify(cache));
 
                 // return user

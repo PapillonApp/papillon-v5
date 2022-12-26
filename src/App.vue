@@ -16,7 +16,20 @@
       bookSharp,
   } from 'ionicons/icons';
 
-
+  interface UserData {
+                student: {
+                    name: string,
+                    avatar: string,
+                    contact: {
+                        email: string,
+                        phone: string
+                    }
+                },
+                class: {
+                    name: string,
+                    school: string
+                }
+            }
 
   export default defineComponent({
     name: 'App',
@@ -37,11 +50,20 @@
     data() {
         return {
             loggedIn: localStorage.loggedIn,
-            userData: [],
-            userName: "",
-            userClass: "",
-            userSchool: "",
-            userAvatar: ""
+            userData: {
+                student: {
+                    name: '',
+                    avatar: '',
+                    contact: {
+                        email: '',
+                        phone: ''
+                    }
+                },
+                class: {
+                    name: '',
+                    school: ''
+                }
+            }
         }
     },
     setup() {
@@ -95,32 +117,12 @@
             await toast.present();
         },
         getUserData() {
-            // user data model type
-            interface UserData {
-                student: {
-                    name: string,
-                    avatar: string,
-                    contact: {
-                        email: string,
-                        phone: string
-                    }
-                },
-                class: {
-                    name: string,
-                    school: string
-                }
-            }
-
             // get user data
             GetUser.default().then((data: UserData) => {
-                // add to localStorage
-                localStorage.setItem('userData', JSON.stringify(data));
+                this.userData = data;
 
-                // set user data
-                this.userName = data.student.name ;
-                this.userClass = data.class.name;
-                this.userSchool = data.class.school;
-                this.userAvatar = data.student.avatar;
+                // set userData in localStorage
+                localStorage.userData = JSON.stringify(data);
             });
         }
     },
@@ -135,17 +137,7 @@
         // user data if logged in
         if(localStorage.loggedIn) {
             this.getUserData();
-
-            (this.$refs['avatar'] as any).addEventListener('error', () => {
-                // replace with /assets/default.png
-                (this.$refs['avatar'] as any).src = "/assets/default.png";
-            });
         }
-
-        // when token is updated
-        window.addEventListener('tokenUpdated', () => {
-            this.getUserData();
-        });
 
         // check if online
         window.addEventListener('online', () => {
@@ -160,6 +152,11 @@
         if(!window.navigator.onLine) {
             this.presentToast("Vous êtes hors connexion.");
         }
+
+        // if avatarCache is set, make it the avatar
+        if(localStorage.avatarCache) {
+            this.userData.student.avatar = localStorage.avatarCache;
+        }
     }
   });
 </script>
@@ -170,12 +167,12 @@
       <ion-menu content-id="main-content" type="overlay" v-if="loggedIn">
         <ion-header>
           <ion-toolbar>
-            <div class="userItem" :style="`background-image: url('${userAvatar}');`">
+            <div class="userItem" :style="`background-image: url('${userData.student.avatar}');`">
                 <div class="userItem_content">
-                    <img class="avatar" :src="userAvatar" ref="avatar"/>
+                    <img class="avatar" :src="userData.student.avatar" ref="avatar"/>
                     <div class="userData">
-                        <h3>{{userName}}</h3>
-                        <p>{{userClass}} • {{userSchool}}</p>
+                        <h3>{{userData.student.name}}</h3>
+                        <p v-if="userData.class.school.trim() != ''">{{userData.class.name}} • {{userData.class.school}}</p>
                     </div>
                 </div>
             </div>

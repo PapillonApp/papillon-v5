@@ -62,6 +62,9 @@
         confirmRnInput() {
             this.$refs.rnPickerModal.$el.dismiss();
         },
+        openRnPicker() {
+            this.$refs.rnPickerModal.$el.present();
+        },
         editTimetable(timetable) {
             // Check if there's 2 lessons starting at the same time
             for (let i = 0; i < timetable.length; i++) {
@@ -80,8 +83,14 @@
         getTimetables() {
             // get timetable for rn
             GetTimetable(this.$rn).then((timetable) => {
-                this.timetable = this.editTimetable(timetable);
-                this.loadedrnButtonString = this.createDateString(this.$rn);
+                if(timetable.error) {
+                    this.timetable = [];
+                    this.timetable.error = timetable.error;
+                }
+                else {
+                    this.timetable = this.editTimetable(timetable);
+                    this.loadedrnButtonString = this.createDateString(this.$rn);
+                }
 
                 if(this.shouldResetSwiper) {
                     this.$refs.swiper.$el.swiper.slideTo(1, 0);
@@ -92,14 +101,26 @@
             // get timetable for yesterday
             let yesterdayRN = new Date(this.$rn) - 86400000;
             GetTimetable(yesterdayRN).then((timetable) => {
-                this.yesterday = this.editTimetable(timetable);
+                if(timetable.error) {
+                    this.yesterday = [];
+                    this.yesterday.error = timetable.error;
+                }
+                else {
+                    this.yesterday = this.editTimetable(timetable);
+                }
             });
 
             // get timetable for tomorrow
             let tomorrowRN = new Date(this.$rn);
             tomorrowRN.setDate(tomorrowRN.getDate() + 1);
             GetTimetable(tomorrowRN).then((timetable) => {
-                this.tomorrow = this.editTimetable(timetable);
+                if(timetable.error) {
+                    this.tomorrow = [];
+                    this.tomorrow.error = timetable.error;
+                }
+                else {
+                    this.tomorrow = this.editTimetable(timetable);
+                }
             });
         },
         handleRefresh(event) {
@@ -267,6 +288,7 @@
             </IonToolbar>
         </IonHeader>
       
+        <!-- faudrait un moyen de retirer cette répétition -->
         <swiper :initialSlide="1" ref="swiper">
             <swiper-slide class="swiper-slide">
                 <IonList>
@@ -282,11 +304,19 @@
                         :isCancelled="cours.status.isCancelled"
                     />
 
-                    <div class="NoCours" v-if="yesterday.length == 0">
+                    <div v-if="!yesterday.error"><div class="NoCours" v-if="yesterday.length == 0">
                         <span class="material-symbols-outlined mdls">upcoming</span>
                         <h2>Pas de cours enregistrés pour cette journée</h2>
                         <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-                    </div>
+
+                        <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                    </div></div>
+
+                    <div v-if="yesterday.error" class="Error"><div class="NoCours" v-if="yesterday.length == 0">
+                        <span class="material-symbols-outlined mdls">wifi_off</span>
+                        <h2>Pas de connexion à Internet</h2>
+                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div></div>
                 </IonList>
             </swiper-slide>
             <swiper-slide>
@@ -304,11 +334,19 @@
                         @open="openCoursModal(cours)"
                     />
 
-                    <div class="NoCours" v-if="timetable.length == 0">
+                    <div v-if="!timetable.error"><div class="NoCours" v-if="timetable.length == 0">
                         <span class="material-symbols-outlined mdls">upcoming</span>
                         <h2>Pas de cours enregistrés pour cette journée</h2>
                         <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-                    </div>
+
+                        <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                    </div></div>
+
+                    <div v-if="timetable.error" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                        <span class="material-symbols-outlined mdls">wifi_off</span>
+                        <h2>Pas de connexion à Internet</h2>
+                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div></div>
                 </IonList>
             </swiper-slide>
             <swiper-slide>
@@ -325,14 +363,23 @@
                         :isCancelled="cours.status.isCancelled"
                     />
 
-                    <div class="NoCours" v-if="tomorrow.length == 0">
+                    <div v-if="!tomorrow.error"><div class="NoCours" v-if="tomorrow.length == 0">
                         <span class="material-symbols-outlined mdls">upcoming</span>
                         <h2>Pas de cours enregistrés pour cette journée</h2>
                         <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-                    </div>
+
+                        <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                    </div></div>
+
+                    <div v-if="tomorrow.error" class="Error"><div class="NoCours" v-if="tomorrow.length == 0">
+                        <span class="material-symbols-outlined mdls">wifi_off</span>
+                        <h2>Pas de connexion à Internet</h2>
+                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div></div>
                 </IonList>
             </swiper-slide>
         </swiper>
+
 
         <IonModal ref="rnPickerModal" trigger="rnPickerModalButton" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
           <IonHeader>
@@ -421,6 +468,10 @@
 <style scoped>
     .swiper-slide {
         /* min-height: 70vh; */
+    }
+
+    .changeDayButton {
+        margin-top: 16px !important;
     }
 
     .NoCours {
