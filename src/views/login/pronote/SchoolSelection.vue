@@ -220,6 +220,10 @@
 
                         this.etabUrl = etab;
                         this.etabCas = cas;
+                        
+                        // get cas name in all_cas_same_host
+                        let cas_name = all_cas_same_host[0].name;
+                        this.displayCas = cas_name;
 
                         this.$refs.loginModal.$el.present()
                     }
@@ -304,6 +308,7 @@
                 isLoading: false,
                 etabUrl: "",
                 etabCas: "",
+                displayCas: "",
                 etabName: "",
             }
         }
@@ -400,7 +405,7 @@
                     
                     <div class="loginIntro">
                         <img src="assets/welcome/pronote_logo.png" alt="Pronote Logo" class="logo"/>
-                        <p>Vous souhaitez vous connecter à <B>Pronote</B> avec l'ENT <B>{{etabCas}}</B> à l'aide de Papillon.</p>
+                        <p>Vous souhaitez vous connecter à <B>Pronote</B> avec l'ENT <B>{{displayCas}}</B> à l'aide de Papillon.</p>
                     </div>
 
                     <div class="loginForm">

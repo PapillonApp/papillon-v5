@@ -48,7 +48,7 @@
                 // empty all local storage
                 localStorage.clear();
                 // go to login page
-                this.$router.push('/login');
+                location.href = '/login';
             },
             emptyCache() {
                 // empty cache

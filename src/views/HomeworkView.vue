@@ -56,6 +56,9 @@ export default defineComponent({
         confirmRnInput() {
             this.$refs.rnPickerModal.$el.dismiss();
         },
+        openRnModal() {
+            this.$refs.rnPickerModal.$el.present();
+        },
         editTimetable(timetable) {
             // set timetable to edit
             return timetable;
@@ -179,7 +182,7 @@ export default defineComponent({
                 <ion-title mode="md">Travail à faire</ion-title>
 
                 <ion-buttons slot="end">
-                    <ion-button color="dark" mode="md" id="rnPickerModalButton">
+                    <ion-button color="dark" mode="md" id="rnPickerModalButton" @click="openRnModal">
                         <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
                         {{ rnButtonString }}
@@ -213,7 +216,8 @@ export default defineComponent({
                         <ion-item v-if="yesterday.length == 0">
                             <span class="material-symbols-outlined mdls" slot="start">no_backpack</span>
                             <ion-label>
-                                <p>Aucun travail à faire</p>
+                                <h3>Aucun travail à faire</h3>
+                                <p>Essayez de changer de date pour consulter vos devoirs...</p>
                             </ion-label>
                         </ion-item>
                     </ion-list>
@@ -248,7 +252,8 @@ export default defineComponent({
                         <ion-item v-if="tomorrow.length == 0">
                             <span class="material-symbols-outlined mdls" slot="start">no_backpack</span>
                             <ion-label>
-                                <p>Aucun travail à faire</p>
+                                <h3>Aucun travail à faire</h3>
+                                <p>Essayez de changer de date pour consulter vos devoirs...</p>
                             </ion-label>
                         </ion-item>
                     </ion-list>
