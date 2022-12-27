@@ -14,6 +14,8 @@
       settingsSharp,
       bookOutline,
       bookSharp,
+      barChartOutline,
+      barChartSharp,
   } from 'ionicons/icons';
 
   interface UserData {
@@ -80,6 +82,12 @@
                 url: '/homework',
                 iosIcon: bookOutline,
                 mdIcon: bookSharp,
+            },
+            {
+                title: 'Notes',
+                url: '/grades',
+                iosIcon: barChartOutline,
+                mdIcon: barChartSharp,
             },
             {
                 title: 'Paramètres',
@@ -164,7 +172,7 @@
 <template>
   <ion-app>
     <ion-split-pane content-id="main-content">
-      <ion-menu content-id="main-content" type="overlay" v-if="loggedIn">
+      <ion-menu content-id="main-content" type="overlay" class="menu" v-if="loggedIn">
         <ion-header>
           <ion-toolbar>
             <div class="userItem" :style="`background-image: url('${userData.student.avatar}');`">
@@ -189,7 +197,11 @@
           </ion-list>
         </ion-content>
       </ion-menu>
-      <ion-router-outlet id="main-content"></ion-router-outlet>
+      <ion-router-outlet id="main-content" v-slot="{ Component }">
+        <keep-alive>
+            <component :is="Component" />
+        </keep-alive>
+    </ion-router-outlet>
     </ion-split-pane>
   </ion-app>
 </template>

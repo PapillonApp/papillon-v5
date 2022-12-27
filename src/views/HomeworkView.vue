@@ -203,59 +203,61 @@ export default defineComponent({
                 </IonToolbar>
             </IonHeader>
 
+            <div id="noTouchZone"></div>
+
             <swiper :initialSlide="1" ref="swiper">
                 <swiper-slide class="swiper-slide">
                     <ion-list>
                         <ion-item v-for="homework in yesterday" :key="homework.id">
-                            <ion-label>
+                            <ion-label class="ion-text-wrap">
                                 <p>{{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
                             </ion-label>
                         </ion-item>
 
-                        <ion-item v-if="yesterday.length == 0">
-                            <span class="material-symbols-outlined mdls" slot="start">no_backpack</span>
-                            <ion-label>
-                                <h3>Aucun travail à faire</h3>
-                                <p>Essayez de changer de date pour consulter vos devoirs...</p>
-                            </ion-label>
-                        </ion-item>
+                        <div class="NoCours" v-if="yesterday.length == 0">
+                            <span class="material-symbols-outlined mdls">auto_stories</span>
+                            <h2>Pas de devoirs enregistrés pour cette journée</h2>
+                            <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
+
+                            <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                        </div>
                     </ion-list>
                 </swiper-slide>
                 <swiper-slide>
                     <ion-list>
                         <ion-item v-for="homework in timetable" :key="homework.id">
-                            <ion-label>
+                            <ion-label class="ion-text-wrap">
                                 <p>{{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
                             </ion-label>
                         </ion-item>
 
-                        <ion-item v-if="timetable.length == 0">
-                            <span class="material-symbols-outlined mdls" slot="start">no_backpack</span>
-                            <ion-label>
-                                <h3>Aucun travail à faire</h3>
-                                <p>Essayez de changer de date pour consulter vos devoirs...</p>
-                            </ion-label>
-                        </ion-item>
+                        <div class="NoCours" v-if="timetable.length == 0">
+                            <span class="material-symbols-outlined mdls">auto_stories</span>
+                            <h2>Pas de devoirs enregistrés pour cette journée</h2>
+                            <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
+
+                            <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                        </div>
                     </ion-list>
                 </swiper-slide>
                 <swiper-slide>
                     <ion-list>
                         <ion-item v-for="homework in tomorrow" :key="homework.id">
-                            <ion-label>
+                            <ion-label class="ion-text-wrap">
                                 <p>{{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
                             </ion-label>
                         </ion-item>
 
-                        <ion-item v-if="tomorrow.length == 0">
-                            <span class="material-symbols-outlined mdls" slot="start">no_backpack</span>
-                            <ion-label>
-                                <h3>Aucun travail à faire</h3>
-                                <p>Essayez de changer de date pour consulter vos devoirs...</p>
-                            </ion-label>
-                        </ion-item>
+                        <div class="NoCours" v-if="tomorrow.length == 0">
+                            <span class="material-symbols-outlined mdls">auto_stories</span>
+                            <h2>Pas de devoirs enregistrés pour cette journée</h2>
+                            <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
+
+                            <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                        </div>
                     </ion-list>
                 </swiper-slide>
             </swiper>
@@ -286,42 +288,46 @@ export default defineComponent({
 </template>
 
 <style scoped>
-.swiper-slide {
-    /* min-height: 70vh; */
-}
+    .swiper-slide {
+        min-height: calc(100vh - 56px);
+    }
 
-.NoCours {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    padding: 20px 50px;
-}
+    .changeDayButton {
+        margin-top: 16px !important;
+    }
 
-.NoCours * {
-    margin: 0;
-    padding: 0;
-    text-align: center;
-}
+    .NoCours {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding: 20px 50px;
+    }
 
-.NoCours .mdls {
-    font-size: 36px;
-    margin-bottom: 14px;
-    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 36;
-}
+    .NoCours * {
+        margin: 0;
+        padding: 0;
+        text-align: center;
+    }
 
-.NoCours h2 {
-    font-size: 24px;
-    line-height: 24px;
-    font-weight: 600;
-}
+    .NoCours .mdls {
+        font-size: 36px;
+        margin-bottom: 14px;
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 36;
+    }
 
-.NoCours p {
-    font-size: 16px;
-    line-height: 16px;
-    font-weight: 400;
-    margin-top: 10px;
-    opacity: 50%;
-}
+    .NoCours h2 {
+        font-size: 24px;
+        line-height: 24px;
+        font-weight: 600;
+    }
+
+    .NoCours p {
+        font-size: 16px;
+        line-height: 16px;
+        font-weight: 400;
+        margin-top: 10px;
+        opacity: 50%;
+    }
 </style>

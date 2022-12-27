@@ -58,7 +58,10 @@
                 // show toast
                 setTimeout(() => {
                     this.presentToast('Cache des données vidé', 'light');
-                    this.localStorageSize = this.getLocalStorageSize() + ' kb';
+                    
+                    setTimeout(() => {
+                        this.localStorageSize = this.getLocalStorageSize() + ' kb';
+                    }, 1000);
                 }, 100);
             },
             refreshToken() {

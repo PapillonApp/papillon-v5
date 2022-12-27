@@ -7,7 +7,7 @@
     import axios from 'axios';
     import $ from "jquery";
     
-    import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp } from 'ionicons/icons';
+    import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp } from 'ionicons/icons';
 
     import { Dialog } from '@capacitor/dialog';
 
@@ -34,7 +34,9 @@
                 businessOutline,
                 businessSharp,
                 navigateOutline,
-                navigateSharp
+                navigateSharp,
+                personCircleOutline,
+                personCircleSharp
             }
         },
         methods: {
@@ -155,8 +157,25 @@
                 });
 
                 if(!cancelled) {
-                    this.loginToEtab(value);
+                    let etaburl = value;
+
+                    // remove everything after the last / if includes 'eleve.html'
+                    if(etaburl.includes('eleve.html')) {
+                        etaburl = etaburl.split('/').slice(0, -1).join('/');
+                    }
+
+                    this.loginToEtab(etaburl);
                 }
+            },
+            loginToDemo() {
+                this.loginToEtab("https://demo.index-education.net/pronote");
+
+                setTimeout(() => {
+                    this.$refs.user.value = "demonstration";
+                    this.$refs.pass.value = "pronotevs";
+
+                    this.login();
+                }, 1000);
             },
             loginToEtab(url) {
                 // lowercase url
@@ -377,6 +396,14 @@
                 <ion-label>
                     <h2>Se connecter avec une URL</h2>
                     <p>Utilisez l'URL fournie par votre établissement</p>
+                </ion-label>
+            </ion-item>
+
+            <ion-item button @click="loginToDemo()">
+                <ion-icon class="icon" slot="start" :ios="personCircleOutline" :md="personCircleSharp"></ion-icon>
+                <ion-label>
+                    <h2>Utiliser le compte démo</h2>
+                    <p>Permet de tester Papillon à l'aide du compte de démonstration</p>
                 </ion-label>
             </ion-item>
 

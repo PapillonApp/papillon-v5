@@ -134,7 +134,7 @@ http://ionicframework.com/docs/theming/ */
 
     --ion-tab-bar-background: #141316;
 
-    --ion-card-background: #141316;
+    --ion-card-background: hsl(260, 7%, 9%);
   }
 
   .ios ion-modal {

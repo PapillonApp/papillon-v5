@@ -287,6 +287,8 @@
                 <ion-title size="large">Ma journée</ion-title>
             </IonToolbar>
         </IonHeader>
+
+        <div id="noTouchZone"></div>
       
         <!-- faudrait un moyen de retirer cette répétition -->
         <swiper :initialSlide="1" ref="swiper">
@@ -467,7 +469,7 @@
   
 <style scoped>
     .swiper-slide {
-        /* min-height: 70vh; */
+        min-height: calc(100vh - 56px);
     }
 
     .changeDayButton {
