@@ -64,6 +64,12 @@ function getPronoteGrades() {
                 resolve(constructPronoteGrades(response.data));
             });
         })
+        .catch((error) => {
+            // error, return error
+            return new Promise((resolve, reject) => {
+                reject(error);
+            });
+        });
 }
 
 // pronote : construct timetable

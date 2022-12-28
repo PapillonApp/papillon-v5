@@ -76,11 +76,11 @@ function getPronoteTimetable(date) {
                 }
             }
 
-            if(error.code == "ERR_NETWORK") {
+            if(error.code) {
                 // return empty timetable in promise
                 return new Promise((resolve, reject) => {
                     resolve({
-                        error: "ERR_NETWORK"
+                        error: error.code
                     });
                 });
             }
