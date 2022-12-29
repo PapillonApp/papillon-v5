@@ -11,13 +11,13 @@ const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme
 import { StatusBar, Style } from '@capacitor/status-bar';
 
 function setStatusBarStyle() {
-  StatusBar.setStyle({style: Style.Default})
-
   if (isDarkMode) {
     StatusBar.setBackgroundColor({color: "#181B1C"});
+    StatusBar.setStyle({style: Style.Dark})
   }
   else {
     StatusBar.setBackgroundColor({color: "#ffffff"});
+    StatusBar.setStyle({style: Style.Light})
   }
 }
 

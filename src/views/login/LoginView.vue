@@ -1,11 +1,14 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonNavLink, IonListHeader } from '@ionic/vue';
+    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonNavLink, IonListHeader, IonModal, IonButton } from '@ionic/vue';
     
     import { logoDiscord, logoGithub, bugOutline, bugSharp, informationCircleOutline, informationCircleSharp } from 'ionicons/icons';
 
     import {version} from '/package'
     import { Capacitor } from '@capacitor/core';
+
+    import { Swiper, SwiperSlide } from 'swiper/vue';
+    import 'swiper/css';
 
     import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
 
@@ -20,7 +23,11 @@
             IonAvatar,
             IonIcon,
             IonNavLink,
-            IonListHeader
+            IonListHeader,
+            IonModal,
+            Swiper,
+            SwiperSlide,
+            IonButton
         },
         setup() {
             return { 
@@ -76,13 +83,24 @@
                         location.href = "/login";
                     }
                     });
-                },
+            },
+            setOpen(isOpen) {
+                setTimeout(() => {
+                    this.isOpen = isOpen;
+                }, 200);
+            },
+            nextSlide() {
+                setTimeout(() => {
+                    this.$refs.swiper.$el.swiper.slideNext();
+                }, 200);
+            },
         },
         data() {
             return {
                 SchoolSelection: SchoolSelection,
                 appVersion: version,
                 appPlatform: Capacitor.getPlatform(),
+                isOpen: true
             }
         },
         mounted() {
@@ -195,12 +213,119 @@
             </ion-item>
         </ion-list>
 
-        
+        <ion-modal :is-open="isOpen">
+            <ion-content>
+                <swiper class="welcomeSwiper" ref="swiper">
+                    <swiper-slide class="welcomeSlide">
+                        <div class="illustration services"></div>
+                        <h3>Papillon vous permet de vous connecter facilement à votre service scolaire favori.</h3>
+                        <p>Avec Papillon, profitez de vos cours et de vos données scolaires dans une interface améliorée. Le support d'EcoleDirecte est prévu ultérieurement.</p>
+
+                        <ion-button expand="block" fill="clear" @click="nextSlide()" class="slideButton">
+                            Continuer
+                        </ion-button>
+                    </swiper-slide>
+                    <swiper-slide class="welcomeSlide">
+                        <div class="illustration interface"></div>
+                        <h3>L'interface à été revue et continuellement améliorée pour une expérience optimale.</h3>
+                        <p>Papillon s'adapte à vos besoins et à vos envies grâce à une interface famillière et agréable, pour un climat de travail confortable.</p>
+
+                        <ion-button expand="block" fill="clear" @click="nextSlide()" class="slideButton">
+                            Continuer
+                        </ion-button>
+                    </swiper-slide>
+                    <swiper-slide class="welcomeSlide">
+                        <div class="illustration data"></div>
+                        <h3>Avec Papillon, vous êtes le maître de vos données.</h3>
+                        <p>Vos données ne sont pas conservées et sont éffacées aussitôt renvoyées par nos serveurs. Papillon est open-source et développé par la communauté.</p>
+
+                        <ion-button expand="block" fill="solid" @click="setOpen(false)" class="slideButton">
+                            Commencer
+                        </ion-button>
+                    </swiper-slide>
+                </swiper>
+            </ion-content>
+        </ion-modal>
       </ion-content>
 </template>
   
 <style scoped>
     .ios .icon {
         opacity: 50%;
+    }
+
+    .welcomeSwiper {
+        height: 100%;
+    }
+
+    .welcomeSlide {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .welcomeSlide * {
+        text-align: center;
+        margin: 0;
+    }
+
+    .illustration {
+        width: 100vw;
+        height: 100vw;
+        
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+
+        margin-top: 0vh;
+    }
+
+    .welcomeSlide h3 {
+        font-size: 1.5em;
+        font-weight: 500;
+        margin: 0.5em 1.5em;
+    }
+
+    .welcomeSlide p {
+        font-size: 1em;
+        font-weight: 400;
+        margin: 0 1.5em;
+        opacity: 50%;
+    }
+
+    .slideButton {
+        margin-top: 20px;
+        width: 50%;
+    }
+
+    .services {
+        background-image: url('assets/services_dark.png');
+    }
+    
+    @media screen and (prefers-color-scheme: light) {
+        .services {
+            background-image: url('assets/services_light.png');
+        }
+    }
+
+    .interface {
+        background-image: url('assets/interface_dark.png');
+    }
+
+    @media screen and (prefers-color-scheme: light) {
+        .interface {
+            background-image: url('assets/interface_light.png');
+        }
+    }
+
+    .data {
+        background-image: url('assets/data_dark.png');
+    }
+
+    @media screen and (prefers-color-scheme: light) {
+        .data {
+            background-image: url('assets/data_light.png');
+        }
     }
 </style>
