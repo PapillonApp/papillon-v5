@@ -39,18 +39,16 @@ function setNavigationBarStyle() {
   }
 }
 
-if (Capacitor.isNativePlatform()) {
-  // Constantly check for dark mode
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-      setStatusBarStyle();
-      if (Capacitor.getPlatform() === 'android') {
-        setNavigationBarStyle();
-      }
-  });
-
-  // Set status bar and navigation bar style
+// Constantly check for dark mode
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
   setStatusBarStyle();
   if (Capacitor.getPlatform() === 'android') {
     setNavigationBarStyle();
   }
+});
+
+// Set status bar and navigation bar style
+setStatusBarStyle();
+if (Capacitor.getPlatform() === 'android') {
+  setNavigationBarStyle();
 }
