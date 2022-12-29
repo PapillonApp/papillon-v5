@@ -147,6 +147,10 @@
             this.getUserData();
         }
 
+        document.addEventListener('tokenUpdated', () => {
+            this.getUserData();
+        });
+
         // check if online
         window.addEventListener('online', () => {
             this.presentToast("Vous êtes maintenant reconnecté à Internet");
