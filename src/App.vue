@@ -1,22 +1,11 @@
 <script lang="ts">
-  import { IonApp, IonContent, IonIcon, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController } from '@ionic/vue';
+  import { IonApp, IonContent, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController } from '@ionic/vue';
   import { defineComponent, ref } from 'vue';
   import { useRoute } from 'vue-router';
 
   const GetUser = require('./functions/fetch/GetUserData');
 
   import { SplashScreen } from '@capacitor/splash-screen';
-
-  import { 
-      calendarOutline,
-      calendarSharp,
-      cogOutline,
-      settingsSharp,
-      bookOutline,
-      bookSharp,
-      barChartOutline,
-      barChartSharp,
-  } from 'ionicons/icons';
 
   interface UserData {
                 student: {
@@ -38,7 +27,6 @@
     components: {
         IonApp, 
         IonContent, 
-        IonIcon, 
         IonItem, 
         IonLabel, 
         IonList, 
@@ -74,26 +62,27 @@
             {
                 title: 'Emploi du temps',
                 url: '/timetable',
-                iosIcon: calendarOutline,
-                mdIcon: calendarSharp,
+                icon: "calendar_month"
             },
             {
                 title: 'Travail à faire',
                 url: '/homework',
-                iosIcon: bookOutline,
-                mdIcon: bookSharp,
+                icon: "auto_stories",
             },
             {
                 title: 'Notes',
                 url: '/grades',
-                iosIcon: barChartOutline,
-                mdIcon: barChartSharp,
+                icon: "insights",
+            },
+            {
+                title: 'Actualités',
+                url: '/news',
+                icon: "newspaper",
             },
             {
                 title: 'Paramètres',
                 url: '/settings',
-                iosIcon: cogOutline,
-                mdIcon: settingsSharp,
+                icon: "settings",
             },
         ];
         const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
@@ -109,8 +98,6 @@
             selectedIndex,
             appPages, 
             labels,
-            calendarOutline,
-            calendarSharp,
             isSelected: (url: string) => url === route.path ? 'selected' : ''
         }
     },
@@ -194,7 +181,7 @@
           <ion-list id="inbox-list">  
             <ion-menu-toggle auto-hide="false" v-for="(p, i) in appPages" :key="i">
               <ion-item mode="md" @click="selectedIndex = i" router-direction="root" :router-link="p.url" lines="none" detail="false" class="hydrated" :class="{ selected: selectedIndex === i }">
-                <ion-icon slot="start" :ios="p.iosIcon" :md="p.mdIcon"></ion-icon>
+                <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
                 <ion-label>{{ p.title }}</ion-label>
               </ion-item>
             </ion-menu-toggle>
@@ -340,7 +327,7 @@
     min-height: 26px;
     }
 
-    ion-item * {
+    ion-item *:not(span) {
         font-family: 'Papillon', sans-serif !important;
     }
 

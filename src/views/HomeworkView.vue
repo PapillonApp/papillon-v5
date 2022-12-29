@@ -217,7 +217,7 @@ export default defineComponent({
 
                         <div class="NoCours" v-if="yesterday.length == 0">
                             <span class="material-symbols-outlined mdls">auto_stories</span>
-                            <h2>Pas de devoirs enregistrés pour cette journée</h2>
+                            <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
                             <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
@@ -235,7 +235,7 @@ export default defineComponent({
 
                         <div class="NoCours" v-if="timetable.length == 0">
                             <span class="material-symbols-outlined mdls">auto_stories</span>
-                            <h2>Pas de devoirs enregistrés pour cette journée</h2>
+                            <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
                             <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
@@ -253,7 +253,7 @@ export default defineComponent({
 
                         <div class="NoCours" v-if="tomorrow.length == 0">
                             <span class="material-symbols-outlined mdls">auto_stories</span>
-                            <h2>Pas de devoirs enregistrés pour cette journée</h2>
+                            <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
                             <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
