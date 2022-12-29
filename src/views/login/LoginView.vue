@@ -228,7 +228,7 @@
                     <swiper-slide class="welcomeSlide">
                         <div class="illustration interface"></div>
                         <h3>L'interface à été revue et continuellement améliorée pour une expérience optimale.</h3>
-                        <p>Papillon s'adapte à vos besoins et à vos envies grâce à une interface famillière et agréable, pour un climat de travail confortable.</p>
+                        <p>Papillon s'adapte à vos besoins et à vos envies grâce à une interface familière et agréable, pour un climat de travail confortable.</p>
 
                         <ion-button expand="block" fill="clear" @click="nextSlide()" class="slideButton">
                             Continuer
@@ -237,7 +237,7 @@
                     <swiper-slide class="welcomeSlide">
                         <div class="illustration data"></div>
                         <h3>Avec Papillon, vous êtes le maître de vos données.</h3>
-                        <p>Vos données ne sont pas conservées et sont éffacées aussitôt renvoyées par nos serveurs. Papillon est open-source et développé par la communauté.</p>
+                        <p>Vos données ne sont pas conservées et sont effacées aussitôt renvoyées par nos serveurs. Papillon est open-source et développé par la communauté.</p>
 
                         <ion-button expand="block" fill="solid" @click="setOpen(false)" class="slideButton">
                             Commencer
