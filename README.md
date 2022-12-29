@@ -1,8 +1,9 @@
-![image](https://user-images.githubusercontent.com/32978709/209976401-994611e3-3b99-4a5c-a64c-e06101a54a56.png#gh-light-mode-only)
-![image](https://user-images.githubusercontent.com/32978709/209976409-dc9b1b32-e0b6-4b1e-bada-21d947103e94.png#gh-dark-mode-only)
+![image](https://user-images.githubusercontent.com/32978709/209976588-a460bb49-d29f-4379-b385-abf4d2957994.png#gh-light-mode-only)
+![image](https://user-images.githubusercontent.com/32978709/209976602-669c225c-a3ec-406b-b7e1-e1a4b1cc8430.png#gh-dark-mode-only)
 
-![image](https://user-images.githubusercontent.com/32978709/209976011-833a82c8-c8d7-481d-9ce7-7d0403da298d.png#gh-dark-mode-only)
-![image](https://user-images.githubusercontent.com/32978709/209976331-fa3637ae-fd29-425a-b467-31f3899269c8.png#gh-light-mode-only)
+![image](https://user-images.githubusercontent.com/32978709/209976636-b4e65a27-2acd-4eef-8ed6-b7432cc865ff.png#gh-light-mode-only)
+![image](https://user-images.githubusercontent.com/32978709/209976643-7eb365b1-3853-4d64-bf31-306cbd3f2267.png#gh-dark-mode-only)
+
 
 ![](https://img.shields.io/github/license/PapillonApp/papillon-v5)
 ![](https://img.shields.io/github/issues/PapillonApp/papillon-v5)
