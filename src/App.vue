@@ -116,7 +116,9 @@
             // get user data
             GetUser.default().then((data: UserData) => {
                 this.userData = data;
-                this.avatar = data.student.avatar;
+                if(!localStorage.getItem('avatarCache')) {
+                    this.avatar = data.student.avatar;
+                }
 
                 // set userData in localStorage
                 localStorage.userData = JSON.stringify(data);
@@ -168,7 +170,7 @@
       <ion-menu content-id="main-content" type="overlay" class="menu" v-if="loggedIn">
         <ion-header>
           <ion-toolbar>
-            <div class="userItem" :style="`background-image: url('${userData.student.avatar}');`">
+            <div class="userItem" :style="`background-image: url('${avatar}');`">
                 <div class="userItem_content">
                     <img class="avatar" :src="avatar" ref="avatar"/>
                     <div class="userData">
