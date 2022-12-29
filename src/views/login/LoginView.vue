@@ -208,7 +208,7 @@
                 <ion-icon class="icon" slot="start" :ios="informationCircleOutline" :md="informationCircleSharp"></ion-icon>
                 <ion-label>
                     <h2>Mentions légales</h2>
-                    <p>(C) 2022 PapillonApp - version {{appVersion}}-{{appPlatform}}</p>
+                    <p>(C) 2023 PapillonApp - version {{appVersion}}-{{appPlatform}}</p>
                 </ion-label>
             </ion-item>
         </ion-list>
