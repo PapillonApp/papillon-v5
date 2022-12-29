@@ -12,10 +12,6 @@
 ![](https://img.shields.io/github/repo-size/PapillonApp/papillon-v5)
 ![](https://img.shields.io/github/forks/PapillonApp/papillon-v5?style=social)
 ![](https://img.shields.io/github/stars/PapillonApp/papillon-v5?style=social)
-##
-
-## README
-**TODO**
 
 ## Installation
 ```
