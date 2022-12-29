@@ -142,7 +142,7 @@ function constructPronoteGrades(grades) {
         }
 
         // add average to subject
-        subject.average = parseFloat(average.average);
+        subject.average = parseFloat(average.average.replace(",", "."));
 
         subject.class = {};
 
@@ -152,7 +152,7 @@ function constructPronoteGrades(grades) {
     });
 
     // calculate averages
-    let studentAverage = parseFloat(grades.overall_average);
+    let studentAverage = parseFloat(grades.overall_average.replace(",", "."));
     
     let classAverage = 0;
     let classMin = 0;

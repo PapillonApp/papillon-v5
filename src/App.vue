@@ -53,7 +53,8 @@
                     name: '',
                     school: ''
                 }
-            }
+            },
+            avatar: '',
         }
     },
     setup() {
@@ -115,6 +116,7 @@
             // get user data
             GetUser.default().then((data: UserData) => {
                 this.userData = data;
+                this.avatar = data.student.avatar;
 
                 // set userData in localStorage
                 localStorage.userData = JSON.stringify(data);
@@ -153,8 +155,8 @@
         }
 
         // if avatarCache is set, make it the avatar
-        if(localStorage.avatarCache) {
-            this.userData.student.avatar = localStorage.avatarCache;
+        if(localStorage.getItem('avatarCache')) {
+            this.avatar = localStorage.getItem('avatarCache') as string;
         }
     }
   });
@@ -168,7 +170,7 @@
           <ion-toolbar>
             <div class="userItem" :style="`background-image: url('${userData.student.avatar}');`">
                 <div class="userItem_content">
-                    <img class="avatar" :src="userData.student.avatar" ref="avatar"/>
+                    <img class="avatar" :src="avatar" ref="avatar"/>
                     <div class="userData">
                         <h3>{{userData.student.name}}</h3>
                         <p v-if="userData.class.school.trim() != ''">{{userData.class.name}} • {{userData.class.school}}</p>

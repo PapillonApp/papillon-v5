@@ -20,11 +20,17 @@
             IonMenuButton,
             IonPage,
             IonButtons,
-            IonCard
+            IonCard,
+            IonItem,
+            IonLabel,
+            IonList,
+            IonListHeader
         },
         data() {
             return { 
-                grades: []
+                grades: [],
+                averages: [],
+                classAverages: [],
             }
         },
         methods: {
@@ -39,8 +45,9 @@
         mounted() {
             GetGrades().then((data) => {
                 this.grades = data.marks;
+                this.averages = data.averages;
 
-                console.log(this.grades);
+                this.classAverages = data.averages.class;
             });
         }
     });
@@ -106,6 +113,46 @@
 
             </div>
         </ion-card>
+
+        <IonList>
+            <IonListHeader>
+                <IonLabel>
+                    <h2>Moyennes</h2>
+                </IonLabel>
+            </IonListHeader>
+
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">person</span>
+                <IonLabel>
+                    <p>Moyenne générale</p>
+                    <h2>{{ averages.average }}<small>/20</small></h2>
+                </IonLabel>
+            </IonItem>
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">groups</span>
+                <IonLabel>
+                    <p>Moyenne de classe</p>
+                    <h2>{{ classAverages.average }}<small>/20</small></h2>
+                </IonLabel>
+            </IonItem>
+            <div style="display:flex">
+                <IonItem>
+                    <span class="material-symbols-outlined mdls" slot="start">swap_vert</span>
+                    <IonLabel>
+                        <p>Meilleure moyenne</p>
+                        <h2>{{ classAverages.max }}<small>/20</small></h2>
+                    </IonLabel>
+                </IonItem>
+                <IonItem>
+                    <IonLabel>
+                        <p>Moins bonne moyenne</p>
+                        <h2>{{ classAverages.min }}<small>/20</small></h2>
+                    </IonLabel>
+                </IonItem>
+            </div>
+        </IonList>
+
+        <br />
 
       </ion-content>
     </ion-page>
