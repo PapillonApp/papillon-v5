@@ -95,7 +95,7 @@ function constructPronoteHomework(hw) {
                 done: homework.done,
             },
             homework: {
-                subject: homework.subject,
+                subject: homework.subject.name,
                 content: homework.description,
             },
             files: homework.files,
