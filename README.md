@@ -26,5 +26,6 @@ ionic serve
 
 ### Générer l'app
 ```
+ionic build
 npx cap open
 ```
