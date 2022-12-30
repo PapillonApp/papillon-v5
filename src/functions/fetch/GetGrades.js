@@ -65,6 +65,11 @@ function getPronoteGrades() {
             });
         })
         .catch((error) => {
+            if(error.response.status == 498) {
+                // token expired, get new token
+                GetToken();
+            }
+
             // error, return error
             return new Promise((resolve, reject) => {
                 reject(error);

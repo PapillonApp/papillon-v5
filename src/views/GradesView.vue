@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSpinner } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -25,7 +25,7 @@
             IonLabel,
             IonList,
             IonListHeader,
-            IonSpinner
+            IonSkeletonText
         },
         data() {
             return { 
@@ -54,6 +54,16 @@
 
                 this.classAverages = data.averages.class;
             });
+
+            document.addEventListener('tokenUpdated', (ev) => {
+                GetGrades().then((data) => {
+                    this.grades = data.marks;
+                    this.averages = data.averages;
+                    this.isLoading = false;
+
+                    this.classAverages = data.averages.class;
+                });
+            });
         }
     });
 </script>
@@ -80,11 +90,25 @@
 
         <div id="noTouchZone"></div>
 
-        <ion-item v-if="this.isLoading">
-            <ion-label>Chargement des notes</ion-label>
-            <ion-spinner></ion-spinner>
-        </ion-item>
-
+        <div v-if="isLoading">
+            <ion-card class="subject" v-for="i in 6" v-bind:key="i">
+                <div class="subject-name" style="padding: 15px 15px">
+                    <ion-skeleton-text :animated="true" style="width: 50%;"></ion-skeleton-text>
+                    <ion-skeleton-text class="avg" :animated="true" style="width: 20%;"></ion-skeleton-text>
+                </div>
+                <div class="grades">
+                    <ion-card class="grade" v-for="i in 3" v-bind:key="i" >
+                        <div class="myGrade" style="width: 135px;">
+                            <ion-skeleton-text :animated="true" style="width: 50%;"></ion-skeleton-text>
+                            <br/>
+                            <ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text>
+                        </div>
+                        <div class="grades"></div>
+                    </ion-card>
+                </div>
+            </ion-card>
+        </div>
+        
         <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index">
             <div class="subject-name" :style="`background: ${getRandomColor()};`">
                 <h3>{{subject.name}}</h3>
