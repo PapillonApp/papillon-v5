@@ -23,7 +23,8 @@
             IonButton,
             IonItem,
             IonLabel,
-            IonModal
+            IonModal,
+            IonList
         },
         data() {
             return { 
@@ -75,14 +76,16 @@
             </IonToolbar>
         </IonHeader>
 
-        <IonItem button v-for="(news, i) in news" v-bind:key="i" @click="openNews(news)">
-            <span class="material-symbols-outlined mdls" slot="start">feed</span>
-                <IonLabel>
-                    <h2>{{ news.title }}</h2>
-                    <p>{{ news.author }} - {{ news.category }}</p>
-                    <small>{{ news.dateString }}</small>
-                </IonLabel>
-        </IonItem>
+        <IonList>
+            <IonItem button v-for="(news, i) in news" v-bind:key="i" @click="openNews(news)">
+                <span class="material-symbols-outlined mdls" slot="start">feed</span>
+                    <IonLabel>
+                        <h2>{{ news.title }}</h2>
+                        <p>{{ news.author }} - {{ news.category }}</p>
+                        <small>{{ news.dateString }}</small>
+                    </IonLabel>
+            </IonItem>
+        </IonList>
 
         <IonModal :presenting-element="presentingElement" :canDismiss="true" ref="modal">
             <IonHeader>
