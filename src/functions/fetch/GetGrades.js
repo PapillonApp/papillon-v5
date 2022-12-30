@@ -74,6 +74,8 @@ function getPronoteGrades() {
 
 // pronote : construct timetable
 function constructPronoteGrades(grades) {
+    console.log(grades);
+    
     let averages = grades.averages;
     let marks = grades.grades;
 
@@ -82,12 +84,12 @@ function constructPronoteGrades(grades) {
     // for each mark, add it to the corresponding subject in the array
     marks.forEach(mark => {
         // check if subject exists
-        let subject = markArray.find(subject => subject.name == mark.subject);
+        let subject = markArray.find(subject => subject.name == mark.subject.name);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
-                name: mark.subject,
+                name: mark.subject.name,
                 marks: []
             }
 
@@ -102,7 +104,7 @@ function constructPronoteGrades(grades) {
         // add mark to subject
         let newMark = {
             info: {
-                subject: mark.subject,
+                subject: mark.subject.name,
                 date: mark.date,
             },
             grade: mark.grade
@@ -129,7 +131,7 @@ function constructPronoteGrades(grades) {
     // add averages
     averages.forEach(average => {
         // check if subject exists
-        let subject = markArray.find(subject => subject.name == average.subject);
+        let subject = markArray.find(subject => subject.name == average.subject.name);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
@@ -151,22 +153,26 @@ function constructPronoteGrades(grades) {
         subject.class.max = parseFloat(average.max);
     });
 
-    // calculate averages
-    let studentAverage = parseFloat(grades.overall_average.replace(",", "."));
-    
+    // calculate averages for each subject in markArray
+    let studentAverage = 0;
     let classAverage = 0;
     let classMin = 0;
     let classMax = 0;
 
     markArray.forEach(subject => {
-        classAverage += parseFloat(subject.class.average);
-        classMin += parseFloat(subject.class.min);
-        classMax += parseFloat(subject.class.max);
+        studentAverage += subject.average;
+        classAverage += subject.class.average;
+        classMin += subject.class.min;
+        classMax += subject.class.max;
     });
 
-    classAverage /= averages.length;
-    classMin /= averages.length;
-    classMax /= averages.length;
+    studentAverage /= markArray.length;
+    classAverage /= markArray.length;
+    classMin /= markArray.length;
+    classMax /= markArray.length;
+
+    // replace StudentAverage with the actual average
+    studentAverage = parseFloat(grades.overall_average.replace(",", "."));
 
     // add averages to array
     let avgs = {
