@@ -313,6 +313,7 @@
                         // get cas name in all_cas_same_host
                         let cas_name = all_cas_same_host[0].name;
                         this.displayCas = cas_name;
+                        this.isEduconnectLogin = all_cas_same_host[0].educonnect == true;
 
                         this.$refs.loginModal.$el.present()
                     }
@@ -505,6 +506,8 @@
                     <div class="loginIntro">
                         <img src="assets/welcome/pronote_logo.png" alt="Pronote Logo" class="logo"/>
                         <p>Vous souhaitez vous connecter à <B>Pronote</B> avec l'ENT <B>{{displayCas}}</B> à l'aide de Papillon.</p>
+                        <br>
+                        <p v-if="isEduconnectLogin">Cet ENT utilise ÉduConnect, merci de rentrer les identifiants de ce service.</p>
                     </div>
 
                     <div class="loginForm">
