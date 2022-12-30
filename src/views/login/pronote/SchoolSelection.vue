@@ -50,6 +50,30 @@
 
                 await toast.present();
             },
+            async presentError(msg, color, error) {
+                const toast = await toastController.create({
+                    message: msg,
+                    duration: 2000,
+                    position: "bottom",
+                    color: color,
+                    buttons: [
+                        {
+                        text: "Plus d'infos",
+                        role: 'info',
+                        handler: () => { 
+                            Dialog.alert({
+                                title: "Erreur",
+                                message: error
+                            })
+                        }
+                        },
+                    ]
+                });
+
+                await toast.present();
+
+                console.error(error)
+            },
             decodeEntities(encodedString) {
                 var translate_re = /&(nbsp|amp|quot|lt|gt);/g;
                 var translate = {
@@ -97,7 +121,7 @@
                     this.findEstablishments(lat, lon)
                 })
                 .catch(error => {
-                    this.presentToast(`Une erreur s'est produite. : pronote/SchoolSelection.getPostal().fail()`, "danger")
+                    this.presentError(`Une erreur s'est produite pour obtenir la localisation de votre code postal.`, "danger", error)
                 })
             },
             findEstablishments(lat, lon) {
@@ -143,7 +167,7 @@
                         }, 200);
                     })
                     .fail((error) => {
-                        this.presentToast(`Une erreur s'est produite. : pronote/SchoolSelection.findEstablishments().fail()`, "danger")
+                        this.presentError(`Une erreur s'est produite dans la détection de l'établissement.`, "danger", error)
                     });
             },
             clearEtabs() {
