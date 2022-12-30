@@ -138,9 +138,16 @@
                 this.terms = e.detail.value;
                 this.isLoading = true;
                 
-                axios.get('https://api.androne.dev/papillon-v4/cors.php?url=https%3A%2F%2Fpositionstack.com%2Fgeo_api.php%3Fquery%3Dfrance%2B' + postal)
+                axios.get('https://cors.api.pronote.plus/https://positionstack.com/geo_api.php?query=france+' + postal, {
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+                        'Access-Control-Allow-Credentials': 'true'
+                    }
+                })
                 .then(response => {                      
-                    let data = JSON.parse(this.decodeEntities(response.data.content)).data;
+                    let data = response.data.data;
 
                     let lat = data[0].latitude;
                     let lon = data[0].longitude;
@@ -197,7 +204,16 @@
                     })
                     .fail((error) => {
                         console.error(error)
-                        this.presentError(`Une erreur s'est produite dans la détection de l'établissement.`, "danger", error)
+                        
+                        if(this.retries < 3) {
+                            setTimeout(() => {
+                                this.findEstablishments(lat, lon);
+                            }, 1000);
+                            this.retries++;
+                        }
+                        else {
+                            this.presentError(`Une erreur s'est produite pour obtenir les établissements à proximité.`, "danger", error.stack)
+                        }
                     });
             },
             clearEtabs() {
@@ -384,6 +400,7 @@
                 displayCas: "",
                 etabName: "",
                 ents: [],
+                retries: 0,
             }
         }
     });
@@ -491,8 +508,8 @@
                     </div>
 
                     <div class="loginForm">
-                        <input ref="user" type="text" placeholder="Identifiant" class="loginInput"/>
-                        <input ref="pass" type="password" placeholder="Mot de passe" class="loginInput"/><br/>
+                        <input ref="user" type="text" placeholder="Identifiant" class="loginInput" appAutofill autocomplete="username"/>
+                        <input ref="pass" type="password" placeholder="Mot de passe" class="loginInput" appAutofill autocomplete="password"/><br/>
 
                         <button @click="login" class="loginButton">Se connecter</button>
                     </div>
