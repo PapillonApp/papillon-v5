@@ -130,7 +130,7 @@
                     this.findEstablishments(lat, lon)
                 })
                 .catch(error => {
-                    this.presentError(`Une erreur s'est produite pour obtenir la localisation de votre code postal.`, "danger", error.stack)
+                    this.presentError(`Une erreur s'est produite pour obtenir votre code postal.`, "danger", error.stack)
                 })
             },
             findEstablishments(lat, lon) {
