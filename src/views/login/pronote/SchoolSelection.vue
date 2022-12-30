@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, toastController, IonListHeader, IonSpinner } from '@ionic/vue';
+    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, toastController, alertController, IonListHeader, IonSpinner } from '@ionic/vue';
 
     import cas_list from '/src/ent_list.json';
 
@@ -61,18 +61,27 @@
                         text: "Plus d'infos",
                         role: 'info',
                         handler: () => { 
-                            Dialog.alert({
-                                title: "Erreur",
-                                message: error
-                            })
+                            if(error == "[object Object]") {
+                                error = "Impossible d'obtenir plus d'infos."
+                            }
+
+                            this.alertDialogError(error)
                         }
                         },
                     ]
                 });
 
                 await toast.present();
+            },
+            async alertDialogError(err) {
+                const alert = await alertController.create({
+                    header: "Détails de l'erreur",
+                    subHeader: "Une erreur s'est produite",
+                    message: err,
+                    buttons: ['OK'],
+                });
 
-                console.error(error)
+                await alert.present();
             },
             decodeEntities(encodedString) {
                 var translate_re = /&(nbsp|amp|quot|lt|gt);/g;
@@ -121,7 +130,7 @@
                     this.findEstablishments(lat, lon)
                 })
                 .catch(error => {
-                    this.presentError(`Une erreur s'est produite pour obtenir la localisation de votre code postal.`, "danger", error)
+                    this.presentError(`Une erreur s'est produite pour obtenir la localisation de votre code postal.`, "danger", error.stack)
                 })
             },
             findEstablishments(lat, lon) {
@@ -167,6 +176,7 @@
                         }, 200);
                     })
                     .fail((error) => {
+                        console.error(error)
                         this.presentError(`Une erreur s'est produite dans la détection de l'établissement.`, "danger", error)
                     });
             },

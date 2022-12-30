@@ -295,8 +295,9 @@
     }
 
     .slideButton {
-        margin-top: 20px;
-        width: 50%;
+        position: absolute;
+        bottom: 5vh;
+        width: 80%;
     }
 
     .services {
