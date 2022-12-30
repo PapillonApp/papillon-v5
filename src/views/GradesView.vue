@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSpinner } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -24,13 +24,15 @@
             IonItem,
             IonLabel,
             IonList,
-            IonListHeader
+            IonListHeader,
+            IonSpinner
         },
         data() {
             return { 
                 grades: [],
                 averages: [],
                 classAverages: [],
+                isLoading: false,
             }
         },
         methods: {
@@ -43,9 +45,12 @@
             }
         },
         mounted() {
+            this.isLoading = true;
+
             GetGrades().then((data) => {
                 this.grades = data.marks;
                 this.averages = data.averages;
+                this.isLoading = false;
 
                 this.classAverages = data.averages.class;
             });
@@ -74,6 +79,11 @@
         </IonHeader>
 
         <div id="noTouchZone"></div>
+
+        <ion-item v-if="this.isLoading">
+            <ion-label>Chargement des notes</ion-label>
+            <ion-spinner></ion-spinner>
+        </ion-item>
 
         <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index">
             <div class="subject-name" :style="`background: ${getRandomColor()};`">

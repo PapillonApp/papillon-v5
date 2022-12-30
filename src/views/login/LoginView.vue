@@ -296,7 +296,7 @@
 
     .slideButton {
         position: absolute;
-        bottom: 5vh;
+        bottom: 8vh;
         width: 80%;
     }
 
