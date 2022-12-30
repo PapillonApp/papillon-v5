@@ -102,7 +102,7 @@ function constructPronoteTimetable(timetable) {
                 color: course.background_color,
             },
             data: {
-                subject: course.subject,
+                subject: course.subject.name,
                 teacher: course.teacher,
                 room: course.room
             },

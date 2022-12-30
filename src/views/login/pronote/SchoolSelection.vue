@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, toastController, alertController, IonListHeader, IonSpinner } from '@ionic/vue';
+    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, toastController, alertController, IonListHeader, IonSpinner, loadingController } from '@ionic/vue';
 
     import cas_list from '/src/ent_list.json';
 
@@ -38,6 +38,9 @@
                 personCircleOutline,
                 personCircleSharp
             }
+        },
+        mounted() {
+            this.getENTs();
         },
         methods: {
             async presentToast(msg, color, notDismissable) {
@@ -98,6 +101,23 @@
                     var num = parseInt(numStr, 10);
                     return String.fromCharCode(num);
                 });
+            },
+            async getENTs() {
+                const infosAPI = this.$api + "/infos";
+
+                const loading = await loadingController.create({
+                    message: 'Obtention des ENTS...'
+                });
+                    
+                loading.present();
+                
+                axios.get(infosAPI)
+                .then(response => {
+                    setTimeout(() => {
+                        loading.dismiss();
+                    }, 200);
+                    this.ents = response.data.ent_list;
+                })
             },
             getPostal(e) {
                 let postal = e.detail.value
@@ -239,7 +259,7 @@
                     console.log(cas_host);
                     
                     
-                    let all_cas_same_host = cas_list.filter(cas => cas.url == cas_host);
+                    let all_cas_same_host = this.ents.filter(cas => cas.url == cas_host);
 
                     let cas = all_cas_same_host[0];
                     if (all_cas_same_host.length == 0) {
@@ -363,6 +383,7 @@
                 etabCas: "",
                 displayCas: "",
                 etabName: "",
+                ents: [],
             }
         }
     });
