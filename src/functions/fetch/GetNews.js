@@ -65,6 +65,11 @@ function getPronoteNews() {
             });
         })
         .catch((error) => {
+            if(error.response.data == 'expired') {
+                // token expired, get new token
+                GetToken();
+            }
+
             // error, return error
             return new Promise((resolve, reject) => {
                 reject(error);

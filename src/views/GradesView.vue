@@ -78,7 +78,7 @@
         <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index">
             <div class="subject-name" :style="`background: ${getRandomColor()};`">
                 <h3>{{subject.name}}</h3>
-                <p class="avg">{{subject.average}}<small>/20</small></p>
+                <p class="avg">{{subject.average.toFixed(2)}}<small>/20</small></p>
             </div>
 
             <div class="grades">
@@ -114,7 +114,7 @@
             </div>
         </ion-card>
 
-        <IonList>
+        <IonList v-if="this.grades.length != 0">
             <IonListHeader>
                 <IonLabel>
                     <h2>Moyennes</h2>
