@@ -273,6 +273,8 @@
     .illustration {
         width: 100vw;
         height: 100vw;
+
+        max-height: 50%;
         
         background-size: contain;
         background-repeat: no-repeat;
