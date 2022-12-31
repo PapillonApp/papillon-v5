@@ -10,8 +10,6 @@
     import { Swiper, SwiperSlide } from 'swiper/vue';
     import 'swiper/css';
 
-    import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
-
     import SchoolSelection from './pronote/SchoolSelection.vue';
 
     export default defineComponent({
