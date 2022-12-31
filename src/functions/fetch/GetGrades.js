@@ -78,9 +78,7 @@ function getPronoteGrades() {
 }
 
 // pronote : construct timetable
-function constructPronoteGrades(grades) {
-    console.log(grades);
-    
+function constructPronoteGrades(grades) {    
     let averages = grades.averages;
     let marks = grades.grades;
 
@@ -111,6 +109,7 @@ function constructPronoteGrades(grades) {
             info: {
                 subject: mark.subject.name,
                 date: mark.date,
+                description: mark.description || "Pas d'intitulé",
             },
             grade: mark.grade
         }
@@ -122,6 +121,7 @@ function constructPronoteGrades(grades) {
         else {
             newMark.info.abs = false;
         }
+        
 
         subject.marks.push(newMark);
     });

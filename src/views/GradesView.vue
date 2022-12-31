@@ -49,6 +49,8 @@
 
             GetGrades().then((data) => {
                 this.grades = data.marks;
+                console.log(data.marks);
+
                 this.averages = data.averages;
                 this.isLoading = false;
 
@@ -119,7 +121,7 @@
                 
                 <ion-card class="grade" v-for="(mark, i) in subject.marks" v-bind:key="i">
                     <div class="myGrade">
-                        <p class="name">Pas d'intitulé</p>
+                        <p class="name">{{ mark.info.description }}</p>
                         <p class="coef">Coeff. : {{mark.grade.coefficient}}</p>
 
                         <p class="grd" v-if="!mark.info.abs">{{mark.grade.value.toFixed(2)}}<small>/{{mark.grade.out_of}}</small></p>
@@ -265,6 +267,10 @@
         font-size: 1rem;
         font-weight: 500;
         color: var(--ion-text-color);
+        width: 125px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .myGrade p.coef {
