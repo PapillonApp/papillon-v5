@@ -1,0 +1,252 @@
+name: Test application deployment
+
+on: 
+  workflow_dispatch:
+    inputs:
+      os:
+        description: 'Operating system'
+        required: true
+        default: 'android'
+      
+
+jobs:
+  initialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+        
+      - name: Get VERSION_CODE
+        id: commit-count
+        run: |
+          let nb=$(git rev-list HEAD --count)+500
+          echo "COUNT=$nb" >> $GITHUB_OUTPUT
+        
+      - name: Get VERSION_NUMBER
+        id: version-number
+        run: |
+          ver="$(git describe --tags --dirty)"
+          echo "VERSION=${ver}" >> $GITHUB_OUTPUT
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+          
+      - name: Update version number (package.json)
+        run:  |
+          ver="${{ steps.version-number.outputs.VERSION }}"
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          if [ '$(expr length "$ver")' == '5' ]; then
+            git tag -d "$ver"
+            git push --delete origin "$ver"
+            npm version "$ver"
+            echo "GH_RELEASE=true" >> $GITHUB_ENV
+          else
+            npm version "$ver" --no-git-tag-version
+            echo "GH_RELEASE=false" >> $GITHUB_ENV
+          fi
+          git commit -am "Automatic update"
+          git push
+    outputs:
+      VERSION_CODE: ${{ steps.commit-count.outputs.COUNT }}
+      VERSION_NUMBER: ${{ steps.version-number.outputs.VERSION }}
+      DEPLOY_TYPE: test
+
+
+  deploy_android:
+    needs: initialize
+    runs-on: macos-latest
+    if: ${{ github.event.inputs.os == 'android' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        run: |
+          brew tap AdoptOpenJDK/openjdk
+          brew install --cask adoptopenjdk15
+
+          echo "JAVA_HOME=$(/usr/libexec/java_home -v 15)" >> $GITHUB_ENV
+          echo ${{ env.JAVA_HOME }}
+          java -version
+
+      - name: Setup Android CLI
+        run: |
+          brew install --cask android-commandlinetools
+          sdkmanager --update
+          set +o pipefail
+
+          yes | sdkmanager --licenses
+          yes | sdkmanager --install "platform-tools"
+          yes | sdkmanager --install "build-tools;30.0.2"
+          yes | sdkmanager --install "platforms;android-30"
+
+          sdkmanager --list_installed
+          set -o pipefail
+
+      - name: Setup Android Builder
+        run: |
+          echo "ANDROID_HOME=$(brew --prefix)/share/android-commandlinetools" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$(brew --prefix)/share/android-commandlinetools" >> $GITHUB_ENV
+          echo "APP_VERSION_CODE=${{ needs.initialize.outputs.VERSION_CODE  }}" >> $GITHUB_ENV
+          echo "APP_VERSION_NUMBER=${{ needs.initialize.outputs.VERSION_NUMBER }}" >> $GITHUB_ENV
+          chmod +x ./android/gradlew;
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+
+      - name: Setup dependencies
+        run: |
+          npm i -g @ionic/cli
+          npm i --prefer-offline --no-audit
+
+      - name: Ionic Capacitor Sync
+        run: ionic capacitor sync android --prod
+     
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.2
+          bundler-cache: true
+
+      - name: Cache bundle dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gems-
+
+      - name: Decrypt Android keys
+        run: sh ./.github/scripts/decrypt_android_keys.sh
+        env:
+          KEYS_SECRET_PASSPHRASE: ${{ secrets.KEYS_SECRET_PASSPHRASE }}  
+
+      - name: Export Data to Fastlane
+        run: |
+          echo "KEY_STORE=./android/fastlane/logi12-prnplus.jks" >> $GITHUB_ENV
+          echo "KEY_STORE_PASSWORD=${{ secrets.KEY_STORE_PASSWORD}}" >> $GITHUB_ENV
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
+          echo "PLAY_CREDENTIALS_JSON=${{ secrets.PLAY_CREDENTIALS_JSON }}" >> $GITHUB_ENV
+
+      - name: Download bundle dependencies
+        run: |
+          gem install bundler:2.0.2
+          bundle config path vendor/bundle
+          bundle install
+        working-directory: android/fastlane
+
+      - name: Test on Fastlane
+        run: |
+          fastlane run validate_play_store_json_key json_key:play_store.json
+
+        working-directory: android/fastlane
+
+      - name: Build and deploy
+        run: |
+          export LC_ALL=fr_FR.UTF-8
+          export LANG=fr_FR.UTF-8
+          bundle exec fastlane ${{ needs.initialize.outputs.DEPLOY_TYPE }} 
+        working-directory: android/fastlane
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+          DEPLOY_TYPE: ${{ needs.initialize.outputs.DEPLOY_TYPE }}
+
+
+  deploy_ios:
+    needs: initialize
+    runs-on: macos-latest
+    if: ${{ github.event.inputs.os == 'ios' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+
+      - name: Init XCode SDK
+        run: xcodebuild -sdk -version
+
+      - name: Setup dependencies
+        run: |
+          npm i -g @ionic/cli
+          npm i --prefer-offline --no-audit
+
+      - name: Ionic Capacitor Sync
+        run: ionic capacitor sync ios --prod
+     
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.2
+          bundler-cache: true
+
+      - name: Cache bundle dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gems-
+
+      - name: Setup SSH Keys and known_hosts for Fastlane Match
+        run: |
+            SSH_PATH="$HOME/.ssh"
+            mkdir -p "$SSH_PATH"
+            touch "$SSH_PATH/known_hosts"    
+            echo "${{ secrets.SSH_KEY }}" > "$SSH_PATH/id_rsa"    
+            chmod 700 "$SSH_PATH"
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            chmod 600 "$SSH_PATH/known_hosts"
+            chmod 600 "$SSH_PATH/id_rsa"    
+            eval $(ssh-agent)
+            ssh-add "$SSH_PATH/id_rsa"
+
+      - name: Decrypt iOS keys
+        run: sh ./.github/scripts/decrypt_ios_keys.sh
+        env:
+          KEYS_SECRET_PASSPHRASE: ${{ secrets.KEYS_SECRET_PASSPHRASE }}  
+
+      - name: Export Data to Fastlane
+        run: |
+          echo "APP_STORE_CONNECT_API_KEY_ID=${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}" >> $GITHUB_ENV
+          echo "APP_STORE_CONNECT_API_ISSUER_ID=${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}" >> $GITHUB_ENV
+          echo "APP_STORE_CONNECT_API_KEY_CONTENT=${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}" >> $GITHUB_ENV
+          echo "CERTIFICATE_STORE_GITHUB_URL=${{ secrets.CERTIFICATE_STORE_GITHUB_URL }}" >> $GITHUB_ENV
+          echo "MATCH_PASSWORD=${{ secrets.MATCH_CERTIFICATE_STORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "APP_IOS_PASSWORD=${{ secrets.APP_IOS_PASSWORD }}" >> $GITHUB_ENV
+          echo "GIT_FULL_NAME=${{ secrets.GIT_FULL_NAME }}" >> $GITHUB_ENV
+          echo "GIT_USER_EMAIL=${{ secrets.GIT_USER_EMAIL }}" >> $GITHUB_ENV
+          echo "APP_VERSION_CODE=${{ needs.initialize.outputs.VERSION_CODE  }}" >> $GITHUB_ENV
+          echo "APP_VERSION_NUMBER=${{ needs.initialize.outputs.VERSION_NUMBER }}" >> $GITHUB_ENV
+
+      - name: Download bundle dependencies
+        run: |
+          gem install bundler:2.0.2
+          bundle config path vendor/bundle
+          bundle install
+        working-directory: ios/app/fastlane
+
+      - name: Build and deploy
+        run: |
+          export LC_ALL=fr_FR.UTF-8
+          export LANG=fr_FR.UTF-8
+          bundle exec fastlane ${{ needs.initialize.outputs.DEPLOY_TYPE }} 
+        working-directory: ios/app/fastlane
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+          DEPLOY_TYPE: ${{ needs.initialize.outputs.DEPLOY_TYPE }}

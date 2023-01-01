@@ -34,12 +34,15 @@ begin
       }
     ) 
 
+    APK_LOCATION = "#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}"
+    AAB_LOCATION = "#{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]}"
+
     supply(
         track: 'production',
         package_name: ENV['APP_PACKAGE_NAME'],
         version_code: ENV['APP_VERSION_CODE'],
         release_status: "draft",
-        aab: SharedValues::GRADLE_AAB_OUTPUT_PATH,
+        aab: "#{AAB_LOCATION}",
         skip_upload_images: true,
         skip_upload_metadata: true,
         skip_upload_changelogs: true,
@@ -66,12 +69,15 @@ begin
       }
     ) 
 
+    APK_LOCATION = "#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}"
+    AAB_LOCATION = "#{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]}"
+
     supply(
         track: 'beta',
         package_name: ENV['APP_PACKAGE_NAME'],
         version_code: ENV['APP_VERSION_CODE'],
         release_status: "draft",
-        aab: SharedValues::GRADLE_AAB_OUTPUT_PATH,
+        aab: "#{AAB_LOCATION}",
         skip_upload_images: true,
         skip_upload_metadata: true,
         skip_upload_changelogs: true,
@@ -79,6 +85,38 @@ begin
         skip_upload_apk: true,
         json_key_data: ENV['PLAY_CREDENTIALS_JSON']
       )
+  end
+
+  lane :test do
+    desc("Build and deploy for test (Android) | It doesn't send app to play store")
+    gradle(
+      tasks: ["bundleRelease", "assembleRelease"],
+      print_command: false,
+      properties: {
+        "android.injected.signing.store.file" => ENV['KEY_STORE'],
+        "android.injected.signing.store.password" => ENV['KEY_STORE_PASSWORD'],
+        "android.injected.signing.key.alias" => ENV['KEY_ALIAS'],
+        "android.injected.signing.key.password" => ENV['KEY_PASSWORD'],
+        "android.injected.version.code" => ENV['APP_VERSION_CODE'],
+        "android.injected.version.name" => ENV['APP_VERSION_NUMBER'],
+      }
+    )
+
+    APK_LOCATION = "#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}"
+    AAB_LOCATION = "#{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]}"
+
+    Dir.chdir "../.." do
+      sh("adb", "install", "#{APK_LOCATION}")
+        sh("adb shell am start -n plus.pronote.app/.MainActivity")
+    end 
+  
+    rescue
+        Dir.chdir "../.." do
+          sh("adb", "uninstall", "plus.pronote.app")
+          sh("adb", "install", "#{APK_LOCATION}")
+          sh("adb shell am start -n plus.pronote.app/.MainActivity")
+        end
+    end
   end
 
 end
