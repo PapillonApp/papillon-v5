@@ -144,7 +144,7 @@ jobs:
           echo "KEY_STORE_PASSWORD=${{ secrets.KEY_STORE_PASSWORD}}" >> $GITHUB_ENV
           echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
           echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
-          echo "PLAY_CREDENTIALS_JSON=${{ secrets.PLAY_CREDENTIALS_JSON }}" >> $GITHUB_ENV
+          echo "PLAY_CREDENTIALS_JSON=./android/fastlane/play_store.json" >> $GITHUB_ENV
 
       - name: Download bundle dependencies
         run: |

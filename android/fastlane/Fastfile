@@ -48,7 +48,7 @@ begin
         skip_upload_changelogs: true,
         skip_upload_screenshots: true,
         skip_upload_apk: true,
-        json_key_data: ENV['PLAY_CREDENTIALS_JSON']
+        json_key: ENV['PLAY_CREDENTIALS_JSON']
       )
   end
 
@@ -83,7 +83,7 @@ begin
         skip_upload_changelogs: true,
         skip_upload_screenshots: true,
         skip_upload_apk: true,
-        json_key_data: ENV['PLAY_CREDENTIALS_JSON']
+        json_key: ENV['PLAY_CREDENTIALS_JSON']
       )
   end
 
@@ -116,7 +116,5 @@ begin
           sh("adb", "install", "#{APK_LOCATION}")
           sh("adb shell am start -n plus.pronote.app/.MainActivity")
         end
-    end
   end
-
 end
