@@ -29,29 +29,6 @@ jobs:
         run: |
           ver="$(git describe --tags --dirty)"
           echo "VERSION=${ver}" >> $GITHUB_OUTPUT
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: npm
-          
-      - name: Update version number (package.json)
-        run:  |
-          ver="${{ steps.version-number.outputs.VERSION }}"
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          if [ '$(expr length "$ver")' == '5' ]; then
-            git tag -d "$ver"
-            git push --delete origin "$ver"
-            npm version "$ver"
-            echo "GH_RELEASE=true" >> $GITHUB_ENV
-          else
-            npm version "$ver" --no-git-tag-version
-            echo "GH_RELEASE=false" >> $GITHUB_ENV
-          fi
-          git commit -am "Automatic update"
-          git push
     outputs:
       VERSION_CODE: ${{ steps.commit-count.outputs.COUNT }}
       VERSION_NUMBER: ${{ steps.version-number.outputs.VERSION }}
