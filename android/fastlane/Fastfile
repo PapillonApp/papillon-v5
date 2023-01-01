@@ -102,19 +102,7 @@ begin
       }
     )
 
-    APK_LOCATION = "#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}"
-    AAB_LOCATION = "#{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]}"
-
-    Dir.chdir "../.." do
-      sh("adb", "install", "#{APK_LOCATION}")
-        sh("adb shell am start -n plus.pronote.app/.MainActivity")
-    end 
-  
-    rescue
-        Dir.chdir "../.." do
-          sh("adb", "uninstall", "plus.pronote.app")
-          sh("adb", "install", "#{APK_LOCATION}")
-          sh("adb shell am start -n plus.pronote.app/.MainActivity")
-        end
+    desc("#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}")
+    desc("#{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]}")
   end
 end

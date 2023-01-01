@@ -110,11 +110,11 @@ jobs:
 
       - name: Export Data to Fastlane
         run: |
-          echo "KEY_STORE=./android/fastlane/logi12-prnplus.jks" >> $GITHUB_ENV
+          echo "KEY_STORE=$GITHUB_WORKSPACE/android/fastlane/logi12-prnplus.jks" >> $GITHUB_ENV
           echo "KEY_STORE_PASSWORD=${{ secrets.KEY_STORE_PASSWORD}}" >> $GITHUB_ENV
           echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
           echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
-          echo "PLAY_CREDENTIALS_JSON=./android/fastlane/play_store.json" >> $GITHUB_ENV
+          echo "PLAY_CREDENTIALS_JSON=$GITHUB_WORKSPACE/android/fastlane/play_store.json" >> $GITHUB_ENV
 
       - name: Download bundle dependencies
         run: |
