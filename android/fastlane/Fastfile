@@ -1,0 +1,84 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+gh = false
+
+begin 
+  lane :prod do
+    desc "Build and deploy for production release (Android)"
+
+    gradle(
+      tasks: ["bundleRelease", "assembleRelease"],
+      print_command: false,
+      properties: {
+        "android.injected.signing.store.file" => ENV['KEY_STORE'],
+        "android.injected.signing.store.password" => ENV['KEY_STORE_PASSWORD'],
+        "android.injected.signing.key.alias" => ENV['KEY_ALIAS'],
+        "android.injected.signing.key.password" => ENV['KEY_PASSWORD'],
+        "android.injected.version.code" => ENV['APP_VERSION_CODE'],
+        "android.injected.version.name" => ENV['APP_VERSION_NUMBER'],
+      }
+    ) 
+
+    supply(
+        track: 'production',
+        package_name: ENV['APP_PACKAGE_NAME'],
+        version_code: ENV['APP_VERSION_CODE'],
+        release_status: "draft",
+        aab: SharedValues::GRADLE_AAB_OUTPUT_PATH,
+        skip_upload_images: true,
+        skip_upload_metadata: true,
+        skip_upload_changelogs: true,
+        skip_upload_screenshots: true,
+        skip_upload_apk: true,
+        json_key_data: ENV['PLAY_CREDENTIALS_JSON']
+      )
+  end
+
+
+  lane :beta do
+    desc "Build and deploy for beta release (Android)"
+
+    gradle(
+      tasks: ["bundleRelease", "assembleRelease"],
+      print_command: false,
+      properties: {
+        "android.injected.signing.store.file" => ENV['KEY_STORE'],
+        "android.injected.signing.store.password" => ENV['KEY_STORE_PASSWORD'],
+        "android.injected.signing.key.alias" => ENV['KEY_ALIAS'],
+        "android.injected.signing.key.password" => ENV['KEY_PASSWORD'],
+        "android.injected.version.code" => ENV['APP_VERSION_CODE'],
+        "android.injected.version.name" => ENV['APP_VERSION_NUMBER'],
+      }
+    ) 
+
+    supply(
+        track: 'beta',
+        package_name: ENV['APP_PACKAGE_NAME'],
+        version_code: ENV['APP_VERSION_CODE'],
+        release_status: "draft",
+        aab: SharedValues::GRADLE_AAB_OUTPUT_PATH,
+        skip_upload_images: true,
+        skip_upload_metadata: true,
+        skip_upload_changelogs: true,
+        skip_upload_screenshots: true,
+        skip_upload_apk: true,
+        json_key_data: ENV['PLAY_CREDENTIALS_JSON']
+      )
+  end
+
+end

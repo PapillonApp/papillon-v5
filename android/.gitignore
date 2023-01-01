@@ -75,6 +75,7 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+fastlane/android_keys.zip
 
 # Version control
 vcs.xml
