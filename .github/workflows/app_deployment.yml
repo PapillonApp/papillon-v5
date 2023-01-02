@@ -161,6 +161,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
           DEPLOY_TYPE: ${{ needs.initialize.outputs.DEPLOY_TYPE }}
 
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Android App (APK) - ${{ needs.initialize.outputs.VERSION_NUMBER }}
+          path: ${{ env.APK_PATH }}
+          retention-days: 3
+
 
   deploy_ios:
     needs: initialize
@@ -248,9 +255,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
           DEPLOY_TYPE: ${{ needs.initialize.outputs.DEPLOY_TYPE }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: iOS App - ${{ needs.initialize.outputs.VERSION_NUMBER }}
+          path: ${{ env.IPA_PATH }}
+          retention-days: 3
   
 
-  summary:
+  summary_and_release:
     needs: [initialize, deploy_android, deploy_ios]
     runs-on: macos-latest
     steps:
@@ -258,6 +272,30 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: Set if GitHub release is needed
+        run: |
+          vernum = ${{ needs.initialize.outputs.VERSION_NUMBER }}
+          vernumlenght = ${#vernum}
+          if [ $vernumlenght -eq 5 ]; then
+            echo "GH_RELEASE=true" >> $GITHUB_ENV
+          else
+            echo "GH_RELEASE=false" >> $GITHUB_ENV
+          fi
+
+      - name: Push to Github release
+        if: ${{ env.GH_RELEASE }} == 'true'
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ${{ env.APK_PATH }}, ${{ env.IPA_PATH }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ needs.initialize.outputs.VERSION_NUMBER }}
+          name: Papillon - ${{ needs.initialize.outputs.VERSION_NUMBER }}
+          draft: true
+          generateReleaseNotes: true
+          makeLatest: true
+          body: Release de version ${{ needs.initialize.outputs.VERSION_NUMBER }}
 
       - name: Deploy summary
         run: |
@@ -268,6 +306,7 @@ jobs:
             echo "#### En production :green_heart:" >> $GITHUB_STEP_SUMMARY
           fi
           echo "Date de déploiement : $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "Lien de la release sur GitHub : ${{ steps.create_release.outputs.html_url }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "#### Android :robot:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY

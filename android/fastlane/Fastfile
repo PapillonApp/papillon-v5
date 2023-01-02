@@ -37,6 +37,9 @@ begin
     APK_LOCATION = "#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}"
     AAB_LOCATION = "#{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]}"
 
+    sh("echo APK_LOCATION=#{APK_LOCATION} >> $GITHUB_ENV")
+    sh("echo AAB_LOCATION=#{AAB_LOCATION} >> $GITHUB_ENV")
+
     supply(
         track: 'production',
         package_name: ENV['APP_PACKAGE_NAME'],
@@ -72,6 +75,9 @@ begin
     APK_LOCATION = "#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}"
     AAB_LOCATION = "#{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]}"
 
+    sh("echo APK_LOCATION=#{APK_LOCATION} >> $GITHUB_ENV")
+    sh("echo AAB_LOCATION=#{AAB_LOCATION} >> $GITHUB_ENV")
+
     supply(
         track: 'beta',
         package_name: ENV['APP_PACKAGE_NAME'],
@@ -102,7 +108,28 @@ begin
       }
     )
 
-    desc("#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}")
-    desc("#{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]}")
+    APK_LOCATION = "#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}"
+    AAB_LOCATION = "#{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]}"
+
+    print "APK_LOCATION: #{APK_LOCATION}"
+    print "AAB_LOCATION: #{AAB_LOCATION}"
+
+    sh("echo APK_LOCATION=#{APK_LOCATION} >> $GITHUB_ENV")
+    sh("echo AAB_LOCATION=#{AAB_LOCATION} >> $GITHUB_ENV")
+
+    Dir.chdir "../.." do
+      sh("adb", "install", "#{APK_LOCATION}")
+        sh("adb shell am start -n plus.pronote.app/.MainActivity")
+    end 
+  
+    rescue # if can't install ynotes
+        Dir.chdir "../.." do
+          sh("adb", "uninstall", "plus.pronote.app")
+          sh("adb", "install", "#{APK_LOCATION}")
+          sh("adb shell am start -n plus.pronote.app/.MainActivity")
+        end
+    end
+
   end
+
 end

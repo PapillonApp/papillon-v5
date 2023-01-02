@@ -43,6 +43,42 @@ begin
         )
     end
 
+    lane :test do
+        desc "Run tests"
+        build_app(
+            configuration: "Release",
+            output_name: "Papillon.ipa",
+            output_directory: ".",
+            workspace: "./App.xcworkspace",
+            scheme: "App",
+            skip_codesigning: true
+        ) 
+
+        scan(
+            workspace: "./App.xcworkspace",
+            scheme: "App",
+            output_types: "junit",
+            output_directory: "./test-results",
+            code_coverage: true
+        )
+
+        IPA_PATH = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
+        SCAN_DERIVED_DATA_PATH = "#{lane_context[SharedValues::SCAN_DERIVED_DATA_PATH]}"
+        SCAN_GENERATED_PLIST_FILES = "#{lane_context[SharedValues::SCAN_GENERATED_PLIST_FILES]}"
+        SCAN_GENERATED_PLIST_FILES.each do |file|
+            puts "file : #{file}"
+        end
+        SCAN_GENERATED_XCRESULT_PATH = "#{lane_context[SharedValues::SCAN_GENERATED_XCRESULT_PATH]}"
+        
+        print "IPA_PATH : #{IPA_PATH}"
+        print "SCAN_DERIVED_DATA_PATH : #{SCAN_DERIVED_DATA_PATH}"
+        print "SCAN_GENERATED_PLIST_FILES : #{SCAN_GENERATED_PLIST_FILES}"
+        print "SCAN_GENERATED_XCRESULT_PATH : #{SCAN_GENERATED_XCRESULT_PATH}"
+        
+        sh("echo IPA_PATH=#{IPA_PATH} >> $GITHUB_ENV")
+
+    end
+
     lane :build do
         api_key = app_store_connect_api_key(
             key_id: ENV['APP_STORE_CONNECT_API_KEY_ID'],
@@ -76,7 +112,7 @@ begin
         
         update_code_signing_settings(
             use_automatic_signing: false,
-            path: "./ios/App/App.xcodeproj",
+            path: "./App.xcodeproj",
             code_sign_identity: "iPhone Distribution"
         )
 
@@ -94,16 +130,20 @@ begin
         )
 
         update_project_provisioning(
-            xcodeproj: "./ios/App/App.xcodeproj",
+            xcodeproj: "./App.xcodeproj",
             profile: ENV['sigh_com.iak.msi_appstore_profile-path']
         )
 
         build_app(
             configuration: "Release",
-            output_name: "App.ipa",
+            output_name: "Papillon.ipa",
             output_directory: ".",
-            workspace: "./ios/App/App.xcworkspace",
+            workspace: "./App.xcworkspace",
             scheme: "App"
         ) 
+
+        IPA_PATH = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
+
+        sh("echo IPA_PATH=#{IPA_PATH} >> $GITHUB_ENV")
     end
 end
