@@ -167,7 +167,8 @@
                 room: cours.data.room,
                 start: cours.time.start.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
                 length: len,
-                status: status
+                status: status,
+                isCancelled: cours.status.isCancelled
             }
 
             // open cours modal
@@ -477,8 +478,16 @@
                         </ion-label>
                     </ion-item>
 
-                    <ion-item>
-                        <span class="material-symbols-outlined mdls" slot="start">info</span>
+                    <ion-item v-if="selectedCourse.isCancelled" style="color: var(--ion-color-danger);">
+                        <span class="material-symbols-outlined mdls" slot="start">error</span>
+                        <ion-label>
+                            <p>Statut</p>
+                            <h3>{{selectedCourse.status}}</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item v-if="!selectedCourse.isCancelled">
+                        <span class="material-symbols-outlined mdls" slot="start">error</span>
                         <ion-label>
                             <p>Statut</p>
                             <h3>{{selectedCourse.status}}</h3>

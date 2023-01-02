@@ -87,7 +87,8 @@
                     </p>
 
                     <p class="CoursInfo Status" v-if="status">
-                        <span class="material-symbols-outlined smol" slot="start">info</span>
+                        <span v-if="!isCancelled" class="material-symbols-outlined smol" slot="start">info</span>
+                        <span v-if="isCancelled" class="material-symbols-outlined smol" slot="start">error</span>
 
                         {{status}}
                     </p>
