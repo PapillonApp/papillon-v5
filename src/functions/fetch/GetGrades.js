@@ -169,6 +169,10 @@ function constructPronoteGrades(grades) {
             newMark.info.significantAverage = true;
         }
 
+        newMark.info.outOf20 = mark.is_out_of_20;
+        newMark.info.bonus = mark.is_bonus;
+        newMark.info.optional = mark.is_optional;
+
         subject.marks.push(newMark);
     });
     
