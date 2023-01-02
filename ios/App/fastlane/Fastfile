@@ -46,8 +46,9 @@ begin
     lane :test do
         desc "Run tests"
         
-        disable_automatic_code_signing(
-            path: "./App.xcodeproj"
+        update_code_signing_settings(
+            path: "./App.xcodeproj",
+            use_automatic_signing: false,
         )
 
         build_app(
@@ -56,7 +57,9 @@ begin
             output_directory: ".",
             workspace: "./App.xcworkspace",
             scheme: "App",
-            skip_codesigning: true
+            skip_codesigning: true,
+            skip_build_archive: true,
+            skip_package_ipa: true,
         ) 
 
         scan(
