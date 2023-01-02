@@ -145,6 +145,7 @@ jobs:
           echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
           echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
           echo "PLAY_CREDENTIALS_JSON=$GITHUB_WORKSPACE/android/fastlane/play_store.json" >> $GITHUB_ENV
+          echo "GRADLE_FILE=$GITHUB_WORKSPACE/android/app/build.gradle" >> $GITHUB_ENV
 
       - name: Download bundle dependencies
         run: |
@@ -155,6 +156,8 @@ jobs:
 
       - name: Build and deploy
         run: |
+          echo "LC_ALL=fr_FR.UTF-8" >> $GITHUB_ENV
+          echo "LANG=fr_FR.UTF-8" >> $GITHUB_ENV
           bundle exec fastlane ${{ needs.initialize.outputs.DEPLOY_TYPE }} 
         working-directory: android/fastlane
 
