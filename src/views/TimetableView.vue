@@ -73,7 +73,7 @@
                     let second = timetable[i+1].time.start.toISOString();
 
                     if(first == second) {
-                        timetable[i+1].course.sameTime = true;
+                        timetable[i].course.sameTime = true;
                     }
                 }
             }
@@ -267,10 +267,10 @@
           <ion-title mode="md">Ma journée</ion-title>
 
           <ion-buttons slot="end">
-            <ion-button color="dark" mode="md" id="rnPickerModalButton">
+            <ion-button color="dark" id="rnPickerModalButton">
               <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
-              {{ rnButtonString }}
+              <p>{{ rnButtonString }}</p>
             </ion-button>
           </ion-buttons>
 
@@ -304,6 +304,7 @@
                         :sameTime="cours.course.sameTime"
                         :status="cours.status.status"
                         :isCancelled="cours.status.isCancelled"
+                        @open="openCoursModal(cours)"
                     />
 
                     <div v-if="!yesterday.error"><div class="NoCours" v-if="yesterday.length == 0">
@@ -363,6 +364,7 @@
                         :sameTime="cours.course.sameTime"
                         :status="cours.status.status"
                         :isCancelled="cours.status.isCancelled"
+                        @open="openCoursModal(cours)"
                     />
 
                     <div v-if="!tomorrow.error"><div class="NoCours" v-if="tomorrow.length == 0">
@@ -469,45 +471,10 @@
   
 <style scoped>
     .swiper-slide {
-        min-height: calc(100vh - 56px);
+        min-height: calc(86vh - 56px);
     }
 
     .changeDayButton {
         margin-top: 16px !important;
-    }
-
-    .NoCours {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        padding: 20px 50px;
-    }
-
-    .NoCours * {
-        margin: 0;
-        padding: 0;
-        text-align: center;
-    }
-
-    .NoCours .mdls {
-        font-size: 36px;
-        margin-bottom: 14px;
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 36;
-    }
-
-    .NoCours h2 {
-        font-size: 24px;
-        line-height: 24px;
-        font-weight: 600;
-    }
-
-    .NoCours p {
-        font-size: 16px;
-        line-height: 16px;
-        font-weight: 400;
-        margin-top: 10px;
-        opacity: 50%;
     }
 </style>

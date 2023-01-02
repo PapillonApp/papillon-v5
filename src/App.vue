@@ -336,13 +336,17 @@
     }
 
     ion-menu.md ion-item {
-    --padding-start: 10px;
-    --padding-end: 10px;
-    border-radius: 4px;
+        --padding-start: 15px;
+        --padding-end: 10px;
+        border-radius: 6px;
     }
 
     ion-menu.md ion-item.selected {
     --background: rgba(var(--ion-color-primary-rgb), 0.14);
+    }
+
+    ion-menu.md ion-item .mdls {
+        margin-right: calc(var(--padding-start) + 2px);
     }
 
     ion-menu.md ion-item.selected ion-icon {

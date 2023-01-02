@@ -295,39 +295,4 @@ export default defineComponent({
     .changeDayButton {
         margin-top: 16px !important;
     }
-
-    .NoCours {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        padding: 20px 50px;
-    }
-
-    .NoCours * {
-        margin: 0;
-        padding: 0;
-        text-align: center;
-    }
-
-    .NoCours .mdls {
-        font-size: 36px;
-        margin-bottom: 14px;
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 36;
-    }
-
-    .NoCours h2 {
-        font-size: 24px;
-        line-height: 24px;
-        font-weight: 600;
-    }
-
-    .NoCours p {
-        font-size: 16px;
-        line-height: 16px;
-        font-weight: 400;
-        margin-top: 10px;
-        opacity: 50%;
-    }
 </style>
