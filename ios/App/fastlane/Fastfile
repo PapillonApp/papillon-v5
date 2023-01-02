@@ -1,0 +1,152 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+begin
+    lane :beta do
+        desc "Push a new beta build to TestFlight"
+        build()
+
+        upload_to_testflight(
+            api_key: api_key,
+            ipa: "App.ipa",
+            skip_waiting_for_build_processing: true
+        )
+    end
+
+    lane :prod do
+        desc "Push a new build to the AppStore"
+        build()
+
+        deliver(
+            build_number: ENV['APP_VERSION_CODE'],
+            app_version: ENV['APP_VERSION_NUMBER'],
+            ipa: "App.ipa",
+            submit_for_review: true,
+            automatic_release: true,
+            force: true, # Skip HTML report verification
+            skip_metadata: true,
+            skip_screenshots: true
+        )
+    end
+
+    lane :test do
+        desc "Run tests"
+        
+        update_code_signing_settings(
+            path: "./App.xcodeproj",
+            use_automatic_signing: false,
+        )
+
+        build_app(
+            configuration: "Release",
+            output_name: "Papillon.ipa",
+            output_directory: ".",
+            workspace: "./App.xcworkspace",
+            scheme: "App",
+            skip_codesigning: true,
+            skip_build_archive: true,
+            skip_package_ipa: true,
+        ) 
+
+        scan(
+            workspace: "./App.xcworkspace",
+            scheme: "App",
+            output_types: "junit",
+            output_directory: "./test-results",
+            code_coverage: true
+        )
+
+        IPA_LOCATION = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
+        SCAN_DERIVED_DATA_PATH = "#{lane_context[SharedValues::SCAN_DERIVED_DATA_PATH]}"
+        SCAN_GENERATED_PLIST_FILES = "#{lane_context[SharedValues::SCAN_GENERATED_PLIST_FILES]}"
+        SCAN_GENERATED_PLIST_FILES.each do |file|
+            puts "file : #{file}"
+        end
+        SCAN_GENERATED_XCRESULT_PATH = "#{lane_context[SharedValues::SCAN_GENERATED_XCRESULT_PATH]}"
+        
+        sh("echo IPA_LOCATION=#{IPA_LOCATION} >> $GITHUB_ENV")
+
+    end
+
+    lane :build do
+        api_key = app_store_connect_api_key(
+            key_id: ENV['APP_STORE_CONNECT_API_KEY_ID'],
+            issuer_id: ENV['APP_STORE_CONNECT_API_ISSUER_ID'],
+            key_content: ENV['APP_STORE_CONNECT_API_KEY_CONTENT']
+        )
+
+        def ensure_temp_keychain(name)
+            delete_keychain(
+                name: name
+            ) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
+            create_keychain(
+                name: name,
+                password: ENV['APP_IOS_PASSWORD'],
+                unlock: true,
+                timeout: 0
+            )
+        end
+
+        ensure_temp_keychain 'login.keychain'
+        
+        match(
+            git_url: ENV['CERTIFICATE_STORE_GITHUB_URL'],
+            type: "appstore", 
+            app_identifier: "app.pronote.plus", 
+            api_key: api_key,
+            readonly: true,
+            keychain_name: "login.keychain",
+            keychain_password: ENV['APP_IOS_PASSWORD']
+        )
+        
+        update_code_signing_settings(
+            use_automatic_signing: false,
+            path: "./App.xcodeproj",
+            code_sign_identity: "iPhone Distribution"
+        )
+
+        sync_code_signing(
+            readonly: true,
+            type: "appstore", 
+            git_url: ENV['CERTIFICATE_STORE_GITHUB_URL'],
+            app_identifier: "app.pronote.plus", 
+            api_key: api_key,
+            keychain_name: "login.keychain",
+            keychain_password: ENV['APP_IOS_PASSWORD'],
+            git_full_name: ENV['GIT_FULL_NAME'],
+            git_user_email: ENV['GIT_USER_EMAIL'],
+            platform: "ios"
+        )
+
+        update_project_provisioning(
+            xcodeproj: "./App.xcodeproj",
+            profile: ENV['sigh_com.iak.msi_appstore_profile-path']
+        )
+
+        build_app(
+            configuration: "Release",
+            output_name: "Papillon.ipa",
+            output_directory: ".",
+            workspace: "./App.xcworkspace",
+            scheme: "App"
+        ) 
+
+        IPA_LOCATION = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
+
+        sh("echo IPA_LOCATION=#{IPA_LOCATION} >> $GITHUB_ENV")
+    end
+end
