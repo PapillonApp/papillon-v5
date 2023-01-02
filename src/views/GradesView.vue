@@ -177,7 +177,7 @@
                 <span class="material-symbols-outlined mdls" slot="start">groups</span>
                 <IonLabel>
                     <p>Moyenne de classe</p>
-                    <h2>{{ classAverages.average }}<small>/20</small></h2>
+                    <h2>{{ classAverages.average.toFixed(2) }}<small>/20</small></h2>
                 </IonLabel>
             </IonItem>
             <div style="display:flex">
@@ -185,13 +185,13 @@
                     <span class="material-symbols-outlined mdls" slot="start">swap_vert</span>
                     <IonLabel>
                         <p>Meilleure moyenne</p>
-                        <h2>{{ classAverages.max }}<small>/20</small></h2>
+                        <h2>{{ classAverages.max.toFixed(2) }}<small>/20</small></h2>
                     </IonLabel>
                 </IonItem>
                 <IonItem>
                     <IonLabel>
                         <p>Moins bonne moyenne</p>
-                        <h2>{{ classAverages.min }}<small>/20</small></h2>
+                        <h2>{{ classAverages.min.toFixed(2) }}<small>/20</small></h2>
                     </IonLabel>
                 </IonItem>
             </div>
