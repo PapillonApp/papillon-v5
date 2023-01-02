@@ -165,7 +165,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Android App (APK) - ${{ needs.initialize.outputs.VERSION_NUMBER }}
-          path: ${{ env.APK_PATH }}
+          path: ${{ env.APK_LOCATION }}
           retention-days: 3
 
 
@@ -260,7 +260,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: iOS App - ${{ needs.initialize.outputs.VERSION_NUMBER }}
-          path: ${{ env.IPA_PATH }}
+          path: ${{ env.IPA_LOCATION }}
           retention-days: 3
   
 

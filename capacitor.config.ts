@@ -1,10 +1,11 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.vinceline.papillon',
+  appId: 'plus.pronote.app',
   appName: 'Papillon',
   webDir: 'dist',
   bundledWebRuntime: false,
+  loggingBehavior: 'debug',
   plugins: {
     "SplashScreen": {
       "launchAutoHide": false,

@@ -62,7 +62,7 @@ begin
             code_coverage: true
         )
 
-        IPA_PATH = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
+        IPA_LOCATION = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
         SCAN_DERIVED_DATA_PATH = "#{lane_context[SharedValues::SCAN_DERIVED_DATA_PATH]}"
         SCAN_GENERATED_PLIST_FILES = "#{lane_context[SharedValues::SCAN_GENERATED_PLIST_FILES]}"
         SCAN_GENERATED_PLIST_FILES.each do |file|
@@ -70,12 +70,7 @@ begin
         end
         SCAN_GENERATED_XCRESULT_PATH = "#{lane_context[SharedValues::SCAN_GENERATED_XCRESULT_PATH]}"
         
-        print "IPA_PATH : #{IPA_PATH}"
-        print "SCAN_DERIVED_DATA_PATH : #{SCAN_DERIVED_DATA_PATH}"
-        print "SCAN_GENERATED_PLIST_FILES : #{SCAN_GENERATED_PLIST_FILES}"
-        print "SCAN_GENERATED_XCRESULT_PATH : #{SCAN_GENERATED_XCRESULT_PATH}"
-        
-        sh("echo IPA_PATH=#{IPA_PATH} >> $GITHUB_ENV")
+        sh("echo IPA_LOCATION=#{IPA_LOCATION} >> $GITHUB_ENV")
 
     end
 
@@ -142,8 +137,8 @@ begin
             scheme: "App"
         ) 
 
-        IPA_PATH = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
+        IPA_LOCATION = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
 
-        sh("echo IPA_PATH=#{IPA_PATH} >> $GITHUB_ENV")
+        sh("echo IPA_LOCATION=#{IPA_LOCATION} >> $GITHUB_ENV")
     end
 end
