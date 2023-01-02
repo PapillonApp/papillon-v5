@@ -20,16 +20,17 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Github commit count
-        run: git rev-list HEAD --count
+
       - name: Use Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16
           cache: npm
+
       - name: Setup dependencies
         run: |
           npm i -g @ionic/cli
           npm i
+          
       - name: Build
         run: ionic build
