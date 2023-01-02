@@ -159,11 +159,6 @@ function constructPronoteGrades(grades) {
             markArray.push(subject);
         }
 
-        // for each info in mark.grade, parse it to a float
-        for(let info in mark.grade) {
-            mark.grade[info] = parseFloat(mark.grade[info]);
-        }
-
         // add mark to subject
         let newMark = {
             info: {
@@ -222,7 +217,7 @@ function constructPronoteGrades(grades) {
         }
 
         // add average to subject
-        subject.average = parseFloat(average.average.replace(",", "."));
+        subject.average = average.average;
 
         // determine if average is significant
         let significant = determineSignificant(average.significant, 'pronote');
@@ -242,9 +237,9 @@ function constructPronoteGrades(grades) {
 
         subject.class = {};
 
-        subject.class.average = parseFloat(average.class_average);
-        subject.class.min = parseFloat(average.min);
-        subject.class.max = parseFloat(average.max);
+        subject.class.average = average.class_average;
+        subject.class.min = average.min;
+        subject.class.max = average.max;
     });
 
     // calculate averages for each subject in markArray
@@ -266,7 +261,7 @@ function constructPronoteGrades(grades) {
     classMax /= markArray.length;
 
     // replace StudentAverage with the actual average
-    studentAverage = parseFloat(grades.overall_average.replace(",", "."));
+    studentAverage = grades.overall_average;
 
     // add averages to array
     let avgs = {
