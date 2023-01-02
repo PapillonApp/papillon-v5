@@ -157,9 +157,6 @@ jobs:
         run: |
           bundle exec fastlane ${{ needs.initialize.outputs.DEPLOY_TYPE }} 
         working-directory: android/fastlane
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
-          DEPLOY_TYPE: ${{ needs.initialize.outputs.DEPLOY_TYPE }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
@@ -208,23 +205,23 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: ${{ runner.os }}-gems-
 
-      - name: Setup SSH Keys and known_hosts for Fastlane Match
-        run: |
-            SSH_PATH="$HOME/.ssh"
-            mkdir -p "$SSH_PATH"
-            touch "$SSH_PATH/known_hosts"    
-            echo "${{ secrets.SSH_KEY }}" > "$SSH_PATH/id_rsa"    
-            chmod 700 "$SSH_PATH"
-            ssh-keyscan github.com >> ~/.ssh/known_hosts
-            chmod 600 "$SSH_PATH/known_hosts"
-            chmod 600 "$SSH_PATH/id_rsa"    
-            eval $(ssh-agent)
-            ssh-add "$SSH_PATH/id_rsa"
+      # - name: Setup SSH Keys and known_hosts for Fastlane Match
+      #   run: |
+      #       SSH_PATH="$HOME/.ssh"
+      #       mkdir -p "$SSH_PATH"
+      #       touch "$SSH_PATH/known_hosts"    
+      #       echo "${{ secrets.SSH_KEY }}" > "$SSH_PATH/id_rsa"    
+      #       chmod 700 "$SSH_PATH"
+      #       ssh-keyscan github.com >> ~/.ssh/known_hosts
+      #       chmod 600 "$SSH_PATH/known_hosts"
+      #       chmod 600 "$SSH_PATH/id_rsa"    
+      #       eval $(ssh-agent)
+      #       ssh-add "$SSH_PATH/id_rsa"
 
-      - name: Decrypt iOS keys
-        run: sh ./.github/scripts/decrypt_ios_keys.sh
-        env:
-          KEYS_SECRET_PASSPHRASE: ${{ secrets.KEYS_SECRET_PASSPHRASE }}  
+      # - name: Decrypt iOS keys
+      #   run: sh ./.github/scripts/decrypt_ios_keys.sh
+      #   env:
+      #     KEYS_SECRET_PASSPHRASE: ${{ secrets.KEYS_SECRET_PASSPHRASE }}  
 
       - name: Export Data to Fastlane
         run: |
@@ -250,11 +247,9 @@ jobs:
         run: |
           export LC_ALL=fr_FR.UTF-8
           export LANG=fr_FR.UTF-8
-          bundle exec fastlane ${{ needs.initialize.outputs.DEPLOY_TYPE }} 
+          bundle exec fastlane test
+        #  bundle exec fastlane ${{ needs.initialize.outputs.DEPLOY_TYPE }} 
         working-directory: ios/app/fastlane
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
-          DEPLOY_TYPE: ${{ needs.initialize.outputs.DEPLOY_TYPE }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
