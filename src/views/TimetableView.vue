@@ -315,10 +315,16 @@
                         <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div></div>
 
-                    <div v-if="yesterday.error" class="Error"><div class="NoCours" v-if="yesterday.length == 0">
+                    <div v-if="yesterday.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="yesterday.length == 0">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div></div>
+
+                    <div v-if="yesterday.error == 'ERR_BAD_REQUEST'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                        <span class="material-symbols-outlined mdls">downloading</span>
+                        <h2>Téléchargement des prochains cours...</h2>
+                        <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
                     </div></div>
                 </IonList>
             </swiper-slide>
@@ -345,10 +351,16 @@
                         <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div></div>
 
-                    <div v-if="timetable.error" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                    <div v-if="timetable.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div></div>
+
+                    <div v-if="timetable.error == 'ERR_BAD_REQUEST'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                        <span class="material-symbols-outlined mdls">downloading</span>
+                        <h2>Téléchargement des prochains cours...</h2>
+                        <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
                     </div></div>
                 </IonList>
             </swiper-slide>
@@ -375,10 +387,16 @@
                         <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div></div>
 
-                    <div v-if="tomorrow.error" class="Error"><div class="NoCours" v-if="tomorrow.length == 0">
+                    <div v-if="tomorrow.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="tomorrow.length == 0">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div></div>
+
+                    <div v-if="tomorrow.error == 'ERR_BAD_REQUEST'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                        <span class="material-symbols-outlined mdls">downloading</span>
+                        <h2>Téléchargement des prochains cours...</h2>
+                        <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
                     </div></div>
                 </IonList>
             </swiper-slide>
