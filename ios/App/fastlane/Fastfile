@@ -45,7 +45,7 @@ begin
 
     lane :test do
         desc "Run tests"
-
+        
         disable_automatic_code_signing(
             path: "./App.xcodeproj"
         )
@@ -54,27 +54,26 @@ begin
             configuration: "Release",
             output_name: "Papillon.ipa",
             output_directory: ".",
-            export_method: "package",
             workspace: "./App.xcworkspace",
             scheme: "App",
             skip_codesigning: true
         ) 
 
-        # scan(
-        #     workspace: "./App.xcworkspace",
-        #     scheme: "App",
-        #     output_types: "junit",
-        #     output_directory: "./test-results",
-        #     code_coverage: true
-        # )
+        scan(
+            workspace: "./App.xcworkspace",
+            scheme: "App",
+            output_types: "junit",
+            output_directory: "./test-results",
+            code_coverage: true
+        )
 
         IPA_LOCATION = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
-        # SCAN_DERIVED_DATA_PATH = "#{lane_context[SharedValues::SCAN_DERIVED_DATA_PATH]}"
-        # SCAN_GENERATED_PLIST_FILES = "#{lane_context[SharedValues::SCAN_GENERATED_PLIST_FILES]}"
-        # SCAN_GENERATED_PLIST_FILES.each do |file|
-        #     puts "file : #{file}"
-        # end
-        # SCAN_GENERATED_XCRESULT_PATH = "#{lane_context[SharedValues::SCAN_GENERATED_XCRESULT_PATH]}"
+        SCAN_DERIVED_DATA_PATH = "#{lane_context[SharedValues::SCAN_DERIVED_DATA_PATH]}"
+        SCAN_GENERATED_PLIST_FILES = "#{lane_context[SharedValues::SCAN_GENERATED_PLIST_FILES]}"
+        SCAN_GENERATED_PLIST_FILES.each do |file|
+            puts "file : #{file}"
+        end
+        SCAN_GENERATED_XCRESULT_PATH = "#{lane_context[SharedValues::SCAN_GENERATED_XCRESULT_PATH]}"
         
         sh("echo IPA_LOCATION=#{IPA_LOCATION} >> $GITHUB_ENV")
 
