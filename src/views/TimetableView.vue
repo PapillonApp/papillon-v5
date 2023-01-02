@@ -410,7 +410,7 @@
         <IonModal ref="coursModal" :keep-contents-mounted="true" :initial-breakpoint="0.6" :breakpoints="[0, 0.6, 0.9]" :handle="true" :canDismiss="true">
             <IonHeader>
               <IonToolbar>
-                <ion-title>Cours</ion-title>
+                <ion-title>{{selectedCourse.name}}</ion-title>
               </IonToolbar>
             </IonHeader>
             <ion-content>
