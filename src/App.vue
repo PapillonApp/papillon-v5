@@ -240,6 +240,10 @@
         width: calc(100% - 12px - 42px);
     }
 
+    .userData p {
+        text-transform: uppercase;
+    }
+
     .userItem h3 {
         font-size: 18px;
         font-weight: 600;
