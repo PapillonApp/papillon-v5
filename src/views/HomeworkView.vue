@@ -182,10 +182,10 @@ export default defineComponent({
                 <ion-title mode="md">Travail à faire</ion-title>
 
                 <ion-buttons slot="end">
-                    <ion-button color="dark" mode="md" id="rnPickerModalButton" @click="openRnModal">
+                    <ion-button color="dark" id="rnPickerModalButton" @click="openRnModal">
                         <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
-                        {{ rnButtonString }}
+                        <p>{{ rnButtonString }}</p>
                     </ion-button>
                 </ion-buttons>
 
