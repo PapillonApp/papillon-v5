@@ -298,14 +298,19 @@
                 <IonList>
                     <CoursElement v-for="cours in yesterday" :key="cours.id"
                         :subject="cours.data.subject"
-                        :teacher="cours.data.teacher"
-                        :room="cours.data.room"
+                        :teachers="cours.data.teachers"
+                        :rooms="cours.data.rooms"
+                        :memo="cours.data.hasMemo"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :color="cours.course.color"
                         :sameTime="cours.course.sameTime"
                         :status="cours.status.status"
                         :isCancelled="cours.status.isCancelled"
+                        :isDetention="cours.status.isDetention"
+                        :isExempted="cours.status.isExempted"
+                        :isOuting="cours.status.isOuting"
+                        :isTest="cours.status.isTest"
                         @open="openCoursModal(cours)"
                     />
 
@@ -335,14 +340,19 @@
                 <IonList>
                     <CoursElement v-for="cours in timetable" :key="cours.id"
                         :subject="cours.data.subject"
-                        :teacher="cours.data.teacher"
-                        :room="cours.data.room"
+                        :teachers="cours.data.teachers"
+                        :rooms="cours.data.rooms"
+                        :memo="cours.data.hasMemo"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :color="cours.course.color"
                         :sameTime="cours.course.sameTime"
                         :status="cours.status.status"
                         :isCancelled="cours.status.isCancelled"
+                        :isDetention="cours.status.isDetention"
+                        :isExempted="cours.status.isExempted"
+                        :isOuting="cours.status.isOuting"
+                        :isTest="cours.status.isTest"
                         @open="openCoursModal(cours)"
                     />
 
@@ -372,14 +382,19 @@
                 <IonList>
                     <CoursElement v-for="cours in tomorrow" :key="cours.id"
                         :subject="cours.data.subject"
-                        :teacher="cours.data.teacher"
-                        :room="cours.data.room"
+                        :teachers="cours.data.teachers"
+                        :rooms="cours.data.rooms"
+                        :memo="cours.data.hasMemo"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :color="cours.course.color"
                         :sameTime="cours.course.sameTime"
                         :status="cours.status.status"
                         :isCancelled="cours.status.isCancelled"
+                        :isDetention="cours.status.isDetention"
+                        :isExempted="cours.status.isExempted"
+                        :isOuting="cours.status.isOuting"
+                        :isTest="cours.status.isTest"
                         @open="openCoursModal(cours)"
                     />
 
@@ -450,7 +465,7 @@
                         <span class="material-symbols-outlined mdls" slot="start">face</span>
                         <ion-label>
                             <p>Professeur</p>
-                            <h3>{{selectedCourse.teacher}}</h3>
+                            <h3>{{selectedCourse.teachers}}</h3>
                         </ion-label>
                     </ion-item>
 
@@ -458,7 +473,15 @@
                         <span class="material-symbols-outlined mdls" slot="start">meeting_room</span>
                         <ion-label>
                             <p>Salle de cours</p>
-                            <h3>{{selectedCourse.room}}</h3>
+                            <h3>{{selectedCourse.rooms}}</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item v-if="selectedCourse.hasMemo">
+                        <span class="material-symbols-outlined mdls" slot="start">description</span>
+                        <ion-label>
+                            <p>Mémo</p>
+                            <h3>{{selectedCourse.memo}}</h3>
                         </ion-label>
                     </ion-item>
 

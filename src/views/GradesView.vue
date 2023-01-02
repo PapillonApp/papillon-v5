@@ -114,7 +114,8 @@
         <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index">
             <div class="subject-name" :style="`background: ${getRandomColor()};`">
                 <h3>{{subject.name}}</h3>
-                <p class="avg">{{subject.average.toFixed(2)}}<small>/20</small></p>
+                <p class="avg" v-if="subject.significant">{{subject.average.toFixed(2)}}<small>/20</small></p>
+                <p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
             </div>
 
             <div class="grades">
@@ -124,12 +125,12 @@
                         <p class="name">{{ mark.info.description }}</p>
                         <p class="coef">Coeff. : {{mark.grade.coefficient}}</p>
 
-                        <p class="grd" v-if="!mark.info.abs">{{mark.grade.value.toFixed(2)}}<small>/{{mark.grade.out_of}}</small></p>
+                        <p class="grd" v-if="mark.info.significant">{{mark.grade.value.toFixed(2)}}<small>/{{mark.grade.out_of}}</small></p>
                         
                         <!-- si absent -->
-                        <p class="grd" v-if="mark.info.abs">Abs.<small>/{{mark.grade.out_of}}</small></p>
+                        <p class="grd" v-if="!mark.info.significant">{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></p>
                     </div>
-                    <div class="averages">
+                    <div class="averages" v-if="mark.info.significantAverage">
                         <div class="average">
                             <p class="grd">{{mark.grade.min}}<small>/{{mark.grade.out_of}}</small></p>
                             <p>Min.</p>
@@ -144,9 +145,17 @@
                             <p class="grd">{{mark.grade.max}}<small>/{{mark.grade.out_of}}</small></p>
                             <p>Max.</p>
                         </div>
-                    </div>
-                </ion-card>
+                    </div>            
 
+                    <div class="averages" v-if="!mark.info.significantAverage">
+                        <div class="average unique">
+                            <p class="grd">{{ mark.info.significantReason }}</p>
+                            <p>Classe</p>
+                        </div>
+                    </div>
+
+                </ion-card>
+                
             </div>
         </ion-card>
 
@@ -316,5 +325,13 @@
         font-size: 0.8rem;
         font-weight: 400;
         opacity: 50%;
+    }
+
+    .average.unique {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
     }
 </style>

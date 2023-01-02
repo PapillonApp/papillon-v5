@@ -24,18 +24,18 @@ function getPronoteGrades() {
     // construct url (date is a TEST date)
     let URL = `${API}/grades?token=${token}`;
 
-    // check if timetable is cached
+    // check if grade is cached
     let gradeCache = localStorage.getItem('gradeCache');
 
     if(gradeCache != null) {
-        // timetable is cached, check if it's up to date
+        // grade is cached, check if it's up to date
         gradeCache = JSON.parse(gradeCache);
 
         let today = new Date();
         let cacheDate = new Date(gradeCache.date);
 
         if(today.toDateString() == cacheDate.toDateString()) {
-            // timetable is up to date, return it
+            // grade is up to date, return it
             return new Promise((resolve, reject) => {
                 resolve(constructPronoteGrades(gradeCache.grades));
             });
@@ -77,6 +77,66 @@ function getPronoteGrades() {
         });
 }
 
+function determineSignificant(significant, service) {
+    let result = {
+        significant: true,
+        significantReason: null,
+        significantZero: false,
+    }
+
+    if (service == 'pronote') {
+        switch (significant) {
+            case 0:
+                result.significant = true;
+                result.significantReason = null;
+                result.significantZero = false;
+                break;
+            case 1:
+                result.significant = false;
+                result.significantReason = "Abs.";
+                result.significantZero = false;
+                break;
+            case 2:
+                result.significant = false;
+                result.significantReason = "Disp.";
+                result.significantZero = false;
+                break;
+            case 3:
+                result.significant = false;
+                result.significantReason = "N.Not";
+                result.significantZero = false;
+                break;
+            case 4:
+                result.significant = false;
+                result.significantReason = "Inap.";
+                result.significantZero = false;
+                break;
+            case 5:
+                result.significant = false;
+                result.significantReason = "N.Ren";
+                result.significantZero = false;
+                break;
+            case 6:
+                result.significant = false;
+                result.significantReason = "Abs.";
+                result.significantZero = true;
+                break;
+            case 7:
+                result.significant = false;
+                result.significantReason = "N.Ren";
+                result.significantZero = true;
+                break;
+            case 8:
+                result.significant = false;
+                result.significantReason = "Disp.";
+                result.significantZero = true;
+                break;
+        }
+    }
+
+    return result;
+}
+
 // pronote : construct timetable
 function constructPronoteGrades(grades) {    
     let averages = grades.averages;
@@ -99,11 +159,6 @@ function constructPronoteGrades(grades) {
             markArray.push(subject);
         }
 
-        // for each info in mark.grade, parse it to a float
-        for(let info in mark.grade) {
-            mark.grade[info] = parseFloat(mark.grade[info]);
-        }
-
         // add mark to subject
         let newMark = {
             info: {
@@ -114,14 +169,27 @@ function constructPronoteGrades(grades) {
             grade: mark.grade
         }
 
-        if(isNaN(mark.grade.value)) {
-            newMark.grade.value = -1;
-            newMark.info.abs = true;
+        // determine if mark is significant
+        let significant = determineSignificant(mark.grade.significant, 'pronote');
+        newMark.info.significant = significant.significant;
+        newMark.info.significantReason = significant.significantReason;
+        newMark.info.significantZero = significant.significantZero;
+
+        delete newMark.grade.significant;
+
+        if (newMark.info.significantZero) {
+            newMark.grade.value = 0;
         }
-        else {
-            newMark.info.abs = false;
+
+        if (!newMark.info.significant && mark.grade.average == -1) {
+            newMark.info.significantAverage = false;
+        } else {
+            newMark.info.significantAverage = true;
         }
-        
+
+        newMark.info.outOf20 = mark.is_out_of_20;
+        newMark.info.bonus = mark.is_bonus;
+        newMark.info.optional = mark.is_optional;
 
         subject.marks.push(newMark);
     });
@@ -149,13 +217,29 @@ function constructPronoteGrades(grades) {
         }
 
         // add average to subject
-        subject.average = parseFloat(average.average.replace(",", "."));
+        subject.average = average.average;
+
+        // determine if average is significant
+        let significant = determineSignificant(average.significant, 'pronote');
+        subject.significant = significant.significant;
+        subject.significantReason = significant.significantReason;
+        subject.significantZero = significant.significantZero;
+
+        if (subject.significantZero) {
+            subject.average = 0;
+        }
+
+        if (!subject.significant && average.class_average == -1) {
+            subject.significantAverage = false;
+        } else {
+            subject.significantAverage = true;
+        }
 
         subject.class = {};
 
-        subject.class.average = parseFloat(average.class_average);
-        subject.class.min = parseFloat(average.min);
-        subject.class.max = parseFloat(average.max);
+        subject.class.average = average.class_average;
+        subject.class.min = average.min;
+        subject.class.max = average.max;
     });
 
     // calculate averages for each subject in markArray
@@ -177,7 +261,7 @@ function constructPronoteGrades(grades) {
     classMax /= markArray.length;
 
     // replace StudentAverage with the actual average
-    studentAverage = parseFloat(grades.overall_average.replace(",", "."));
+    studentAverage = grades.overall_average;
 
     // add averages to array
     let avgs = {

@@ -100,11 +100,16 @@ function constructPronoteTimetable(timetable) {
             course: {
                 id: course.id,
                 color: course.background_color,
+                num: course.num,
             },
             data: {
                 subject: course.subject.name,
-                teacher: course.teacher,
-                room: course.room
+                teachers: course.teachers,
+                rooms: course.rooms,
+                groupNames: course.group_names,
+                memo: course.memo,
+                hasMemo: false,
+                linkVirtual: course.virtual,
             },
             time: {
                 start: new Date(course.start),
@@ -112,10 +117,17 @@ function constructPronoteTimetable(timetable) {
             },
             status: {
                 isCancelled: course.is_cancelled,
-                status: course.status,
-                groupName: course.group_name
+                isExempted: course.is_exempted,
+                isDetention: course.is_detention,
+                isOuting: course.is_outing,
+                isTest: course.is_test,
+                status: course.status
             }
         };
+
+        if (course.memo != null) {
+            newCourse.data.hasMemo = true;
+        }
 
         // push course to courses
         courses.push(newCourse);

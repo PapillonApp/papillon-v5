@@ -12,14 +12,18 @@
                 type: String,
                 required: true
             },
-            teacher: {
-                type: String,
+            teachers: {
+                type: Array,
                 required: false
             },
-            room: {
-                type: String,
+            rooms: {
+                type: Array,
                 required: false,
-                default: "N/A"
+            },
+            memo: {
+                type: Boolean,
+                required: false,
+                default: false
             },
             start: {
                 type: String,
@@ -35,6 +39,26 @@
                 default: "var(--ion-color-primary)"
             },
             isCancelled: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            isExempted: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            isDetention: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            isOuting: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            isTest: {
                 type: Boolean,
                 required: false,
                 default: false
@@ -78,12 +102,12 @@
                     <p class="CoursInfo">
                         <span class="material-symbols-outlined smol" slot="start">face</span>
 
-                        {{teacher}}
+                        {{teachers}}
                     </p>
-                    <p class="CoursInfo" v-if="(room !== null)">
+                    <p class="CoursInfo" v-if="(rooms !== null)">
                         <span class="material-symbols-outlined smol" slot="start">meeting_room</span>
 
-                        {{room}}
+                        {{rooms}}
                     </p>
 
                     <p class="CoursInfo Status" v-if="status">
