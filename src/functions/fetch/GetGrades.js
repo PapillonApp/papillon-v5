@@ -77,6 +77,66 @@ function getPronoteGrades() {
         });
 }
 
+function determineSignificant(significant, service) {
+    let result = {
+        significant: true,
+        significantReason: null,
+        significantZero: false,
+    }
+
+    if (service == 'pronote') {
+        switch (significant) {
+            case 0:
+                result.significant = true;
+                result.significantReason = null;
+                result.significantZero = false;
+                break;
+            case 1:
+                result.significant = false;
+                result.significantReason = "Abs.";
+                result.significantZero = false;
+                break;
+            case 2:
+                result.significant = false;
+                result.significantReason = "Disp.";
+                result.significantZero = false;
+                break;
+            case 3:
+                result.significant = false;
+                result.significantReason = "N.Not";
+                result.significantZero = false;
+                break;
+            case 4:
+                result.significant = false;
+                result.significantReason = "Inap.";
+                result.significantZero = false;
+                break;
+            case 5:
+                result.significant = false;
+                result.significantReason = "N.Ren";
+                result.significantZero = false;
+                break;
+            case 6:
+                result.significant = false;
+                result.significantReason = "Abs.";
+                result.significantZero = true;
+                break;
+            case 7:
+                result.significant = false;
+                result.significantReason = "N.Ren";
+                result.significantZero = true;
+                break;
+            case 8:
+                result.significant = false;
+                result.significantReason = "Disp.";
+                result.significantZero = true;
+                break;
+        }
+    }
+
+    return result;
+}
+
 // pronote : construct timetable
 function constructPronoteGrades(grades) {    
     let averages = grades.averages;
@@ -99,6 +159,11 @@ function constructPronoteGrades(grades) {
             markArray.push(subject);
         }
 
+        // for each info in mark.grade, parse it to a float
+        for(let info in mark.grade) {
+            mark.grade[info] = parseFloat(mark.grade[info]);
+        }
+
         // add mark to subject
         let newMark = {
             info: {
@@ -109,53 +174,11 @@ function constructPronoteGrades(grades) {
             grade: mark.grade
         }
 
-        switch (mark.grade.significant) {
-            case 0:
-                newMark.info.significant = true;
-                newMark.info.significantReason = null;
-                newMark.info.significantZero = false;
-                break;
-            case 1:
-                newMark.info.significant = false;
-                newMark.info.significantReason = "Abs.";
-                newMark.info.significantZero = false;
-                break;
-            case 2:
-                newMark.info.significant = false;
-                newMark.info.significantReason = "Disp.";
-                newMark.info.significantZero = false;
-                break;
-            case 3:
-                newMark.info.significant = false;
-                newMark.info.significantReason = "N.Not";
-                newMark.info.significantZero = false;
-                break;
-            case 4:
-                newMark.info.significant = false;
-                newMark.info.significantReason = "Inap.";
-                newMark.info.significantZero = false;
-                break;
-            case 5:
-                newMark.info.significant = false;
-                newMark.info.significantReason = "N.Ren";
-                newMark.info.significantZero = false;
-                break;
-            case 6:
-                newMark.info.significant = false;
-                newMark.info.significantReason = "Abs.";
-                newMark.info.significantZero = true;
-                break;
-            case 7:
-                newMark.info.significant = false;
-                newMark.info.significantReason = "N.Ren";
-                newMark.info.significantZero = true;
-                break;
-            case 8:
-                newMark.info.significant = true;
-                newMark.info.significantReason = "Félicitations";
-                newMark.info.significantZero = false;
-                break;
-        }
+        // determine if mark is significant
+        let significant = determineSignificant(mark.grade.significant, 'pronote');
+        newMark.info.significant = significant.significant;
+        newMark.info.significantReason = significant.significantReason;
+        newMark.info.significantZero = significant.significantZero;
 
         delete newMark.grade.significant;
 
@@ -200,6 +223,22 @@ function constructPronoteGrades(grades) {
 
         // add average to subject
         subject.average = parseFloat(average.average.replace(",", "."));
+
+        // determine if average is significant
+        let significant = determineSignificant(average.significant, 'pronote');
+        subject.significant = significant.significant;
+        subject.significantReason = significant.significantReason;
+        subject.significantZero = significant.significantZero;
+
+        if (subject.significantZero) {
+            subject.average = 0;
+        }
+
+        if (!subject.significant && average.class_average == -1) {
+            subject.significantAverage = false;
+        } else {
+            subject.significantAverage = true;
+        }
 
         subject.class = {};
 

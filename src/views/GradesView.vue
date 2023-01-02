@@ -114,7 +114,8 @@
         <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index">
             <div class="subject-name" :style="`background: ${getRandomColor()};`">
                 <h3>{{subject.name}}</h3>
-                <p class="avg">{{subject.average.toFixed(2)}}<small>/20</small></p>
+                <p class="avg" v-if="subject.significant">{{subject.average.toFixed(2)}}<small>/20</small></p>
+                <p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
             </div>
 
             <div class="grades">
