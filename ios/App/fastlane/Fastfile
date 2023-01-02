@@ -40,16 +40,21 @@ begin
             force: true, # Skip HTML report verification
             skip_metadata: true,
             skip_screenshots: true
-        )
+        ) aptempt -
     end
 
     lane :test do
         desc "Run tests"
+
+        disable_automatic_code_signing(
+            path: "./App.xcodeproj"
+        )
+
         build_app(
             configuration: "Release",
             output_name: "Papillon.ipa",
             output_directory: ".",
-            export_method: "ad-hoc",
+            export_method: "package",
             workspace: "./App.xcworkspace",
             scheme: "App",
             skip_codesigning: true
