@@ -128,7 +128,6 @@ begin
           sh("adb", "install", "#{APK_LOCATION}")
           sh("adb shell am start -n plus.pronote.app/.MainActivity")
         end
-    end
 
   end
 
