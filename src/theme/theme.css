@@ -107,14 +107,8 @@ input.sc-ion-searchbar-md {
     src: url('/public/fonts/MaterialSymbolsOutlined.woff2') format('woff');
 }
 
-@font-face {
-    font-family: 'Material Symbols Rounded';
-    font-style: normal;
-    src: url('/public/fonts/MaterialSymbolsRounded.woff2') format('woff');
-}
-
 .material-symbols-outlined {
-    font-family: 'Material Symbols Rounded' !important;
+    font-family: 'Material Symbols Outlined' !important;
     font-weight: normal;
     font-style: normal;
     font-size: 24px;  /* Preferred icon size */
@@ -125,25 +119,12 @@ input.sc-ion-searchbar-md {
     word-wrap: normal;
     white-space: nowrap;
     direction: ltr;
-}
-
-.material-symbols-rounded {
-    font-family: 'Material Symbols Rounded' !important;
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;  /* Preferred icon size */
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
+    font-display: block;
 }
 
 .mdls {
     font-variation-settings:
-    'FILL' 1,
+    'FILL' 0,
     'wght' 400,
     'GRAD' 0,
     'opsz' 24
@@ -155,4 +136,8 @@ input.sc-ion-searchbar-md {
 
 ion-item .mdls[slot="start"] {
     margin-inline-end: 24px;
+}
+
+.mdls::before {
+    display: none;
 }
