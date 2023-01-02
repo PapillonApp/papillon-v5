@@ -24,18 +24,18 @@ function getPronoteGrades() {
     // construct url (date is a TEST date)
     let URL = `${API}/grades?token=${token}`;
 
-    // check if timetable is cached
+    // check if grade is cached
     let gradeCache = localStorage.getItem('gradeCache');
 
     if(gradeCache != null) {
-        // timetable is cached, check if it's up to date
+        // grade is cached, check if it's up to date
         gradeCache = JSON.parse(gradeCache);
 
         let today = new Date();
         let cacheDate = new Date(gradeCache.date);
 
         if(today.toDateString() == cacheDate.toDateString()) {
-            // timetable is up to date, return it
+            // grade is up to date, return it
             return new Promise((resolve, reject) => {
                 resolve(constructPronoteGrades(gradeCache.grades));
             });
@@ -99,11 +99,6 @@ function constructPronoteGrades(grades) {
             markArray.push(subject);
         }
 
-        // for each info in mark.grade, parse it to a float
-        for(let info in mark.grade) {
-            mark.grade[info] = parseFloat(mark.grade[info]);
-        }
-
         // add mark to subject
         let newMark = {
             info: {
@@ -114,14 +109,65 @@ function constructPronoteGrades(grades) {
             grade: mark.grade
         }
 
-        if(isNaN(mark.grade.value)) {
-            newMark.grade.value = -1;
-            newMark.info.abs = true;
+        switch (mark.grade.significant) {
+            case 0:
+                newMark.info.significant = true;
+                newMark.info.significantReason = null;
+                newMark.info.significantZero = false;
+                break;
+            case 1:
+                newMark.info.significant = false;
+                newMark.info.significantReason = "Abs.";
+                newMark.info.significantZero = false;
+                break;
+            case 2:
+                newMark.info.significant = false;
+                newMark.info.significantReason = "Disp.";
+                newMark.info.significantZero = false;
+                break;
+            case 3:
+                newMark.info.significant = false;
+                newMark.info.significantReason = "N.Not";
+                newMark.info.significantZero = false;
+                break;
+            case 4:
+                newMark.info.significant = false;
+                newMark.info.significantReason = "Inap.";
+                newMark.info.significantZero = false;
+                break;
+            case 5:
+                newMark.info.significant = false;
+                newMark.info.significantReason = "N.Ren";
+                newMark.info.significantZero = false;
+                break;
+            case 6:
+                newMark.info.significant = false;
+                newMark.info.significantReason = "Abs.";
+                newMark.info.significantZero = true;
+                break;
+            case 7:
+                newMark.info.significant = false;
+                newMark.info.significantReason = "N.Ren";
+                newMark.info.significantZero = true;
+                break;
+            case 8:
+                newMark.info.significant = true;
+                newMark.info.significantReason = "Félicitations";
+                newMark.info.significantZero = false;
+                break;
         }
-        else {
-            newMark.info.abs = false;
+
+        delete newMark.grade.significant;
+
+        if (newMark.info.significantZero) {
+            newMark.grade.value = 0;
         }
-        
+
+        if (!newMark.info.significant && mark.grade.average == -1) {
+            newMark.info.significantAverage = false;
+        } else {
+            newMark.info.significantAverage = true;
+        }
 
         subject.marks.push(newMark);
     });
