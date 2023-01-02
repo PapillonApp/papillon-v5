@@ -116,19 +116,6 @@ begin
 
     sh("echo APK_LOCATION=#{APK_LOCATION} >> $GITHUB_ENV")
     sh("echo AAB_LOCATION=#{AAB_LOCATION} >> $GITHUB_ENV")
-
-    Dir.chdir "../.." do
-      sh("adb", "install", "#{APK_LOCATION}")
-        sh("adb shell am start -n plus.pronote.app/.MainActivity")
-    end 
-  
-    rescue # if can't install ynotes
-        Dir.chdir "../.." do
-          sh("adb", "uninstall", "plus.pronote.app")
-          sh("adb", "install", "#{APK_LOCATION}")
-          sh("adb shell am start -n plus.pronote.app/.MainActivity")
-        end
-
   end
 
 end
