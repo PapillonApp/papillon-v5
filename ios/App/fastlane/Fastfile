@@ -40,7 +40,7 @@ begin
             force: true, # Skip HTML report verification
             skip_metadata: true,
             skip_screenshots: true
-        ) aptempt -
+        )
     end
 
     lane :test do
