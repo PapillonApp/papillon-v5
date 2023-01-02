@@ -114,7 +114,7 @@
         <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index">
             <div class="subject-name" :style="`background: ${getRandomColor()};`">
                 <h3>{{subject.name}}</h3>
-                <p class="avg" v-if="subject.significant">{{subject.average.toFixed(2)}}<small>/20</small></p>
+                <p class="avg" v-if="subject.significant">{{subject.average}}<small>/20</small></p>
                 <p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
             </div>
 
@@ -125,7 +125,7 @@
                         <p class="name">{{ mark.info.description }}</p>
                         <p class="coef">Coeff. : {{mark.grade.coefficient}}</p>
 
-                        <p class="grd" v-if="mark.info.significant">{{mark.grade.value.toFixed(2)}}<small>/{{mark.grade.out_of}}</small></p>
+                        <p class="grd" v-if="mark.info.significant">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
                         
                         <!-- si absent -->
                         <p class="grd" v-if="!mark.info.significant">{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></p>
@@ -177,7 +177,7 @@
                 <span class="material-symbols-outlined mdls" slot="start">groups</span>
                 <IonLabel>
                     <p>Moyenne de classe</p>
-                    <h2>{{ classAverages.average.toFixed(2) }}<small>/20</small></h2>
+                    <h2>{{ classAverages.average }}<small>/20</small></h2>
                 </IonLabel>
             </IonItem>
             <div style="display:flex">
@@ -185,13 +185,13 @@
                     <span class="material-symbols-outlined mdls" slot="start">swap_vert</span>
                     <IonLabel>
                         <p>Meilleure moyenne</p>
-                        <h2>{{ classAverages.max.toFixed(2) }}<small>/20</small></h2>
+                        <h2>{{ classAverages.max }}<small>/20</small></h2>
                     </IonLabel>
                 </IonItem>
                 <IonItem>
                     <IonLabel>
                         <p>Moins bonne moyenne</p>
-                        <h2>{{ classAverages.min.toFixed(2) }}<small>/20</small></h2>
+                        <h2>{{ classAverages.min }}<small>/20</small></h2>
                     </IonLabel>
                 </IonItem>
             </div>
@@ -276,7 +276,7 @@
         font-size: 1rem;
         font-weight: 500;
         color: var(--ion-text-color);
-        width: 125px;
+        width: 130px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

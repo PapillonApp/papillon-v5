@@ -5,6 +5,11 @@ import axios from 'axios';
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
+// funcs
+function isFloat(n){
+    return Number(n) === n && n % 1 !== 0;
+}
+
 // main function
 async function getGrades() {
     // as only pronote is supported for now, we can just return the pronote timetable
@@ -159,6 +164,11 @@ function constructPronoteGrades(grades) {
             markArray.push(subject);
         }
 
+        mark.grade.value = parseFloat(mark.grade.value.replace(',', '.'));
+        mark.grade.average = parseFloat(mark.grade.average.replace(',', '.'));
+        mark.grade.min = parseFloat(mark.grade.min.replace(',', '.'));
+        mark.grade.max = parseFloat(mark.grade.max.replace(',', '.'));
+
         // add mark to subject
         let newMark = {
             info: {
@@ -190,6 +200,22 @@ function constructPronoteGrades(grades) {
         newMark.info.outOf20 = mark.is_out_of_20;
         newMark.info.bonus = mark.is_bonus;
         newMark.info.optional = mark.is_optional;
+
+        if(!isNaN(newMark.grade.value)) {
+            newMark.grade.value = parseFloat(newMark.grade.value).toFixed(2);
+        }
+
+        if(!isNaN(newMark.grade.average) && isFloat(newMark.grade.average)) {
+            newMark.grade.average = parseFloat(newMark.grade.average).toFixed(1);
+        }
+        
+        if(!isNaN(newMark.grade.min) && isFloat(newMark.grade.min)) {
+            newMark.grade.min = parseFloat(newMark.grade.min).toFixed(1);
+        }
+
+        if(!isNaN(newMark.grade.max) && isFloat(newMark.grade.max)) {
+            newMark.grade.max = parseFloat(newMark.grade.max).toFixed(1);
+        }
 
         subject.marks.push(newMark);
     });
