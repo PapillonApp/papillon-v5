@@ -50,8 +50,8 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           if [ '$(expr length "$ver")' == '5' ]; then
-            git tag -d "$ver"
-            git push --delete origin "$ver"
+            git tag -d $ver
+            git push --delete origin $ver
             npm version "$ver"
             echo "GH_RELEASE=true" >> $GITHUB_ENV
           else
@@ -169,6 +169,7 @@ jobs:
   deploy_ios:
     needs: initialize
     runs-on: macos-latest
+    if: true == false
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -205,23 +206,23 @@ jobs:
           key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: ${{ runner.os }}-gems-
 
-      # - name: Setup SSH Keys and known_hosts for Fastlane Match
-      #   run: |
-      #       SSH_PATH="$HOME/.ssh"
-      #       mkdir -p "$SSH_PATH"
-      #       touch "$SSH_PATH/known_hosts"    
-      #       echo "${{ secrets.SSH_KEY }}" > "$SSH_PATH/id_rsa"    
-      #       chmod 700 "$SSH_PATH"
-      #       ssh-keyscan github.com >> ~/.ssh/known_hosts
-      #       chmod 600 "$SSH_PATH/known_hosts"
-      #       chmod 600 "$SSH_PATH/id_rsa"    
-      #       eval $(ssh-agent)
-      #       ssh-add "$SSH_PATH/id_rsa"
+      - name: Setup SSH Keys and known_hosts for Fastlane Match
+        run: |
+            SSH_PATH="$HOME/.ssh"
+            mkdir -p "$SSH_PATH"
+            touch "$SSH_PATH/known_hosts"    
+            echo "${{ secrets.SSH_KEY }}" > "$SSH_PATH/id_rsa"    
+            chmod 700 "$SSH_PATH"
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            chmod 600 "$SSH_PATH/known_hosts"
+            chmod 600 "$SSH_PATH/id_rsa"    
+            eval $(ssh-agent)
+            ssh-add "$SSH_PATH/id_rsa"
 
-      # - name: Decrypt iOS keys
-      #   run: sh ./.github/scripts/decrypt_ios_keys.sh
-      #   env:
-      #     KEYS_SECRET_PASSPHRASE: ${{ secrets.KEYS_SECRET_PASSPHRASE }}  
+      - name: Decrypt iOS keys
+        run: sh ./.github/scripts/decrypt_ios_keys.sh
+        env:
+          KEYS_SECRET_PASSPHRASE: ${{ secrets.KEYS_SECRET_PASSPHRASE }}  
 
       - name: Export Data to Fastlane
         run: |
@@ -247,8 +248,7 @@ jobs:
         run: |
           export LC_ALL=fr_FR.UTF-8
           export LANG=fr_FR.UTF-8
-          bundle exec fastlane test
-        #  bundle exec fastlane ${{ needs.initialize.outputs.DEPLOY_TYPE }} 
+          bundle exec fastlane ${{ needs.initialize.outputs.DEPLOY_TYPE }} 
         working-directory: ios/app/fastlane
 
       - name: Upload Artifact
@@ -260,7 +260,7 @@ jobs:
   
 
   summary_and_release:
-    needs: [initialize, deploy_android, deploy_ios]
+    needs: [initialize, deploy_android]
     runs-on: macos-latest
     steps:
       - name: Checkout code
@@ -283,7 +283,7 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ${{ env.APK_PATH }}, ${{ env.IPA_PATH }}
+          artifacts: ${{ env.APK_LOCATION }} #, ${{ env.IPA_LOCATION }}
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ needs.initialize.outputs.VERSION_NUMBER }}
           name: Papillon - ${{ needs.initialize.outputs.VERSION_NUMBER }}
@@ -308,16 +308,18 @@ jobs:
           echo "Version : ${{ needs.initialize.outputs.VERSION_NUMBER }}" >> $GITHUB_STEP_SUMMARY
           echo "Code de version : ${{ needs.initialize.outputs.VERSION_CODE }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "#### iOS :apple:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Version : ${{ needs.initialize.outputs.VERSION_NUMBER }}" >> $GITHUB_STEP_SUMMARY
-          echo "Code de version : ${{ needs.initialize.outputs.VERSION_CODE }}" >> $GITHUB_STEP_SUMMARY
-          if [ "${{ needs.initialize.outputs.DEPLOY_TYPE }}" == "beta" ]; then
-            echo "Déployé sur TestFlight" >> $GITHUB_STEP_SUMMARY
-          else:
-            echo "Déployé sur l'AppStore" >> $GITHUB_STEP_SUMMARY
-          fi
+          
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "Fin de rapport de déploiement" >> $GITHUB_STEP_SUMMARY
           echo "(c) 2023 - PapillonApp" >> $GITHUB_STEP_SUMMARY
+          
+        # echo "#### iOS :apple:" >> $GITHUB_STEP_SUMMARY
+        # echo "" >> $GITHUB_STEP_SUMMARY
+        # echo "Version : ${{ needs.initialize.outputs.VERSION_NUMBER }}" >> $GITHUB_STEP_SUMMARY
+        # echo "Code de version : ${{ needs.initialize.outputs.VERSION_CODE }}" >> $GITHUB_STEP_SUMMARY
+        # if [ "${{ needs.initialize.outputs.DEPLOY_TYPE }}" == "beta" ]; then
+        #   echo "Déployé sur TestFlight" >> $GITHUB_STEP_SUMMARY
+        # else:
+        #   echo "Déployé sur l'AppStore" >> $GITHUB_STEP_SUMMARY
+        # fi
