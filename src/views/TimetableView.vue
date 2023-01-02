@@ -487,7 +487,7 @@
                     </ion-item>
 
                     <ion-item v-if="!selectedCourse.isCancelled">
-                        <span class="material-symbols-outlined mdls" slot="start">error</span>
+                        <span class="material-symbols-outlined mdls" slot="start">info</span>
                         <ion-label>
                             <p>Statut</p>
                             <h3>{{selectedCourse.status}}</h3>
