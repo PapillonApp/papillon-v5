@@ -1,6 +1,6 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner } from '@ionic/vue';
   
   import { calendarOutline, calendarSharp, todayOutline, todaySharp } from 'ionicons/icons';
 
@@ -32,6 +32,7 @@
         IonRefresherContent,
         IonItem,
         IonLabel,
+        IonSpinner
     },
     setup() {
         return { 
@@ -322,7 +323,8 @@
                     </div></div>
 
                     <div v-if="yesterday.error == 'ERR_BAD_REQUEST'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
-                        <span class="material-symbols-outlined mdls">downloading</span>
+                        <IonSpinner></IonSpinner>
+                        <br/>
                         <h2>Téléchargement des prochains cours...</h2>
                         <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
                     </div></div>
@@ -358,7 +360,8 @@
                     </div></div>
 
                     <div v-if="timetable.error == 'ERR_BAD_REQUEST'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
-                        <span class="material-symbols-outlined mdls">downloading</span>
+                        <IonSpinner></IonSpinner>
+                        <br/>
                         <h2>Téléchargement des prochains cours...</h2>
                         <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
                     </div></div>
@@ -394,7 +397,8 @@
                     </div></div>
 
                     <div v-if="tomorrow.error == 'ERR_BAD_REQUEST'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
-                        <span class="material-symbols-outlined mdls">downloading</span>
+                        <IonSpinner></IonSpinner>
+                        <br/>
                         <h2>Téléchargement des prochains cours...</h2>
                         <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
                     </div></div>
