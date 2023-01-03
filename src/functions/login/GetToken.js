@@ -1,4 +1,5 @@
 import { app } from '@/main.ts'
+import displayToast from '@/functions/utils/displayToast.js';
 
 // get token
 function getToken() {
@@ -49,6 +50,14 @@ function getPronoteLogin() {
             document.dispatchEvent(new CustomEvent('tokenUpdated'));
         }
         else {
+            if(result == "missingpassword" || result == "missingusername" || result.error.includes("probably wrong login information")) {
+                displayToast.presentToast("Merci de vous reconnecter.", "danger")
+            } else if(result.error == "Your IP address is suspended.") {
+                displayToast.presentError("Une erreur s'est produite", "danger", "L'adresse IP de nos serveurs est suspendue pour votre établissement. S'il vous plaît réessayez dans quelques heures.")
+            }
+            else {
+                displayToast.presentError("Une erreur s'est produite.", "danger", result.error)
+            }
             // redirect to login page
             console.log(result);
         }
