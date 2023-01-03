@@ -1,7 +1,7 @@
 import { toastController, alertController } from '@ionic/vue';
 import { Dialog } from '@capacitor/dialog';
 
-async function presentToast(msg, color) {
+async function presentToast(msg, color, isDismissible) {
 	const toast = await toastController.create({
 		message: msg,
 		duration: 2000,
