@@ -75,6 +75,40 @@
                     }, 200);
                     this.ents = response.data.ent_list;
                 })
+            },            
+            async createEntPicker(multipleEnts) {
+                let pickerEnts = [];
+                for (let i = 0; i < multipleEnts.length; i++) {
+                    pickerEnts.push({
+                        text: multipleEnts[i].name,
+                        value: multipleEnts[i].py
+                    });
+                }
+
+                const picker = await pickerController.create({
+                    columns: [{
+                        name: 'ents',
+                        options: pickerEnts,
+                    }],
+                    buttons: [
+                        {
+                            text: 'Annuler',
+                            role: 'cancel',
+                            handler: () => {
+                                this.choice_py = null,
+                                displayToast.presentToast("Vous devez choisir un ENT pour continuer.", "danger")
+                            }
+                        },
+                        {
+                            text: 'Valider',
+                            handler: (value) => {
+                                this.choice_py = value.ents.value
+                            }
+                        }
+                    ]
+                });
+
+                await picker.present();
             },
             getPostal(e) {
                 let postal = e.detail.value
