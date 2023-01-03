@@ -149,7 +149,7 @@
 
         // check if offline
         window.addEventListener('offline', () => {
-            this.presentToast("Vous êtes plus connecté à Internet");
+            this.presentToast("Vous n'êtes plus connecté à Internet");
         });
 
         if(!window.navigator.onLine) {
