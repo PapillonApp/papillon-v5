@@ -2,8 +2,6 @@
     import { defineComponent } from 'vue';
     import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, toastController, alertController, IonListHeader, IonSpinner, loadingController } from '@ionic/vue';
 
-    import cas_list from '/src/ent_list.json';
-
     import axios from 'axios';
     import $ from "jquery";
     
