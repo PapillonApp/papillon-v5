@@ -105,7 +105,13 @@
                             <br/>
                             <ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text>
                         </div>
-                        <div class="grades"></div>
+                        <div class="grades">
+                            <ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+
+                            <ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+
+                            <ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+                        </div>
                     </ion-card>
                 </div>
             </ion-card>
