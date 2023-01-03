@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonModal, toastController, IonCard } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonModal, IonCard } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 

@@ -1,12 +1,13 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
     import {version} from '/package'
     import { Capacitor } from '@capacitor/core';
 
+    import displayToast from '@/functions/utils/displayToast.js';
     import GetToken from '@/functions/login/GetToken.js';
 
     export default defineComponent({
@@ -34,16 +35,6 @@
             }
         },
         methods: {
-            async presentToast(msg, color) {
-                const toast = await toastController.create({
-                    message: msg,
-                    duration: 2000,
-                    position: "bottom",
-                    color: color
-                });
-
-                await toast.present();
-            },
             logout() {
                 // empty all local storage
                 localStorage.clear();
@@ -57,7 +48,7 @@
 
                 // show toast
                 setTimeout(() => {
-                    this.presentToast('Cache des données vidé', 'light');
+                    displayToast.presentToast('Cache des données vidé', 'light');
                     
                     setTimeout(() => {
                         this.localStorageSize = this.getLocalStorageSize() + ' kb';
@@ -68,11 +59,11 @@
                 GetToken();
 
                 // show toast
-                this.presentToast('Demande de nouvelle clé envoyée...', 'light');
+                displayToast.presentToast('Demande de nouvelle clé envoyée...', 'light');
 
                 // wait for event tokenUpdated once token is updated
                 document.addEventListener('tokenUpdated', () => {
-                    this.presentToast('Nouvelle clé de connexion reçue !', 'light');
+                    displayToast.presentToast('Nouvelle clé de connexion reçue !', 'light');
                 });
             },
             getLocalStorageSize() {

@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { IonApp, IonContent, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController } from '@ionic/vue';
+  import { IonApp, IonContent, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane } from '@ionic/vue';
   import { defineComponent, ref } from 'vue';
   import { useRoute } from 'vue-router';
 
   const GetUser = require('./functions/fetch/GetUserData');
+  const displayToast = require('./functions/utils/displayToast.js');
 
   import { SplashScreen } from '@capacitor/splash-screen';
 
@@ -103,15 +104,6 @@
         }
     },
     methods: {
-        async presentToast(msg: string) {
-            const toast = await toastController.create({
-                message: msg,
-                duration: 2000,
-                position: "bottom"
-            });
-
-            await toast.present();
-        },
         getUserData() {
             // get user data
             GetUser.default().then((data: UserData) => {
@@ -144,16 +136,16 @@
 
         // check if online
         window.addEventListener('online', () => {
-            this.presentToast("Vous êtes maintenant reconnecté à Internet");
+            displayToast.presentToast("Vous êtes maintenant reconnecté à Internet");
         });
 
         // check if offline
         window.addEventListener('offline', () => {
-            this.presentToast("Vous n'êtes plus connecté à Internet");
+            displayToast.presentToast("Vous n'êtes plus connecté à Internet");
         });
 
         if(!window.navigator.onLine) {
-            this.presentToast("Vous êtes hors connexion.");
+            displayToast.presentToast("Vous êtes hors connexion.");
         }
 
         // if avatarCache is set, make it the avatar
