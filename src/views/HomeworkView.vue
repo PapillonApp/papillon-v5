@@ -141,7 +141,11 @@ export default defineComponent({
                 // get new rn
                 // check if swiper is on yesterday
                 if(swiper.activeIndex == 0) {
-                    this.$rn = new Date(this.$rn) - 86400000;
+                    let newRn = new Date(this.$rn);
+                    newRn.setDate(newRn.getDate() - 1);
+
+                    this.$rn = newRn;
+                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
@@ -157,6 +161,7 @@ export default defineComponent({
                     newRn.setDate(newRn.getDate() + 1);
 
                     this.$rn = newRn;
+                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
