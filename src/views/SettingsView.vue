@@ -27,7 +27,7 @@
         setup() {
             return { 
                 appVersion: version,
-                apiVersion: '3.0.0',
+                apiVersion: 'Inconnue',
                 appPlatform: Capacitor.getPlatform(),
                 localStorageSize: '',
                 userName: ''
@@ -90,7 +90,19 @@
 
                 // return size
                 return localStorageSize;
-            }
+            },
+            getServerStatus() {
+                const API = this.$api;
+
+                fetch(API + "/infos")
+                    .then(response => response.json())
+                    .then(result => {
+                        this.apiVersion = result.version;
+                    })
+                    .catch(error => {
+                        this.apiVersion = "Inconnue";
+                    });
+            },
         },
         mounted() {
             // Get user data
@@ -99,6 +111,8 @@
             if (userData) {
                 this.userName = userData.student.name;
             }
+
+            this.getServerStatus();
 
             // Get localStorage size
             this.localStorageSize = this.getLocalStorageSize() + ' kb';
