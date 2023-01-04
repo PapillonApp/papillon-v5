@@ -51,9 +51,7 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           if [ '$(expr length "$ver")' == '5' ]; then
-            git tag -d $ver
-            git push --delete origin $ver
-            npm version "$ver"
+            npm version "$ver" --no-git-tag-version
             echo "GH_RELEASE=true" >> $GITHUB_ENV
           else
             npm version "$ver" --no-git-tag-version
@@ -272,16 +270,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-
-      - name: Set if GitHub release is needed
-        run: |
-          vernum = ${{ needs.initialize.outputs.VERSION_NUMBER }}
-          vernumlenght = ${#vernum}
-          if [ $vernumlenght -eq 5 ]; then
-            echo "GH_RELEASE=true" >> $GITHUB_ENV
-          else
-            echo "GH_RELEASE=false" >> $GITHUB_ENV
-          fi
 
       - name: Push to Github release
         if: ${{ env.GH_RELEASE }} == 'true'
