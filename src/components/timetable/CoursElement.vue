@@ -13,12 +13,14 @@
                 required: true
             },
             teachers: {
-                type: Array,
-                required: false
+                type: String,
+                required: false,
+                default: "Pas d'enseignant"
             },
             rooms: {
-                type: Array,
+                type: String,
                 required: false,
+                default: "Pas de salle"
             },
             memo: {
                 type: Boolean,
@@ -75,12 +77,12 @@
             }
         },
         data() {
-            return { 
+            return {
                 classes: "cours ",
             }
         },
         setup() {
-            return { }
+            return {}
         },
         mounted() {
             return false

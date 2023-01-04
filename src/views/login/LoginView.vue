@@ -263,7 +263,7 @@
                     </swiper-slide>
                     <swiper-slide class="welcomeSlide">
                         <div class="illustration interface"></div>
-                        <h3>L'interface à été revue et continuellement améliorée pour une expérience optimale.</h3>
+                        <h3>L'interface a été revue et continuellement améliorée pour une expérience optimale.</h3>
                         <p>Papillon s'adapte à vos besoins et à vos envies grâce à une interface familière et agréable, pour un climat de travail confortable.</p>
 
                         <ion-button expand="block" fill="clear" @click="nextSlide()" class="slideButton">

@@ -1,13 +1,13 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, toastController, alertController, IonListHeader, IonSpinner, loadingController } from '@ionic/vue';
-
-    import cas_list from '/src/ent_list.json';
+    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, IonListHeader, IonSpinner, loadingController, pickerController } from '@ionic/vue';
 
     import axios from 'axios';
     import $ from "jquery";
     
     import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp } from 'ionicons/icons';
+
+    import displayToast from '@/functions/utils/displayToast.js';
 
     import { Dialog } from '@capacitor/dialog';
 
@@ -43,49 +43,6 @@
             this.getENTs();
         },
         methods: {
-            async presentToast(msg, color, notDismissable) {
-                const toast = await toastController.create({
-                    message: msg,
-                    duration: 2000,
-                    position: "bottom",
-                    color: color
-                });
-
-                await toast.present();
-            },
-            async presentError(msg, color, error) {
-                const toast = await toastController.create({
-                    message: msg,
-                    duration: 2000,
-                    position: "bottom",
-                    color: color,
-                    buttons: [
-                        {
-                        text: "Plus d'infos",
-                        role: 'info',
-                        handler: () => { 
-                            if(error == "[object Object]") {
-                                error = "Impossible d'obtenir plus d'infos."
-                            }
-
-                            this.alertDialogError(error)
-                        }
-                        },
-                    ]
-                });
-
-                await toast.present();
-            },
-            async alertDialogError(err) {
-                const alert = await alertController.create({
-                    header: "Détails de l'erreur",
-                    subHeader: "Une erreur s'est produite",
-                    message: err,
-                    buttons: ['OK'],
-                });
-
-                await alert.present();
-            },
             decodeEntities(encodedString) {
                 var translate_re = /&(nbsp|amp|quot|lt|gt);/g;
                 var translate = {
@@ -118,6 +75,40 @@
                     }, 200);
                     this.ents = response.data.ent_list;
                 })
+            },            
+            async createEntPicker(multipleEnts) {
+                let pickerEnts = [];
+                for (let i = 0; i < multipleEnts.length; i++) {
+                    pickerEnts.push({
+                        text: multipleEnts[i].name,
+                        value: multipleEnts[i].py
+                    });
+                }
+
+                const picker = await pickerController.create({
+                    columns: [{
+                        name: 'ents',
+                        options: pickerEnts,
+                    }],
+                    buttons: [
+                        {
+                            text: 'Annuler',
+                            role: 'cancel',
+                            handler: () => {
+                                this.choice_py = null,
+                                displayToast.presentToast("Vous devez choisir un ENT pour continuer.", "danger")
+                            }
+                        },
+                        {
+                            text: 'Valider',
+                            handler: (value) => {
+                                this.choice_py = value.ents.value
+                            }
+                        }
+                    ]
+                });
+
+                await picker.present();
             },
             getPostal(e) {
                 let postal = e.detail.value
@@ -157,7 +148,7 @@
                     this.findEstablishments(lat, lon)
                 })
                 .catch(error => {
-                    this.presentError(`Une erreur s'est produite pour obtenir votre code postal.`, "danger", error.stack)
+                    displayToast.presentError(`Une erreur s'est produite pour obtenir votre code postal.`, "danger", error.stack)
                 })
             },
             findEstablishments(lat, lon) {
@@ -212,7 +203,7 @@
                             this.retries++;
                         }
                         else {
-                            this.presentError(`Une erreur s'est produite pour obtenir les établissements à proximité.`, "danger", error.stack)
+                            displayToast.presentError(`Une erreur s'est produite pour obtenir les établissements à proximité.`, "danger", error.stack)
                         }
                     });
             },
@@ -280,7 +271,7 @@
                     let cas = all_cas_same_host[0];
                     if (all_cas_same_host.length == 0) {
                         // no CAS for this host
-                        this.presentToast(`Aucun CAS trouvé pour ${cas_host}.`, "danger")
+                        displayToast.presentToast(`Aucun CAS trouvé pour ${cas_host}.`, "danger")
                     }
                     else if (all_cas_same_host.length >= 1) {
                         // only one CAS for this host
@@ -346,7 +337,7 @@
                     redirect: 'follow'
                 };
 
-                this.presentToast("Connexion en cours...", "dark", true)
+                displayToast.presentToast("Connexion en cours...", "dark", true)
 
                 fetch(API + "/generatetoken", requestOptions)
                     .then(response => response.json())
@@ -354,17 +345,19 @@
                         console.log(result);
 
                         if(!result.token) {
-                            if(result.error ==  "Fail to connect with EduConnect : probably wrong login information") {
-                                this.presentToast("Identifiants incorrects.", "danger")
+                            if(result.error.includes("probably wrong login information")) {
+                                displayToast.presentToast("Identifiants incorrects.", "danger")
                             }
                             else if(result == "missingusername") {
-                                this.presentToast("Veuillez entrer un identifiant.", "danger")
+                                displayToast.presentToast("Veuillez entrer un identifiant.", "danger")
                             }
                             else if(result == "missingpassword") {
-                                this.presentToast("Veuillez entrer un mot de passe.", "danger")
+                                displayToast.presentToast("Veuillez entrer un mot de passe.", "danger")
+                            } else if(result.error == "Your IP address is suspended.") {
+                                displayToast.presentError("Une erreur s'est produite", "danger", "L'adresse IP de nos serveurs est suspendue pour votre établissement. S'il vous plaît réessayez dans quelques heures.")
                             }
                             else {
-                                this.presentToast("Une erreur s'est produite.", "danger")
+                                displayToast.presentError("Une erreur s'est produite.", "danger", result.error)
                             }
                         }
                         else {

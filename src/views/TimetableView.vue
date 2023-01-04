@@ -163,9 +163,12 @@
             // set selectedCourse
             this.selectedCourse = {
                 name: cours.data.subject,
-                teacher: cours.data.teacher,
-                room: cours.data.room,
+                teachers: cours.data.teachers.join(', ') ?? "Aucun professeur",
+                rooms: cours.data.rooms.join(', ') ?? "Aucune salle",
                 start: cours.time.start.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                memo: cours.data.memo,
+                hasMemo: cours.data.hasMemo,
+                linkVirtualClassroom: cours.data.linkVirtual,
                 length: len,
                 status: status,
                 isCancelled: cours.status.isCancelled
@@ -224,7 +227,11 @@
                 // get new rn
                 // check if swiper is on yesterday
                 if(swiper.activeIndex == 0) {
-                    this.$rn = new Date(this.$rn) - 86400000;
+                    let newRn = new Date(this.$rn);
+                    newRn.setDate(newRn.getDate() - 1);
+
+                    this.$rn = newRn;
+                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
@@ -240,6 +247,7 @@
                     newRn.setDate(newRn.getDate() + 1);
 
                     this.$rn = newRn;
+                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
@@ -249,10 +257,6 @@
                 }
             }, 200);
         });
-
-        // test
-        // get date for 8/12/2022
-        let date = new Date(2022, 11, 16);
     }
   });
 </script>
@@ -298,8 +302,8 @@
                 <IonList>
                     <CoursElement v-for="cours in yesterday" :key="cours.id"
                         :subject="cours.data.subject"
-                        :teachers="cours.data.teachers"
-                        :rooms="cours.data.rooms"
+                        :teachers="cours.data.teachers.join(', ')"
+                        :rooms="cours.data.rooms.join(', ')"
                         :memo="cours.data.hasMemo"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
@@ -340,8 +344,8 @@
                 <IonList>
                     <CoursElement v-for="cours in timetable" :key="cours.id"
                         :subject="cours.data.subject"
-                        :teachers="cours.data.teachers"
-                        :rooms="cours.data.rooms"
+                        :teachers="cours.data.teachers.join(', ')"
+                        :rooms="cours.data.rooms.join(', ')"
                         :memo="cours.data.hasMemo"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
@@ -382,8 +386,8 @@
                 <IonList>
                     <CoursElement v-for="cours in tomorrow" :key="cours.id"
                         :subject="cours.data.subject"
-                        :teachers="cours.data.teachers"
-                        :rooms="cours.data.rooms"
+                        :teachers="cours.data.teachers.join(', ')"
+                        :rooms="cours.data.rooms.join(', ')"
                         :memo="cours.data.hasMemo"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"

@@ -12,13 +12,13 @@ function isFloat(n){
 
 // main function
 async function getGrades() {
-    // as only pronote is supported for now, we can just return the pronote timetable
+    // as only pronote is supported for now, we can just return the pronote grades
     
-    // return pronote timetable
+    // return pronote grades
     return getPronoteGrades();
 }
 
-// pronote : get timetable
+// pronote : get grades
 function getPronoteGrades() {
     // gather vars
     const API = app.config.globalProperties.$api;
@@ -55,7 +55,7 @@ function getPronoteGrades() {
                 GetToken();
             }
 
-            // save timetable to localstorage cache with today's date
+            // save grades to localstorage cache with today's date
             let today = new Date();
             let gradeCache = {
                 date: today,
@@ -64,7 +64,7 @@ function getPronoteGrades() {
 
             localStorage.setItem('gradeCache', JSON.stringify(gradeCache));
 
-            // construct timetable and return it as a promise
+            // construct grades and return it as a promise
             return new Promise((resolve, reject) => {
                 resolve(constructPronoteGrades(response.data));
             });
@@ -142,7 +142,7 @@ function determineSignificant(significant, service) {
     return result;
 }
 
-// pronote : construct timetable
+// pronote : construct grades
 function constructPronoteGrades(grades) {    
     let averages = grades.averages;
     let marks = grades.grades;
