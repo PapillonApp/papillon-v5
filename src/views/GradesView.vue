@@ -117,8 +117,8 @@
             </ion-card>
         </div>
         
-        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index">
-            <div class="subject-name" :style="`background: #${ subject.id.substring(0,6) };`">
+        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: #${ subject.id.substring(1,7) };`">
+            <div class="subject-name">
                 <h3>{{subject.name}}</h3>
                 <p class="avg" v-if="subject.significant">{{subject.average}}<small>/20</small></p>
                 <p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
@@ -203,7 +203,7 @@
             </div>
         </IonList>
 
-        <br />
+        <br /> <br />
 
       </ion-content>
     </ion-page>
@@ -215,7 +215,7 @@
         justify-content: space-between;
         align-items: center;
         padding: 10px 15px;
-        background: var(--ion-color-step-50);
+        background: var(--backgroundTheme);
     }
 
     .subject-name * {
@@ -260,6 +260,8 @@
         flex-direction: column;
         min-width: fit-content;
         max-width: fit-content;
+        isolation: isolate;
+        overflow: hidden;
     }
 
     .myGrade {
@@ -339,5 +341,19 @@
         flex-direction: column;
         align-items: center;
         gap: 5px;
+    }
+
+    .ios .grade {
+        border: 1px solid var(--ion-color-step-50);
+        border-radius: 8px;
+    }
+
+    .ios .myGrade {
+        border: none;
+        background: var(--backgroundTheme);
+    }
+
+    .ios .myGrade * {
+        color: #fff !important;
     }
 </style>

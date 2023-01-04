@@ -286,7 +286,7 @@
       <ion-content :fullscreen="true">
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
-          </ion-refresher>
+        </ion-refresher>
 
         <IonHeader collapse="condense">
             <IonToolbar>
@@ -449,7 +449,7 @@
           </ion-content>
         </IonModal>
 
-        <IonModal ref="coursModal" :keep-contents-mounted="true" :initial-breakpoint="0.6" :breakpoints="[0, 0.6, 0.9]" :handle="true" :canDismiss="true">
+        <IonModal class="coursModal" ref="coursModal" :keep-contents-mounted="true" :initial-breakpoint="0.6" :breakpoints="[0, 0.6, 0.9]" :handle="true" :canDismiss="true">
             <IonHeader>
               <IonToolbar>
                 <ion-title>{{selectedCourse.name}}</ion-title>
