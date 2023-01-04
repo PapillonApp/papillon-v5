@@ -152,6 +152,7 @@ jobs:
           gem install bundler:2.0.2
           bundle config path vendor/bundle
           bundle install
+          bundle exec gem install "fastlane-plugin-versioning_android"
         working-directory: android/fastlane
 
       - name: Build and deploy
