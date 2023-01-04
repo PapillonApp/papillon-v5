@@ -13,14 +13,12 @@
                 required: true
             },
             teachers: {
-                type: String,
-                required: false,
-                default: "Pas d'enseignant"
+                type: Array,
+                required: false
             },
             rooms: {
-                type: String,
+                type: Array,
                 required: false,
-                default: "Pas de salle"
             },
             memo: {
                 type: Boolean,
@@ -77,12 +75,12 @@
             }
         },
         data() {
-            return {
+            return { 
                 classes: "cours ",
             }
         },
         setup() {
-            return {}
+            return { }
         },
         mounted() {
             return false
@@ -104,12 +102,12 @@
                     <p class="CoursInfo">
                         <span class="material-symbols-outlined smol" slot="start">face</span>
 
-                        {{teachers[0]}}
+                        {{teachers}}
                     </p>
                     <p class="CoursInfo" v-if="(rooms !== null)">
                         <span class="material-symbols-outlined smol" slot="start">meeting_room</span>
 
-                        {{rooms[0]}}
+                        {{rooms}}
                     </p>
 
                     <p class="CoursInfo Status" v-if="status">
