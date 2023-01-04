@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, IonListHeader, IonSpinner, loadingController, pickerController } from '@ionic/vue';
+    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, IonListHeader, IonSpinner, loadingController, actionSheetController } from '@ionic/vue';
 
     import axios from 'axios';
     import $ from "jquery";
@@ -77,38 +77,37 @@
                 })
             },            
             async createEntPicker(multipleEnts) {
-                let pickerEnts = [];
+                console.log(multipleEnts)
+
+                let options = [];
+
                 for (let i = 0; i < multipleEnts.length; i++) {
-                    pickerEnts.push({
+                    options.push({
                         text: multipleEnts[i].name,
-                        value: multipleEnts[i].py
+                        handler: () => {
+                            this.choice_py = multipleEnts[i].py;
+                        }
                     });
                 }
 
-                const picker = await pickerController.create({
-                    columns: [{
-                        name: 'ents',
-                        options: pickerEnts,
-                    }],
-                    buttons: [
-                        {
-                            text: 'Annuler',
-                            role: 'cancel',
-                            handler: () => {
-                                this.choice_py = null,
-                                displayToast.presentToast("Vous devez choisir un ENT pour continuer.", "danger")
-                            }
-                        },
-                        {
-                            text: 'Valider',
-                            handler: (value) => {
-                                this.choice_py = value.ents.value
-                            }
-                        }
-                    ]
+                options.push({
+                    text: 'Annuler',
+                    role: 'cancel',
+                    handler: () => {
+                        this.presentToast("Vous devez choisir un ENT pour continuer.", "danger")
+                    },
+                    data: {
+                        action: 'cancel'
+                    }
                 });
 
-                await picker.present();
+                const actionSheet = await actionSheetController.create({
+                    header: 'Choisissez votre ENT',
+                    subHeader: 'Plusieurs ENT ont été trouvés. Choisissez celui que vous souhaitez utiliser.',
+                    buttons: options
+                });
+
+                await actionSheet.present();
             },
             getPostal(e) {
                 let postal = e.detail.value
@@ -396,7 +395,7 @@
                 ents: [],
                 retries: 0,
             }
-        }
+        },
     });
 </script>
 
