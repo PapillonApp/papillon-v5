@@ -184,7 +184,7 @@
           </ion-list>
         </ion-content>
       </ion-menu>
-      <ion-router-outlet id="main-content" v-slot="{ Component }">
+      <ion-router-outlet id="main-content" v-slot="{ Component }" animated="true">
         <keep-alive>
             <component :is="Component" />
         </keep-alive>

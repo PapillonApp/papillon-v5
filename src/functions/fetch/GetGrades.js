@@ -237,6 +237,7 @@ function constructPronoteGrades(grades) {
 
         // add average to subject
         subject.average = average.average;
+        subject.id = average.subject.id;
 
         // determine if average is significant
         let significant = determineSignificant(average.significant, 'pronote');
