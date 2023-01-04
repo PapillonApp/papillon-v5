@@ -187,7 +187,7 @@ export default defineComponent({
                 <ion-title mode="md">Travail à faire</ion-title>
 
                 <ion-buttons slot="end">
-                    <ion-button color="dark" id="rnPickerModalButton" @click="openRnModal">
+                    <ion-button mode="md" color="dark" id="rnPickerModalButton" @click="openRnModal">
                         <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
                         <p>{{ rnButtonString }}</p>
@@ -294,7 +294,7 @@ export default defineComponent({
 
 <style scoped>
     .swiper-slide {
-        min-height: calc(100vh - 56px);
+        min-height: calc(86vh - 56px);
     }
 
     .changeDayButton {

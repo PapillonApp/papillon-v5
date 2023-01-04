@@ -76,7 +76,7 @@
         },
         data() {
             return { 
-                classes: "cours ",
+                classes: "ion-activatable ripple-parent rounded-rectangle cours ",
             }
         },
         setup() {
@@ -91,6 +91,8 @@
 <template>
     <div :class="classes + isCancelled" v-if="!sameTime" @click="$emit('open')">
         <div class="CoursColor" slot="start" :style="`background: ${color};`"></div>
+
+        <ion-ripple-effect></ion-ripple-effect>
 
         <ion-label>
             <small class="CoursStart"> {{ start }} </small>
@@ -136,8 +138,13 @@
         margin-bottom: 10px;
 
         overflow: hidden;
+        isolation: isolate;
 
         position: relative;
+    }
+
+    .ios .CoursData {
+        padding-bottom: 10px;
     }
 
     .CoursData {

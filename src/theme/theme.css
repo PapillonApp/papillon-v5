@@ -100,6 +100,7 @@ input.sc-ion-searchbar-md {
     height: 36px;
 
     overflow: hidden;
+    isolation: isolate;
 }
 
 @media screen and (prefers-color-scheme: dark) {
