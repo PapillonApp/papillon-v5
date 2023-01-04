@@ -154,6 +154,7 @@
             }
 
             let status = cours.status.status;
+            let hasStatus = status != undefined;
 
             // set status if it's undefined
             if(status == undefined) {
@@ -171,6 +172,7 @@
                 linkVirtualClassroom: cours.data.linkVirtual,
                 length: len,
                 status: status,
+                hasStatus: hasStatus,
                 isCancelled: cours.status.isCancelled
             }
 
@@ -286,7 +288,7 @@
       <ion-content :fullscreen="true">
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
-        </ion-refresher>
+          </ion-refresher>
 
         <IonHeader collapse="condense">
             <IonToolbar>
@@ -449,7 +451,7 @@
           </ion-content>
         </IonModal>
 
-        <IonModal class="coursModal" ref="coursModal" :keep-contents-mounted="true" :initial-breakpoint="0.6" :breakpoints="[0, 0.6, 0.9]" :handle="true" :canDismiss="true">
+        <IonModal ref="coursModal" :keep-contents-mounted="true" :initial-breakpoint="0.6" :breakpoints="[0, 0.6, 0.9]" :handle="true" :canDismiss="true">
             <IonHeader>
               <IonToolbar>
                 <ion-title>{{selectedCourse.name}}</ion-title>
@@ -513,7 +515,15 @@
                         </ion-label>
                     </ion-item>
 
-                    <ion-item v-if="!selectedCourse.isCancelled">
+                    <ion-item v-else-if="selectedCourse.hasStatus" style="color: var(--ion-color-warning);">
+                        <span class="material-symbols-outlined mdls" slot="start">info</span>
+                        <ion-label>
+                            <p>Statut</p>
+                            <h3>{{selectedCourse.status}}</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item v-else>
                         <span class="material-symbols-outlined mdls" slot="start">info</span>
                         <ion-label>
                             <p>Statut</p>
