@@ -102,12 +102,12 @@
                     <p class="CoursInfo">
                         <span class="material-symbols-outlined smol" slot="start">face</span>
 
-                        {{teachers}}
+                        {{teachers[0]}}
                     </p>
                     <p class="CoursInfo" v-if="(rooms !== null)">
                         <span class="material-symbols-outlined smol" slot="start">meeting_room</span>
 
-                        {{rooms}}
+                        {{rooms[0]}}
                     </p>
 
                     <p class="CoursInfo Status" v-if="status">

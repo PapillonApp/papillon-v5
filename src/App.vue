@@ -182,13 +182,13 @@
           </ion-toolbar>
         </ion-header>
         <ion-content mode="md">
-          <ion-list id="inbox-list">  
-            <ion-menu-toggle auto-hide="false" v-for="(p, i) in appPages" :key="i">
-              <ion-item mode="md" @click="selectedIndex = i" router-direction="root" :router-link="p.url" lines="none" detail="false" class="hydrated" :class="{ selected: selectedIndex === i }">
-                <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
-                <ion-label>{{ p.title }}</ion-label>
-              </ion-item>
-            </ion-menu-toggle>
+          <ion-list id="inbox-list"> 
+            <router-link class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
+                <ion-item button mode="md" lines="none" detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
+                    <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
+                    <ion-label>{{ p.title }}</ion-label>
+                </ion-item>
+            </router-link>
           </ion-list>
         </ion-content>
       </ion-menu>
@@ -202,6 +202,11 @@
 </template>
 
 <style scoped>
+    .navLink {
+        text-decoration: none;
+    }
+
+
     .userItem {
         display: flex;
         padding: 0px;
@@ -343,10 +348,13 @@
         --padding-start: 15px;
         --padding-end: 10px;
         border-radius: 6px;
+        color: var(--ion-color-step-500);
+        margin-bottom: 2px;
     }
 
     ion-menu.md ion-item.selected {
-    --background: rgba(var(--ion-color-primary-rgb), 0.14);
+        --background: rgba(var(--ion-color-primary-rgb), 0.14);
+        color: var(--ion-color-primary-rgb);
     }
 
     ion-menu.md ion-item .mdls {
