@@ -1,13 +1,13 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, toastController, IonListHeader, IonSpinner } from '@ionic/vue';
-
-    import cas_list from '/src/ent_list.json';
+    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, IonListHeader, IonSpinner, loadingController, actionSheetController } from '@ionic/vue';
 
     import axios from 'axios';
     import $ from "jquery";
     
     import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp } from 'ionicons/icons';
+
+    import displayToast from '@/functions/utils/displayToast.js';
 
     import { Dialog } from '@capacitor/dialog';
 
@@ -39,17 +39,10 @@
                 personCircleSharp
             }
         },
+        mounted() {
+            this.getENTs();
+        },
         methods: {
-            async presentToast(msg, color, notDismissable) {
-                const toast = await toastController.create({
-                    message: msg,
-                    duration: 2000,
-                    position: "bottom",
-                    color: color
-                });
-
-                await toast.present();
-            },
             decodeEntities(encodedString) {
                 var translate_re = /&(nbsp|amp|quot|lt|gt);/g;
                 var translate = {
@@ -65,6 +58,56 @@
                     var num = parseInt(numStr, 10);
                     return String.fromCharCode(num);
                 });
+            },
+            async getENTs() {
+                const infosAPI = this.$api + "/infos";
+
+                const loading = await loadingController.create({
+                    message: 'Obtention des ENTS...'
+                });
+                    
+                loading.present();
+                
+                axios.get(infosAPI)
+                .then(response => {
+                    setTimeout(() => {
+                        loading.dismiss();
+                    }, 200);
+                    this.ents = response.data.ent_list;
+                })
+            },            
+            async createEntPicker(multipleEnts) {
+                console.log(multipleEnts)
+
+                let options = [];
+
+                for (let i = 0; i < multipleEnts.length; i++) {
+                    options.push({
+                        text: multipleEnts[i].name,
+                        handler: () => {
+                            this.choice_py = multipleEnts[i].py;
+                        }
+                    });
+                }
+
+                options.push({
+                    text: 'Annuler',
+                    role: 'cancel',
+                    handler: () => {
+                        this.presentToast("Vous devez choisir un ENT pour continuer.", "danger")
+                    },
+                    data: {
+                        action: 'cancel'
+                    }
+                });
+
+                const actionSheet = await actionSheetController.create({
+                    header: 'Choisissez votre ENT',
+                    subHeader: 'Plusieurs ENT ont été trouvés. Choisissez celui que vous souhaitez utiliser.',
+                    buttons: options
+                });
+
+                await actionSheet.present();
             },
             getPostal(e) {
                 let postal = e.detail.value
@@ -85,9 +128,16 @@
                 this.terms = e.detail.value;
                 this.isLoading = true;
                 
-                axios.get('https://api.androne.dev/papillon-v4/cors.php?url=https%3A%2F%2Fpositionstack.com%2Fgeo_api.php%3Fquery%3Dfrance%2B' + postal)
+                axios.get('https://cors.api.pronote.plus/https://positionstack.com/geo_api.php?query=france+' + postal, {
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+                        'Access-Control-Allow-Credentials': 'true'
+                    }
+                })
                 .then(response => {                      
-                    let data = JSON.parse(this.decodeEntities(response.data.content)).data;
+                    let data = response.data.data;
 
                     let lat = data[0].latitude;
                     let lon = data[0].longitude;
@@ -97,7 +147,7 @@
                     this.findEstablishments(lat, lon)
                 })
                 .catch(error => {
-                    this.presentToast(`Une erreur s'est produite. : pronote/SchoolSelection.getPostal().fail()`, "danger")
+                    displayToast.presentError(`Une erreur s'est produite pour obtenir votre code postal.`, "danger", error.stack)
                 })
             },
             findEstablishments(lat, lon) {
@@ -143,7 +193,17 @@
                         }, 200);
                     })
                     .fail((error) => {
-                        this.presentToast(`Une erreur s'est produite. : pronote/SchoolSelection.findEstablishments().fail()`, "danger")
+                        console.error(error)
+                        
+                        if(this.retries < 3) {
+                            setTimeout(() => {
+                                this.findEstablishments(lat, lon);
+                            }, 1000);
+                            this.retries++;
+                        }
+                        else {
+                            displayToast.presentError(`Une erreur s'est produite pour obtenir les établissements à proximité.`, "danger", error.stack)
+                        }
                     });
             },
             clearEtabs() {
@@ -205,12 +265,12 @@
                     console.log(cas_host);
                     
                     
-                    let all_cas_same_host = cas_list.filter(cas => cas.url == cas_host);
+                    let all_cas_same_host = this.ents.filter(cas => cas.url == cas_host);
 
                     let cas = all_cas_same_host[0];
                     if (all_cas_same_host.length == 0) {
                         // no CAS for this host
-                        this.presentToast(`Aucun CAS trouvé pour ${cas_host}.`, "danger")
+                        displayToast.presentToast(`Aucun CAS trouvé pour ${cas_host}.`, "danger")
                     }
                     else if (all_cas_same_host.length >= 1) {
                         // only one CAS for this host
@@ -243,6 +303,7 @@
                         // get cas name in all_cas_same_host
                         let cas_name = all_cas_same_host[0].name;
                         this.displayCas = cas_name;
+                        this.isEduconnectLogin = all_cas_same_host[0].educonnect == true;
 
                         this.$refs.loginModal.$el.present()
                     }
@@ -275,7 +336,7 @@
                     redirect: 'follow'
                 };
 
-                this.presentToast("Connexion en cours...", "dark", true)
+                displayToast.presentToast("Connexion en cours...", "dark", true)
 
                 fetch(API + "/generatetoken", requestOptions)
                     .then(response => response.json())
@@ -283,17 +344,19 @@
                         console.log(result);
 
                         if(!result.token) {
-                            if(result.error ==  "Fail to connect with EduConnect : probably wrong login information") {
-                                this.presentToast("Identifiants incorrects.", "danger")
+                            if(result.error.includes("probably wrong login information")) {
+                                displayToast.presentToast("Identifiants incorrects.", "danger")
                             }
                             else if(result == "missingusername") {
-                                this.presentToast("Veuillez entrer un identifiant.", "danger")
+                                displayToast.presentToast("Veuillez entrer un identifiant.", "danger")
                             }
                             else if(result == "missingpassword") {
-                                this.presentToast("Veuillez entrer un mot de passe.", "danger")
+                                displayToast.presentToast("Veuillez entrer un mot de passe.", "danger")
+                            } else if(result.error == "Your IP address is suspended.") {
+                                displayToast.presentError("Une erreur s'est produite", "danger", "L'adresse IP de nos serveurs est suspendue pour votre établissement. S'il vous plaît réessayez dans quelques heures.")
                             }
                             else {
-                                this.presentToast("Une erreur s'est produite.", "danger")
+                                displayToast.presentError("Une erreur s'est produite.", "danger", result.error)
                             }
                         }
                         else {
@@ -329,8 +392,10 @@
                 etabCas: "",
                 displayCas: "",
                 etabName: "",
+                ents: [],
+                retries: 0,
             }
-        }
+        },
     });
 </script>
 
@@ -433,11 +498,13 @@
                     <div class="loginIntro">
                         <img src="assets/welcome/pronote_logo.png" alt="Pronote Logo" class="logo"/>
                         <p>Vous souhaitez vous connecter à <B>Pronote</B> avec l'ENT <B>{{displayCas}}</B> à l'aide de Papillon.</p>
+                        <br>
+                        <p v-if="isEduconnectLogin">Cet ENT utilise ÉduConnect, merci de rentrer les identifiants de ce service.</p>
                     </div>
 
                     <div class="loginForm">
-                        <input ref="user" type="text" placeholder="Identifiant" class="loginInput"/>
-                        <input ref="pass" type="password" placeholder="Mot de passe" class="loginInput"/><br/>
+                        <input ref="user" type="text" placeholder="Identifiant" class="loginInput" appAutofill autocomplete="username"/>
+                        <input ref="pass" type="password" placeholder="Mot de passe" class="loginInput" appAutofill autocomplete="password"/><br/>
 
                         <button @click="login" class="loginButton">Se connecter</button>
                     </div>

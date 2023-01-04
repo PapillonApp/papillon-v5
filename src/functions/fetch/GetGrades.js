@@ -5,15 +5,20 @@ import axios from 'axios';
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
+// funcs
+function isFloat(n){
+    return Number(n) === n && n % 1 !== 0;
+}
+
 // main function
 async function getGrades() {
-    // as only pronote is supported for now, we can just return the pronote timetable
+    // as only pronote is supported for now, we can just return the pronote grades
     
-    // return pronote timetable
+    // return pronote grades
     return getPronoteGrades();
 }
 
-// pronote : get timetable
+// pronote : get grades
 function getPronoteGrades() {
     // gather vars
     const API = app.config.globalProperties.$api;
@@ -24,18 +29,18 @@ function getPronoteGrades() {
     // construct url (date is a TEST date)
     let URL = `${API}/grades?token=${token}`;
 
-    // check if timetable is cached
+    // check if grade is cached
     let gradeCache = localStorage.getItem('gradeCache');
 
     if(gradeCache != null) {
-        // timetable is cached, check if it's up to date
+        // grade is cached, check if it's up to date
         gradeCache = JSON.parse(gradeCache);
 
         let today = new Date();
         let cacheDate = new Date(gradeCache.date);
 
         if(today.toDateString() == cacheDate.toDateString()) {
-            // timetable is up to date, return it
+            // grade is up to date, return it
             return new Promise((resolve, reject) => {
                 resolve(constructPronoteGrades(gradeCache.grades));
             });
@@ -50,7 +55,7 @@ function getPronoteGrades() {
                 GetToken();
             }
 
-            // save timetable to localstorage cache with today's date
+            // save grades to localstorage cache with today's date
             let today = new Date();
             let gradeCache = {
                 date: today,
@@ -59,12 +64,17 @@ function getPronoteGrades() {
 
             localStorage.setItem('gradeCache', JSON.stringify(gradeCache));
 
-            // construct timetable and return it as a promise
+            // construct grades and return it as a promise
             return new Promise((resolve, reject) => {
                 resolve(constructPronoteGrades(response.data));
             });
         })
         .catch((error) => {
+            if(error.response.status == 498) {
+                // token expired, get new token
+                GetToken();
+            }
+
             // error, return error
             return new Promise((resolve, reject) => {
                 reject(error);
@@ -72,8 +82,68 @@ function getPronoteGrades() {
         });
 }
 
-// pronote : construct timetable
-function constructPronoteGrades(grades) {
+function determineSignificant(significant, service) {
+    let result = {
+        significant: true,
+        significantReason: null,
+        significantZero: false,
+    }
+
+    if (service == 'pronote') {
+        switch (significant) {
+            case 0:
+                result.significant = true;
+                result.significantReason = null;
+                result.significantZero = false;
+                break;
+            case 1:
+                result.significant = false;
+                result.significantReason = "Abs.";
+                result.significantZero = false;
+                break;
+            case 2:
+                result.significant = false;
+                result.significantReason = "Disp.";
+                result.significantZero = false;
+                break;
+            case 3:
+                result.significant = false;
+                result.significantReason = "N.Not";
+                result.significantZero = false;
+                break;
+            case 4:
+                result.significant = false;
+                result.significantReason = "Inap.";
+                result.significantZero = false;
+                break;
+            case 5:
+                result.significant = false;
+                result.significantReason = "N.Ren";
+                result.significantZero = false;
+                break;
+            case 6:
+                result.significant = false;
+                result.significantReason = "Abs.";
+                result.significantZero = true;
+                break;
+            case 7:
+                result.significant = false;
+                result.significantReason = "N.Ren";
+                result.significantZero = true;
+                break;
+            case 8:
+                result.significant = false;
+                result.significantReason = "Disp.";
+                result.significantZero = true;
+                break;
+        }
+    }
+
+    return result;
+}
+
+// pronote : construct grades
+function constructPronoteGrades(grades) {    
     let averages = grades.averages;
     let marks = grades.grades;
 
@@ -82,38 +152,62 @@ function constructPronoteGrades(grades) {
     // for each mark, add it to the corresponding subject in the array
     marks.forEach(mark => {
         // check if subject exists
-        let subject = markArray.find(subject => subject.name == mark.subject);
+        let subject = markArray.find(subject => subject.name == mark.subject.name);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
-                name: mark.subject,
+                name: mark.subject.name,
                 marks: []
             }
 
             markArray.push(subject);
         }
 
-        // for each info in mark.grade, parse it to a float
-        for(let info in mark.grade) {
-            mark.grade[info] = parseFloat(mark.grade[info]);
-        }
-
         // add mark to subject
         let newMark = {
             info: {
-                subject: mark.subject,
+                subject: mark.subject.name,
                 date: mark.date,
+                description: mark.description || "Pas d'intitulé",
             },
             grade: mark.grade
         }
 
-        if(isNaN(mark.grade.value)) {
-            newMark.grade.value = -1;
-            newMark.info.abs = true;
+        // determine if mark is significant
+        let significant = determineSignificant(mark.grade.significant, 'pronote');
+        newMark.info.significant = significant.significant;
+        newMark.info.significantReason = significant.significantReason;
+        newMark.info.significantZero = significant.significantZero;
+
+        delete newMark.grade.significant;
+
+        if (newMark.info.significantZero) {
+            newMark.grade.value = 0;
         }
-        else {
-            newMark.info.abs = false;
+
+        if (!newMark.info.significant && mark.grade.average == -1) {
+            newMark.info.significantAverage = false;
+        } else {
+            newMark.info.significantAverage = true;
+        }
+
+        newMark.info.outOf20 = mark.is_out_of_20;
+        newMark.info.bonus = mark.is_bonus;
+        newMark.info.optional = mark.is_optional;
+
+        newMark.grade.value = parseFloat(newMark.grade.value).toFixed(2);
+
+        if(isFloat(newMark.grade.average)) {
+            newMark.grade.average = parseFloat(newMark.grade.average).toFixed(1);
+        }
+        
+        if(isFloat(newMark.grade.min)) {
+            newMark.grade.min = parseFloat(newMark.grade.min).toFixed(1);
+        }
+
+        if(isFloat(newMark.grade.max)) {
+            newMark.grade.max = parseFloat(newMark.grade.max).toFixed(1);
         }
 
         subject.marks.push(newMark);
@@ -129,7 +223,7 @@ function constructPronoteGrades(grades) {
     // add averages
     averages.forEach(average => {
         // check if subject exists
-        let subject = markArray.find(subject => subject.name == average.subject);
+        let subject = markArray.find(subject => subject.name == average.subject.name);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
@@ -142,31 +236,52 @@ function constructPronoteGrades(grades) {
         }
 
         // add average to subject
-        subject.average = parseFloat(average.average.replace(",", "."));
+        subject.average = average.average;
+        subject.id = average.subject.id;
+
+        // determine if average is significant
+        let significant = determineSignificant(average.significant, 'pronote');
+        subject.significant = significant.significant;
+        subject.significantReason = significant.significantReason;
+        subject.significantZero = significant.significantZero;
+
+        if (subject.significantZero) {
+            subject.average = 0;
+        }
+
+        if (!subject.significant && average.class_average == -1) {
+            subject.significantAverage = false;
+        } else {
+            subject.significantAverage = true;
+        }
 
         subject.class = {};
 
-        subject.class.average = parseFloat(average.class_average);
-        subject.class.min = parseFloat(average.min);
-        subject.class.max = parseFloat(average.max);
+        subject.class.average = average.class_average;
+        subject.class.min = average.min;
+        subject.class.max = average.max;
     });
 
-    // calculate averages
-    let studentAverage = parseFloat(grades.overall_average.replace(",", "."));
-    
+    // calculate averages for each subject in markArray
+    let studentAverage = 0;
     let classAverage = 0;
     let classMin = 0;
     let classMax = 0;
 
     markArray.forEach(subject => {
-        classAverage += parseFloat(subject.class.average);
-        classMin += parseFloat(subject.class.min);
-        classMax += parseFloat(subject.class.max);
+        studentAverage += subject.average;
+        classAverage += subject.class.average;
+        classMin += subject.class.min;
+        classMax += subject.class.max;
     });
 
-    classAverage /= averages.length;
-    classMin /= averages.length;
-    classMax /= averages.length;
+    studentAverage /= markArray.length;
+    classAverage /= markArray.length;
+    classMin /= markArray.length;
+    classMax /= markArray.length;
+
+    // replace StudentAverage with the actual average
+    studentAverage = grades.overall_average;
 
     // add averages to array
     let avgs = {

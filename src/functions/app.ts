@@ -12,7 +12,7 @@ import { StatusBar, Style } from '@capacitor/status-bar';
 
 function setStatusBarStyle() {
   if (isDarkMode) {
-    StatusBar.setBackgroundColor({color: "#181B1C"});
+    StatusBar.setBackgroundColor({color: "#1C1B1F"});
     StatusBar.setStyle({style: Style.Dark})
   }
   else {
@@ -27,7 +27,7 @@ import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
 function setNavigationBarStyle() {
   if (isDarkMode) {
     NavigationBar.setColor({
-        color: "#131516",
+        color: "#1C1B1F",
         darkButtons: false
     });
   }

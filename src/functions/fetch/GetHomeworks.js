@@ -7,13 +7,13 @@ import GetToken from '@/functions/login/GetToken.js';
 
 // main function
 async function getHomeworks(date) {
-    // as only pronote is supported for now, we can just return the pronote timetable
+    // as only pronote is supported for now, we can just return the pronote homework
 
-    // return pronote timetable
+    // return pronote homework
     return getPronoteHomework(date);
 }
 
-// pronote : get timetable
+// pronote : get homework
 function getPronoteHomework(date) {
     // gather vars
     const API = app.config.globalProperties.$api;
@@ -28,26 +28,26 @@ function getPronoteHomework(date) {
     // construct url (date is a TEST date)
     let URL = `${API}/homework?dateFrom=${dayString}&dateTo=${dayString}&token=${token}`;
 
-    // check if timetable is cached
+    // check if homework is cached
     let cacheSearch = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
     cacheSearch = cacheSearch.filter((element) => {
         return element.date == dayString && element.token == token;
     });
     if (cacheSearch.length > 0) {
-        // return cached timetable in promise
+        // return cached homework in promise
         return new Promise((resolve, reject) => {
-            let timetable = JSON.parse(cacheSearch[0].timetable);
-            resolve(constructPronoteHomework(timetable));
+            let homework = JSON.parse(cacheSearch[0].homework);
+            resolve(constructPronoteHomework(homework));
         });
     }
     else {
-        // get timetable from API
+        // get homework from API
         return axios.get(URL)
             .then((response) => {
-                // get timetable
+                // get homework
                 let homeworks = response.data;
 
-                // construct timetable
+                // construct homework
                 homeworks = constructPronoteHomework(homeworks);
 
                 // cache response
@@ -55,7 +55,7 @@ function getPronoteHomework(date) {
                 let cacheElement = {
                     date: dayString,
                     token: token,
-                    timetable: JSON.stringify(response.data)
+                    homework: JSON.stringify(response.data)
                 };
                 cache.push(cacheElement);
                 localStorage.setItem('HomeworkCache', JSON.stringify(cache));
@@ -79,12 +79,12 @@ function getPronoteHomework(date) {
     }
 }
 
-// pronote : construct timetable
+// pronote : construct homework
 function constructPronoteHomework(hw) {
     // declaring vars
     let homeworkArray = [];
 
-    // for each course in timetable
+    // for each course in homework
     hw.forEach((homework) => {
         // construct course
         let newHomework = {
@@ -95,7 +95,7 @@ function constructPronoteHomework(hw) {
                 done: homework.done,
             },
             homework: {
-                subject: homework.subject,
+                subject: homework.subject.name,
                 content: homework.description,
             },
             files: homework.files,

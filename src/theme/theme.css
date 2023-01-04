@@ -94,10 +94,36 @@ input.sc-ion-searchbar-md {
 
 /* (MD) Calendar button */
 #rnPickerModalButton {
-    text-transform: none;
-    font-size: 16px;
+    background: var(--ion-color-step-50) !important;
+    border-radius: 300px;
+
+    height: 36px;
+
+    overflow: hidden;
+    isolation: isolate;
+}
+
+@media screen and (prefers-color-scheme: dark) {
+    #rnPickerModalButton {
+        background-color: #ffffff11;
+    }
+}
+
+#rnPickerModalButton span {
+    margin-left: 3px;
+}
+
+#rnPickerModalButton p {
     font-weight: 500;
+    font-size: 16px;
+    text-transform: none;
     letter-spacing: normal;
+
+    margin-right: 3px;
+}
+
+#rnPickerModalButton.ios {
+    margin-right: 5px !important;
 }
 
 /* Material Symbols */
@@ -107,17 +133,11 @@ input.sc-ion-searchbar-md {
     src: url('/public/fonts/MaterialSymbolsOutlined.woff2') format('woff');
 }
 
-@font-face {
-    font-family: 'Material Symbols Rounded';
-    font-style: normal;
-    src: url('/public/fonts/MaterialSymbolsRounded.woff2') format('woff');
-}
-
 .material-symbols-outlined {
-    font-family: 'Material Symbols Rounded' !important;
+    font-family: 'Material Symbols Outlined' !important;
     font-weight: normal;
     font-style: normal;
-    font-size: 24px;  /* Preferred icon size */
+  /* Preferred icon size */
     display: inline-block;
     line-height: 1;
     text-transform: none;
@@ -125,20 +145,7 @@ input.sc-ion-searchbar-md {
     word-wrap: normal;
     white-space: nowrap;
     direction: ltr;
-}
-
-.material-symbols-rounded {
-    font-family: 'Material Symbols Rounded' !important;
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;  /* Preferred icon size */
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
+    font-display: block;
 }
 
 .mdls {
@@ -146,7 +153,9 @@ input.sc-ion-searchbar-md {
     'FILL' 0,
     'wght' 400,
     'GRAD' 0,
-    'opsz' 24
+    'opsz' 24;
+
+    font-size: 24px;
 }
 
 .mdls[slot="start"] {
@@ -155,4 +164,84 @@ input.sc-ion-searchbar-md {
 
 ion-item .mdls[slot="start"] {
     margin-inline-end: 24px;
+}
+
+.mdls::before {
+    display: none;
+}
+
+.smol {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 18 !important;
+
+    font-size: 18px !important;
+}
+
+/* NoCours */
+.NoCours {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    height: 100%;
+    padding: 20px 32px;
+}
+
+.NoCours * {
+    margin: 0;
+    padding: 0;
+    text-align: left;
+}
+
+.NoCours .mdls {
+    font-size: 24px;
+    margin-bottom: 14px;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 36;
+    padding: 10px;
+    background: var(--ion-color-step-50);
+    border-radius: 300px;
+}
+
+.NoCours h2 {
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: 600;
+}
+
+.NoCours p {
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: 400;
+    margin-top: 10px;
+    opacity: 50%;
+}
+
+.NoCours .button {
+    margin-left: -15.4px;
+}
+
+.ios .NoCours {
+    padding: 18px 32px;
+    align-items: center;
+}
+
+.ios .NoCours * {
+    text-align: center;
+}
+
+.ios .NoCours .button {
+    margin-left: 0;
+}
+
+.md ion-modal {
+    background: #00000055;
+}
+
+.md ion-modal::part(content) {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    overflow: hidden;
 }

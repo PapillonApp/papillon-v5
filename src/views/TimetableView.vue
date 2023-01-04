@@ -1,6 +1,6 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner } from '@ionic/vue';
   
   import { calendarOutline, calendarSharp, todayOutline, todaySharp } from 'ionicons/icons';
 
@@ -32,6 +32,7 @@
         IonRefresherContent,
         IonItem,
         IonLabel,
+        IonSpinner
     },
     setup() {
         return { 
@@ -73,7 +74,7 @@
                     let second = timetable[i+1].time.start.toISOString();
 
                     if(first == second) {
-                        timetable[i+1].course.sameTime = true;
+                        timetable[i].course.sameTime = true;
                     }
                 }
             }
@@ -153,6 +154,7 @@
             }
 
             let status = cours.status.status;
+            let hasStatus = status != undefined;
 
             // set status if it's undefined
             if(status == undefined) {
@@ -162,11 +164,16 @@
             // set selectedCourse
             this.selectedCourse = {
                 name: cours.data.subject,
-                teacher: cours.data.teacher,
-                room: cours.data.room,
+                teachers: cours.data.teachers.join(', ') || "Aucun professeur",
+                rooms: cours.data.rooms.join(', ') || "Aucune salle",
                 start: cours.time.start.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                memo: cours.data.memo,
+                hasMemo: cours.data.hasMemo,
+                linkVirtualClassroom: cours.data.linkVirtual,
                 length: len,
-                status: status
+                status: status,
+                hasStatus: hasStatus,
+                isCancelled: cours.status.isCancelled
             }
 
             // open cours modal
@@ -222,7 +229,11 @@
                 // get new rn
                 // check if swiper is on yesterday
                 if(swiper.activeIndex == 0) {
-                    this.$rn = new Date(this.$rn) - 86400000;
+                    let newRn = new Date(this.$rn);
+                    newRn.setDate(newRn.getDate() - 1);
+
+                    this.$rn = newRn;
+                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
@@ -238,6 +249,7 @@
                     newRn.setDate(newRn.getDate() + 1);
 
                     this.$rn = newRn;
+                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
@@ -247,10 +259,6 @@
                 }
             }, 200);
         });
-
-        // test
-        // get date for 8/12/2022
-        let date = new Date(2022, 11, 16);
     }
   });
 </script>
@@ -267,10 +275,10 @@
           <ion-title mode="md">Ma journée</ion-title>
 
           <ion-buttons slot="end">
-            <ion-button color="dark" mode="md" id="rnPickerModalButton">
+            <ion-button mode="md" color="dark" id="rnPickerModalButton">
               <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
-              {{ rnButtonString }}
+              <p>{{ rnButtonString }}</p>
             </ion-button>
           </ion-buttons>
 
@@ -296,14 +304,20 @@
                 <IonList>
                     <CoursElement v-for="cours in yesterday" :key="cours.id"
                         :subject="cours.data.subject"
-                        :teacher="cours.data.teacher"
-                        :room="cours.data.room"
+                        :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
+                        :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
+                        :memo="cours.data.hasMemo"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :color="cours.course.color"
                         :sameTime="cours.course.sameTime"
                         :status="cours.status.status"
                         :isCancelled="cours.status.isCancelled"
+                        :isDetention="cours.status.isDetention"
+                        :isExempted="cours.status.isExempted"
+                        :isOuting="cours.status.isOuting"
+                        :isTest="cours.status.isTest"
+                        @open="openCoursModal(cours)"
                     />
 
                     <div v-if="!yesterday.error"><div class="NoCours" v-if="yesterday.length == 0">
@@ -314,10 +328,17 @@
                         <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div></div>
 
-                    <div v-if="yesterday.error" class="Error"><div class="NoCours" v-if="yesterday.length == 0">
+                    <div v-if="yesterday.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="yesterday.length == 0">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div></div>
+
+                    <div v-if="yesterday.error == 'ERR_BAD_REQUEST'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                        <IonSpinner></IonSpinner>
+                        <br/>
+                        <h2>Téléchargement des prochains cours...</h2>
+                        <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
                     </div></div>
                 </IonList>
             </swiper-slide>
@@ -325,14 +346,19 @@
                 <IonList>
                     <CoursElement v-for="cours in timetable" :key="cours.id"
                         :subject="cours.data.subject"
-                        :teacher="cours.data.teacher"
-                        :room="cours.data.room"
+                        :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
+                        :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
+                        :memo="cours.data.hasMemo"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :color="cours.course.color"
                         :sameTime="cours.course.sameTime"
                         :status="cours.status.status"
                         :isCancelled="cours.status.isCancelled"
+                        :isDetention="cours.status.isDetention"
+                        :isExempted="cours.status.isExempted"
+                        :isOuting="cours.status.isOuting"
+                        :isTest="cours.status.isTest"
                         @open="openCoursModal(cours)"
                     />
 
@@ -344,10 +370,17 @@
                         <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div></div>
 
-                    <div v-if="timetable.error" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                    <div v-if="timetable.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div></div>
+
+                    <div v-if="timetable.error == 'ERR_BAD_REQUEST'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                        <IonSpinner></IonSpinner>
+                        <br/>
+                        <h2>Téléchargement des prochains cours...</h2>
+                        <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
                     </div></div>
                 </IonList>
             </swiper-slide>
@@ -355,14 +388,20 @@
                 <IonList>
                     <CoursElement v-for="cours in tomorrow" :key="cours.id"
                         :subject="cours.data.subject"
-                        :teacher="cours.data.teacher"
-                        :room="cours.data.room"
+                        :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
+                        :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
+                        :memo="cours.data.hasMemo"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :color="cours.course.color"
                         :sameTime="cours.course.sameTime"
                         :status="cours.status.status"
                         :isCancelled="cours.status.isCancelled"
+                        :isDetention="cours.status.isDetention"
+                        :isExempted="cours.status.isExempted"
+                        :isOuting="cours.status.isOuting"
+                        :isTest="cours.status.isTest"
+                        @open="openCoursModal(cours)"
                     />
 
                     <div v-if="!tomorrow.error"><div class="NoCours" v-if="tomorrow.length == 0">
@@ -373,10 +412,17 @@
                         <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div></div>
 
-                    <div v-if="tomorrow.error" class="Error"><div class="NoCours" v-if="tomorrow.length == 0">
+                    <div v-if="tomorrow.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="tomorrow.length == 0">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div></div>
+
+                    <div v-if="tomorrow.error == 'ERR_BAD_REQUEST'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                        <IonSpinner></IonSpinner>
+                        <br/>
+                        <h2>Téléchargement des prochains cours...</h2>
+                        <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
                     </div></div>
                 </IonList>
             </swiper-slide>
@@ -408,7 +454,7 @@
         <IonModal ref="coursModal" :keep-contents-mounted="true" :initial-breakpoint="0.6" :breakpoints="[0, 0.6, 0.9]" :handle="true" :canDismiss="true">
             <IonHeader>
               <IonToolbar>
-                <ion-title>Cours</ion-title>
+                <ion-title>{{selectedCourse.name}}</ion-title>
               </IonToolbar>
             </IonHeader>
             <ion-content>
@@ -425,7 +471,7 @@
                         <span class="material-symbols-outlined mdls" slot="start">face</span>
                         <ion-label>
                             <p>Professeur</p>
-                            <h3>{{selectedCourse.teacher}}</h3>
+                            <h3>{{selectedCourse.teachers}}</h3>
                         </ion-label>
                     </ion-item>
 
@@ -433,7 +479,15 @@
                         <span class="material-symbols-outlined mdls" slot="start">meeting_room</span>
                         <ion-label>
                             <p>Salle de cours</p>
-                            <h3>{{selectedCourse.room}}</h3>
+                            <h3>{{selectedCourse.rooms}}</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item v-if="selectedCourse.hasMemo">
+                        <span class="material-symbols-outlined mdls" slot="start">description</span>
+                        <ion-label>
+                            <p>Mémo</p>
+                            <h3>{{selectedCourse.memo}}</h3>
                         </ion-label>
                     </ion-item>
 
@@ -453,7 +507,23 @@
                         </ion-label>
                     </ion-item>
 
-                    <ion-item>
+                    <ion-item v-if="selectedCourse.isCancelled" style="color: var(--ion-color-danger);">
+                        <span class="material-symbols-outlined mdls" slot="start">error</span>
+                        <ion-label>
+                            <p>Statut</p>
+                            <h3>{{selectedCourse.status}}</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item v-else-if="selectedCourse.hasStatus" style="color: var(--ion-color-warning);">
+                        <span class="material-symbols-outlined mdls" slot="start">info</span>
+                        <ion-label>
+                            <p>Statut</p>
+                            <h3>{{selectedCourse.status}}</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item v-else>
                         <span class="material-symbols-outlined mdls" slot="start">info</span>
                         <ion-label>
                             <p>Statut</p>
@@ -469,45 +539,10 @@
   
 <style scoped>
     .swiper-slide {
-        min-height: calc(100vh - 56px);
+        min-height: calc(86vh - 56px);
     }
 
     .changeDayButton {
         margin-top: 16px !important;
-    }
-
-    .NoCours {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        padding: 20px 50px;
-    }
-
-    .NoCours * {
-        margin: 0;
-        padding: 0;
-        text-align: center;
-    }
-
-    .NoCours .mdls {
-        font-size: 36px;
-        margin-bottom: 14px;
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 36;
-    }
-
-    .NoCours h2 {
-        font-size: 24px;
-        line-height: 24px;
-        font-weight: 600;
-    }
-
-    .NoCours p {
-        font-size: 16px;
-        line-height: 16px;
-        font-weight: 400;
-        margin-top: 10px;
-        opacity: 50%;
     }
 </style>

@@ -141,7 +141,11 @@ export default defineComponent({
                 // get new rn
                 // check if swiper is on yesterday
                 if(swiper.activeIndex == 0) {
-                    this.$rn = new Date(this.$rn) - 86400000;
+                    let newRn = new Date(this.$rn);
+                    newRn.setDate(newRn.getDate() - 1);
+
+                    this.$rn = newRn;
+                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
@@ -157,6 +161,7 @@ export default defineComponent({
                     newRn.setDate(newRn.getDate() + 1);
 
                     this.$rn = newRn;
+                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
@@ -182,10 +187,10 @@ export default defineComponent({
                 <ion-title mode="md">Travail à faire</ion-title>
 
                 <ion-buttons slot="end">
-                    <ion-button color="dark" mode="md" id="rnPickerModalButton" @click="openRnModal">
+                    <ion-button mode="md" color="dark" id="rnPickerModalButton" @click="openRnModal">
                         <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
-                        {{ rnButtonString }}
+                        <p>{{ rnButtonString }}</p>
                     </ion-button>
                 </ion-buttons>
 
@@ -289,45 +294,10 @@ export default defineComponent({
 
 <style scoped>
     .swiper-slide {
-        min-height: calc(100vh - 56px);
+        min-height: calc(86vh - 56px);
     }
 
     .changeDayButton {
         margin-top: 16px !important;
-    }
-
-    .NoCours {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        padding: 20px 50px;
-    }
-
-    .NoCours * {
-        margin: 0;
-        padding: 0;
-        text-align: center;
-    }
-
-    .NoCours .mdls {
-        font-size: 36px;
-        margin-bottom: 14px;
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 36;
-    }
-
-    .NoCours h2 {
-        font-size: 24px;
-        line-height: 24px;
-        font-weight: 600;
-    }
-
-    .NoCours p {
-        font-size: 16px;
-        line-height: 16px;
-        font-weight: 400;
-        margin-top: 10px;
-        opacity: 50%;
     }
 </style>

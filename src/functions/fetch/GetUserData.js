@@ -114,7 +114,8 @@ function constructPronoteUser(user) {
         class: {
             name: user.class,
             school: user.establishment
-        }
+        },
+        periods: user.periods
     }
 
     // return student

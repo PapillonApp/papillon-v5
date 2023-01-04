@@ -2,15 +2,13 @@
     import { defineComponent } from 'vue';
     import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonNavLink, IonListHeader, IonModal, IonButton } from '@ionic/vue';
     
-    import { logoDiscord, logoGithub, bugOutline, bugSharp, informationCircleOutline, informationCircleSharp } from 'ionicons/icons';
+    import { logoDiscord, logoGithub, bugOutline, bugSharp, informationCircleOutline, informationCircleSharp, globeOutline, globeSharp } from 'ionicons/icons';
 
     import {version} from '/package'
     import { Capacitor } from '@capacitor/core';
 
     import { Swiper, SwiperSlide } from 'swiper/vue';
     import 'swiper/css';
-
-    import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
 
     import SchoolSelection from './pronote/SchoolSelection.vue';
 
@@ -36,7 +34,9 @@
                 bugOutline,
                 bugSharp,
                 informationCircleOutline,
-                informationCircleSharp
+                informationCircleSharp,
+                globeOutline,
+                globeSharp,
             }
         },
         methods: {
@@ -94,19 +94,42 @@
                     this.$refs.swiper.$el.swiper.slideNext();
                 }, 200);
             },
+            getServerStatus() {
+                const API = this.$api;
+
+                fetch(API + "/infos")
+                    .then(response => response.json())
+                    .then(result => {
+                        this.status = result.status;
+                    })
+                    .catch(error => {
+                        this.status = "error";
+                    });
+            },
         },
         data() {
             return {
                 SchoolSelection: SchoolSelection,
                 appVersion: version,
                 appPlatform: Capacitor.getPlatform(),
-                isOpen: true
+                isOpen: true,
+                status: ""
             }
         },
         mounted() {
             if(localStorage.loginData !== undefined && localStorage.loginData !== []) {
                 // this.login();
             }
+
+            this.getServerStatus();
+
+            if(localStorage.seenWelcome === "true") {
+                this.isOpen = false;
+            }
+
+            // add seen to localstorage
+            localStorage.seenWelcome = true;
+            
         }
     });
 </script>
@@ -192,7 +215,7 @@
         <ion-list>
             <ion-list-header>
                 <ion-label>
-                    <p>Plus d'options</p>
+                    <p>Plus d'options et d'informations</p>
                 </ion-label>
             </ion-list-header>
 
@@ -202,6 +225,19 @@
                     <h2>Signaler un bug ou une erreur</h2>
                     <p>Reportez votre problème sur GitHub</p>
                 </ion-label>
+            </ion-item>
+
+            <ion-item>
+                <ion-icon class="icon" slot="start" :ios="globeOutline" :md="globeSharp"></ion-icon>
+                <ion-label>
+                    <h2>Statut du serveur</h2>
+                    <p v-if='status == ""'>Obtention du statut...</p>
+                    <p v-if='status == "ok"'>Le serveur est en ligne.</p>
+                    <p v-if='status == "error"'>Impossible de contacter le serveur</p>
+                </ion-label>
+
+                <ion-chip color="success" v-if='status == "ok"'>En ligne</ion-chip>
+                <ion-chip color="warning" v-if='status == "error"'>Indisponible</ion-chip>
             </ion-item>
 
             <ion-item button href="https://pronote.plus/assets/terms_privacy_23112022_rev0.pdf">
@@ -227,7 +263,7 @@
                     </swiper-slide>
                     <swiper-slide class="welcomeSlide">
                         <div class="illustration interface"></div>
-                        <h3>L'interface à été revue et continuellement améliorée pour une expérience optimale.</h3>
+                        <h3>L'interface a été revue et continuellement améliorée pour une expérience optimale.</h3>
                         <p>Papillon s'adapte à vos besoins et à vos envies grâce à une interface familière et agréable, pour un climat de travail confortable.</p>
 
                         <ion-button expand="block" fill="clear" @click="nextSlide()" class="slideButton">
@@ -273,6 +309,8 @@
     .illustration {
         width: 100vw;
         height: 100vw;
+
+        max-height: 50%;
         
         background-size: contain;
         background-repeat: no-repeat;
@@ -295,8 +333,9 @@
     }
 
     .slideButton {
-        margin-top: 20px;
-        width: 50%;
+        position: absolute;
+        bottom: 8vh;
+        width: 80%;
     }
 
     .services {

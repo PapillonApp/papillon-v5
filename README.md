@@ -5,6 +5,7 @@
 ![image](https://user-images.githubusercontent.com/32978709/209976643-7eb365b1-3853-4d64-bf31-306cbd3f2267.png#gh-dark-mode-only)
 
 
+![](https://github.com/PapillonApp/papillon-v5/actions/workflows/build.yml/badge.svg)
 ![](https://img.shields.io/github/license/PapillonApp/papillon-v5)
 ![](https://img.shields.io/github/issues/PapillonApp/papillon-v5)
 ![](https://img.shields.io/github/issues-pr/PapillonApp/papillon-v5)
@@ -26,5 +27,6 @@ ionic serve
 
 ### Générer l'app
 ```
+ionic build
 npx cap open
 ```

@@ -5,6 +5,7 @@ const config: CapacitorConfig = {
   appName: 'Papillon',
   webDir: 'dist',
   bundledWebRuntime: false,
+  loggingBehavior: 'debug',
   plugins: {
     "SplashScreen": {
       "launchAutoHide": false,

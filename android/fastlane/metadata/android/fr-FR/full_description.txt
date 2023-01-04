@@ -1,0 +1,21 @@
+Avec Papillon, c'est simple d'accéder à son emploi du temps, à ses devoirs, à ses notes, et à bien plus ! Connectez simplement votre service scolaire, et profitez immédiatement d'une expérience améliorée !
+
+📆 Emploi du temps
+   - Organisation intuitive du temps
+   - Ajout au calendrier (bientôt)
+   - Cours personnalisés (bientôt)
+📑 Travail à faire
+   - Gestion intuitive de son planning de travail
+🎓 Notes et compétences
+   - Moyenne générale et moyennes de classe (bientôt)
+   - Remise automatique des notes sur 20 (bientôt)
+   - Affichage intuitif en grille
+📂 Contenu des cours et fichiers (bientôt)
+📰 Actualités
+🚪 Absences, retards et sanctions (bientôt)
+🎨 Designée avec des principes d'UI et d'UX précis
+✋ Prête pour un usage à une main
+✨ S'améliore continuellement grace aux mises à jour
+📱 Look natif pour iOS et Android
+🕺 Police et couleur d'interface personnalisables (bientôt)
+🤯 Étend les fonctionnalités de l'app
