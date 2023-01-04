@@ -13,12 +13,14 @@
                 required: true
             },
             teachers: {
-                type: Array,
-                required: false
+                type: String,
+                required: false,
+                default: "Pas de professeur"
             },
             rooms: {
-                type: Array,
+                type: String,
                 required: false,
+                default: "Pas de salle"
             },
             memo: {
                 type: Boolean,
