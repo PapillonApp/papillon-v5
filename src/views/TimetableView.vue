@@ -164,8 +164,8 @@
             // set selectedCourse
             this.selectedCourse = {
                 name: cours.data.subject,
-                teachers: cours.data.teachers.join(', ') ?? "Aucun professeur",
-                rooms: cours.data.rooms.join(', ') ?? "Aucune salle",
+                teachers: cours.data.teachers.join(', ') || "Aucun professeur",
+                rooms: cours.data.rooms.join(', ') || "Aucune salle",
                 start: cours.time.start.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
                 memo: cours.data.memo,
                 hasMemo: cours.data.hasMemo,
@@ -304,8 +304,8 @@
                 <IonList>
                     <CoursElement v-for="cours in yesterday" :key="cours.id"
                         :subject="cours.data.subject"
-                        :teachers="cours.data.teachers.join(', ')"
-                        :rooms="cours.data.rooms.join(', ')"
+                        :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
+                        :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
                         :memo="cours.data.hasMemo"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
@@ -346,8 +346,8 @@
                 <IonList>
                     <CoursElement v-for="cours in timetable" :key="cours.id"
                         :subject="cours.data.subject"
-                        :teachers="cours.data.teachers.join(', ')"
-                        :rooms="cours.data.rooms.join(', ')"
+                        :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
+                        :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
                         :memo="cours.data.hasMemo"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
@@ -388,8 +388,8 @@
                 <IonList>
                     <CoursElement v-for="cours in tomorrow" :key="cours.id"
                         :subject="cours.data.subject"
-                        :teachers="cours.data.teachers.join(', ')"
-                        :rooms="cours.data.rooms.join(', ')"
+                        :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
+                        :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
                         :memo="cours.data.hasMemo"
                         :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
                         :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
