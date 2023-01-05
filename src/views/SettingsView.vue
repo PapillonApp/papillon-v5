@@ -82,28 +82,26 @@
                 // return size
                 return localStorageSize;
             },
-            getServerStatus() {
+            getApiVersion() {
                 const API = this.$api;
 
-                fetch(API + "/infos")
-                    .then(response => response.json())
-                    .then(result => {
+                fetch(API + "/infos").then(response => response.json()).then(result => {
                         this.apiVersion = result.version;
                     })
                     .catch(error => {
                         this.apiVersion = "Inconnue";
                     });
-            },
+            }
         },
         mounted() {
+            this.getApiVersion();
+
             // Get user data
             let userData = JSON.parse(localStorage.getItem('userData'));
 
             if (userData) {
                 this.userName = userData.student.name;
             }
-
-            this.getServerStatus();
 
             // Get localStorage size
             this.localStorageSize = this.getLocalStorageSize() + ' kb';
