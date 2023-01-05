@@ -245,6 +245,15 @@
                 // start loading
                 this.isLoading = true;
 
+                if(!etab.includes("eleve.html")) {
+                    if(etab.includes("/pronote/")) {
+                        etab = etab + "eleve.html";
+                    }
+                    else {
+                        etab = etab + "/" + "eleve.html";
+                    }
+                }
+
                 // get ENT
                 axios.get(`https://api.androne.dev/papillon-v4/redirect.php?url=${encodeURIComponent(etab)}`)
                 .then(response => {
@@ -284,16 +293,7 @@
                         // car toutatice est chelou
                         this.loginToEtab(url.replace("index-education.net", "pronote.toutatice.fr"));
                     }
-                    else {
-                        if(!etab.includes("eleve.html")) {
-                            if(etab.includes("/pronote/")) {
-                                etab = etab + "eleve.html";
-                            }
-                            else {
-                                etab = etab + "/" + "eleve.html";
-                            }
-                        }
-                        
+                    else {                        
                         // put etab to lowercase
                         etab = etab.toLowerCase();
 
