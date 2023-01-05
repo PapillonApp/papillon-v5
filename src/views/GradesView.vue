@@ -42,7 +42,19 @@
                     color += Math.floor(Math.random() * 10);
                 }
                 return color;
-            }
+            },
+            LightenColor(color, percent) {
+                var num = parseInt(color,16),
+                    amt = Math.round(2.55 * percent),
+                    R = (num >> 16) + amt,
+                    B = (num >> 8 & 0x00FF) + amt,
+                    G = (num & 0x0000FF) + amt;
+
+                    return (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
+            },
+            darkenHexColor(col) {
+                return '#' + this.LightenColor(col, -20);
+            },
         },
         mounted() {
             this.isLoading = true;
@@ -117,7 +129,7 @@
             </ion-card>
         </div>
         
-        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: #${ subject.id.substring(1,7) };`">
+        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: ${ darkenHexColor(subject.id.substring(0,6).toString()) };`">
             <div class="subject-name">
                 <h3>{{subject.name}}</h3>
                 <p class="avg" v-if="subject.significant">{{subject.average}}<small>/20</small></p>
