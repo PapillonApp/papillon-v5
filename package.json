@@ -17,6 +17,7 @@
     "@capacitor/assets": "^2.0.4",
     "@capacitor/core": "^4.6.1",
     "@capacitor/dialog": "^4.1.0",
+    "@capacitor/geolocation": "^4.1.0",
     "@capacitor/ios": "^4.6.1",
     "@capacitor/preferences": "^4.0.2",
     "@capacitor/splash-screen": "^4.1.2",

@@ -9,6 +9,8 @@
 
     import displayToast from '@/functions/utils/displayToast.js';
 
+    import { Geolocation } from '@capacitor/geolocation';
+
     import { Dialog } from '@capacitor/dialog';
 
     export default defineComponent({
@@ -41,6 +43,7 @@
         },
         mounted() {
             this.getENTs();
+            this.GetLocation();
         },
         methods: {
             decodeEntities(encodedString) {
@@ -75,7 +78,16 @@
                     }, 200);
                     this.ents = response.data.ent_list;
                 })
-            },            
+            },    
+            async GetLocation() {
+                const coordinates = await Geolocation.getCurrentPosition();
+
+                let lat = coordinates.coords.latitude;
+                let lon = coordinates.coords.longitude;
+
+                this.isLoading = true;
+                this.findEstablishments(lat, lon)
+            },     
             async createEntPicker(multipleEnts) {
                 console.log(multipleEnts)
 
@@ -411,7 +423,7 @@
             </ion-buttons>
         </ion-toolbar>
         <ion-toolbar>
-            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Entrez une ville, un code postal" type="text" :debounce="1000" animated="true" @ionChange="getPostal($event)" @ionClear="clearEtabs()" v-bind="terms"></ion-searchbar>
+            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Entrez un code postal..." type="number" :debounce="1000" animated="true" @ionChange="getPostal($event)" @ionClear="clearEtabs()" v-bind="terms"></ion-searchbar>
         </ion-toolbar>
     </ion-header>
       
