@@ -275,7 +275,7 @@
           <ion-title mode="md">Ma journée</ion-title>
 
           <ion-buttons slot="end">
-            <ion-button mode="md" color="dark" @click="openRnPicker()">
+            <ion-button mode="md" id="rnPickerModalButton" color="dark" @click="openRnPicker()">
               <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
               <p>{{ rnButtonString }}</p>
@@ -429,7 +429,7 @@
         </swiper>
 
 
-        <IonModal ref="rnPickerModal" trigger="rnPickerModalButton" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
+        <IonModal ref="rnPickerModal" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
           <IonHeader>
             <IonToolbar>
               <ion-title>Sélection de la date</ion-title>
