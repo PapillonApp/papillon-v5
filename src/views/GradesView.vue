@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText, IonSegment, IonSegmentButton } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText, IonSegment, IonSegmentButton, IonModal } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -24,6 +24,7 @@
             IonItem,
             IonLabel,
             IonList,
+            IonModal,
             IonListHeader,
             IonSkeletonText,
             IonSegment,
@@ -36,6 +37,14 @@
                 classAverages: [],
                 isLoading: false,
                 periods: [],
+                selectedMark: {
+                    subject: "",
+                    average: 0,
+                    class_average: 0,
+                    max_average: 0,
+                    min_average: 0,
+                    out_of: 0,
+                },
             }
         },
         methods: {
@@ -96,7 +105,20 @@
                 // get corresponding period name from id
                 let newPeriod = this.periods.find(period => period.id == newSegment);
                 console.log(newPeriod);
-            }
+            },
+            openAverageModal(subject) {
+
+                this.selectedMark = {
+                    subject: subject.name,
+                    average: subject.average,
+                    class_average: subject.class.average,
+                    max_average: subject.class.max,
+                    min_average: subject.class.min,
+                    out_of: 20,
+                }
+
+                this.$refs.averageModal.$el.present(subject);
+            },
         },
         mounted() {
             this.isLoading = true;
@@ -179,7 +201,7 @@
         </div>
         
         <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: ${ darkenHexColor(subject.id.substring(2,8).toString()) };`">
-            <div class="subject-name">
+            <div class="subject-name" @click="openAverageModal(subject)">
                 <h3>{{subject.name}}</h3>
                 <p class="avg" v-if="subject.significant">{{subject.average}}<small>/20</small></p>
                 <p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
@@ -265,6 +287,49 @@
         </IonList>
 
         <br /> <br />
+
+        <IonModal ref="averageModal" :keep-contents-mounted="true" :initial-breakpoint="0.4" :breakpoints="[0, 0.4, 0.6]" :handle="true" :canDismiss="true">
+            <IonHeader>
+              <IonToolbar>
+                <ion-title>{{ selectedMark.subject }}</ion-title>
+              </IonToolbar>
+            </IonHeader>
+            <ion-content>
+                <ion-list>
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">face</span>
+                        <ion-label>
+                            <p>Ma moyenne</p>
+                            <h3>{{ selectedMark.average }}/20</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">school</span>
+                        <ion-label>
+                            <p>Moyenne de la classe</p>
+                            <h3>{{ selectedMark.class_average }}/20</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">person_remove</span>
+                        <ion-label>
+                            <p>La moyenne basse</p>
+                            <h3>{{ selectedMark.min_average }}/20</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">person_add</span>
+                        <ion-label>
+                            <p>La moyenne haute</p>
+                            <h3>{{ selectedMark.max_average }}/20</h3>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-content>
+        </IonModal>
 
       </ion-content>
     </ion-page>
