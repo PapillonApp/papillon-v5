@@ -275,7 +275,7 @@
           <ion-title mode="md">Ma journée</ion-title>
 
           <ion-buttons slot="end">
-            <ion-button mode="md" color="dark" id="rnPickerModalButton">
+            <ion-button mode="md" color="dark" @click="openRnPicker()">
               <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
               <p>{{ rnButtonString }}</p>

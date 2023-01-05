@@ -84,6 +84,11 @@
         setup() {
             return { }
         },
+        methods: {
+            openCours() {
+                this.$emit('open')
+            }
+        },
         mounted() {
             return false
         }
@@ -91,10 +96,8 @@
 </script>
 
 <template>
-    <div :class="classes + isCancelled" v-if="!sameTime" @click="$emit('open')">
+    <div :class="classes + isCancelled" v-if="!sameTime" @click="openCours()">
         <div class="CoursColor" slot="start" :style="`background: ${color};`"></div>
-
-        <ion-ripple-effect></ion-ripple-effect>
 
         <ion-label>
             <small class="CoursStart"> {{ start }} </small>
