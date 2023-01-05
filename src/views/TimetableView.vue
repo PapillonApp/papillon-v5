@@ -74,7 +74,7 @@
                     let second = timetable[i+1].time.start.toISOString();
 
                     if(first == second) {
-                        timetable[i].course.sameTime = true;
+                        timetable[i+1].course.sameTime = true;
                     }
                 }
             }
