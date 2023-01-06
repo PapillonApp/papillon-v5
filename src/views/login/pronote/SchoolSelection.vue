@@ -89,15 +89,20 @@
                 this.findEstablishments(lat, lon)
             },     
             async createEntPicker(multipleEnts) {
-                console.log(multipleEnts)
-
                 let options = [];
 
-                for (let i = 0; i < multipleEnts.length; i++) {
+                for (let i = 0; i < multipleEnts.cas.length; i++) {
                     options.push({
-                        text: multipleEnts[i].name,
+                        text: multipleEnts.cas[i].name,
                         handler: () => {
-                            this.choice_py = multipleEnts[i].py;
+                            let selected = {
+                                etab : multipleEnts.etab.toLowerCase(),
+                                cas : multipleEnts.cas[i].py,
+                                cas_name : multipleEnts.cas[i].name,
+                                educonnect : multipleEnts.cas[i].educonnect == true,
+                            }
+
+                            this.displayLogin(selected)
                         }
                     });
                 }
@@ -298,19 +303,12 @@
                         cas = all_cas_same_host[0].py;
                     } else {
                         // multiple CAS for this host
-                        // ask user to choose one
-                        let listToChoose = [];
-                        for (let i = 0; i < all_cas_same_host.length; i++) {
-                            listToChoose.push({
-                                id : i,
-                                cas : all_cas_same_host[i],
-                                etab : etab.toLowerCase(),
-                            });
-                        }
+                        let listToChoose = {
+                            etab : etab.toLowerCase(),
+                            cas : all_cas_same_host,
+                        };
 
-                        // open modal
-                        this.listToChoose = listToChoose;
-                        this.$refs.casModal.$el.present();
+                        this.createEntPicker(listToChoose);
                         return;
                     }
 
@@ -321,29 +319,28 @@
                         // car toutatice est chelou
                         this.loginToEtab(url.replace("index-education.net", "pronote.toutatice.fr"));
                     }
-                    else {                        
+                    else {
                         // put etab to lowercase
                         etab = etab.toLowerCase();
 
-                        this.etabUrl = etab;
-                        this.etabCas = cas;
-                        
-                        // get cas name in all_cas_same_host
-                        let cas_name = all_cas_same_host[0].name;
-                        this.displayCas = cas_name;
-                        this.isEduconnectLogin = all_cas_same_host[0].educonnect == true;
+                        let selected = {
+                            etab : etab,
+                            cas : cas,
+                            cas_name : all_cas_same_host[0].name,
+                            educonnect : all_cas_same_host[0].educonnect == true,
+                        }
 
-                        this.$refs.loginModal.$el.present()
+                        this.displayLogin(selected)
                     }
                 });
             },
-            chooseCas(selected){
-                this.etabCas = selected.cas.py;
-                this.displayCas = selected.cas.name;
-                this.isEduconnectLogin = selected.cas.educonnect == true;
+            displayLogin(selected) {
                 this.etabUrl = selected.etab;
-                this.$refs.casModal.$el.dismiss();
-                this.$refs.loginModal.$el.present();
+                this.etabCas = selected.cas;
+                this.displayCas = selected.cas_name;
+                this.isEduconnectLogin = selected.educonnect;
+
+                this.$refs.loginModal.$el.present()
             },
             dismiss() {
                 this.$refs.loginModal.$el.dismiss();
