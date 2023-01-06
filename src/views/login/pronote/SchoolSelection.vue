@@ -293,9 +293,25 @@
                         // no CAS for this host
                         displayToast.presentToast(`Aucun CAS trouvé pour ${cas_host}.`, "danger")
                     }
-                    else if (all_cas_same_host.length >= 1) {
+                    else if (all_cas_same_host.length == 1) {
                         // only one CAS for this host
                         cas = all_cas_same_host[0].py;
+                    } else {
+                        // multiple CAS for this host
+                        // ask user to choose one
+                        let listToChoose = [];
+                        for (let i = 0; i < all_cas_same_host.length; i++) {
+                            listToChoose.push({
+                                id : i,
+                                cas : all_cas_same_host[i],
+                                etab : etab.toLowerCase(),
+                            });
+                        }
+
+                        // open modal
+                        this.listToChoose = listToChoose;
+                        this.$refs.casModal.$el.present();
+                        return;
                     }
 
                     console.log(url);
@@ -320,6 +336,14 @@
                         this.$refs.loginModal.$el.present()
                     }
                 });
+            },
+            chooseCas(selected){
+                this.etabCas = selected.cas.py;
+                this.displayCas = selected.cas.name;
+                this.isEduconnectLogin = selected.cas.educonnect == true;
+                this.etabUrl = selected.etab;
+                this.$refs.casModal.$el.dismiss();
+                this.$refs.loginModal.$el.present();
             },
             dismiss() {
                 this.$refs.loginModal.$el.dismiss();
@@ -528,6 +552,25 @@
                 </div>
             </ion-content>
         </ion-modal> 
+
+        <ion-modal ref="casModal" trigger="open-casModal" :swipeToClose="true">
+            <div class="choiceCas">
+                <ion-list>
+                    <ion-list-header>
+                        <ion-label>
+                            <p>Choisissez votre CAS</p>
+                        </ion-label>
+                    </ion-list-header>
+
+                    <ion-item button detail="true" v-for="(toChoose, index) in listToChoose" v-bind:key="index" @click="chooseCas(toChoose)">
+                        <ion-icon class="icon" slot="start" :ios="schoolOutline" :md="schoolSharp"></ion-icon>
+                        <ion-label>
+                            <h2>{{ toChoose.cas.name }}</h2>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+            </div>
+        </ion-modal>
     </ion-content>
 </template>
   
