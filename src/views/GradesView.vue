@@ -119,6 +119,27 @@
 
                 this.$refs.averageModal.$el.present(subject);
             },
+            getGradesRefresh() {
+                GetGrades().then((data) => {
+                    this.grades = data.marks;
+
+                    this.averages = data.averages;
+                    this.isLoading = false;
+
+                    this.classAverages = data.averages.class;
+                })
+            },
+            handleRefresh(event) {
+                // get new Grades data
+                this.getGradesRefresh()
+
+                // stop refresh when this.grades is updated
+                this.$watch('grades', () => {
+                    setTimeout(() => {
+                        event.target.complete();
+                    }, 200);
+                });
+            },
         },
         mounted() {
             this.isLoading = true;
@@ -161,6 +182,10 @@
       </IonHeader>
       
       <ion-content :fullscreen="true">
+        <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+            <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
+
         <IonHeader collapse="condense">
             <IonToolbar>
                 <ion-title size="large">Notes</ion-title>

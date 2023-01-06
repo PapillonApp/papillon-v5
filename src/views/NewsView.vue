@@ -42,7 +42,23 @@
             },
             closeNews() {
                 this.$refs.modal.$el.dismiss();
-            }
+            },
+            getNewsRefresh() {
+                GetNews().then((data) => {
+                    this.news = data;
+                })
+            },
+            handleRefresh(event) {
+                // get new News data
+                this.getNewsRefresh()
+
+                // stop refresh when this.news is updated
+                this.$watch('news', () => {
+                    setTimeout(() => {
+                        event.target.complete();
+                    }, 200);
+                });
+            },
         },
         mounted() {
             this.presentingElement = this.$refs.page.$el;
@@ -70,6 +86,10 @@
       </IonHeader>
       
       <ion-content :fullscreen="true">
+        <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+            <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
+
         <IonHeader collapse="condense">
             <IonToolbar>
                 <ion-title size="large">Actualités</ion-title>
