@@ -268,7 +268,7 @@
 
                 // get ENT
                 axios.get(`https://api.androne.dev/papillon-v4/redirect.php?url=${encodeURIComponent(etab)}`)
-                .then(async response => {
+                .then(response => {
                     // end loading
                     this.isLoading = false;
 
