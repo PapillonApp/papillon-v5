@@ -254,10 +254,19 @@
                     this.login();
                 }, 1000);
             },
-            loginToEtab(url) {
+            loginToEtab(url, cp) {
                 // lowercase url
                 url = url.toLowerCase();
                 let etab = url.toLowerCase();
+
+                let isToutatice = false;
+
+                // check if cp (integer) starts with 35, 22, 56, or 29 (Bretagne)
+                if(cp) {
+                    if(cp.toString().startsWith("35") || cp.toString().startsWith("22") || cp.toString().startsWith("56") || cp.toString().startsWith("29")) {
+                        isToutatice = true;
+                    }
+                }
 
                 // start loading
                 this.isLoading = true;
@@ -315,7 +324,7 @@
                     console.log(url);
 
                     // TODO: Vérifier si ca fonctionne pour toutatice
-                    if(url == resp && url.includes("index-education.net")) {
+                    if(isToutatice) {
                         // car toutatice est chelou
                         this.loginToEtab(url.replace("index-education.net", "pronote.toutatice.fr"));
                     }
@@ -332,7 +341,7 @@
 
                         this.displayLogin(selected)
                     }
-                });
+                })
             },
             displayLogin(selected) {
                 this.etabUrl = selected.etab;
@@ -457,7 +466,7 @@
                 </ion-label>
             </ion-list-header>
 
-            <ion-item button detail="true" v-for="(etab, index) in etabs" v-bind:key="index" @click="loginToEtab(etab.url)">
+            <ion-item button detail="true" v-for="(etab, index) in etabs" v-bind:key="index" @click="loginToEtab(etab.url, etab.cp)">
                 <ion-icon class="icon" slot="start" :ios="schoolOutline" :md="schoolSharp"></ion-icon>
                 <ion-label>
                     <h2>{{ etab.nomEtab }}</h2>
