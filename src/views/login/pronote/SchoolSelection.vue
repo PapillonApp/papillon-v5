@@ -634,6 +634,8 @@
         background: none;
         border-radius: 0px;
         margin-bottom: 10px;
+        overflow: hidden;
+        isolation: isolate;
     }
 
     .loginInput:focus {
@@ -651,5 +653,7 @@
         font-weight: bold;
         font-size: 16px;
         cursor: pointer;
+        overflow: hidden;
+        isolation: isolate;
     }
 </style>

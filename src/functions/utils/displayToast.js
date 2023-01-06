@@ -12,6 +12,17 @@ async function presentToast(msg, color, isDismissible) {
 	await toast.present();
 }
 
+async function presentToastIcon(msg, color, icon, isDismissible) {
+	const toast = await toastController.create({
+		message: msg,
+		duration: 2000,
+		position: "bottom",
+		color: color,
+		icon: icon
+	});
+
+	await toast.present();
+}
 
 async function presentError(msg, color, error) {
 	const toast = await toastController.create({
@@ -47,4 +58,20 @@ async function alertDialogError(err) {
 	await alert.present();
 }
 
-export default { presentToast, presentError };
+async function presentToastTest() {
+	const toast = await toastController.create({
+		message: "Ceci est un test",
+		duration: 200000,
+		position: "bottom",
+		color: "light"
+	});
+
+	await toast.present();
+}
+
+export default {
+	presentToast,
+	presentError,
+	presentToastIcon,
+	presentToastTest
+};

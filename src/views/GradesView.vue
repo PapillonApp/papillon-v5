@@ -194,7 +194,7 @@
 
         <div id="noTouchZone"></div>
 
-        <ion-segment id="segment" value="default" ref="segment" @ionChange="segChange()">
+        <ion-segment style="display: none;" id="segment" value="default" ref="segment" @ionChange="segChange()">
             <ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.status" :id="period.id">
                 <ion-label>{{period.name}}</ion-label>
             </ion-segment-button>

@@ -176,7 +176,7 @@
 
     .CoursName {
         font-size: 1.2em;
-        font-weight: 500;
+        font-weight: 700 !important;
     }
 
     .CoursColor {

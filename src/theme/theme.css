@@ -1,35 +1,35 @@
 /* Import fonts from /fonts folder */
 @font-face {
     font-family: 'Papillon';
-    src: url('/public/fonts/Hind/Hind-Light.ttf') format('truetype');
+    src: url('/public/fonts/Barlow/Barlow-Light.ttf') format('truetype');
     font-weight: 300;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Papillon';
-    src: url('/public/fonts/Hind/Hind-Regular.ttf') format('truetype');
+    src: url('/public/fonts/Barlow/Barlow-Regular.ttf') format('truetype');
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Papillon';
-    src: url('/public/fonts/Hind/Hind-Medium.ttf') format('truetype');
+    src: url('/public/fonts/Barlow/Barlow-Medium.ttf') format('truetype');
     font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Papillon';
-    src: url('/public/fonts/Hind/Hind-SemiBold.ttf') format('truetype');
+    src: url('/public/fonts/Barlow/Barlow-SemiBold.ttf') format('truetype');
     font-weight: 600;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Papillon';
-    src: url('/public/fonts/Hind/Hind-Bold.ttf') format('truetype');
+    src: url('/public/fonts/Barlow/Barlow-Bold.ttf') format('truetype');
     font-weight: 700;
     font-style: normal;
 }
@@ -244,4 +244,22 @@ ion-item .mdls[slot="start"] {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     overflow: hidden;
+}
+
+/* toasts */
+
+.md ion-toast {
+    --border-radius: 8px !important;
+    --box-shadow: 0 2px 6px #00000015 !important;
+
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.ios ion-toast {
+    --border-radius: 8px !important;
+    --box-shadow: 0 2px 6px #00000015 !important;
+
+    font-size: 15px;
+    font-weight: 400;
 }
