@@ -197,7 +197,7 @@ function constructPronoteGrades(grades) {
             newMark.info.significantAverage = true;
         }
 
-        if (!newMark.info.significant && mark.info.significantReason == null) {
+        if (!newMark.info.significant && newMark.info.significantReason == null) {
             return; // It's an empty mark so don't show it on the tab
         }
 
