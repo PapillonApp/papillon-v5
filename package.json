@@ -29,6 +29,7 @@
     "core-js": "^3.6.5",
     "ionicons": "^6.0.3",
     "jquery": "^3.6.2",
+    "lucide-vue-next": "^0.104.0",
     "swiper": "^8.4.5",
     "vue": "^3.2.21",
     "vue-router": "^4.0.12"

@@ -96,8 +96,10 @@
 </script>
 
 <template>
-    <div :class="classes + isCancelled" v-if="!sameTime" @click="openCours()">
-        <div class="CoursColor" slot="start" :style="`background: ${color};`"></div>
+    <div :class="classes + isCancelled" :style="`--backgroundColor: ${color};`" v-if="!sameTime" @click="openCours()">
+        <div class="bg"></div>
+        
+        <div class="CoursColor" slot="start"></div>
 
         <ion-label>
             <small class="CoursStart"> {{ start }} </small>
@@ -148,6 +150,18 @@
         position: relative;
     }
 
+    .cours .bg {
+        background: var(--backgroundColor);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.05;
+        filter: saturate(1.5);
+    }
+
     .ios .CoursData {
         padding-bottom: 10px;
     }
@@ -160,7 +174,7 @@
         width: 100%;
         height: 100%;
 
-        padding: 8px 0px;
+        padding: 10px 1px;
     }
 
     .CoursStart {
@@ -171,17 +185,18 @@
 
         position: absolute;
         top: 13px;
-        right: 14px;
+        right: 16px;
     }
 
     .CoursName {
         font-size: 1.2em;
-        font-weight: 700 !important;
+        font-weight: 600 !important;
     }
 
     .CoursColor {
         width: 4px;  
         margin-right: 15px !important;
+        background: var(--backgroundColor);
     }
 
     .CoursInfoContainer {

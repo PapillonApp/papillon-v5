@@ -130,7 +130,7 @@ input.sc-ion-searchbar-md {
 @font-face {
     font-family: 'Material Symbols Outlined';
     font-style: normal;
-    src: url('/public/fonts/MaterialSymbolsOutlined.woff2') format('woff');
+    src: url('/public/fonts/MaterialSymbolsOutlined.woff2') format('woff2');
 }
 
 .material-symbols-outlined {
@@ -156,6 +156,7 @@ input.sc-ion-searchbar-md {
     'opsz' 24;
 
     font-size: 24px;
+    font-display: block;
 }
 
 .mdls[slot="start"] {
@@ -206,9 +207,10 @@ ion-item .mdls[slot="start"] {
 }
 
 .NoCours h2 {
-    font-size: 24px;
-    line-height: 24px;
-    font-weight: 600;
+    font-size: 28px;
+    line-height: 26px;
+    font-weight: 400 !important;
+    margin-bottom: 5px;
 }
 
 .NoCours p {
@@ -221,6 +223,7 @@ ion-item .mdls[slot="start"] {
 
 .NoCours .button {
     margin-left: -15.4px;
+    font-weight: 600 !important;
 }
 
 .ios .NoCours {
@@ -262,4 +265,10 @@ ion-item .mdls[slot="start"] {
 
     font-size: 15px;
     font-weight: 400;
+}
+
+ion-header ion-toolbar ion-title.md {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: -2px;
 }

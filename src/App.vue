@@ -251,14 +251,27 @@
         white-space: nowrap;
     }
 
+    .ios .userItem h3 {
+        font-size: 18px;
+        margin-bottom: 0;
+    }
+
     .userItem p {
-        font-size: 14px;
+        font-size: 15px;
         color: #888;
         width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        margin-top: 3px;
     }
+
+    .ios .userItem p {
+        font-size: 15px;
+        margin-top: 0;
+        font-family: "Papillon";
+    }
+
 
     .md .userItem_content {
         flex-direction: column;
@@ -363,6 +376,7 @@
 
     ion-menu ion-item ion-label {
     font-weight: 500;
+    margin-top: 8px;
     }
 
     ion-note {
