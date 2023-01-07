@@ -136,6 +136,8 @@ http://ionicframework.com/docs/theming/ */
     --ion-tab-bar-background: #141316;
 
     --ion-card-background: hsl(260, 7%, 9%);
+
+    --ion-inset-background: hsl(260, 7%, 12%);
   }
 
   .ios ion-modal {
@@ -182,6 +184,8 @@ http://ionicframework.com/docs/theming/ */
     --ion-tab-bar-background: #1C1B1F;
 
     --ion-card-background: hsl(255, 7%, 12%);
+
+    --ion-inset-background: hsl(255, 7%, 15%);
   }
 
   .md ion-modal {

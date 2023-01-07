@@ -239,6 +239,8 @@ ion-item .mdls[slot="start"] {
     margin-left: 0;
 }
 
+/* Modals */
+
 .md ion-modal {
     background: #00000055;
 }
@@ -270,4 +272,23 @@ ion-item .mdls[slot="start"] {
 ion-header ion-toolbar ion-title.md {
     font-size: 20px;
     font-weight: 600;
+}
+
+/* items */
+ion-list.list-inset.md ion-list-header {
+    border-radius: 8px 8px 0px 0px !important;
+    overflow: hidden;
+}
+
+ion-list.list-inset.md ion-item:last-child {
+    border-radius: 0px 0px 8px 8px !important;
+    overflow: hidden;
+}
+
+ion-list.list-inset * {
+    --background : var(--ion-inset-background) !important;
+}
+
+ion-list.list-inset.ios ion-list-header ion-label {
+    margin-top: 0px;
 }

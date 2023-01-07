@@ -471,8 +471,8 @@
               </IonToolbar>
             </IonHeader>
             <ion-content>
-                <ion-list>
-                    <ion-item>
+                <ion-list >
+                    <ion-item class="info-item">
                         <span class="material-symbols-outlined mdls" slot="start">history_edu</span>
                         <ion-label>
                             <p>Nom de la matière</p>
@@ -480,7 +480,7 @@
                         </ion-label>
                     </ion-item>
 
-                    <ion-item>
+                    <ion-item class="info-item">
                         <span class="material-symbols-outlined mdls" slot="start">face</span>
                         <ion-label>
                             <p>Professeur</p>
@@ -488,7 +488,7 @@
                         </ion-label>
                     </ion-item>
 
-                    <ion-item>
+                    <ion-item class="info-item">
                         <span class="material-symbols-outlined mdls" slot="start">meeting_room</span>
                         <ion-label>
                             <p>Salle de cours</p>
@@ -496,7 +496,7 @@
                         </ion-label>
                     </ion-item>
 
-                    <ion-item v-if="selectedCourse.hasMemo">
+                    <ion-item class="info-item" v-if="selectedCourse.hasMemo">
                         <span class="material-symbols-outlined mdls" slot="start">description</span>
                         <ion-label>
                             <p>Mémo</p>
@@ -504,15 +504,15 @@
                         </ion-label>
                     </ion-item>
 
-                    <ion-item>
+                    <ion-item class="info-item">
                         <span class="material-symbols-outlined mdls" slot="start">schedule</span>
                         <ion-label>
-                            <p>Horaire de cours</p>
+                            <p>Horaires</p>
                             <h3>De {{selectedCourse.start}} à {{selectedCourse.end}}</h3>
                         </ion-label>
                     </ion-item>
 
-                    <ion-item>
+                    <ion-item class="info-item">
                         <span class="material-symbols-outlined mdls" slot="start">pending_actions</span>
                         <ion-label>
                             <p>Temps de cours</p>
@@ -520,7 +520,7 @@
                         </ion-label>
                     </ion-item>
 
-                    <ion-item v-if="selectedCourse.isCancelled" style="color: var(--ion-color-danger);">
+                    <ion-item class="info-item" v-if="selectedCourse.isCancelled" style="color: var(--ion-color-danger);">
                         <span class="material-symbols-outlined mdls" slot="start">emergency_home</span>
                         <ion-label>
                             <p>Statut</p>
@@ -528,7 +528,7 @@
                         </ion-label>
                     </ion-item>
 
-                    <ion-item v-else-if="selectedCourse.hasStatus" style="color: var(--ion-color-warning);">
+                    <ion-item class="info-item" v-else-if="selectedCourse.hasStatus" style="color: var(--ion-color-warning);">
                         <span class="material-symbols-outlined mdls" slot="start">info</span>
                         <ion-label>
                             <p>Statut</p>
@@ -536,7 +536,7 @@
                         </ion-label>
                     </ion-item>
 
-                    <ion-item v-else>
+                    <ion-item class="info-item" v-else>
                         <span class="material-symbols-outlined mdls" slot="start">info</span>
                         <ion-label>
                             <p>Statut</p>

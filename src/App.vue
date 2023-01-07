@@ -149,9 +149,21 @@
         }
 
         // if avatarCache is set, make it the avatar
-        if(localStorage.getItem('avatarCache')) {
+        if(localStorage.getItem('customAvatar')) {
+            this.avatar = localStorage.getItem('customAvatar') as string;
+        }
+        else if(localStorage.getItem('avatarCache')) {
             this.avatar = localStorage.getItem('avatarCache') as string;
         }
+
+        document.addEventListener('userDataUpdated', () => {
+            if(localStorage.getItem('customAvatar')) {
+                this.avatar = localStorage.getItem('customAvatar') as string;
+            }
+            else if(localStorage.getItem('avatarCache')) {
+                this.avatar = localStorage.getItem('avatarCache') as string;
+            }
+        });
     }
   });
 </script>

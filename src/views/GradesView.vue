@@ -138,8 +138,6 @@
                     });
                 });
 
-                console.log(grades);
-
                 return grades;
             },
             getGradesRefresh() {
@@ -180,6 +178,17 @@
 
             document.addEventListener('tokenUpdated', (ev) => {
                 GetGrades().then((data) => {
+                    this.grades = this.editMarks(data.marks);
+                    this.averages = data.averages;
+                    this.isLoading = false;
+
+                    this.classAverages = data.averages.class;
+                });
+            });
+
+            document.addEventListener('gradeSettingsUpdated', (ev) => {
+                GetGrades().then((data) => {
+                    this.out_of_20 = localStorage.getItem('tweakGrades20') == "true" ? true : false;
                     this.grades = this.editMarks(data.marks);
                     this.averages = data.averages;
                     this.isLoading = false;

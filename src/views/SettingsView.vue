@@ -10,7 +10,9 @@
     import displayToast from '@/functions/utils/displayToast.js';
     import GetToken from '@/functions/login/GetToken.js';
 
-    import { trashBin, refresh, checkmark } from 'ionicons/icons';
+    import { trash, refresh, checkmark, alertCircle } from 'ionicons/icons';
+
+    import { FilePicker } from '@capawesome/capacitor-file-picker';
 
     export default defineComponent({
         name: 'FolderPage',
@@ -51,7 +53,7 @@
 
                 // show toast
                 setTimeout(() => {
-                    displayToast.presentToastIcon('Cache des données vidé', 'light', trashBin);
+                    displayToast.presentToastIcon('Cache des données vidé', 'light', trash);
                     
                     setTimeout(() => {
                         this.localStorageSize = this.getLocalStorageSize() + ' kb';
@@ -104,6 +106,49 @@
                 localStorage.setItem('tweakGrades20', tweakGrades20Checked);
 
                 document.dispatchEvent(new CustomEvent('gradeSettingsUpdated'));
+                displayToast.presentToastIcon('Paramètres des notes enregistrées', 'light', checkmark);
+            },
+            async tweakChangeAvatar() {
+                try {
+                    const result = await FilePicker.pickImages({
+                        multiple: false,
+                        readData: true
+                    });
+
+                    let base64Data = result.files[0].data;
+
+                    let base64URL = 'data:image/jpeg;base64,' + base64Data;
+
+                    // resize image to 200px width using canvas
+                    let canvas = document.createElement('canvas');
+                    let ctx = canvas.getContext('2d');
+                    let img = new Image();
+                    img.src = base64URL;
+
+                    img.onload = function () {
+                        canvas.width = 128;
+                        canvas.height = 128 * img.height / img.width;
+
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                        let newImage = canvas.toDataURL('image/jpeg');
+
+                        localStorage.setItem('customAvatar', newImage);
+                        document.dispatchEvent(new CustomEvent('userDataUpdated'));
+
+                        displayToast.presentToastIcon('Photo de profil modifiée', 'success', checkmark);
+                    }
+                }
+                catch (error) {
+                    console.error(error);
+                    displayToast.presentToastIcon('Erreur lors du changement de photo de profil ('+ error + ')', 'danger', alertCircle);
+                }
+            },
+            tweakDeleteAvatar() {
+                localStorage.removeItem('customAvatar');
+                document.dispatchEvent(new CustomEvent('userDataUpdated'));
+
+                displayToast.presentToastIcon('Photo de profil supprimée', 'light', trash);
             }
         },
         mounted() {
@@ -148,7 +193,7 @@
             </IonToolbar>
         </IonHeader>
 
-        <IonList>
+        <IonList :inset="true" lines="inset">
             <IonListHeader>
                 <IonLabel>
                     <p>Mon compte</p>
@@ -165,7 +210,7 @@
         </IonList>
 
 
-        <IonList>
+        <IonList :inset="true" lines="inset">
             <IonListHeader>
                 <IonLabel>
                     <p>Options</p>
@@ -197,7 +242,7 @@
             </IonItem>
         </IonList>
 
-        <IonList>
+        <IonList :inset="true" lines="inset">
             <IonListHeader>
                 <IonLabel>
                     <p>Tweaks</p>
@@ -207,16 +252,29 @@
             <IonItem>
                 <span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
                 <IonLabel>
-                    <small>Notes</small>
                     <h2>Remettre les notes sur 20</h2>
-                    <p>Uniformise le barème de toutes les notes</p>  
-                    <p><small>Nécéssite un redémarrage</small></p>
+                    <p>Uniformise le barème de toutes les notes</p>
                 </IonLabel>
                 <IonToggle slot="end" ref="tweakGrades20" @ionChange="tweakGrades20Change()"></IonToggle>
             </IonItem>
+
+            <IonItem button @click="tweakChangeAvatar()">
+                <span class="material-symbols-outlined mdls" slot="start">person_pin</span>
+                <IonLabel>
+                    <h2>Changer de photo de profil</h2>
+                    <p>Utiliser une photo différente dans l'application</p>
+                </IonLabel>
+            </IonItem>
+
+            <IonItem button @click="tweakDeleteAvatar()">
+                <span class="material-symbols-outlined mdls" slot="start">delete</span>
+                <IonLabel>
+                    <h2>Supprimer la photo de profil personnalisée</h2>
+                </IonLabel>
+            </IonItem>
         </IonList>
 
-        <IonList>
+        <IonList :inset="true" lines="inset">
             <IonListHeader>
                 <IonLabel>
                     <p>A propos de l'app</p>
