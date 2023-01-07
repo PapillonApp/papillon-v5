@@ -115,18 +115,6 @@
                 // set userData in localStorage
                 localStorage.userData = JSON.stringify(data);
             });
-        },
-        updateSelectedIndex() {
-            // get current URL page
-            const currentUrl = window.location.href;
-            const currentUrlSplit = currentUrl.split('/');
-            const currentPage = "/" + currentUrlSplit[currentUrlSplit.length - 1];
-
-            // find in appPages 
-            const currentPageIndex = this.appPages.findIndex(page => page.url === currentPage);
-
-            // set selected index
-            this.selectedIndex = currentPageIndex;
         }
     },
     mounted() {
@@ -176,11 +164,6 @@
                 this.avatar = localStorage.getItem('avatarCache') as string;
             }
         });
-
-        setInterval(() => {
-            // y'a probablement une meilleure façon de faire ça mais bon
-            this.updateSelectedIndex();
-        }, 50);
     }
   });
 </script>
@@ -386,7 +369,7 @@
         margin-bottom: 2px;
     }
 
-    ion-menu ion-item.selected {
+    ion-menu .router-link-active ion-item {
         --background: rgba(var(--ion-color-primary-rgb), 0.14);
         color: var(--ion-color-primary-rgb);
     }
@@ -395,7 +378,7 @@
         margin-right: calc(var(--padding-start) + 2px);
     }
 
-    ion-menu ion-item.selected ion-icon {
+    ion-menu .router-link-active ion-item ion-icon {
     color: var(--ion-color-primary);
     }
 
@@ -414,20 +397,20 @@
     color: var(--ion-color-medium-shade);
     }
 
-    ion-item.selected {
+    .router-link-active ion-item {
         --color: var(--ion-color-primary);
     }
 
-    ion-item.selected:hover {
+    .router-link-active ion-item:hover {
         background: rgba(var(--ion-color-primary-rgb), 0.1);
         cursor: pointer;
     }
 
-    ion-menu-toggle ion-item:not(.selected) {
+    a:not(.router-link-active) ion-menu-toggle ion-item {
         --color: var(--ion-color-medium-shade);
     }
 
-    ion-menu-toggle ion-item:not(.selected):hover {
+    a:not(.router-link-active) ion-menu-toggle ion-item:hover {
         opacity: 0.75;
         cursor: pointer;
     }
