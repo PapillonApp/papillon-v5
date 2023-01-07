@@ -178,6 +178,7 @@
                 teachers: cours.data.teachers.join(', ') || "Aucun professeur",
                 rooms: cours.data.rooms.join(', ') || "Aucune salle",
                 start: cours.time.start.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                end: cours.time.end.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
                 memo: cours.data.memo,
                 hasMemo: cours.data.hasMemo,
                 linkVirtualClassroom: cours.data.linkVirtual,
@@ -205,6 +206,7 @@
                 teacher: '',
                 room: '',
                 start: '',
+                end: '',
                 length: '',
                 status: '',
             }
@@ -505,8 +507,8 @@
                     <ion-item>
                         <span class="material-symbols-outlined mdls" slot="start">schedule</span>
                         <ion-label>
-                            <p>Heure de début</p>
-                            <h3>{{selectedCourse.start}}</h3>
+                            <p>Horaire de cours</p>
+                            <h3>De {{selectedCourse.start}} à {{selectedCourse.end}}</h3>
                         </ion-label>
                     </ion-item>
 
@@ -519,10 +521,10 @@
                     </ion-item>
 
                     <ion-item v-if="selectedCourse.isCancelled" style="color: var(--ion-color-danger);">
-                        <span class="material-symbols-outlined mdls" slot="start">error</span>
+                        <span class="material-symbols-outlined mdls" slot="start">emergency_home</span>
                         <ion-label>
                             <p>Statut</p>
-                            <h3>{{selectedCourse.status}}</h3>
+                            <h3>Ce cours n'est pas maintenu<br>Motif : {{selectedCourse.status}}</h3>
                         </ion-label>
                     </ion-item>
 

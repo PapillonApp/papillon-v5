@@ -119,7 +119,7 @@
 
                     <p class="CoursInfo Status" v-if="status">
                         <span v-if="!isCancelled" class="material-symbols-outlined smol" slot="start">info</span>
-                        <span v-if="isCancelled" class="material-symbols-outlined smol" slot="start">error</span>
+                        <span v-if="isCancelled" class="material-symbols-outlined smol" slot="start">emergency_home</span>
 
                         {{status}}
                     </p>
