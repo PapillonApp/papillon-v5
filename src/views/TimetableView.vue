@@ -67,16 +67,27 @@
             this.$refs.rnPickerModal.$el.present();
         },
         editTimetable(timetable) {
-            // Check if there's 2 lessons starting at the same time
-            for (let i = 0; i < timetable.length; i++) {
-                if(timetable[i+1] !== undefined) {
-                    let first = timetable[i].time.start.toISOString();
-                    let second = timetable[i+1].time.start.toISOString();
+            // add sameTime property to courses that are at the same time
+            for(let i = 0; i < timetable.length; i++) {
+                let lesson = timetable[i];
+                let lessonStart = new Date(lesson.time.start);
+                let lessonEnd = new Date(lesson.time.end);
 
-                    if(first == second) {
-                        timetable[i+1].course.sameTime = true;
+                for(let j = 0; j < timetable.length; j++) {
+                    let lesson2 = timetable[j];
+                    let lesson2Start = new Date(lesson2.time.start);
+                    let lesson2End = new Date(lesson2.time.end);
+
+                    if (lessonStart <= lesson2Start && lessonEnd >= lesson2End && lesson.course.num != lesson2.course.num) {
+                        if (lesson.course.num > lesson2.course.num) {
+                            timetable[j].course.sameTime = true;
+                        }
+                        else {
+                            timetable[i].course.sameTime = true;
+                        }
                     }
                 }
+
             }
             
             return timetable;
