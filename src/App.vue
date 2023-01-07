@@ -1,7 +1,10 @@
 <script lang="ts">
-  import { IonApp, IonContent, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane } from '@ionic/vue';
+  import { IonApp, IonContent, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController } from '@ionic/vue';
+
   import { defineComponent, ref } from 'vue';
   import { useRoute } from 'vue-router';
+
+  import { globeOutline } from 'ionicons/icons';
 
   const GetUser = require('./functions/fetch/GetUserData');
   const displayToast = require('./functions/utils/displayToast.js');
@@ -104,6 +107,18 @@
         }
     },
     methods: {
+        async presentToast(header: string, msg: string, color: string, icon: any) {
+            const toast = await toastController.create({
+                header: header,
+                message: msg,
+                duration: 2000,
+                position: "bottom",
+                color: color,
+                icon: icon
+            });
+
+            await toast.present();
+        },
         getUserData() {
             // get user data
             GetUser.default().then((data: UserData) => {
@@ -134,20 +149,6 @@
             this.getUserData();
         });
 
-        // check if online
-        window.addEventListener('online', () => {
-            displayToast.presentToast("Vous êtes maintenant reconnecté à Internet");
-        });
-
-        // check if offline
-        window.addEventListener('offline', () => {
-            displayToast.presentToast("Vous n'êtes plus connecté à Internet");
-        });
-
-        if(!window.navigator.onLine) {
-            displayToast.presentToast("Vous êtes hors connexion.");
-        }
-
         // if avatarCache is set, make it the avatar
         if(localStorage.getItem('customAvatar')) {
             this.avatar = localStorage.getItem('customAvatar') as string;
@@ -164,6 +165,20 @@
                 this.avatar = localStorage.getItem('avatarCache') as string;
             }
         });
+
+        // check internet connection
+        window.addEventListener('online', () => {
+            this.presentToast('Vous êtes de nouveau connecté à Internet.', 'Certaines informations nécéssiteront peut-être un rafraîchissement.', 'success', globeOutline)
+        });
+
+        window.addEventListener('offline', () => {
+            this.presentToast('Vous n\'êtes plus connecté à Internet.', 'Vous n\'aurez accès qu\'aux informations déjà téléchargées.', 'danger', globeOutline)
+        });
+
+        // check if online
+        if(!navigator.onLine) {
+            this.presentToast('Vous n\'êtes pas connecté à Internet.', 'Vous n\'aurez accès qu\'aux informations déjà téléchargées.', 'danger', globeOutline)
+        }
     }
   });
 </script>

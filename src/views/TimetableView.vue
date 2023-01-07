@@ -1,6 +1,8 @@
 <script>
   import { defineComponent } from 'vue';
   import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner } from '@ionic/vue';
+
+  const displayToast = require('@/functions/utils/displayToast.js');
   
   import { calendarOutline, calendarSharp, todayOutline, todaySharp } from 'ionicons/icons';
 

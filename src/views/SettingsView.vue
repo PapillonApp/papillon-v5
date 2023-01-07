@@ -51,7 +51,12 @@
 
                 // show toast
                 setTimeout(() => {
-                    displayToast.presentToastIcon('Cache des données vidé', 'light', trash);
+                    displayToast.presentToastFull(
+                        'Cache des données vidé',
+                        'Les informations pré-téléchargées ont été supprimées',
+                        'light',
+                        trash
+                    );
                     
                     setTimeout(() => {
                         this.localStorageSize = this.getLocalStorageSize() + ' kb';
@@ -62,11 +67,21 @@
                 GetToken();
 
                 // show toast
-                displayToast.presentToastIcon('Demande de nouvelle clé envoyée...', 'light', refresh);
+                displayToast.presentToastFull(
+                    'Demande de nouvelle clé envoyée...', 
+                    'Veuillez patienter quelques secondes.',
+                    'light',
+                    refresh
+                );
 
                 // wait for event tokenUpdated once token is updated
                 document.addEventListener('tokenUpdated', () => {
-                    displayToast.presentToastIcon('Nouvelle clé de connexion reçue !', 'success', checkmark);
+                    displayToast.presentToastFull(
+                        'Nouvelle clé de connexion reçue !',
+                        'Vos données s\'actualisent en arrière-plan...',
+                        'success',
+                        checkmark
+                    );
                 });
             },
             getLocalStorageSize() {
@@ -107,7 +122,12 @@
                 localStorage.setItem('tweakGrades20', tweakGrades20Checked);
 
                 document.dispatchEvent(new CustomEvent('gradeSettingsUpdated'));
-                displayToast.presentToastIcon('Paramètres des notes enregistrées', 'light', checkmark);
+                displayToast.presentToastFull(
+                    'Paramètres des notes enregistrées',
+                    'Les paramètres des notes ont été enregistrées avec succès.',
+                    'light',
+                    checkmark
+                );
             },
             async tweakChangeAvatar() {
                 try {
@@ -137,19 +157,34 @@
                         localStorage.setItem('customAvatar', newImage);
                         document.dispatchEvent(new CustomEvent('userDataUpdated'));
 
-                        displayToast.presentToastIcon('Photo de profil modifiée', 'success', checkmark);
+                        displayToast.presentToastFull(
+                            'Photo de profil modifiée',
+                            'La photo de profil a été modifiée avec succès.',
+                            'success',
+                            checkmark
+                        );
                     }
                 }
                 catch (error) {
                     console.error(error);
-                    displayToast.presentToastIcon('Erreur lors du changement de photo de profil ('+ error + ')', 'danger', alertCircle);
+                    displayToast.presentToastFull(
+                        'Erreur lors du changement de photo de profil',
+                        error,
+                        'danger',
+                        alertCircle
+                    );
                 }
             },
             tweakDeleteAvatar() {
                 localStorage.removeItem('customAvatar');
                 document.dispatchEvent(new CustomEvent('userDataUpdated'));
 
-                displayToast.presentToastIcon('Photo de profil supprimée', 'light', trash);
+                displayToast.presentToastFull(
+                    'Photo de profil supprimée',
+                    'La photo de profil a été supprimée avec succès.',
+                    'light',
+                    trash
+                );
             }
         },
         mounted() {
