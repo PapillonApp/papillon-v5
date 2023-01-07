@@ -1,4 +1,4 @@
-package plus.pronote.app;
+package xyz.getpapillon.app;
 
 import com.getcapacitor.BridgeActivity;
 
