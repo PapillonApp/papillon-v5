@@ -376,7 +376,6 @@
 
     ion-menu ion-item ion-label {
     font-weight: 500;
-    margin-top: 8px;
     }
 
     ion-note {
