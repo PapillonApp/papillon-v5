@@ -4,7 +4,7 @@
     
     import { calendarOutline } from 'ionicons/icons';
 
-    import {version} from '/package'
+    import { version } from '/package'
     import { Capacitor } from '@capacitor/core';
 
     import displayToast from '@/functions/utils/displayToast.js';
@@ -33,10 +33,8 @@
         setup() {
             return { 
                 appVersion: version,
-                apiVersion: 'Inconnue',
                 appPlatform: Capacitor.getPlatform(),
-                localStorageSize: '',
-                userName: ''
+                localStorageSize: ''
             }
         },
         methods: {
@@ -90,14 +88,17 @@
             getServerStatus() {
                 const API = this.$api;
 
+                let cacheApiVersion = localStorage.getItem('apiVersion');
+
                 fetch(API + "/infos")
                     .then(response => response.json())
                     .then(result => {
-                        this.apiVersion = result.version;
-                    })
-                    .catch(error => {
-                        this.apiVersion = "Inconnue";
+                        let apiVer = result.version;
+                        localStorage.setItem('apiVersion', apiVer);
+                        this.apiVersion = apiVer;
                     });
+
+                this.apiVersion = cacheApiVersion ?? 'Inconnue';
             },
             tweakGrades20Change() {
                 let tweakGrades20 = this.$refs.tweakGrades20;
