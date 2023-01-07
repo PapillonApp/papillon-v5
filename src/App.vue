@@ -115,6 +115,18 @@
                 // set userData in localStorage
                 localStorage.userData = JSON.stringify(data);
             });
+        },
+        updateSelectedIndex() {
+            // get current URL page
+            const currentUrl = window.location.href;
+            const currentUrlSplit = currentUrl.split('/');
+            const currentPage = "/" + currentUrlSplit[currentUrlSplit.length - 1];
+
+            // find in appPages 
+            const currentPageIndex = this.appPages.findIndex(page => page.url === currentPage);
+
+            // set selected index
+            this.selectedIndex = currentPageIndex;
         }
     },
     mounted() {
@@ -164,6 +176,11 @@
                 this.avatar = localStorage.getItem('avatarCache') as string;
             }
         });
+
+        setInterval(() => {
+            // y'a probablement une meilleure façon de faire ça mais bon
+            this.updateSelectedIndex();
+        }, 50);
     }
   });
 </script>
