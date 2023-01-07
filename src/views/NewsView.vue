@@ -98,7 +98,8 @@
 
         <IonList>
             <IonItem button v-for="(news, i) in news" v-bind:key="i" @click="openNews(news)">
-                <span class="material-symbols-outlined mdls" slot="start">feed</span>
+                <span v-if="!news.isSurvey" class="material-symbols-outlined mdls" slot="start">feed</span>
+                <span v-if="news.isSurvey" class="material-symbols-outlined mdls" slot="start">contact_support</span>
                     <IonLabel>
                         <h2>{{ news.title }}</h2>
                         <p>{{ news.author }} - {{ news.category }}</p>
@@ -119,7 +120,16 @@
             <IonContent class="newsModalContent ion-padding">
                 <h1>{{ openedNews.title }}</h1>
                 <small>de {{ openedNews.author }} - {{ openedNews.dateString }}</small>
-                <hr />
+                <div v-if="openedNews.isSurvey">
+                    <IonItem class="survey-warning">
+                        <span class="material-symbols-outlined mdls" slot="start">error</span>
+                        <IonLabel>
+                            <h2>Impossible de répondre</h2>
+                            <p>Vous ne pouvez pas répondre à un sondage depuis Papillon, merci de vous rentre sur votre service scolaire pour répondre.</p>
+                        </IonLabel>
+                    </IonItem>
+                </div>
+                <hr v-else />
                 <div class="newsModalContentContent" v-html="openedNews.htmlContent"></div>
             </IonContent>
         </IonModal>
@@ -158,5 +168,14 @@
     .newsModalContentContent {
         zoom: 1.2;
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    .survey-warning {
+        margin: 15px 0px;
+        color: var(--ion-color-danger);
+    }
+
+    .survey-warning p {
+        white-space: pre-line;
     }
 </style>
