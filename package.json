@@ -17,6 +17,7 @@
     "@capacitor/assets": "^2.0.4",
     "@capacitor/core": "^4.6.1",
     "@capacitor/dialog": "^4.1.0",
+    "@capacitor/geolocation": "^4.1.0",
     "@capacitor/ios": "^4.6.1",
     "@capacitor/preferences": "^4.0.2",
     "@capacitor/splash-screen": "^4.1.2",
@@ -28,6 +29,7 @@
     "core-js": "^3.6.5",
     "ionicons": "^6.0.3",
     "jquery": "^3.6.2",
+    "lucide-vue-next": "^0.104.0",
     "swiper": "^8.4.5",
     "vue": "^3.2.21",
     "vue-router": "^4.0.12"

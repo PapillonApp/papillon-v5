@@ -335,7 +335,6 @@
     .slideButton {
         position: absolute;
         bottom: 8vh;
-        width: 80%;
     }
 
     .services {

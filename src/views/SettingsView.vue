@@ -10,6 +10,8 @@
     import displayToast from '@/functions/utils/displayToast.js';
     import GetToken from '@/functions/login/GetToken.js';
 
+    import { trashBin, refresh, checkmark } from 'ionicons/icons';
+
     export default defineComponent({
         name: 'FolderPage',
         components: {
@@ -48,7 +50,7 @@
 
                 // show toast
                 setTimeout(() => {
-                    displayToast.presentToast('Cache des données vidé', 'light');
+                    displayToast.presentToastIcon('Cache des données vidé', 'light', trashBin);
                     
                     setTimeout(() => {
                         this.localStorageSize = this.getLocalStorageSize() + ' kb';
@@ -59,11 +61,11 @@
                 GetToken();
 
                 // show toast
-                displayToast.presentToast('Demande de nouvelle clé envoyée...', 'light');
+                displayToast.presentToastIcon('Demande de nouvelle clé envoyée...', 'light', refresh);
 
                 // wait for event tokenUpdated once token is updated
                 document.addEventListener('tokenUpdated', () => {
-                    displayToast.presentToast('Nouvelle clé de connexion reçue !', 'light');
+                    displayToast.presentToastIcon('Nouvelle clé de connexion reçue !', 'success', checkmark);
                 });
             },
             getLocalStorageSize() {
@@ -107,6 +109,8 @@
 
             // Get localStorage size
             this.localStorageSize = this.getLocalStorageSize() + ' kb';
+
+            // displayToast.presentToastTest();
         }
     });
 </script>

@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText, IonSegment, IonSegmentButton, IonModal } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -24,8 +24,11 @@
             IonItem,
             IonLabel,
             IonList,
+            IonModal,
             IonListHeader,
-            IonSkeletonText
+            IonSkeletonText,
+            IonSegment,
+            IonSegmentButton
         },
         data() {
             return { 
@@ -33,6 +36,15 @@
                 averages: [],
                 classAverages: [],
                 isLoading: false,
+                periods: [],
+                selectedMark: {
+                    subject: "",
+                    average: 0,
+                    class_average: 0,
+                    max_average: 0,
+                    min_average: 0,
+                    out_of: 0,
+                },
             }
         },
         methods: {
@@ -42,20 +54,106 @@
                     color += Math.floor(Math.random() * 10);
                 }
                 return color;
-            }
+            },
+            LightenColor(color, percent) {
+                var num = parseInt(color,16),
+                    amt = Math.round(2.55 * percent),
+                    R = (num >> 16) + amt,
+                    B = (num >> 8 & 0x00FF) + amt,
+                    G = (num & 0x0000FF) + amt;
+
+                    return (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
+            },
+            darkenHexColor(col) {
+                return '#' + this.LightenColor(col, -20);
+            },
+            getPeriods() {
+                let allPeriods = JSON.parse(localStorage.getItem('userData')).periods;
+
+                // if first period contains "Trimestre", add all trimesters
+                if (allPeriods[0].name.includes("Trimestre")) {
+                    for (let i = 0; i < allPeriods.length; i++) {
+                        if (allPeriods[i].name.includes("Trimestre")) {
+                            this.periods.push(allPeriods[i]);
+                        }
+                    }
+                }
+
+                // if first period contains "Semestre", add all semesters
+                if (allPeriods[0].name.includes("Semestre")) {
+                    for (let i = 0; i < allPeriods.length; i++) {
+                        if (allPeriods[i].name.includes("Semestre")) {
+                            this.periods.push(allPeriods[i]);
+                        }
+                    }
+                }
+
+                // for each period, if actual is True, set status to "default"
+                for (let i = 0; i < this.periods.length; i++) {
+                    this.periods[i].status = this.periods[i].id;
+
+                    if (this.periods[i].actual) {
+                        this.$refs.segment.$el.value = this.periods[i].id;
+                    }
+                }
+
+                console.log(this.periods);
+            },
+            segChange() {
+                let newSegment = this.$refs.segment.$el.value;
+
+                // get corresponding period name from id
+                let newPeriod = this.periods.find(period => period.id == newSegment);
+                console.log(newPeriod);
+            },
+            openAverageModal(subject) {
+
+                this.selectedMark = {
+                    subject: subject.name,
+                    average: subject.average,
+                    class_average: subject.class.average,
+                    max_average: subject.class.max,
+                    min_average: subject.class.min,
+                    out_of: 20,
+                }
+
+                this.$refs.averageModal.$el.present(subject);
+            },
+            getGradesRefresh() {
+                GetGrades().then((data) => {
+                    this.grades = data.marks;
+
+                    this.averages = data.averages;
+                    this.isLoading = false;
+
+                    this.classAverages = data.averages.class;
+                })
+            },
+            handleRefresh(event) {
+                // get new Grades data
+                this.getGradesRefresh()
+
+                // stop refresh when this.grades is updated
+                this.$watch('grades', () => {
+                    setTimeout(() => {
+                        event.target.complete();
+                    }, 200);
+                });
+            },
         },
         mounted() {
             this.isLoading = true;
 
             GetGrades().then((data) => {
                 this.grades = data.marks;
-                console.log(data.marks);
 
                 this.averages = data.averages;
                 this.isLoading = false;
 
                 this.classAverages = data.averages.class;
             });
+
+            this.getPeriods();
 
             document.addEventListener('tokenUpdated', (ev) => {
                 GetGrades().then((data) => {
@@ -84,6 +182,10 @@
       </IonHeader>
       
       <ion-content :fullscreen="true">
+        <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+            <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
+
         <IonHeader collapse="condense">
             <IonToolbar>
                 <ion-title size="large">Notes</ion-title>
@@ -91,6 +193,12 @@
         </IonHeader>
 
         <div id="noTouchZone"></div>
+
+        <ion-segment style="display: none;" id="segment" value="default" ref="segment" @ionChange="segChange()">
+            <ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.status" :id="period.id">
+                <ion-label>{{period.name}}</ion-label>
+            </ion-segment-button>
+        </ion-segment>
 
         <div v-if="isLoading">
             <ion-card class="subject" v-for="i in 6" v-bind:key="i">
@@ -117,8 +225,8 @@
             </ion-card>
         </div>
         
-        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: #${ subject.id.substring(1,7) };`">
-            <div class="subject-name">
+        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: ${ darkenHexColor(subject.id.substring(2,8).toString()) };`">
+            <div class="subject-name" @click="openAverageModal(subject)">
                 <h3>{{subject.name}}</h3>
                 <p class="avg" v-if="subject.significant">{{subject.average}}<small>/20</small></p>
                 <p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
@@ -205,6 +313,49 @@
 
         <br /> <br />
 
+        <IonModal ref="averageModal" :keep-contents-mounted="true" :initial-breakpoint="0.4" :breakpoints="[0, 0.4, 0.6]" :handle="true" :canDismiss="true">
+            <IonHeader>
+              <IonToolbar>
+                <ion-title>{{ selectedMark.subject }}</ion-title>
+              </IonToolbar>
+            </IonHeader>
+            <ion-content>
+                <ion-list>
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">face</span>
+                        <ion-label>
+                            <p>Ma moyenne</p>
+                            <h3>{{ selectedMark.average }}/20</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">school</span>
+                        <ion-label>
+                            <p>Moyenne de la classe</p>
+                            <h3>{{ selectedMark.class_average }}/20</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">person_remove</span>
+                        <ion-label>
+                            <p>La moyenne basse</p>
+                            <h3>{{ selectedMark.min_average }}/20</h3>
+                        </ion-label>
+                    </ion-item>
+
+                    <ion-item>
+                        <span class="material-symbols-outlined mdls" slot="start">person_add</span>
+                        <ion-label>
+                            <p>La moyenne haute</p>
+                            <h3>{{ selectedMark.max_average }}/20</h3>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+            </ion-content>
+        </IonModal>
+
       </ion-content>
     </ion-page>
 </template>
@@ -254,7 +405,6 @@
 
     .grade {
         width: 100%;
-        background: var(--ion-color-step-50);
         border-radius: 5px;
         display: flex;
         flex-direction: column;
@@ -262,6 +412,12 @@
         max-width: fit-content;
         isolation: isolate;
         overflow: hidden;
+    }
+
+    @media screen and (prefers-color-scheme: dark) {
+        .grade {
+            background: var(--ion-color-step-50);
+        }
     }
 
     .myGrade {
@@ -355,5 +511,10 @@
 
     .ios .myGrade * {
         color: #fff !important;
+    }
+
+    .ios #segment {
+        width: calc(100vw - 24px);
+        margin: 0 12px;
     }
 </style>

@@ -136,6 +136,11 @@ function determineSignificant(significant, service) {
                 result.significantReason = "Disp.";
                 result.significantZero = true;
                 break;
+            case -1:
+                result.significant = false;
+                result.significantReason = null;
+                result.significantZero = false;
+                break;
         }
     }
 
@@ -190,6 +195,10 @@ function constructPronoteGrades(grades) {
             newMark.info.significantAverage = false;
         } else {
             newMark.info.significantAverage = true;
+        }
+
+        if (!newMark.info.significant && newMark.info.significantReason == null) {
+            return; // It's an empty mark so don't show it on the tab
         }
 
         newMark.info.outOf20 = mark.is_out_of_20;

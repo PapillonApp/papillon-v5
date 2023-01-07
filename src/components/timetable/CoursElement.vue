@@ -84,6 +84,11 @@
         setup() {
             return { }
         },
+        methods: {
+            openCours() {
+                this.$emit('open')
+            }
+        },
         mounted() {
             return false
         }
@@ -91,10 +96,10 @@
 </script>
 
 <template>
-    <div :class="classes + isCancelled" v-if="!sameTime" @click="$emit('open')">
-        <div class="CoursColor" slot="start" :style="`background: ${color};`"></div>
-
-        <ion-ripple-effect></ion-ripple-effect>
+    <div :class="classes + isCancelled" :style="`--backgroundColor: ${color};`" v-if="!sameTime" @click="openCours()">
+        <div class="bg"></div>
+        
+        <div class="CoursColor" slot="start"></div>
 
         <ion-label>
             <small class="CoursStart"> {{ start }} </small>
@@ -116,7 +121,7 @@
 
                     <p class="CoursInfo Status" v-if="status">
                         <span v-if="!isCancelled" class="material-symbols-outlined smol" slot="start">info</span>
-                        <span v-if="isCancelled" class="material-symbols-outlined smol" slot="start">error</span>
+                        <span v-if="isCancelled" class="material-symbols-outlined smol" slot="start">emergency_home</span>
 
                         {{status}}
                     </p>
@@ -145,6 +150,18 @@
         position: relative;
     }
 
+    .cours .bg {
+        background: var(--backgroundColor);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 0.05;
+        filter: saturate(1.5);
+    }
+
     .ios .CoursData {
         padding-bottom: 10px;
     }
@@ -168,21 +185,23 @@
 
         position: absolute;
         top: 13px;
-        right: 14px;
+        right: 16px;
     }
 
     .CoursName {
         font-size: 1.2em;
-        font-weight: 500;
+        font-weight: 600 !important;
+        margin-top: 1px;
     }
 
     .CoursColor {
         width: 4px;  
         margin-right: 15px !important;
+        background: var(--backgroundColor);
     }
 
     .CoursInfoContainer {
-        margin-top: 5px;
+        margin-top: 2px;
     }
 
     .CoursInfo {

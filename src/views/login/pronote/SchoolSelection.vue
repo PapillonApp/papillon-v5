@@ -9,6 +9,8 @@
 
     import displayToast from '@/functions/utils/displayToast.js';
 
+    import { Geolocation } from '@capacitor/geolocation';
+
     import { Dialog } from '@capacitor/dialog';
 
     export default defineComponent({
@@ -41,6 +43,7 @@
         },
         mounted() {
             this.getENTs();
+            this.GetLocation();
         },
         methods: {
             decodeEntities(encodedString) {
@@ -75,17 +78,31 @@
                     }, 200);
                     this.ents = response.data.ent_list;
                 })
-            },            
-            async createEntPicker(multipleEnts) {
-                console.log(multipleEnts)
+            },    
+            async GetLocation() {
+                const coordinates = await Geolocation.getCurrentPosition();
 
+                let lat = coordinates.coords.latitude;
+                let lon = coordinates.coords.longitude;
+
+                this.isLoading = true;
+                this.findEstablishments(lat, lon)
+            },     
+            async createEntPicker(multipleEnts) {
                 let options = [];
 
-                for (let i = 0; i < multipleEnts.length; i++) {
+                for (let i = 0; i < multipleEnts.cas.length; i++) {
                     options.push({
-                        text: multipleEnts[i].name,
+                        text: multipleEnts.cas[i].name,
                         handler: () => {
-                            this.choice_py = multipleEnts[i].py;
+                            let selected = {
+                                etab : multipleEnts.etab.toLowerCase(),
+                                cas : multipleEnts.cas[i].py,
+                                cas_name : multipleEnts.cas[i].name,
+                                educonnect : multipleEnts.cas[i].educonnect == true,
+                            }
+
+                            this.displayLogin(selected)
                         }
                     });
                 }
@@ -237,10 +254,19 @@
                     this.login();
                 }, 1000);
             },
-            loginToEtab(url) {
+            loginToEtab(url, cp) {
                 // lowercase url
                 url = url.toLowerCase();
                 let etab = url.toLowerCase();
+
+                let isToutatice = false;
+
+                // check if cp (integer) starts with 35, 22, 56, or 29 (Bretagne)
+                if(cp) {
+                    if(cp.toString().startsWith("35") || cp.toString().startsWith("22") || cp.toString().startsWith("56") || cp.toString().startsWith("29")) {
+                        isToutatice = true;
+                    }
+                }
 
                 // start loading
                 this.isLoading = true;
@@ -281,33 +307,49 @@
                         // no CAS for this host
                         displayToast.presentToast(`Aucun CAS trouvé pour ${cas_host}.`, "danger")
                     }
-                    else if (all_cas_same_host.length >= 1) {
+                    else if (all_cas_same_host.length == 1) {
                         // only one CAS for this host
                         cas = all_cas_same_host[0].py;
+                    } else {
+                        // multiple CAS for this host
+                        let listToChoose = {
+                            etab : etab.toLowerCase(),
+                            cas : all_cas_same_host,
+                        };
+
+                        this.createEntPicker(listToChoose);
+                        return;
                     }
 
                     console.log(url);
 
                     // TODO: Vérifier si ca fonctionne pour toutatice
-                    if(url == resp && url.includes("index-education.net")) {
+                    if(isToutatice) {
                         // car toutatice est chelou
                         this.loginToEtab(url.replace("index-education.net", "pronote.toutatice.fr"));
                     }
-                    else {                        
+                    else {
                         // put etab to lowercase
                         etab = etab.toLowerCase();
 
-                        this.etabUrl = etab;
-                        this.etabCas = cas;
-                        
-                        // get cas name in all_cas_same_host
-                        let cas_name = all_cas_same_host[0].name;
-                        this.displayCas = cas_name;
-                        this.isEduconnectLogin = all_cas_same_host[0].educonnect == true;
+                        let selected = {
+                            etab : etab,
+                            cas : cas,
+                            cas_name : all_cas_same_host[0].name,
+                            educonnect : all_cas_same_host[0].educonnect == true,
+                        }
 
-                        this.$refs.loginModal.$el.present()
+                        this.displayLogin(selected)
                     }
-                });
+                })
+            },
+            displayLogin(selected) {
+                this.etabUrl = selected.etab;
+                this.etabCas = selected.cas;
+                this.displayCas = selected.cas_name;
+                this.isEduconnectLogin = selected.educonnect;
+
+                this.$refs.loginModal.$el.present()
             },
             dismiss() {
                 this.$refs.loginModal.$el.dismiss();
@@ -411,7 +453,7 @@
             </ion-buttons>
         </ion-toolbar>
         <ion-toolbar>
-            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Entrez une ville, un code postal" type="text" :debounce="1000" animated="true" @ionChange="getPostal($event)" @ionClear="clearEtabs()" v-bind="terms"></ion-searchbar>
+            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Entrez un code postal..." type="number" :debounce="1000" animated="true" @ionChange="getPostal($event)" @ionClear="clearEtabs()" v-bind="terms"></ion-searchbar>
         </ion-toolbar>
     </ion-header>
       
@@ -424,7 +466,7 @@
                 </ion-label>
             </ion-list-header>
 
-            <ion-item button detail="true" v-for="(etab, index) in etabs" v-bind:key="index" @click="loginToEtab(etab.url)">
+            <ion-item button detail="true" v-for="(etab, index) in etabs" v-bind:key="index" @click="loginToEtab(etab.url, etab.cp)">
                 <ion-icon class="icon" slot="start" :ios="schoolOutline" :md="schoolSharp"></ion-icon>
                 <ion-label>
                     <h2>{{ etab.nomEtab }}</h2>
@@ -516,6 +558,25 @@
                 </div>
             </ion-content>
         </ion-modal> 
+
+        <ion-modal ref="casModal" trigger="open-casModal" :swipeToClose="true">
+            <div class="choiceCas">
+                <ion-list>
+                    <ion-list-header>
+                        <ion-label>
+                            <p>Choisissez votre CAS</p>
+                        </ion-label>
+                    </ion-list-header>
+
+                    <ion-item button detail="true" v-for="(toChoose, index) in listToChoose" v-bind:key="index" @click="chooseCas(toChoose)">
+                        <ion-icon class="icon" slot="start" :ios="schoolOutline" :md="schoolSharp"></ion-icon>
+                        <ion-label>
+                            <h2>{{ toChoose.cas.name }}</h2>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+            </div>
+        </ion-modal>
     </ion-content>
 </template>
   
@@ -573,6 +634,8 @@
         background: none;
         border-radius: 0px;
         margin-bottom: 10px;
+        overflow: hidden;
+        isolation: isolate;
     }
 
     .loginInput:focus {
@@ -590,5 +653,7 @@
         font-weight: bold;
         font-size: 16px;
         cursor: pointer;
+        overflow: hidden;
+        isolation: isolate;
     }
 </style>

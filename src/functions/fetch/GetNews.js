@@ -98,7 +98,11 @@ function constructPronoteNews(news) {
             date: newsItem.date,
             dateString: new Date(newsItem.date).toLocaleDateString( 'fr-FR', { weekday: 'long', month: 'long', day: 'numeric' }) + " à " + new Date(newsItem.date).toLocaleTimeString( 'fr-FR', { hour: '2-digit', minute: '2-digit' }),
             category: newsItem.category,
-            author: newsItem.author
+            author: newsItem.author,
+            attachments: newsItem.attachments,
+            isSurvey: newsItem.survey,
+            isRead: newsItem.read,
+            isAnonymized: newsItem.anonymous_survey,
         }
 
         newsArray.push(newsReturn);

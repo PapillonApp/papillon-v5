@@ -67,16 +67,27 @@
             this.$refs.rnPickerModal.$el.present();
         },
         editTimetable(timetable) {
-            // Check if there's 2 lessons starting at the same time
-            for (let i = 0; i < timetable.length; i++) {
-                if(timetable[i+1] !== undefined) {
-                    let first = timetable[i].time.start.toISOString();
-                    let second = timetable[i+1].time.start.toISOString();
+            // add sameTime property to courses that are at the same time
+            for(let i = 0; i < timetable.length; i++) {
+                let lesson = timetable[i];
+                let lessonStart = new Date(lesson.time.start);
+                let lessonEnd = new Date(lesson.time.end);
 
-                    if(first == second) {
-                        timetable[i+1].course.sameTime = true;
+                for(let j = 0; j < timetable.length; j++) {
+                    let lesson2 = timetable[j];
+                    let lesson2Start = new Date(lesson2.time.start);
+                    let lesson2End = new Date(lesson2.time.end);
+
+                    if (lessonStart <= lesson2Start && lessonEnd >= lesson2End && lesson.course.num != lesson2.course.num) {
+                        if (lesson.course.num > lesson2.course.num) {
+                            timetable[j].course.sameTime = true;
+                        }
+                        else {
+                            timetable[i].course.sameTime = true;
+                        }
                     }
                 }
+
             }
             
             return timetable;
@@ -167,6 +178,7 @@
                 teachers: cours.data.teachers.join(', ') || "Aucun professeur",
                 rooms: cours.data.rooms.join(', ') || "Aucune salle",
                 start: cours.time.start.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                end: cours.time.end.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
                 memo: cours.data.memo,
                 hasMemo: cours.data.hasMemo,
                 linkVirtualClassroom: cours.data.linkVirtual,
@@ -194,6 +206,7 @@
                 teacher: '',
                 room: '',
                 start: '',
+                end: '',
                 length: '',
                 status: '',
             }
@@ -275,7 +288,7 @@
           <ion-title mode="md">Ma journée</ion-title>
 
           <ion-buttons slot="end">
-            <ion-button mode="md" color="dark" id="rnPickerModalButton">
+            <ion-button mode="md" id="rnPickerModalButton" color="dark" @click="openRnPicker()">
               <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
               <p>{{ rnButtonString }}</p>
@@ -429,7 +442,7 @@
         </swiper>
 
 
-        <IonModal ref="rnPickerModal" trigger="rnPickerModalButton" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
+        <IonModal ref="rnPickerModal" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
           <IonHeader>
             <IonToolbar>
               <ion-title>Sélection de la date</ion-title>
@@ -487,15 +500,15 @@
                         <span class="material-symbols-outlined mdls" slot="start">description</span>
                         <ion-label>
                             <p>Mémo</p>
-                            <h3>{{selectedCourse.memo}}</h3>
+                            <h3 class="display-all">{{selectedCourse.memo}}</h3>
                         </ion-label>
                     </ion-item>
 
                     <ion-item>
                         <span class="material-symbols-outlined mdls" slot="start">schedule</span>
                         <ion-label>
-                            <p>Heure de début</p>
-                            <h3>{{selectedCourse.start}}</h3>
+                            <p>Horaire de cours</p>
+                            <h3>De {{selectedCourse.start}} à {{selectedCourse.end}}</h3>
                         </ion-label>
                     </ion-item>
 
@@ -508,10 +521,10 @@
                     </ion-item>
 
                     <ion-item v-if="selectedCourse.isCancelled" style="color: var(--ion-color-danger);">
-                        <span class="material-symbols-outlined mdls" slot="start">error</span>
+                        <span class="material-symbols-outlined mdls" slot="start">emergency_home</span>
                         <ion-label>
                             <p>Statut</p>
-                            <h3>{{selectedCourse.status}}</h3>
+                            <h3>Ce cours n'est pas maintenu<br>Motif : {{selectedCourse.status}}</h3>
                         </ion-label>
                     </ion-item>
 
@@ -544,5 +557,9 @@
 
     .changeDayButton {
         margin-top: 16px !important;
+    }
+
+    .display-all {
+        white-space: pre-line;
     }
 </style>

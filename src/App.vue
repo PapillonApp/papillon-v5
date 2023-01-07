@@ -181,7 +181,7 @@
         <ion-content mode="md">
           <ion-list id="inbox-list"> 
             <router-link class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
-                <ion-item button mode="md" lines="none" detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
+                <ion-item button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
                     <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
                     <ion-label>{{ p.title }}</ion-label>
                 </ion-item>
@@ -256,14 +256,27 @@
         white-space: nowrap;
     }
 
+    .ios .userItem h3 {
+        font-size: 18px;
+        margin-bottom: 0;
+    }
+
     .userItem p {
-        font-size: 14px;
+        font-size: 15px;
         color: #888;
         width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        margin-top: 3px;
     }
+
+    .ios .userItem p {
+        font-size: 15px;
+        margin-top: 0;
+        font-family: "Papillon";
+    }
+
 
     .md .userItem_content {
         flex-direction: column;
