@@ -105,6 +105,10 @@
                 this.timetable.loading = true;
                 this.yesterday.loading = true;
                 this.tomorrow.loading = true;
+
+                this.timetable.error = "STILL_LOADING";
+                this.yesterday.error = "STILL_LOADING";
+                this.tomorrow.error = "STILL_LOADING";
             }
 
             // get timetable for rn
