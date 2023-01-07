@@ -285,7 +285,7 @@ ion-list.list-inset.md ion-item:last-child {
     overflow: hidden;
 }
 
-ion-list.list-inset * {
+ion-list.list-inset ion-list-header, ion-list.list-inset ion-item {
     --background : var(--ion-inset-background) !important;
 }
 
