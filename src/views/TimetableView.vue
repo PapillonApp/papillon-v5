@@ -93,20 +93,34 @@
             return timetable;
         },
         getTimetables() {
+            // reset swiper and show loading spinner
+            if(this.shouldResetSwiper) {
+                this.$refs.swiper.$el.swiper.slideTo(1, 0);
+                this.shouldResetSwiper = false;
+
+                this.timetable = [];
+                this.yesterday = [];
+                this.tomorrow = [];
+
+                this.timetable.loading = true;
+                this.yesterday.loading = true;
+                this.tomorrow.loading = true;
+            }
+
             // get timetable for rn
             GetTimetable(this.$rn).then((timetable) => {
                 if(timetable.error) {
                     this.timetable = [];
                     this.timetable.error = timetable.error;
+
+                    if(timetable.error == "ERR_BAD_REQUEST") {
+                        this.timetable.loading = true;
+                    }
                 }
                 else {
                     this.timetable = this.editTimetable(timetable);
                     this.loadedrnButtonString = this.createDateString(this.$rn);
-                }
-
-                if(this.shouldResetSwiper) {
-                    this.$refs.swiper.$el.swiper.slideTo(1, 0);
-                    this.shouldResetSwiper = false;
+                    this.timetable.loading = false;
                 }
             });
 
@@ -116,9 +130,14 @@
                 if(timetable.error) {
                     this.yesterday = [];
                     this.yesterday.error = timetable.error;
+
+                    if(timetable.error == "ERR_BAD_REQUEST") {
+                        this.yesterday.loading = true;
+                    }
                 }
                 else {
                     this.yesterday = this.editTimetable(timetable);
+                    this.yesterday.loading = false;
                 }
             });
 
@@ -132,6 +151,11 @@
                 }
                 else {
                     this.tomorrow = this.editTimetable(timetable);
+                    this.tomorrow.loading = false;
+
+                    if(timetable.error == "ERR_BAD_REQUEST") {
+                        this.tomorrow.loading = true;
+                    }
                 }
             });
         },
@@ -347,7 +371,7 @@
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
                     </div></div>
 
-                    <div v-if="yesterday.error == 'ERR_BAD_REQUEST'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                    <div v-if="yesterday.loading" class="Error"><div class="NoCours" v-if="timetable.length == 0">
                         <IonSpinner></IonSpinner>
                         <br/>
                         <h2>Téléchargement des prochains cours...</h2>
@@ -389,7 +413,7 @@
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
                     </div></div>
 
-                    <div v-if="timetable.error == 'ERR_BAD_REQUEST'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                    <div v-if="timetable.loading" class="Error"><div class="NoCours" v-if="timetable.length == 0">
                         <IonSpinner></IonSpinner>
                         <br/>
                         <h2>Téléchargement des prochains cours...</h2>
@@ -431,7 +455,7 @@
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
                     </div></div>
 
-                    <div v-if="tomorrow.error == 'ERR_BAD_REQUEST'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                    <div v-if="tomorrow.loading" class="Error"><div class="NoCours" v-if="timetable.length == 0">
                         <IonSpinner></IonSpinner>
                         <br/>
                         <h2>Téléchargement des prochains cours...</h2>
