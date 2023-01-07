@@ -45,6 +45,7 @@
                     min_average: 0,
                     out_of: 0,
                 },
+                out_of_20: localStorage.getItem('tweakGrades20') == "true" ? true : false,
             }
         },
         methods: {
@@ -119,9 +120,31 @@
 
                 this.$refs.averageModal.$el.present(subject);
             },
+            editMarks(grades) {
+                let out_of_20 = this.out_of_20;
+
+                grades.forEach(subject => {
+                    subject.marks.forEach(mark => {
+                        // if out of 20 make it out of 20
+                        if (out_of_20) {
+                            mark.grade.original_value = mark.grade.value;
+                            mark.grade.original_out_of = mark.grade.out_of;
+                            
+                            mark.grade.value = parseFloat(mark.grade.value) / parseFloat(mark.grade.out_of) * 20;
+
+                            mark.grade.value = mark.grade.value.toFixed(2);
+                            mark.grade.out_of = 20;
+                        }
+                    });
+                });
+
+                console.log(grades);
+
+                return grades;
+            },
             getGradesRefresh() {
                 GetGrades().then((data) => {
-                    this.grades = data.marks;
+                    this.grades = this.editMarks(data.marks);
 
                     this.averages = data.averages;
                     this.isLoading = false;
@@ -145,7 +168,7 @@
             this.isLoading = true;
 
             GetGrades().then((data) => {
-                this.grades = data.marks;
+                this.grades = this.editMarks(data.marks);
 
                 this.averages = data.averages;
                 this.isLoading = false;
@@ -157,7 +180,7 @@
 
             document.addEventListener('tokenUpdated', (ev) => {
                 GetGrades().then((data) => {
-                    this.grades = data.marks;
+                    this.grades = this.editMarks(data.marks);
                     this.averages = data.averages;
                     this.isLoading = false;
 
@@ -240,6 +263,7 @@
                         <p class="coef">Coeff. : {{mark.grade.coefficient}}</p>
 
                         <p class="grd" v-if="mark.info.significant">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
+                        <p class="coef" v-if="mark.grade.original_value">{{mark.grade.original_value}}/{{mark.grade.original_out_of}}</p>
                         
                         <!-- si absent -->
                         <p class="grd" v-if="!mark.info.significant">{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></p>

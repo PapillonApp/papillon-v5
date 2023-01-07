@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonToggle } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -25,7 +25,8 @@
             IonList,
             IonListHeader,
             IonLabel,
-            IonItem
+            IonItem,
+            IonToggle
         },
         setup() {
             return { 
@@ -96,6 +97,14 @@
                         this.apiVersion = "Inconnue";
                     });
             },
+            tweakGrades20Change() {
+                let tweakGrades20 = this.$refs.tweakGrades20;
+                let tweakGrades20Checked = tweakGrades20.$el.checked;
+
+                localStorage.setItem('tweakGrades20', tweakGrades20Checked);
+
+                document.dispatchEvent(new CustomEvent('gradeSettingsUpdated'));
+            }
         },
         mounted() {
             // Get user data
@@ -111,6 +120,10 @@
             this.localStorageSize = this.getLocalStorageSize() + ' kb';
 
             // displayToast.presentToastTest();
+
+            // get tweakGrades20 ref
+            let tweakGrades20 = this.$refs.tweakGrades20;
+            tweakGrades20.$el.checked = localStorage.getItem('tweakGrades20') == 'true';
         }
     });
 </script>
@@ -187,6 +200,25 @@
         <IonList>
             <IonListHeader>
                 <IonLabel>
+                    <p>Tweaks</p>
+                </IonLabel>
+            </IonListHeader>
+
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
+                <IonLabel>
+                    <small>Notes</small>
+                    <h2>Remettre les notes sur 20</h2>
+                    <p>Uniformise le barème de toutes les notes</p>  
+                    <p><small>Nécéssite un redémarrage</small></p>
+                </IonLabel>
+                <IonToggle slot="end" ref="tweakGrades20" @ionChange="tweakGrades20Change()"></IonToggle>
+            </IonItem>
+        </IonList>
+
+        <IonList>
+            <IonListHeader>
+                <IonLabel>
                     <p>A propos de l'app</p>
                 </IonLabel>
             </IonListHeader>
@@ -215,6 +247,8 @@
                 </IonLabel>
             </IonItem>
         </IonList>
+
+        <br /> <br /> 
       </ion-content>
     </ion-page>
 </template>
