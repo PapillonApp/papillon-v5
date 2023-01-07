@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonNavLink, IonListHeader, IonModal, IonButton } from '@ionic/vue';
+    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonNavLink, IonListHeader, IonModal, IonButton, IonChip } from '@ionic/vue';
     
     import { logoDiscord, logoGithub, bugOutline, bugSharp, informationCircleOutline, informationCircleSharp, globeOutline, globeSharp } from 'ionicons/icons';
 
@@ -25,7 +25,8 @@
             IonModal,
             Swiper,
             SwiperSlide,
-            IonButton
+            IonButton,
+            IonChip
         },
         setup() {
             return { 
