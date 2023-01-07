@@ -487,7 +487,7 @@
                         <span class="material-symbols-outlined mdls" slot="start">description</span>
                         <ion-label>
                             <p>Mémo</p>
-                            <h3>{{selectedCourse.memo}}</h3>
+                            <h3 class="display-all">{{selectedCourse.memo}}</h3>
                         </ion-label>
                     </ion-item>
 
@@ -544,5 +544,9 @@
 
     .changeDayButton {
         margin-top: 16px !important;
+    }
+
+    .display-all {
+        white-space: pre-line;
     }
 </style>
