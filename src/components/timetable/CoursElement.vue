@@ -174,7 +174,7 @@
         width: 100%;
         height: 100%;
 
-        padding: 10px 0px;
+        padding: 8px 0px;
     }
 
     .CoursStart {
@@ -191,6 +191,7 @@
     .CoursName {
         font-size: 1.2em;
         font-weight: 600 !important;
+        margin-top: 1px;
     }
 
     .CoursColor {
@@ -200,7 +201,7 @@
     }
 
     .CoursInfoContainer {
-        margin-top: 5px;
+        margin-top: 2px;
     }
 
     .CoursInfo {
