@@ -346,13 +346,17 @@ export default defineComponent({
                 <swiper-slide class="swiper-slide">
                     <ion-list>
                         <ion-item v-for="homework in yesterday" :key="homework.id" button>
-                            <ion-checkbox slot="start" :checked="homework.data.done"></ion-checkbox>
+                            <div slot="start">
+                                <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
+                            </div>
                             <ion-label :style="`--courseColor: ${homework.data.color};`">
-                                <p><span class="courseColor"></span> {{ homework.homework.subject }}</p>
-                                <h2>{{ homework.homework.content }}</h2>
+                                <div @click="openHomework(homework)">
+                                    <p><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
+                                    <h2>{{ homework.homework.content }}</h2>
+                                </div>
 
                                 <div class="innerChips" v-if="homework.files.length !== 0">
-                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true">
+                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true" @click="openLink(attachment.url)">
                                         <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
 
                                         <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
@@ -422,13 +426,17 @@ export default defineComponent({
                 <swiper-slide>
                     <ion-list>
                         <ion-item v-for="homework in tomorrow" :key="homework.id" button>
-                            <ion-checkbox slot="start" :checked="homework.data.done"></ion-checkbox>
+                            <div slot="start">
+                                <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
+                            </div>
                             <ion-label :style="`--courseColor: ${homework.data.color};`">
-                                <p><span class="courseColor"></span> {{ homework.homework.subject }}</p>
-                                <h2>{{ homework.homework.content }}</h2>
+                                <div @click="openHomework(homework)">
+                                    <p><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
+                                    <h2>{{ homework.homework.content }}</h2>
+                                </div>
 
                                 <div class="innerChips" v-if="homework.files.length !== 0">
-                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true">
+                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true" @click="openLink(attachment.url)">
                                         <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
 
                                         <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
