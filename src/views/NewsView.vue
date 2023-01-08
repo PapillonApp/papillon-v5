@@ -211,7 +211,7 @@
 
     .newsModalContent .chips ion-chip {
         margin-right: 5px;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
     }
 
     .newsModalContent .chips span {

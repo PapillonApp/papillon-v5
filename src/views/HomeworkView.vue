@@ -1,6 +1,6 @@
 <script>
 import { defineComponent } from 'vue';
-import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel } from '@ionic/vue';
+import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonChip } from '@ionic/vue';
 
 import { calendarOutline, calendarSharp, todayOutline, todaySharp } from 'ionicons/icons';
 
@@ -26,6 +26,8 @@ export default defineComponent({
         SwiperSlide,
         IonRefresher,
         IonRefresherContent,
+        IonSpinner,
+        IonChip
     },
     setup() {
         return {
@@ -64,21 +66,37 @@ export default defineComponent({
             return timetable;
         },
         getTimetables() {
+            if(this.shouldResetSwiper) {
+                this.$refs.swiper.$el.swiper.slideTo(1, 0);
+                this.shouldResetSwiper = false;
+
+                this.timetable = [];
+                this.yesterday = [];
+                this.tomorrow = [];
+
+                this.timetable.loading = true;
+                this.yesterday.loading = true;
+                this.tomorrow.loading = true;
+
+                this.timetable.error = "STILL_LOADING";
+                this.yesterday.error = "STILL_LOADING";
+                this.tomorrow.error = "STILL_LOADING";
+            }
+
             // get timetable for rn
             GetHomeworks(this.$rn).then((homeworks) => {
                 this.timetable = homeworks;
-                this.loadedrnButtonString = this.createDateString(this.$rn);
+                console.log(this.timetable);
 
-                if(this.shouldResetSwiper) {
-                    this.$refs.swiper.$el.swiper.slideTo(1, 0);
-                    this.shouldResetSwiper = false;
-                }
+                this.loadedrnButtonString = this.createDateString(this.$rn);
+                this.timetable.loading = false;
             });
 
             // get timetable for yesterday
             let yesterdayRN = new Date(this.$rn) - 86400000;
             GetHomeworks(yesterdayRN).then((homeworks) => {
                 this.yesterday = homeworks;
+                this.yesterday.loading = false;
             });
 
             // get timetable for tomorrow
@@ -86,6 +104,7 @@ export default defineComponent({
             tomorrowRN.setDate(tomorrowRN.getDate() + 1);
             GetHomeworks(tomorrowRN).then((homeworks) => {
                 this.tomorrow = homeworks;
+                this.tomorrow.loading = false;
             });
         },
         handleRefresh(event) {
@@ -99,6 +118,13 @@ export default defineComponent({
                 }, 200);
             });
         },
+        openHomework(hw) {
+            this.openedHw = hw;
+            this.$refs.hwModal.$el.present();
+        },
+        closeHomework() {
+            this.$refs.hwModal.$el.dismiss();
+        },
     },
     data() {
         return {
@@ -109,6 +135,7 @@ export default defineComponent({
             yesterday: [],
             tomorrow: [],
             shouldResetSwiper: false,
+            openedHw: [],
         }
     },
     mounted() {
@@ -213,56 +240,77 @@ export default defineComponent({
             <swiper :initialSlide="1" ref="swiper">
                 <swiper-slide class="swiper-slide">
                     <ion-list>
-                        <ion-item v-for="homework in yesterday" :key="homework.id">
-                            <ion-label class="ion-text-wrap">
+                        <ion-item v-for="homework in yesterday" :key="homework.id" button>
+                            <ion-label>
                                 <p>{{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
                             </ion-label>
                         </ion-item>
 
-                        <div class="NoCours" v-if="yesterday.length == 0">
+                        <div v-if="yesterday.loading" class="Error"><div class="NoCours" v-if="yesterday.length == 0">
+                            <IonSpinner></IonSpinner>
+                            <br/>
+                            <h2>Téléchargement des prochains devoirs...</h2>
+                            <p>Veuillez patienter pendant qu'on récupère vos devoirs depuis nos serveurs...</p>
+                        </div></div>
+
+                        <div v-if="!yesterday.loading"><div class="NoCours" v-if="yesterday.length == 0">
                             <span class="material-symbols-outlined mdls">auto_stories</span>
                             <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
                             <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                        </div>
+                        </div></div>
                     </ion-list>
                 </swiper-slide>
                 <swiper-slide>
                     <ion-list>
-                        <ion-item v-for="homework in timetable" :key="homework.id">
-                            <ion-label class="ion-text-wrap">
+                        <ion-item v-for="homework in timetable" :key="homework.id" button @click="openHomework(homework)">
+                            <ion-label>
                                 <p>{{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
                             </ion-label>
                         </ion-item>
 
-                        <div class="NoCours" v-if="timetable.length == 0">
+                        <div v-if="timetable.loading" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                            <IonSpinner></IonSpinner>
+                            <br/>
+                            <h2>Téléchargement des prochains devoirs...</h2>
+                            <p>Veuillez patienter pendant qu'on récupère vos devoirs depuis nos serveurs...</p>
+                        </div></div>
+
+                        <div v-if="!timetable.loading"><div class="NoCours" v-if="timetable.length == 0">
                             <span class="material-symbols-outlined mdls">auto_stories</span>
                             <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
                             <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                        </div>
+                        </div></div>
                     </ion-list>
                 </swiper-slide>
                 <swiper-slide>
                     <ion-list>
-                        <ion-item v-for="homework in tomorrow" :key="homework.id">
-                            <ion-label class="ion-text-wrap">
+                        <ion-item v-for="homework in tomorrow" :key="homework.id" button>
+                            <ion-label>
                                 <p>{{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
                             </ion-label>
                         </ion-item>
 
-                        <div class="NoCours" v-if="tomorrow.length == 0">
+                        <div v-if="tomorrow.loading" class="Error"><div class="NoCours" v-if="tomorrow.length == 0">
+                            <IonSpinner></IonSpinner>
+                            <br/>
+                            <h2>Téléchargement des prochains devoirs...</h2>
+                            <p>Veuillez patienter pendant qu'on récupère vos devoirs depuis nos serveurs...</p>
+                        </div></div>
+
+                        <div v-if="!tomorrow.loading"><div class="NoCours" v-if="tomorrow.length == 0">
                             <span class="material-symbols-outlined mdls">auto_stories</span>
                             <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
                             <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                        </div>
+                        </div></div>
                     </ion-list>
                 </swiper-slide>
             </swiper>
@@ -288,6 +336,32 @@ export default defineComponent({
                     </IonDatetime>
                 </ion-content>
             </IonModal>
+
+            <IonModal :presenting-element="presentingElement" :canDismiss="true" ref="hwModal">
+                <IonHeader translucent>
+                    <IonToolbar>
+                        <IonTitle>Travail en {{ openedHw.homework.subject }}</IonTitle>
+                        <IonButtons slot="end">
+                            <IonButton @click="closeHomework()">Fermer</IonButton>
+                        </IonButtons>
+                    </IonToolbar>
+                </IonHeader>
+                <IonContent class="ionPadding hwModalContent">
+                    <div class="contentText">
+                        {{ openedHw.homework.content }}
+                    </div>
+
+                    <div class="chips" v-if="openedHw.files.length !== 0">
+                        <ion-chip v-for="(attachment, i) in openedHw.files" :key="i" @click="openLink(attachment.url)" color="dark" :outline="true">
+                            <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
+
+                            <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
+
+                            <p>{{attachment.name}}</p>
+                        </ion-chip>
+                    </div>
+                </IonContent>
+            </IonModal>
         </ion-content>
     </ion-page>
 </template>
@@ -299,5 +373,33 @@ export default defineComponent({
 
     .changeDayButton {
         margin-top: 16px !important;
+    }
+
+    .contentText {
+        padding: 15px;
+    }
+
+    .hwModalContent .chips {
+        margin-left: 10px !important;
+
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .hwModalContent .chips ion-chip {
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+
+    .hwModalContent .chips span {
+        opacity: 50%;
+        margin-right: 8px;
+    }
+
+    .hwModalContent .chips ion-chip p {
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 </style>
