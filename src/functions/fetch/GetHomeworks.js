@@ -5,6 +5,8 @@ import axios from 'axios';
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
+import subjectColor from '@/functions/utils/subjectColor.js'
+
 // main function
 async function getHomeworks(date, forceReload) {
     // as only pronote is supported for now, we can just return the pronote homework
@@ -114,6 +116,8 @@ function constructPronoteHomework(hw) {
             },
             files: homework.files,
         };
+
+        subjectColor.setSubjectColor(newHomework.homework.subject, newHomework.data.color, true);
 
         // push course to courses
         homeworkArray.push(newHomework);

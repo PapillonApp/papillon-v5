@@ -5,6 +5,8 @@ import axios from 'axios';
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
+import subjectColor from '@/functions/utils/subjectColor.js'
+
 // funcs
 function isFloat(n){
     return Number(n) === n && n % 1 !== 0;
@@ -162,6 +164,7 @@ function constructPronoteGrades(grades) {
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
+                color: subjectColor.getSubjectColor(mark.subject.name, subjectColor.darkenHexColor(mark.subject.id.substring(2,8).toString())),
                 name: mark.subject.name,
                 marks: []
             }
