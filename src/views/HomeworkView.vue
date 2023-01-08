@@ -347,8 +347,8 @@ export default defineComponent({
                     <ion-list>
                         <ion-item v-for="homework in yesterday" :key="homework.id" button>
                             <ion-checkbox slot="start" :checked="homework.data.done"></ion-checkbox>
-                            <ion-label>
-                                <p>{{ homework.homework.subject }}</p>
+                            <ion-label :style="`--courseColor: ${homework.data.color};`">
+                                <p><span class="courseColor"></span> {{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
 
                                 <div class="innerChips" v-if="homework.files.length !== 0">
@@ -385,9 +385,9 @@ export default defineComponent({
                             <div slot="start">
                                 <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
                             </div>
-                            <ion-label >
+                            <ion-label :style="`--courseColor: ${homework.data.color};`">
                                 <div @click="openHomework(homework)">
-                                    <p>{{ homework.homework.subject }}</p>
+                                    <p><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
                                     <h2>{{ homework.homework.content }}</h2>
                                 </div>
 
@@ -423,8 +423,8 @@ export default defineComponent({
                     <ion-list>
                         <ion-item v-for="homework in tomorrow" :key="homework.id" button>
                             <ion-checkbox slot="start" :checked="homework.data.done"></ion-checkbox>
-                            <ion-label>
-                                <p>{{ homework.homework.subject }}</p>
+                            <ion-label :style="`--courseColor: ${homework.data.color};`">
+                                <p><span class="courseColor"></span> {{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
 
                                 <div class="innerChips" v-if="homework.files.length !== 0">
@@ -558,5 +558,14 @@ export default defineComponent({
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    .courseColor {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--courseColor);
+        display: inline-block;
+        margin-right: 5px;
     }
 </style>
