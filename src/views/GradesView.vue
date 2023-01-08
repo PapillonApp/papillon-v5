@@ -117,7 +117,7 @@
             </ion-card>
         </div>
         
-        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: #${ subject.id.substring(1,7) };`">
+        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: ${ subject.color };`">
             <div class="subject-name">
                 <h3>{{subject.name}}</h3>
                 <p class="avg" v-if="subject.significant">{{subject.average}}<small>/20</small></p>
