@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonModal, IonCard, IonSpinner } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonModal, IonCard, IonSpinner, IonChip, IonSearchbar } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -25,11 +25,13 @@
             IonLabel,
             IonModal,
             IonList,
-            IonSpinner
+            IonSpinner,
+            IonSearchbar
         },
         data() {
             return { 
                 news: [],
+                fullNews: [],
                 openedNews: [],
                 presentingElement: null,
                 isLoading: false
@@ -45,10 +47,28 @@
             closeNews() {
                 this.$refs.modal.$el.dismiss();
             },
+            openLink(url) {
+                window.open(url, "_blank");
+            },
             getNewsRefresh() {
                 GetNews().then((data) => {
                     this.news = data;
                 })
+            },
+            searchNews() {
+                let search = this.$refs.searchBar.$el.value;
+                let news = this.fullNews;
+
+                if (search == "") {
+                    this.news = news;
+                } else {
+                    // filter news by name, content and author
+                    let filteredNews = news.filter((news) => {
+                        return news.title.toLowerCase().includes(search.toLowerCase()) || news.content.toLowerCase().includes(search.toLowerCase()) || news.author.toLowerCase().includes(search.toLowerCase());
+                    });
+
+                    this.news = filteredNews;
+                }
             },
             handleRefresh(event) {
                 // get new News data
@@ -68,6 +88,9 @@
             this.isLoading = true;
             GetNews().then((data) => {
                 this.news = data;
+                this.fullNews = data;
+                console.log(this.news);
+                
                 this.isLoading = false;
             });
 
@@ -97,6 +120,9 @@
         <IonHeader collapse="condense">
             <IonToolbar>
                 <ion-title size="large">Actualités</ion-title>
+            </IonToolbar>
+            <IonToolbar>
+                <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></ion-searchbar>
             </IonToolbar>
         </IonHeader>
 
@@ -142,6 +168,17 @@
                 </div>
                 <hr v-else />
                 <div class="newsModalContentContent" v-html="openedNews.htmlContent"></div>
+
+                <div class="chips" v-if="openedNews.attachments.length !== 0">
+                    <ion-chip v-for="(attachment, i) in openedNews.attachments" :key="i" @click="openLink(attachment.url)" color="dark" :outline="true">
+                        <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
+
+                        <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
+
+                        <p>{{attachment.name}}</p>
+                    </ion-chip>
+                </div>
+                <br /> <br />
             </IonContent>
         </IonModal>
       </ion-content>
@@ -159,6 +196,31 @@
         opacity: 25%;
     }
 
+    .newsModalContent .chips {
+        margin-top: 20px !important;
+        margin-bottom: 20px !important;
+
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .newsModalContent .chips ion-chip {
+        margin-right: 5px;
+        margin-bottom: 10px;
+    }
+
+    .newsModalContent .chips span {
+        opacity: 50%;
+        margin-right: 8px;
+    }
+
+    .newsModalContent .chips ion-chip p {
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
     @media screen and (prefers-color-scheme: dark) {
         .newsModalContent hr {
             background: #fff !important;
@@ -171,8 +233,8 @@
     }
 
     .newsModalContent small {
-        font-size: 0.8em;
-        font-weight: 500;
+        font-size: 0.9em;
+        font-weight: 400;
         opacity: 0.5;
     }
 
