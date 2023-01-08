@@ -86,6 +86,14 @@ function constructPronoteHomework(hw) {
 
     // for each course in homework
     hw.forEach((homework) => {
+        // for each file in homework.files
+        homework.files.forEach((file) => {
+            // if no file.name, set it to "Document"
+            if (!file.name) {
+                file.name = "Document";
+            }
+        });
+
         // construct course
         let newHomework = {
             data: {

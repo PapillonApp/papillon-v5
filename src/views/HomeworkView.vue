@@ -382,7 +382,7 @@ export default defineComponent({
                                 <h2>{{ homework.homework.content }}</h2>
 
                                 <div class="innerChips" v-if="homework.files.length !== 0">
-                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" @click="openLink(attachment.url)" color="dark" :outline="true">
+                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true">
                                         <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
 
                                         <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
