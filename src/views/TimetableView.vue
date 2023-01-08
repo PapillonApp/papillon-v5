@@ -94,7 +94,7 @@
             
             return timetable;
         },
-        getTimetables() {
+        getTimetables(force) {
             // reset swiper and show loading spinner
             if(this.shouldResetSwiper) {
                 this.$refs.swiper.$el.swiper.slideTo(1, 0);
@@ -114,7 +114,7 @@
             }
 
             // get timetable for rn
-            GetTimetable(this.$rn).then((timetable) => {
+            GetTimetable(this.$rn, force).then((timetable) => {
                 if(timetable.error) {
                     this.timetable = [];
                     this.timetable.error = timetable.error;
@@ -132,7 +132,7 @@
 
             // get timetable for yesterday
             let yesterdayRN = new Date(this.$rn) - 86400000;
-            GetTimetable(yesterdayRN).then((timetable) => {
+            GetTimetable(yesterdayRN, force).then((timetable) => {
                 if(timetable.error) {
                     this.yesterday = [];
                     this.yesterday.error = timetable.error;
@@ -150,7 +150,7 @@
             // get timetable for tomorrow
             let tomorrowRN = new Date(this.$rn);
             tomorrowRN.setDate(tomorrowRN.getDate() + 1);
-            GetTimetable(tomorrowRN).then((timetable) => {
+            GetTimetable(tomorrowRN, force).then((timetable) => {
                 if(timetable.error) {
                     this.tomorrow = [];
                     this.tomorrow.error = timetable.error;
@@ -167,7 +167,7 @@
         },
         handleRefresh(event) {
             // get new timetable data
-            this.getTimetables();
+            this.getTimetables(true);
 
             // stop refresh when this.timetable is updated
             this.$watch('timetable', () => {

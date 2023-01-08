@@ -71,7 +71,7 @@ export default defineComponent({
             // set timetable to edit
             return timetable;
         },
-        getTimetables() {
+        getTimetables(force) {
             if(this.shouldResetSwiper) {
                 this.$refs.swiper.$el.swiper.slideTo(1, 0);
                 this.shouldResetSwiper = false;
@@ -90,7 +90,7 @@ export default defineComponent({
             }
 
             // get timetable for rn
-            GetHomeworks(this.$rn).then((homeworks) => {
+            GetHomeworks(this.$rn, force).then((homeworks) => {
                 this.timetable = homeworks;
 
                 this.loadedrnButtonString = this.createDateString(this.$rn);
@@ -99,7 +99,7 @@ export default defineComponent({
 
             // get timetable for yesterday
             let yesterdayRN = new Date(this.$rn) - 86400000;
-            GetHomeworks(yesterdayRN).then((homeworks) => {
+            GetHomeworks(yesterdayRN, force).then((homeworks) => {
                 this.yesterday = homeworks;
                 this.yesterday.loading = false;
             });
@@ -107,14 +107,14 @@ export default defineComponent({
             // get timetable for tomorrow
             let tomorrowRN = new Date(this.$rn);
             tomorrowRN.setDate(tomorrowRN.getDate() + 1);
-            GetHomeworks(tomorrowRN).then((homeworks) => {
+            GetHomeworks(tomorrowRN, force).then((homeworks) => {
                 this.tomorrow = homeworks;
                 this.tomorrow.loading = false;
             });
         },
         handleRefresh(event) {
             // get new timetable data
-            this.getTimetables();
+            this.getTimetables(true);
 
             // stop refresh when this.timetable is updated
             this.$watch('timetable', () => {

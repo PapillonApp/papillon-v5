@@ -6,15 +6,15 @@ import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
 // main function
-async function getTimetable(date) {
+async function getTimetable(date, forceReload) {
     // as only pronote is supported for now, we can just return the pronote timetable
     
     // return pronote timetable
-    return getPronoteTimetable(date);
+    return getPronoteTimetable(date, forceReload);
 }
 
 // pronote : get timetable
-function getPronoteTimetable(date) {
+function getPronoteTimetable(date, forceReload) {
     // gather vars
     const API = app.config.globalProperties.$api;
     const dayRequest = new Date(date);
@@ -33,7 +33,7 @@ function getPronoteTimetable(date) {
     cacheSearch = cacheSearch.filter((element) => {
         return element.date == dayString && element.token == token;
     });
-    if (cacheSearch.length > 0) {
+    if (cacheSearch.length > 0 && !forceReload) {
         // return cached timetable in promise
         return new Promise((resolve, reject) => {
             let timetable = JSON.parse(cacheSearch[0].timetable);
