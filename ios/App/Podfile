@@ -15,9 +15,12 @@ def capacitor_pods
   pod 'CapacitorActionSheet', :path => '../../node_modules/@capacitor/action-sheet'
   pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
   pod 'CapacitorDialog', :path => '../../node_modules/@capacitor/dialog'
+  pod 'CapacitorFilesystem', :path => '../../node_modules/@capacitor/filesystem'
+  pod 'CapacitorGeolocation', :path => '../../node_modules/@capacitor/geolocation'
   pod 'CapacitorPreferences', :path => '../../node_modules/@capacitor/preferences'
   pod 'CapacitorSplashScreen', :path => '../../node_modules/@capacitor/splash-screen'
   pod 'CapacitorStatusBar', :path => '../../node_modules/@capacitor/status-bar'
+  pod 'CapawesomeCapacitorFilePicker', :path => '../../node_modules/@capawesome/capacitor-file-picker'
   pod 'HugotomaziCapacitorNavigationBar', :path => '../../node_modules/@hugotomazi/capacitor-navigation-bar'
 end
 

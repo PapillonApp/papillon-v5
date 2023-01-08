@@ -1,7 +1,10 @@
 <script lang="ts">
-  import { IonApp, IonContent, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane } from '@ionic/vue';
+  import { IonApp, IonContent, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController } from '@ionic/vue';
+
   import { defineComponent, ref } from 'vue';
   import { useRoute } from 'vue-router';
+
+  import { globeOutline } from 'ionicons/icons';
 
   const GetUser = require('./functions/fetch/GetUserData');
   const displayToast = require('./functions/utils/displayToast.js');
@@ -104,6 +107,18 @@
         }
     },
     methods: {
+        async presentToast(header: string, msg: string, color: string, icon: any) {
+            const toast = await toastController.create({
+                header: header,
+                message: msg,
+                duration: 2000,
+                position: "bottom",
+                color: color,
+                icon: icon
+            });
+
+            await toast.present();
+        },
         getUserData() {
             // get user data
             GetUser.default().then((data: UserData) => {
@@ -134,23 +149,35 @@
             this.getUserData();
         });
 
-        // check if online
-        window.addEventListener('online', () => {
-            displayToast.presentToast("Vous êtes maintenant reconnecté à Internet");
-        });
-
-        // check if offline
-        window.addEventListener('offline', () => {
-            displayToast.presentToast("Vous n'êtes plus connecté à Internet");
-        });
-
-        if(!window.navigator.onLine) {
-            displayToast.presentToast("Vous êtes hors connexion.");
+        // if avatarCache is set, make it the avatar
+        if(localStorage.getItem('customAvatar')) {
+            this.avatar = localStorage.getItem('customAvatar') as string;
+        }
+        else if(localStorage.getItem('avatarCache')) {
+            this.avatar = localStorage.getItem('avatarCache') as string;
         }
 
-        // if avatarCache is set, make it the avatar
-        if(localStorage.getItem('avatarCache')) {
-            this.avatar = localStorage.getItem('avatarCache') as string;
+        document.addEventListener('userDataUpdated', () => {
+            if(localStorage.getItem('customAvatar')) {
+                this.avatar = localStorage.getItem('customAvatar') as string;
+            }
+            else if(localStorage.getItem('avatarCache')) {
+                this.avatar = localStorage.getItem('avatarCache') as string;
+            }
+        });
+
+        // check internet connection
+        window.addEventListener('online', () => {
+            this.presentToast('Vous êtes de nouveau connecté à Internet.', 'Certaines informations nécéssiteront peut-être un rafraîchissement.', 'success', globeOutline)
+        });
+
+        window.addEventListener('offline', () => {
+            this.presentToast('Vous n\'êtes plus connecté à Internet.', 'Vous n\'aurez accès qu\'aux informations déjà téléchargées.', 'danger', globeOutline)
+        });
+
+        // check if online
+        if(!navigator.onLine) {
+            this.presentToast('Vous n\'êtes pas connecté à Internet.', 'Vous n\'aurez accès qu\'aux informations déjà téléchargées.', 'danger', globeOutline)
         }
     }
   });
@@ -176,7 +203,7 @@
         <ion-content mode="md">
           <ion-list id="inbox-list"> 
             <router-link class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
-                <ion-item button mode="md" lines="none" detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
+                <ion-item button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
                     <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
                     <ion-label>{{ p.title }}</ion-label>
                 </ion-item>
@@ -251,14 +278,27 @@
         white-space: nowrap;
     }
 
+    .ios .userItem h3 {
+        font-size: 18px;
+        margin-bottom: 0;
+    }
+
     .userItem p {
-        font-size: 14px;
+        font-size: 15px;
         color: #888;
         width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        margin-top: 3px;
     }
+
+    .ios .userItem p {
+        font-size: 15px;
+        margin-top: 0;
+        font-family: "Papillon";
+    }
+
 
     .md .userItem_content {
         flex-direction: column;
@@ -272,7 +312,7 @@
     }
 
     .md .userItem p {
-        color: #ffffff99;
+        color: #ffffffc2;
     }
 
     .md .userData {
@@ -344,7 +384,7 @@
         margin-bottom: 2px;
     }
 
-    ion-menu ion-item.selected {
+    ion-menu .router-link-active ion-item {
         --background: rgba(var(--ion-color-primary-rgb), 0.14);
         color: var(--ion-color-primary-rgb);
     }
@@ -353,7 +393,7 @@
         margin-right: calc(var(--padding-start) + 2px);
     }
 
-    ion-menu ion-item.selected ion-icon {
+    ion-menu .router-link-active ion-item ion-icon {
     color: var(--ion-color-primary);
     }
 
@@ -372,20 +412,20 @@
     color: var(--ion-color-medium-shade);
     }
 
-    ion-item.selected {
+    .router-link-active ion-item {
         --color: var(--ion-color-primary);
     }
 
-    ion-item.selected:hover {
+    .router-link-active ion-item:hover {
         background: rgba(var(--ion-color-primary-rgb), 0.1);
         cursor: pointer;
     }
 
-    ion-menu-toggle ion-item:not(.selected) {
+    a:not(.router-link-active) ion-menu-toggle ion-item {
         --color: var(--ion-color-medium-shade);
     }
 
-    ion-menu-toggle ion-item:not(.selected):hover {
+    a:not(.router-link-active) ion-menu-toggle ion-item:hover {
         opacity: 0.75;
         cursor: pointer;
     }

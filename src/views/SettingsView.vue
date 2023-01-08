@@ -1,14 +1,18 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonToggle, actionSheetController } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
-    import {version} from '/package'
+    import { version } from '/package'
     import { Capacitor } from '@capacitor/core';
 
     import displayToast from '@/functions/utils/displayToast.js';
     import GetToken from '@/functions/login/GetToken.js';
+
+    import { trash, refresh, checkmark, alertCircle } from 'ionicons/icons';
+
+    import { FilePicker } from '@capawesome/capacitor-file-picker';
 
     export default defineComponent({
         name: 'FolderPage',
@@ -23,19 +27,50 @@
             IonList,
             IonListHeader,
             IonLabel,
-            IonItem
+            IonItem,
+            IonToggle
         },
         setup() {
             return { 
                 appVersion: version,
-                apiVersion: 'Inconnue',
                 appPlatform: Capacitor.getPlatform(),
-                localStorageSize: '',
-                userName: ''
+                localStorageSize: ''
             }
         },
         methods: {
-            logout() {
+            async logout() {
+                const actionSheet = await actionSheetController.create({
+                header: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+                subHeader: 'Vous perdrez vos paramètres et vos données seront supprimées de votre appareil.',
+                buttons: [
+                    {
+                        text: 'Se déconnecter',
+                        role: 'destructive',
+                        data: {
+                            action: 'delete',
+                        },
+                        handler: () => {
+                            this.logoutFunc();
+                        },
+                    },
+                    {
+                        text: 'Annuler',
+                        role: 'cancel',
+                        data: {
+                            action: 'cancel',
+                        },
+                    },
+                ],
+                });
+
+                await actionSheet.present();
+
+                const res = await actionSheet.onDidDismiss();
+                let result = JSON.stringify(res, null, 2);
+
+                console.log(result);
+            },
+            logoutFunc() {
                 // empty all local storage
                 localStorage.clear();
                 // go to login page
@@ -45,10 +80,18 @@
                 // empty cache
                 localStorage.removeItem('UserCache');
                 localStorage.removeItem('TimetableCache');
+                localStorage.removeItem('newsCache');
+                localStorage.removeItem('gradeCache');
+                localStorage.removeItem('HomeworkCache');
 
                 // show toast
                 setTimeout(() => {
-                    displayToast.presentToast('Cache des données vidé', 'light');
+                    displayToast.presentToastFull(
+                        'Cache des données vidé',
+                        'Les informations pré-téléchargées ont été supprimées',
+                        'light',
+                        trash
+                    );
                     
                     setTimeout(() => {
                         this.localStorageSize = this.getLocalStorageSize() + ' kb';
@@ -59,11 +102,21 @@
                 GetToken();
 
                 // show toast
-                displayToast.presentToast('Demande de nouvelle clé envoyée...', 'light');
+                displayToast.presentToastFull(
+                    'Demande de nouvelle clé envoyée...', 
+                    'Veuillez patienter quelques secondes.',
+                    'light',
+                    refresh
+                );
 
                 // wait for event tokenUpdated once token is updated
                 document.addEventListener('tokenUpdated', () => {
-                    displayToast.presentToast('Nouvelle clé de connexion reçue !', 'light');
+                    displayToast.presentToastFull(
+                        'Nouvelle clé de connexion reçue !',
+                        'Vos données s\'actualisent en arrière-plan...',
+                        'success',
+                        checkmark
+                    );
                 });
             },
             getLocalStorageSize() {
@@ -85,12 +138,88 @@
             getApiVersion() {
                 const API = this.$api;
 
-                fetch(API + "/infos").then(response => response.json()).then(result => {
-                        this.apiVersion = result.version;
-                    })
-                    .catch(error => {
-                        this.apiVersion = "Inconnue";
+                let cacheApiVersion = localStorage.getItem('apiVersion');
+
+                fetch(API + "/infos")
+                    .then(response => response.json())
+                    .then(result => {
+                        let apiVer = result.version;
+                        localStorage.setItem('apiVersion', apiVer);
+                        this.apiVersion = apiVer;
                     });
+
+                this.apiVersion = cacheApiVersion ?? 'Inconnue';
+            },
+            tweakGrades20Change() {
+                let tweakGrades20 = this.$refs.tweakGrades20;
+                let tweakGrades20Checked = tweakGrades20.$el.checked;
+
+                localStorage.setItem('tweakGrades20', tweakGrades20Checked);
+
+                document.dispatchEvent(new CustomEvent('gradeSettingsUpdated'));
+                displayToast.presentToastFull(
+                    'Paramètres des notes enregistrées',
+                    'Les paramètres des notes ont été enregistrées avec succès.',
+                    'light',
+                    checkmark
+                );
+            },
+            async tweakChangeAvatar() {
+                try {
+                    const result = await FilePicker.pickImages({
+                        multiple: false,
+                        readData: true
+                    });
+
+                    let base64Data = result.files[0].data;
+
+                    let base64URL = 'data:image/jpeg;base64,' + base64Data;
+
+                    // resize image to 200px width using canvas
+                    let canvas = document.createElement('canvas');
+                    let ctx = canvas.getContext('2d');
+                    let img = new Image();
+                    img.src = base64URL;
+
+                    img.onload = function () {
+                        canvas.width = 128;
+                        canvas.height = 128 * img.height / img.width;
+
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                        let newImage = canvas.toDataURL('image/jpeg');
+
+                        localStorage.setItem('customAvatar', newImage);
+                        document.dispatchEvent(new CustomEvent('userDataUpdated'));
+
+                        displayToast.presentToastFull(
+                            'Photo de profil modifiée',
+                            'La photo de profil a été modifiée avec succès.',
+                            'success',
+                            checkmark
+                        );
+                    }
+                }
+                catch (error) {
+                    console.error(error);
+                    displayToast.presentToastFull(
+                        'Erreur lors du changement de photo de profil',
+                        error,
+                        'danger',
+                        alertCircle
+                    );
+                }
+            },
+            tweakDeleteAvatar() {
+                localStorage.removeItem('customAvatar');
+                document.dispatchEvent(new CustomEvent('userDataUpdated'));
+
+                displayToast.presentToastFull(
+                    'Photo de profil supprimée',
+                    'La photo de profil a été supprimée avec succès.',
+                    'light',
+                    trash
+                );
             }
         },
         mounted() {
@@ -105,13 +234,19 @@
 
             // Get localStorage size
             this.localStorageSize = this.getLocalStorageSize() + ' kb';
+
+            // displayToast.presentToastTest();
+
+            // get tweakGrades20 ref
+            let tweakGrades20 = this.$refs.tweakGrades20;
+            tweakGrades20.$el.checked = localStorage.getItem('tweakGrades20') == 'true';
         }
     });
 </script>
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader">
+      <IonHeader class="AppHeader" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -129,7 +264,7 @@
             </IonToolbar>
         </IonHeader>
 
-        <IonList>
+        <IonList :inset="true" lines="inset">
             <IonListHeader>
                 <IonLabel>
                     <p>Mon compte</p>
@@ -146,7 +281,7 @@
         </IonList>
 
 
-        <IonList>
+        <IonList :inset="true" lines="inset">
             <IonListHeader>
                 <IonLabel>
                     <p>Options</p>
@@ -178,7 +313,39 @@
             </IonItem>
         </IonList>
 
-        <IonList>
+        <IonList :inset="true" lines="inset">
+            <IonListHeader>
+                <IonLabel>
+                    <p>Tweaks</p>
+                </IonLabel>
+            </IonListHeader>
+
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
+                <IonLabel>
+                    <h2>Remettre les notes sur 20</h2>
+                    <p>Uniformise le barème de toutes les notes</p>
+                </IonLabel>
+                <IonToggle slot="end" ref="tweakGrades20" @ionChange="tweakGrades20Change()"></IonToggle>
+            </IonItem>
+
+            <IonItem button @click="tweakChangeAvatar()">
+                <span class="material-symbols-outlined mdls" slot="start">person_pin</span>
+                <IonLabel>
+                    <h2>Changer de photo de profil</h2>
+                    <p>Utiliser une photo différente dans l'application</p>
+                </IonLabel>
+            </IonItem>
+
+            <IonItem button @click="tweakDeleteAvatar()">
+                <span class="material-symbols-outlined mdls" slot="start">delete</span>
+                <IonLabel>
+                    <h2>Supprimer la photo de profil personnalisée</h2>
+                </IonLabel>
+            </IonItem>
+        </IonList>
+
+        <IonList :inset="true" lines="inset">
             <IonListHeader>
                 <IonLabel>
                     <p>A propos de l'app</p>
@@ -209,6 +376,8 @@
                 </IonLabel>
             </IonItem>
         </IonList>
+
+        <br /> <br /> 
       </ion-content>
     </ion-page>
 </template>

@@ -101,6 +101,8 @@ input.sc-ion-searchbar-md {
 
     overflow: hidden;
     isolation: isolate;
+
+    transition: background 0.2s;
 }
 
 @media screen and (prefers-color-scheme: dark) {
@@ -126,11 +128,15 @@ input.sc-ion-searchbar-md {
     margin-right: 5px !important;
 }
 
+ion-header.ios:not(.header-collapse-condense-inactive) #rnPickerModalButton {
+    background: transparent !important;
+}
+
 /* Material Symbols */
 @font-face {
     font-family: 'Material Symbols Outlined';
     font-style: normal;
-    src: url('/public/fonts/MaterialSymbolsOutlined.woff2') format('woff');
+    src: url('/public/fonts/MaterialSymbolsOutlined.woff2') format('woff2');
 }
 
 .material-symbols-outlined {
@@ -156,6 +162,7 @@ input.sc-ion-searchbar-md {
     'opsz' 24;
 
     font-size: 24px;
+    font-display: block;
 }
 
 .mdls[slot="start"] {
@@ -206,9 +213,10 @@ ion-item .mdls[slot="start"] {
 }
 
 .NoCours h2 {
-    font-size: 24px;
-    line-height: 24px;
-    font-weight: 600;
+    font-size: 28px;
+    line-height: 26px;
+    font-weight: 400 !important;
+    margin-bottom: 5px;
 }
 
 .NoCours p {
@@ -221,6 +229,7 @@ ion-item .mdls[slot="start"] {
 
 .NoCours .button {
     margin-left: -15.4px;
+    font-weight: 600 !important;
 }
 
 .ios .NoCours {
@@ -236,6 +245,8 @@ ion-item .mdls[slot="start"] {
     margin-left: 0;
 }
 
+/* Modals */
+
 .md ion-modal {
     background: #00000055;
 }
@@ -244,4 +255,51 @@ ion-item .mdls[slot="start"] {
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     overflow: hidden;
+}
+
+/* toasts */
+
+.md ion-toast {
+    --border-radius: 8px !important;
+    --box-shadow: 0 2px 6px #00000015 !important;
+
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.ios ion-toast {
+    --border-radius: 8px !important;
+    --box-shadow: 0 2px 6px #00000015 !important;
+
+    font-size: 15px;
+    font-weight: 400;
+}
+
+ion-header ion-toolbar ion-title.md {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+/* items */
+ion-list.list-inset.md ion-list-header {
+    border-radius: 8px 8px 0px 0px !important;
+    overflow: hidden;
+}
+
+ion-list.list-inset.md ion-item:last-child {
+    border-radius: 0px 0px 8px 8px !important;
+    overflow: hidden;
+}
+
+ion-list.list-inset ion-list-header, ion-list.list-inset ion-item {
+    --background : var(--ion-inset-background) !important;
+}
+
+ion-list.list-inset.ios ion-list-header ion-label {
+    margin-top: 0px;
+}
+
+/* action sheet */
+ion-action-sheet {
+    --ion-color-primary: #0075ff !important;
 }

@@ -28,6 +28,12 @@ jobs:
           ver="$(git describe --tags --dirty)"
           echo "VERSION=${ver}" >> $GITHUB_OUTPUT
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+
       - name: Get deploy type
         id: deploy-type
         run: |
@@ -38,12 +44,6 @@ jobs:
           else
             echo "TYPE=unknown" >> $GITHUB_OUTPUT
           fi
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: npm
           
       - name: Update version number (package.json)
         run:  |
@@ -117,7 +117,9 @@ jobs:
           npm i --prefer-offline --no-audit
 
       - name: Ionic Capacitor Sync
-        run: ionic capacitor sync android --prod
+        run: |
+          npm version ${{ needs.initialize.outputs.VERSION_NUMBER }} --no-git-tag-version
+          ionic capacitor sync android --prod
      
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -158,7 +160,7 @@ jobs:
         run: |
           echo "LC_ALL=fr_FR.UTF-8" >> $GITHUB_ENV
           echo "LANG=fr_FR.UTF-8" >> $GITHUB_ENV
-          bundle exec fastlane ${{ needs.initialize.outputs.DEPLOY_TYPE }} 
+          bundle exec fastlane deploy
         working-directory: android/fastlane
 
       - name: Upload Artifact
@@ -172,7 +174,6 @@ jobs:
   deploy_ios:
     needs: initialize
     runs-on: macos-latest
-    if: true == false
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -194,7 +195,9 @@ jobs:
           npm i --prefer-offline --no-audit
 
       - name: Ionic Capacitor Sync
-        run: ionic capacitor sync ios --prod
+        run: |
+          npm version ${{ needs.initialize.outputs.VERSION_NUMBER }} --no-git-tag-version
+          ionic capacitor sync ios --prod
      
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -229,14 +232,18 @@ jobs:
 
       - name: Export Data to Fastlane
         run: |
-          echo "APP_STORE_CONNECT_API_KEY_ID=${{ secrets.APP_STORE_CONNECT_API_KEY_ID }}" >> $GITHUB_ENV
-          echo "APP_STORE_CONNECT_API_ISSUER_ID=${{ secrets.APP_STORE_CONNECT_API_ISSUER_ID }}" >> $GITHUB_ENV
-          echo "APP_STORE_CONNECT_API_KEY_CONTENT=${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}" >> $GITHUB_ENV
+          echo "APP_STORE_API_KEY_ID=${{ secrets.APP_STORE_API_KEY_ID }}" >> $GITHUB_ENV
+          echo "APP_STORE_API_KEY_ISSUER_ID=${{ secrets.APP_STORE_API_KEY_ISSUER_ID }}" >> $GITHUB_ENV
+          echo "APP_STORE_API_KEY=${{ secrets.APP_STORE_API_KEY }}" >> $GITHUB_ENV
           echo "CERTIFICATE_STORE_GITHUB_URL=${{ secrets.CERTIFICATE_STORE_GITHUB_URL }}" >> $GITHUB_ENV
           echo "MATCH_PASSWORD=${{ secrets.MATCH_CERTIFICATE_STORE_PASSWORD }}" >> $GITHUB_ENV
           echo "APP_IOS_PASSWORD=${{ secrets.APP_IOS_PASSWORD }}" >> $GITHUB_ENV
-          echo "GIT_FULL_NAME=${{ secrets.GIT_FULL_NAME }}" >> $GITHUB_ENV
+          echo "GIT_USER_TOKEN=${{ secrets.GIT_USER_TOKEN }}" >> $GITHUB_ENV
           echo "GIT_USER_EMAIL=${{ secrets.GIT_USER_EMAIL }}" >> $GITHUB_ENV
+          echo "APPLE_ID=${{ secrets.APPLE_ID }}" >> $GITHUB_ENV
+          echo "ITC_TEAM_ID=${{ secrets.ITC_TEAM_ID }}" >> $GITHUB_ENV
+          echo "ITC_TEAM_NAME=${{ secrets.ITC_TEAM_NAME }}" >> $GITHUB_ENV
+          echo "APPLE_DEVELOPER_TEAM_ID=${{ secrets.APPLE_DEVELOPER_TEAM_ID }}" >> $GITHUB_ENV
           echo "APP_VERSION_CODE=${{ needs.initialize.outputs.VERSION_CODE  }}" >> $GITHUB_ENV
           echo "APP_VERSION_NUMBER=${{ needs.initialize.outputs.VERSION_NUMBER }}" >> $GITHUB_ENV
 
@@ -249,8 +256,8 @@ jobs:
 
       - name: Build and deploy
         run: |
-          export LC_ALL=fr_FR.UTF-8
-          export LANG=fr_FR.UTF-8
+          echo "LC_ALL=fr_FR.UTF-8" >> $GITHUB_ENV
+          echo "LANG=fr_FR.UTF-8" >> $GITHUB_ENV
           bundle exec fastlane ${{ needs.initialize.outputs.DEPLOY_TYPE }} 
         working-directory: ios/app/fastlane
 
@@ -263,7 +270,7 @@ jobs:
   
 
   summary_and_release:
-    needs: [initialize, deploy_android]
+    needs: [initialize, deploy_android, deploy_ios]
     runs-on: macos-latest
     steps:
       - name: Checkout code
@@ -301,18 +308,18 @@ jobs:
           echo "Version : ${{ needs.initialize.outputs.VERSION_NUMBER }}" >> $GITHUB_STEP_SUMMARY
           echo "Code de version : ${{ needs.initialize.outputs.VERSION_CODE }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+          echo "#### iOS :apple:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Version : ${{ needs.initialize.outputs.VERSION_NUMBER }}" >> $GITHUB_STEP_SUMMARY
+          echo "Code de version : ${{ needs.initialize.outputs.VERSION_CODE }}" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ needs.initialize.outputs.DEPLOY_TYPE }}" == "beta" ]; then
+            echo "Déployé sur TestFlight" >> $GITHUB_STEP_SUMMARY
+          else:
+            echo "Déployé sur l'AppStore" >> $GITHUB_STEP_SUMMARY
+          fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "Fin de rapport de déploiement" >> $GITHUB_STEP_SUMMARY
           echo "(c) 2023 - PapillonApp" >> $GITHUB_STEP_SUMMARY
           
-        # echo "#### iOS :apple:" >> $GITHUB_STEP_SUMMARY
-        # echo "" >> $GITHUB_STEP_SUMMARY
-        # echo "Version : ${{ needs.initialize.outputs.VERSION_NUMBER }}" >> $GITHUB_STEP_SUMMARY
-        # echo "Code de version : ${{ needs.initialize.outputs.VERSION_CODE }}" >> $GITHUB_STEP_SUMMARY
-        # if [ "${{ needs.initialize.outputs.DEPLOY_TYPE }}" == "beta" ]; then
-        #   echo "Déployé sur TestFlight" >> $GITHUB_STEP_SUMMARY
-        # else:
-        #   echo "Déployé sur l'AppStore" >> $GITHUB_STEP_SUMMARY
-        # fi
+

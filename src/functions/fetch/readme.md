@@ -1,11 +1,11 @@
-# fonctions Fetch dans Pronote+ v5
+# fonctions Fetch dans Papillon v5
 Ce guide permettra de mieux comprendre quelles sont les issues de chaque fichier ici.
 
 ## A quoi servent ces fichiers ?
 Ce sont eux qui s'occupent de récupérer les données depuis l'API et les uniformiser dans un format traitable peu importe l'API ou le service derrière.
 
 ## Comment fonctionnent-ils
-Ils sont *en théorie* sénsés détecter le service utilisé et rendre les données correspondantes.
+Ils sont *en théorie* sensés détecter le service utilisé et rendre les données correspondantes.
 Pour le moment, seul Pronote est proposé : les données sont donc faites pour Pronote.
 
 ## Quels sont les schémas à rendre

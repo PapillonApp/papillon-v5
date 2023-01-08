@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonNavLink, IonListHeader, IonModal, IonButton } from '@ionic/vue';
+    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonNavLink, IonListHeader, IonModal, IonButton, IonChip } from '@ionic/vue';
     
     import { logoDiscord, logoGithub, bugOutline, bugSharp, informationCircleOutline, informationCircleSharp, globeOutline, globeSharp } from 'ionicons/icons';
 
@@ -25,7 +25,8 @@
             IonModal,
             Swiper,
             SwiperSlide,
-            IonButton
+            IonButton,
+            IonChip
         },
         setup() {
             return { 
@@ -113,7 +114,7 @@
                 appVersion: version,
                 appPlatform: Capacitor.getPlatform(),
                 isOpen: true,
-                status: ""
+                status: "",
             }
         },
         mounted() {
@@ -137,14 +138,14 @@
 <template>
       <ion-header>
         <ion-toolbar>
-          <ion-title>Bienvenue dans Papillon</ion-title>
+          <ion-title>Bienvenue sur Papillon 👋</ion-title>
         </ion-toolbar>
       </ion-header>
       
       <ion-content :fullscreen="true">
         <ion-header collapse="condense">
             <ion-toolbar>
-              <ion-title size="large">Bienvenue dans Papillon</ion-title>
+              <ion-title size="large">Bienvenue 👋</ion-title>
             </ion-toolbar>
         </ion-header>
 
@@ -244,40 +245,29 @@
                 <ion-icon class="icon" slot="start" :ios="informationCircleOutline" :md="informationCircleSharp"></ion-icon>
                 <ion-label>
                     <h2>Mentions légales</h2>
-                    <p>(C) 2023 PapillonApp - version {{appVersion}}-{{appPlatform}}</p>
+                    <p>(C) 2023 logi12 - version {{appVersion}}-{{appPlatform}}</p>
                 </ion-label>
             </ion-item>
         </ion-list>
 
-        <ion-modal :is-open="isOpen">
+        <ion-modal :is-open="isOpen" :initial-breakpoint="0.65" :breakpoints="[0, 0.65]">
             <ion-content>
                 <swiper class="welcomeSwiper" ref="swiper">
                     <swiper-slide class="welcomeSlide">
-                        <div class="illustration services"></div>
-                        <h3>Papillon vous permet de vous connecter facilement à votre service scolaire favori.</h3>
-                        <p>Avec Papillon, profitez de vos cours et de vos données scolaires dans une interface améliorée. Le support d'EcoleDirecte est prévu ultérieurement.</p>
+                        <img src="/assets/new/welcome.png" class="illustration"/>
+                        <div class="description">
+                            <h1>Bienvenue sur Papillon 👋</h1>
+                            <p>
+                                Papillon vous permet de consulter vos notes, devoirs, emploi du temps, et bien plus encore.
+                            </p>
+                            <small>
+                                Tout ce dont vous avez besoin est un compte Pronote ou EcoleDirecte (prochainement).
+                            </small>
+                        </div>
 
-                        <ion-button expand="block" fill="clear" @click="nextSlide()" class="slideButton">
-                            Continuer
-                        </ion-button>
-                    </swiper-slide>
-                    <swiper-slide class="welcomeSlide">
-                        <div class="illustration interface"></div>
-                        <h3>L'interface a été revue et continuellement améliorée pour une expérience optimale.</h3>
-                        <p>Papillon s'adapte à vos besoins et à vos envies grâce à une interface familière et agréable, pour un climat de travail confortable.</p>
+                        <IonButton expand="block" mode="md" class="btn continueButton" @click="setOpen(false)">Commencer</IonButton>
 
-                        <ion-button expand="block" fill="clear" @click="nextSlide()" class="slideButton">
-                            Continuer
-                        </ion-button>
-                    </swiper-slide>
-                    <swiper-slide class="welcomeSlide">
-                        <div class="illustration data"></div>
-                        <h3>Avec Papillon, vous êtes le maître de vos données.</h3>
-                        <p>Vos données ne sont pas conservées et sont effacées aussitôt renvoyées par nos serveurs. Papillon est open-source et développé par la communauté.</p>
-
-                        <ion-button expand="block" fill="solid" @click="setOpen(false)" class="slideButton">
-                            Commencer
-                        </ion-button>
+                        <p class="version">version {{appVersion}}-{{appPlatform}}</p>
                     </swiper-slide>
                 </swiper>
             </ion-content>
@@ -306,65 +296,66 @@
         margin: 0;
     }
 
-    .illustration {
-        width: 100vw;
-        height: 100vw;
-
-        max-height: 50%;
-        
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-
-        margin-top: 0vh;
+    .welcomeSlide .illustration {
+        width: 100%;
+        max-height: 25%;
+        object-fit: contain;
+        margin-top: 20px;
     }
 
-    .welcomeSlide h3 {
-        font-size: 1.5em;
-        font-weight: 500;
-        margin: 0.5em 1.5em;
+    .welcomeSlide .description {
+        margin-top: 15px;
+        width: 100%;
+        padding: 0 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
     }
 
-    .welcomeSlide p {
-        font-size: 1em;
-        font-weight: 400;
-        margin: 0 1.5em;
-        opacity: 50%;
+    .welcomeSlide .description h1 {
+        font-size: 27.5px;
+        line-height: 28px;
+        font-weight: 600 !important;
+        font-family: 'Papillon';
+        color: var(--ion-color-primary);
+        margin-bottom: 10px;
+        text-align: left;
     }
 
-    .slideButton {
-        position: absolute;
-        bottom: 8vh;
-        width: 80%;
+    .welcomeSlide .description p {
+        font-size: 17px;
+        line-height: 20px;
+        font-weight: 400 !important;
+        text-align: left;
+        margin-bottom: 10px;
     }
 
-    .services {
-        background-image: url('assets/services_dark.png');
-    }
-    
-    @media screen and (prefers-color-scheme: light) {
-        .services {
-            background-image: url('assets/services_light.png');
-        }
-    }
-
-    .interface {
-        background-image: url('assets/interface_dark.png');
+    .welcomeSlide .description small {
+        font-size: 15px;
+        line-height: 16px;
+        font-weight: 400 !important;
+        color: var(--ion-color-medium);
+        text-align: left;
+        margin-bottom: 10px;
     }
 
-    @media screen and (prefers-color-scheme: light) {
-        .interface {
-            background-image: url('assets/interface_light.png');
-        }
+    .welcomeSlide .btn {
+        width: calc(100% - 24px * 2);
+        margin-top: 10px;
     }
 
-    .data {
-        background-image: url('assets/data_dark.png');
+    .welcomeSlide .continueButton {
+        margin-top: 20px;
     }
 
-    @media screen and (prefers-color-scheme: light) {
-        .data {
-            background-image: url('assets/data_light.png');
-        }
+    .welcomeSlide .version {
+        text-align: center;
+        font-size: 13px;
+        line-height: 12px;
+        font-weight: 400 !important;
+        color: var(--ion-color-medium);
+        margin-top: 2vh;
+        opacity: 0.5;
     }
 </style>

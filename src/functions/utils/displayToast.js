@@ -1,7 +1,7 @@
 import { toastController, alertController } from '@ionic/vue';
 import { Dialog } from '@capacitor/dialog';
 
-async function presentToast(msg, color, isDismissible) {
+async function presentToast(msg, color) {
 	const toast = await toastController.create({
 		message: msg,
 		duration: 2000,
@@ -12,6 +12,30 @@ async function presentToast(msg, color, isDismissible) {
 	await toast.present();
 }
 
+async function presentToastIcon(msg, color, icon) {
+	const toast = await toastController.create({
+		message: msg,
+		duration: 2000,
+		position: "bottom",
+		color: color,
+		icon: icon
+	});
+
+	await toast.present();
+}
+
+async function presentToastFull(header, msg, color, icon) {
+	const toast = await toastController.create({
+		header: header,
+		message: msg,
+		duration: 2000,
+		position: "bottom",
+		color: color,
+		icon: icon
+	});
+
+	await toast.present();
+}
 
 async function presentError(msg, color, error) {
 	const toast = await toastController.create({
@@ -47,4 +71,21 @@ async function alertDialogError(err) {
 	await alert.present();
 }
 
-export default { presentToast, presentError };
+async function presentToastTest() {
+	const toast = await toastController.create({
+		message: "Ceci est un test",
+		duration: 200000,
+		position: "bottom",
+		color: "light"
+	});
+
+	await toast.present();
+}
+
+export default {
+	presentToastFull,
+	presentToast,
+	presentError,
+	presentToastIcon,
+	presentToastTest
+};

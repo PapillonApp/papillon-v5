@@ -5,6 +5,8 @@ import axios from 'axios';
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
+import subjectColor from '@/functions/utils/subjectColor.js'
+
 // funcs
 function isFloat(n){
     return Number(n) === n && n % 1 !== 0;
@@ -136,6 +138,11 @@ function determineSignificant(significant, service) {
                 result.significantReason = "Disp.";
                 result.significantZero = true;
                 break;
+            case -1:
+                result.significant = false;
+                result.significantReason = null;
+                result.significantZero = false;
+                break;
         }
     }
 
@@ -157,6 +164,7 @@ function constructPronoteGrades(grades) {
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
+                color: subjectColor.getSubjectColor(mark.subject.name, subjectColor.darkenHexColor(mark.subject.id.substring(2,8).toString())),
                 name: mark.subject.name,
                 marks: []
             }
@@ -190,6 +198,10 @@ function constructPronoteGrades(grades) {
             newMark.info.significantAverage = false;
         } else {
             newMark.info.significantAverage = true;
+        }
+
+        if (!newMark.info.significant && newMark.info.significantReason == null) {
+            return; // It's an empty mark so don't show it on the tab
         }
 
         newMark.info.outOf20 = mark.is_out_of_20;

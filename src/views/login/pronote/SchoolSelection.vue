@@ -9,6 +9,8 @@
 
     import displayToast from '@/functions/utils/displayToast.js';
 
+    import { Geolocation } from '@capacitor/geolocation';
+
     import { Dialog } from '@capacitor/dialog';
 
     export default defineComponent({
@@ -41,6 +43,7 @@
         },
         mounted() {
             this.getENTs();
+            this.GetLocation();
         },
         methods: {
             decodeEntities(encodedString) {
@@ -75,17 +78,31 @@
                     }, 200);
                     this.ents = response.data.ent_list;
                 })
-            },            
-            async createEntPicker(multipleEnts) {
-                console.log(multipleEnts)
+            },    
+            async GetLocation() {
+                const coordinates = await Geolocation.getCurrentPosition();
 
+                let lat = coordinates.coords.latitude;
+                let lon = coordinates.coords.longitude;
+
+                this.isLoading = true;
+                this.findEstablishments(lat, lon)
+            },     
+            async createEntPicker(multipleEnts) {
                 let options = [];
 
-                for (let i = 0; i < multipleEnts.length; i++) {
+                for (let i = 0; i < multipleEnts.cas.length; i++) {
                     options.push({
-                        text: multipleEnts[i].name,
+                        text: multipleEnts.cas[i].name,
                         handler: () => {
-                            this.choice_py = multipleEnts[i].py;
+                            let selected = {
+                                etab : multipleEnts.etab.toLowerCase(),
+                                cas : multipleEnts.cas[i].py,
+                                cas_name : multipleEnts.cas[i].name,
+                                educonnect : multipleEnts.cas[i].educonnect == true,
+                            }
+
+                            this.displayLogin(selected)
                         }
                     });
                 }
@@ -237,13 +254,31 @@
                     this.login();
                 }, 1000);
             },
-            loginToEtab(url) {
+            loginToEtab(url, cp) {
                 // lowercase url
                 url = url.toLowerCase();
                 let etab = url.toLowerCase();
 
+                let isToutatice = false;
+
+                // check if cp (integer) starts with 35, 22, 56, or 29 (Bretagne)
+                if(cp) {
+                    if(cp.toString().startsWith("35") || cp.toString().startsWith("22") || cp.toString().startsWith("56") || cp.toString().startsWith("29")) {
+                        isToutatice = true;
+                    }
+                }
+
                 // start loading
                 this.isLoading = true;
+
+                if(!etab.includes("eleve.html")) {
+                    if(etab.includes("/pronote/")) {
+                        etab = etab + "eleve.html";
+                    }
+                    else {
+                        etab = etab + "/" + "eleve.html";
+                    }
+                }
 
                 // get ENT
                 axios.get(`https://api.androne.dev/papillon-v4/redirect.php?url=${encodeURIComponent(etab)}`)
@@ -272,42 +307,49 @@
                         // no CAS for this host
                         displayToast.presentToast(`Aucun CAS trouvé pour ${cas_host}.`, "danger")
                     }
-                    else if (all_cas_same_host.length >= 1) {
+                    else if (all_cas_same_host.length == 1) {
                         // only one CAS for this host
                         cas = all_cas_same_host[0].py;
+                    } else {
+                        // multiple CAS for this host
+                        let listToChoose = {
+                            etab : etab.toLowerCase(),
+                            cas : all_cas_same_host,
+                        };
+
+                        this.createEntPicker(listToChoose);
+                        return;
                     }
 
                     console.log(url);
 
                     // TODO: Vérifier si ca fonctionne pour toutatice
-                    if(url == resp && url.includes("index-education.net")) {
+                    if(isToutatice) {
                         // car toutatice est chelou
                         this.loginToEtab(url.replace("index-education.net", "pronote.toutatice.fr"));
                     }
                     else {
-                        if(!etab.includes("eleve.html")) {
-                            if(etab.includes("/pronote/")) {
-                                etab = etab + "eleve.html";
-                            }
-                            else {
-                                etab = etab + "/" + "eleve.html";
-                            }
-                        }
-                        
                         // put etab to lowercase
                         etab = etab.toLowerCase();
 
-                        this.etabUrl = etab;
-                        this.etabCas = cas;
-                        
-                        // get cas name in all_cas_same_host
-                        let cas_name = all_cas_same_host[0].name;
-                        this.displayCas = cas_name;
-                        this.isEduconnectLogin = all_cas_same_host[0].educonnect == true;
+                        let selected = {
+                            etab : etab,
+                            cas : cas,
+                            cas_name : all_cas_same_host[0].name,
+                            educonnect : all_cas_same_host[0].educonnect == true,
+                        }
 
-                        this.$refs.loginModal.$el.present()
+                        this.displayLogin(selected)
                     }
-                });
+                })
+            },
+            displayLogin(selected) {
+                this.etabUrl = selected.etab;
+                this.etabCas = selected.cas;
+                this.displayCas = selected.cas_name;
+                this.isEduconnectLogin = selected.educonnect;
+
+                this.$refs.loginModal.$el.present()
             },
             dismiss() {
                 this.$refs.loginModal.$el.dismiss();
@@ -411,7 +453,7 @@
             </ion-buttons>
         </ion-toolbar>
         <ion-toolbar>
-            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Entrez une ville, un code postal" type="text" :debounce="1000" animated="true" @ionChange="getPostal($event)" @ionClear="clearEtabs()" v-bind="terms"></ion-searchbar>
+            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Entrez un code postal..." type="number" :debounce="1000" animated="true" @ionChange="getPostal($event)" @ionClear="clearEtabs()" v-bind="terms"></ion-searchbar>
         </ion-toolbar>
     </ion-header>
       
@@ -424,7 +466,7 @@
                 </ion-label>
             </ion-list-header>
 
-            <ion-item button detail="true" v-for="(etab, index) in etabs" v-bind:key="index" @click="loginToEtab(etab.url)">
+            <ion-item button detail="true" v-for="(etab, index) in etabs" v-bind:key="index" @click="loginToEtab(etab.url, etab.cp)">
                 <ion-icon class="icon" slot="start" :ios="schoolOutline" :md="schoolSharp"></ion-icon>
                 <ion-label>
                     <h2>{{ etab.nomEtab }}</h2>
@@ -497,25 +539,29 @@
                     
                     <div class="loginIntro">
                         <img src="assets/welcome/pronote_logo.png" alt="Pronote Logo" class="logo"/>
-                        <p>Vous souhaitez vous connecter à <B>Pronote</B> avec l'ENT <B>{{displayCas}}</B> à l'aide de Papillon.</p>
-                        <br>
-                        <p v-if="isEduconnectLogin">Cet ENT utilise ÉduConnect, merci de rentrer les identifiants de ce service.</p>
+                        <div class="introData">
+                            <h2>Connexion à Papillon</h2>
+                            <p>Vous souhaitez vous connecter à <B>Pronote</B> avec l'ENT <B>{{displayCas}}</B> à l'aide de Papillon.</p>
+                            <br v-if="isEduconnectLogin">
+                            <p v-if="isEduconnectLogin" class="isEduconnectLogin">Cet ENT utilise ÉduConnect, merci de rentrer les identifiants de ce service.</p>
+                        </div>
                     </div>
 
                     <div class="loginForm">
-                        <input ref="user" type="text" placeholder="Identifiant" class="loginInput" appAutofill autocomplete="username"/>
-                        <input ref="pass" type="password" placeholder="Mot de passe" class="loginInput" appAutofill autocomplete="password"/><br/>
+                        <input ref="user" type="text" placeholder="Identifiant" class="loginInput" appAutofill autocomplete="username" value=""/>
+                        <input ref="pass" type="password" placeholder="Mot de passe" class="loginInput" appAutofill autocomplete="password" value=""/><br/>
 
                         <button @click="login" class="loginButton">Se connecter</button>
                     </div>
 
                     <div class="loginConditions">
-                        Vos données ne sont pas stockées sur nos serveurs. En vous connectant, vous acceptez les <a href="https://papillon.app/conditions">conditions d'utilisation</a> de Papillon.
+                        Vos données ne sont pas stockées sur nos serveurs. En vous connectant avec cette application, vous acceptez les <a href="https://papillon.app/conditions">conditions d'utilisation</a> de Papillon.
                     </div>
 
                 </div>
             </ion-content>
         </ion-modal> 
+
     </ion-content>
 </template>
   
@@ -542,24 +588,45 @@
 
     .loginIntro {
         padding: 20px;
-        text-align: center;
-        border-bottom: 1px solid #e5e5e5;
+        text-align: left;
+        background: linear-gradient(180deg, #009C34 0%, #00AC6E 100%);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
     } 
+
+    .introData h2 {
+        font-size: 24px;
+        font-family: 'Papillon' !important;
+        font-weight: 700;
+    }
     
     .loginIntro .logo {
-        height: 48px;
-        width: 48px;
+        height: 42px;
+        width: 42px;
     }
 
     .loginIntro p {
         margin-top: 5px;
     }
 
+    .isEduconnectLogin {
+        font-size: 14px;
+        font-weight: 500;
+        color: #ffffffc0;
+    }
+
     .loginConditions {
-        padding: 20px;
+        padding: 5px 20px;
         text-align: center;
-        font-size: 12px;
+        font-size: 13px;
         color: #999999;
+    }
+
+    .loginConditions a {
+        color: #009c34;
     }
 
     .loginForm {
@@ -568,27 +635,31 @@
 
     .loginInput {
         width: 100%;
-        padding: 10px;
-        border: 1px solid #55555555;
-        background: none;
-        border-radius: 0px;
+        padding: 15px 15px;
+        border: none;
+        background: #00000010;
+        border-radius: 8px;
         margin-bottom: 10px;
-    }
+        overflow: hidden;
+        isolation: isolate;
 
-    .loginInput:focus {
-        border: 1px solid #009c34;
-        outline: 3px solid #0066ff22;
+        font-size: 16px;
+        font-weight: 500;
+        font-family: 'Papillon' !important;
     }
 
     .loginButton {
         width: 100%;
-        padding: 10px;
+        padding: 15px 15px;
         border: 1px solid #009c34;
-        border-radius: 0px;
+        border-radius: 8px;
         background-color: #009c34;
         color: #ffffff;
-        font-weight: bold;
-        font-size: 16px;
+        font-weight: 600;
+        font-size: 17px;
         cursor: pointer;
+        overflow: hidden;
+        isolation: isolate;
+        font-family: 'Papillon' !important;
     }
 </style>
