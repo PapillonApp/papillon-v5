@@ -28,6 +28,12 @@ jobs:
           ver="$(git describe --tags --dirty)"
           echo "VERSION=${ver}" >> $GITHUB_OUTPUT
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+
       - name: Get deploy type
         id: deploy-type
         run: |
@@ -38,12 +44,6 @@ jobs:
           else
             echo "TYPE=unknown" >> $GITHUB_OUTPUT
           fi
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          cache: npm
           
       - name: Update version number (package.json)
         run:  |
@@ -160,7 +160,7 @@ jobs:
         run: |
           echo "LC_ALL=fr_FR.UTF-8" >> $GITHUB_ENV
           echo "LANG=fr_FR.UTF-8" >> $GITHUB_ENV
-          bundle exec fastlane ${{ needs.initialize.outputs.DEPLOY_TYPE }} 
+          bundle exec fastlane deploy
         working-directory: android/fastlane
 
       - name: Upload Artifact

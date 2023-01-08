@@ -107,7 +107,7 @@ begin
         match(
             git_url: ENV['CERTIFICATE_STORE_GITHUB_URL'],
             type: "appstore", 
-            app_identifier: "app.pronote.plus", 
+            app_identifier: "xyz.getpapillon.ios", 
             api_key: api_key,
             readonly: true,
             keychain_name: "login.keychain",
@@ -124,7 +124,7 @@ begin
             readonly: true,
             type: "appstore", 
             git_url: ENV['CERTIFICATE_STORE_GITHUB_URL'],
-            app_identifier: "app.pronote.ios", 
+            app_identifier: "xyz.getpapillon.ios", 
             api_key: api_key,
             keychain_name: "login.keychain",
             keychain_password: ENV['APP_IOS_PASSWORD'],
@@ -156,21 +156,21 @@ begin
 
         sync_code_signing(
             type: "development",
-            app_identifier: "app.pronote.ios",
+            app_identifier: "xyz.getpapillon.ios",
             force_for_new_devices: true,
             readonly: false
         )
 
         sync_code_signing(
             type: "appstore",
-            app_identifier: "app.pronote.ios",
+            app_identifier: "xyz.getpapillon.ios",
             force_for_new_devices: true,
             readonly: false
         )
 
         sync_code_signing(
             type: "adhoc",
-            app_identifier: "app.pronote.ios",
+            app_identifier: "xyz.getpapillon.ios",
             force_for_new_devices: true,
             readonly: false
         )
