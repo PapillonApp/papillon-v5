@@ -110,21 +110,15 @@
 
           <ion-title mode="md">Actualités</ion-title>
         </IonToolbar>
+        <IonToolbar>
+                <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></ion-searchbar>
+            </IonToolbar>
       </IonHeader>
       
       <ion-content :fullscreen="true">
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
-
-        <IonHeader collapse="condense">
-            <IonToolbar>
-                <ion-title size="large">Actualités</ion-title>
-            </IonToolbar>
-            <IonToolbar>
-                <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></ion-searchbar>
-            </IonToolbar>
-        </IonHeader>
 
         <div class="NoCours" v-if="isLoading">
             <IonSpinner></IonSpinner>

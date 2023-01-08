@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText, IonSegment, IonSegmentButton, IonModal } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText, IonSegment, IonSegmentButton, IonModal, IonSearchbar } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -28,11 +28,13 @@
             IonListHeader,
             IonSkeletonText,
             IonSegment,
-            IonSegmentButton
+            IonSegmentButton,
+            IonSearchbar
         },
         data() {
             return { 
                 grades: [],
+                fullGrades: [],
                 averages: [],
                 classAverages: [],
                 isLoading: false,
@@ -143,6 +145,7 @@
             getGradesRefresh() {
                 GetGrades().then((data) => {
                     this.grades = this.editMarks(data.marks);
+                    this.fullGrades = this.editMarks(data.marks);
 
                     this.averages = data.averages;
                     this.isLoading = false;
@@ -161,12 +164,24 @@
                     }, 200);
                 });
             },
+            searchGrades() {
+                let search = this.$refs.searchBar.$el.value;
+
+                if (search == "") {
+                    this.grades = this.fullGrades;
+                } else {
+                    this.grades = this.fullGrades.filter(subject => {
+                        return subject.name.toLowerCase().includes(search.toLowerCase());
+                    });
+                }
+            }
         },
         mounted() {
             this.isLoading = true;
 
             GetGrades().then((data) => {
                 this.grades = this.editMarks(data.marks);
+                this.fullGrades = this.editMarks(data.marks);
 
                 this.averages = data.averages;
                 this.isLoading = false;
@@ -179,6 +194,7 @@
             document.addEventListener('tokenUpdated', (ev) => {
                 GetGrades().then((data) => {
                     this.grades = this.editMarks(data.marks);
+                    this.fullGrades = this.editMarks(data.marks);
                     this.averages = data.averages;
                     this.isLoading = false;
 
@@ -190,6 +206,7 @@
                 GetGrades().then((data) => {
                     this.out_of_20 = localStorage.getItem('tweakGrades20') == "true" ? true : false;
                     this.grades = this.editMarks(data.marks);
+                    this.fullGrades = this.editMarks(data.marks);
                     this.averages = data.averages;
                     this.isLoading = false;
 
@@ -221,6 +238,9 @@
         <IonHeader collapse="condense">
             <IonToolbar>
                 <ion-title size="large">Notes</ion-title>
+            </IonToolbar>
+            <IonToolbar>
+                <IonSearchbar ref="searchBar" placeholder="Chercher une matière..." @ionChange="searchGrades()"></IonSearchbar>
             </IonToolbar>
         </IonHeader>
 
