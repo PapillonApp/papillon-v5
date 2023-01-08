@@ -125,7 +125,7 @@
             this.getServerStatus();
 
             if(localStorage.seenWelcome === "true") {
-                // this.isOpen = false;
+                this.isOpen = false;
             }
 
             // add seen to localstorage
@@ -138,14 +138,14 @@
 <template>
       <ion-header>
         <ion-toolbar>
-          <ion-title>Bienvenue dans Papillon</ion-title>
+          <ion-title>Bienvenue sur Papillon 👋</ion-title>
         </ion-toolbar>
       </ion-header>
       
       <ion-content :fullscreen="true">
         <ion-header collapse="condense">
             <ion-toolbar>
-              <ion-title size="large">Bienvenue dans Papillon</ion-title>
+              <ion-title size="large">Bienvenue 👋</ion-title>
             </ion-toolbar>
         </ion-header>
 

@@ -539,9 +539,12 @@
                     
                     <div class="loginIntro">
                         <img src="assets/welcome/pronote_logo.png" alt="Pronote Logo" class="logo"/>
-                        <p>Vous souhaitez vous connecter à <B>Pronote</B> avec l'ENT <B>{{displayCas}}</B> à l'aide de Papillon.</p>
-                        <br>
-                        <p v-if="isEduconnectLogin">Cet ENT utilise ÉduConnect, merci de rentrer les identifiants de ce service.</p>
+                        <div class="introData">
+                            <h2>Connexion à Papillon</h2>
+                            <p>Vous souhaitez vous connecter à <B>Pronote</B> avec l'ENT <B>{{displayCas}}</B> à l'aide de Papillon.</p>
+                            <br v-if="isEduconnectLogin">
+                            <p v-if="isEduconnectLogin" class="isEduconnectLogin">Cet ENT utilise ÉduConnect, merci de rentrer les identifiants de ce service.</p>
+                        </div>
                     </div>
 
                     <div class="loginForm">
@@ -552,7 +555,7 @@
                     </div>
 
                     <div class="loginConditions">
-                        Vos données ne sont pas stockées sur nos serveurs. En vous connectant, vous acceptez les <a href="https://papillon.app/conditions">conditions d'utilisation</a> de Papillon.
+                        Vos données ne sont pas stockées sur nos serveurs. En vous connectant avec cette application, vous acceptez les <a href="https://papillon.app/conditions">conditions d'utilisation</a> de Papillon.
                     </div>
 
                 </div>
@@ -603,24 +606,45 @@
 
     .loginIntro {
         padding: 20px;
-        text-align: center;
-        border-bottom: 1px solid #e5e5e5;
+        text-align: left;
+        background: linear-gradient(180deg, #009C34 0%, #00AC6E 100%);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
     } 
+
+    .introData h2 {
+        font-size: 24px;
+        font-family: 'Papillon' !important;
+        font-weight: 700;
+    }
     
     .loginIntro .logo {
-        height: 48px;
-        width: 48px;
+        height: 42px;
+        width: 42px;
     }
 
     .loginIntro p {
         margin-top: 5px;
     }
 
+    .isEduconnectLogin {
+        font-size: 14px;
+        font-weight: 500;
+        color: #ffffffc0;
+    }
+
     .loginConditions {
-        padding: 20px;
+        padding: 5px 20px;
         text-align: center;
-        font-size: 12px;
+        font-size: 13px;
         color: #999999;
+    }
+
+    .loginConditions a {
+        color: #009c34;
     }
 
     .loginForm {
@@ -629,31 +653,31 @@
 
     .loginInput {
         width: 100%;
-        padding: 10px;
-        border: 1px solid #55555555;
-        background: none;
-        border-radius: 0px;
+        padding: 15px 15px;
+        border: none;
+        background: #00000010;
+        border-radius: 8px;
         margin-bottom: 10px;
         overflow: hidden;
         isolation: isolate;
-    }
 
-    .loginInput:focus {
-        border: 1px solid #009c34;
-        outline: 3px solid #0066ff22;
+        font-size: 16px;
+        font-weight: 500;
+        font-family: 'Papillon' !important;
     }
 
     .loginButton {
         width: 100%;
-        padding: 10px;
+        padding: 15px 15px;
         border: 1px solid #009c34;
-        border-radius: 0px;
+        border-radius: 8px;
         background-color: #009c34;
         color: #ffffff;
-        font-weight: bold;
-        font-size: 16px;
+        font-weight: 600;
+        font-size: 17px;
         cursor: pointer;
         overflow: hidden;
         isolation: isolate;
+        font-family: 'Papillon' !important;
     }
 </style>
