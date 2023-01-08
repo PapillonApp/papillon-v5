@@ -95,6 +95,12 @@ export default defineComponent({
 
                 this.loadedrnButtonString = this.createDateString(this.$rn);
                 this.timetable.loading = false;
+
+                this.dontRetryCheck = true;
+
+                setTimeout(() => {
+                    this.dontRetryCheck = false;
+                }, 200);
             });
 
             // get timetable for yesterday
