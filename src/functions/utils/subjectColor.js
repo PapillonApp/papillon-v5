@@ -45,8 +45,12 @@ function getSubjectColor(subjectName, color) {
 	let subjectColors = JSON.parse(localStorage.getItem('SubjectColors')) || {};
 
 	if (subjectName.includes('>')) {
-		subjectName = subjectName.split(' > ')[1];
-	}
+		subjectName = subjectName.split(' > ')[0];
+	} else if (subjectName.includes('&')) {
+		true // do nothing
+	} else if (subjectName.split(' ').length > 1) {
+		subjectName = subjectName.split(' ')[0];
+	} 
 
 	if (subjectColors[subjectName]) {
 		return subjectColors[subjectName];
