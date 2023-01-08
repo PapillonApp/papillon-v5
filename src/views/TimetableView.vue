@@ -308,7 +308,7 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader">
+      <IonHeader class="AppHeader" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -494,7 +494,7 @@
           </ion-content>
         </IonModal>
 
-        <IonModal ref="coursModal" :keep-contents-mounted="true" :initial-breakpoint="0.6" :breakpoints="[0, 0.6, 0.9]" :handle="true" :canDismiss="true">
+        <IonModal ref="coursModal" class="coursModal" :keep-contents-mounted="true" :initial-breakpoint="0.6" :breakpoints="[0, 0.6, 0.9]" :handle="true" :canDismiss="true">
             <IonHeader>
               <IonToolbar>
                 <ion-title>{{selectedCourse.name}}</ion-title>
@@ -506,7 +506,7 @@
                         <span class="material-symbols-outlined mdls" slot="start">history_edu</span>
                         <ion-label>
                             <p>Nom de la matière</p>
-                            <h3>{{selectedCourse.name}}</h3>
+                            <h2>{{selectedCourse.name}}</h2>
                         </ion-label>
                     </ion-item>
 
@@ -514,7 +514,7 @@
                         <span class="material-symbols-outlined mdls" slot="start">face</span>
                         <ion-label>
                             <p>Professeur</p>
-                            <h3>{{selectedCourse.teachers}}</h3>
+                            <h2>{{selectedCourse.teachers}}</h2>
                         </ion-label>
                     </ion-item>
 
@@ -522,7 +522,7 @@
                         <span class="material-symbols-outlined mdls" slot="start">meeting_room</span>
                         <ion-label>
                             <p>Salle de cours</p>
-                            <h3>{{selectedCourse.rooms}}</h3>
+                            <h2>{{selectedCourse.rooms}}</h2>
                         </ion-label>
                     </ion-item>
 
@@ -530,7 +530,7 @@
                         <span class="material-symbols-outlined mdls" slot="start">description</span>
                         <ion-label>
                             <p>Mémo</p>
-                            <h3 class="display-all">{{selectedCourse.memo}}</h3>
+                            <h2 class="display-all">{{selectedCourse.memo}}</h2>
                         </ion-label>
                     </ion-item>
 
@@ -538,7 +538,7 @@
                         <span class="material-symbols-outlined mdls" slot="start">schedule</span>
                         <ion-label>
                             <p>Horaires</p>
-                            <h3>De {{selectedCourse.start}} à {{selectedCourse.end}}</h3>
+                            <h2>De {{selectedCourse.start}} à {{selectedCourse.end}}</h2>
                         </ion-label>
                     </ion-item>
 
@@ -546,7 +546,7 @@
                         <span class="material-symbols-outlined mdls" slot="start">pending_actions</span>
                         <ion-label>
                             <p>Temps de cours</p>
-                            <h3>{{selectedCourse.length}}</h3>
+                            <h2>{{selectedCourse.length}}</h2>
                         </ion-label>
                     </ion-item>
 
@@ -554,7 +554,7 @@
                         <span class="material-symbols-outlined mdls" slot="start">emergency_home</span>
                         <ion-label>
                             <p>Statut</p>
-                            <h3>Ce cours n'est pas maintenu<br>Motif : {{selectedCourse.status}}</h3>
+                            <h2>Ce cours n'est pas maintenu<br>Motif : {{selectedCourse.status}}</h2>
                         </ion-label>
                     </ion-item>
 
@@ -562,7 +562,7 @@
                         <span class="material-symbols-outlined mdls" slot="start">info</span>
                         <ion-label>
                             <p>Statut</p>
-                            <h3>{{selectedCourse.status}}</h3>
+                            <h2>{{selectedCourse.status}}</h2>
                         </ion-label>
                     </ion-item>
 
@@ -570,7 +570,7 @@
                         <span class="material-symbols-outlined mdls" slot="start">info</span>
                         <ion-label>
                             <p>Statut</p>
-                            <h3>{{selectedCourse.status}}</h3>
+                            <h2>{{selectedCourse.status}}</h2>
                         </ion-label>
                     </ion-item>
                 </ion-list>
@@ -591,5 +591,9 @@
 
     .display-all {
         white-space: pre-line;
+    }
+    
+    .coursModal h2 {
+        font-size: 16px !important;
     }
 </style>

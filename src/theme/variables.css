@@ -221,4 +221,12 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-step-900: #2f3233;
     --ion-color-step-950: #242627;
   }
+
+  .md body {
+    --ion-inset-background: hsl(255, 7%, 96%);
+  }
+
+  .ios body {
+    --ion-inset-background: hsl(255, 0%, 97%);
+  }
 }

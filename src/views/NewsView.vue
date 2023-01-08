@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonModal, IonCard } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonModal, IonCard, IonSpinner } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -24,13 +24,15 @@
             IonItem,
             IonLabel,
             IonModal,
-            IonList
+            IonList,
+            IonSpinner
         },
         data() {
             return { 
                 news: [],
                 openedNews: [],
                 presentingElement: null,
+                isLoading: false
             }
         },
         methods: {
@@ -63,8 +65,10 @@
         mounted() {
             this.presentingElement = this.$refs.page.$el;
 
+            this.isLoading = true;
             GetNews().then((data) => {
                 this.news = data;
+                this.isLoading = false;
             });
 
             return false;
@@ -74,7 +78,7 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader">
+      <IonHeader class="AppHeader" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -96,6 +100,13 @@
             </IonToolbar>
         </IonHeader>
 
+        <div class="NoCours" v-if="isLoading">
+            <IonSpinner></IonSpinner>
+            <br/>
+            <h2>Téléchargement des actualités...</h2>
+            <p>Veuillez patienter pendant qu'on récupère les actualités depuis nos serveurs...</p>
+        </div>
+
         <IonList>
             <IonItem button v-for="(news, i) in news" v-bind:key="i" @click="openNews(news)">
                 <span v-if="!news.isSurvey" class="material-symbols-outlined mdls" slot="start">feed</span>
@@ -109,11 +120,11 @@
         </IonList>
 
         <IonModal :presenting-element="presentingElement" :canDismiss="true" ref="modal">
-            <IonHeader>
+            <IonHeader translucent>
                 <IonToolbar>
                     <IonTitle>{{ openedNews.title }}</IonTitle>
                     <IonButtons slot="end">
-                        <IonButton @click="closeNews()">Close</IonButton>
+                        <IonButton @click="closeNews()">Fermer</IonButton>
                     </IonButtons>
                 </IonToolbar>
             </IonHeader>

@@ -101,6 +101,8 @@ input.sc-ion-searchbar-md {
 
     overflow: hidden;
     isolation: isolate;
+
+    transition: background 0.2s;
 }
 
 @media screen and (prefers-color-scheme: dark) {
@@ -124,6 +126,10 @@ input.sc-ion-searchbar-md {
 
 #rnPickerModalButton.ios {
     margin-right: 5px !important;
+}
+
+ion-header.ios:not(.header-collapse-condense-inactive) #rnPickerModalButton {
+    background: transparent !important;
 }
 
 /* Material Symbols */

@@ -211,7 +211,7 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader">
+      <IonHeader class="AppHeader" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">

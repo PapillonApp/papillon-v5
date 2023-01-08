@@ -312,7 +312,7 @@
     }
 
     .md .userItem p {
-        color: #ffffff99;
+        color: #ffffffc2;
     }
 
     .md .userData {

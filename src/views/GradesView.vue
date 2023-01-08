@@ -202,7 +202,7 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader">
+      <IonHeader class="AppHeader" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -346,7 +346,7 @@
 
         <br /> <br />
 
-        <IonModal ref="averageModal" :keep-contents-mounted="true" :initial-breakpoint="0.4" :breakpoints="[0, 0.4, 0.6]" :handle="true" :canDismiss="true">
+        <IonModal ref="averageModal" :keep-contents-mounted="true" :initial-breakpoint="0.5" :breakpoints="[0, 0.5, 0.9]" :handle="true" :canDismiss="true">
             <IonHeader>
               <IonToolbar>
                 <ion-title>{{ selectedMark.subject }}</ion-title>
