@@ -158,7 +158,7 @@ export default defineComponent({
                     if(checkbox.checked) {
                         displayToast.presentToastFull(
                             "Devoir marqué comme fait",
-                            `Votre devoir de ${hw.data.subject} a été marqué comme fait.`,
+                            `Votre devoir de ${hw.homework.subject} a été marqué comme fait.`,
                             "success",
                             checkmark
                         )
@@ -166,7 +166,7 @@ export default defineComponent({
                     else {
                         displayToast.presentToastFull(
                             "Devoir marqué comme non fait",
-                            `Votre devoir de ${hw.data.subject} a été marqué comme non fait.`,
+                            `Votre devoir de ${hw.homework.subject} a été marqué comme non fait.`,
                             "success",
                             checkmark
                         )
