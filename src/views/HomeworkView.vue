@@ -1,13 +1,18 @@
 <script>
 import { defineComponent } from 'vue';
-import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonChip } from '@ionic/vue';
+import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonChip, IonCheckbox } from '@ionic/vue';
 
-import { calendarOutline, calendarSharp, todayOutline, todaySharp } from 'ionicons/icons';
+import { calendarOutline, calendarSharp, todayOutline, todaySharp, alertCircle, checkmark } from 'ionicons/icons';
+
+import displayToast from '@/functions/utils/displayToast.js';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 
 import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
+import GetToken from "@/functions/login/GetToken.js";
+
+import axios from 'axios';
 
 export default defineComponent({
     name: 'FolderPage',
@@ -27,7 +32,8 @@ export default defineComponent({
         IonRefresher,
         IonRefresherContent,
         IonSpinner,
-        IonChip
+        IonChip,
+        IonCheckbox
     },
     setup() {
         return {
@@ -86,7 +92,6 @@ export default defineComponent({
             // get timetable for rn
             GetHomeworks(this.$rn).then((homeworks) => {
                 this.timetable = homeworks;
-                console.log(this.timetable);
 
                 this.loadedrnButtonString = this.createDateString(this.$rn);
                 this.timetable.loading = false;
@@ -125,6 +130,98 @@ export default defineComponent({
         closeHomework() {
             this.$refs.hwModal.$el.dismiss();
         },
+        openLink(url) {
+                window.open(url, "_blank");
+        },
+        changeDone(hw) {
+            if(!this.dontRetryCheck) {
+                let homeworkID = hw.data.id;
+
+                const API = this.$api;
+                let token = localStorage.getItem('token');
+
+                let dayRequest = new Date(this.$rn);
+                let dayString = dayRequest.toISOString().split('T')[0];
+
+                let URL = `${API}/homework/changeState`;
+
+                // post request with token, homeworkId, dateFrom and dateTo
+                axios.post(URL, {
+                    token: token,
+                    homeworkId: homeworkID,
+                    dateFrom: dayString,
+                    dateTo: dayString
+                }).then((response) => {
+                    let checkboxID = `checkbox_${hw.data.id}`;
+                    let checkbox = document.getElementById(checkboxID);
+
+                    if(checkbox.checked) {
+                        displayToast.presentToastFull(
+                            "Devoir marqué comme fait",
+                            `Votre devoir de ${hw.data.subject} a été marqué comme fait.`,
+                            "success",
+                            checkmark
+                        )
+                    }
+                    else {
+                        displayToast.presentToastFull(
+                            "Devoir marqué comme non fait",
+                            `Votre devoir de ${hw.data.subject} a été marqué comme non fait.`,
+                            "success",
+                            checkmark
+                        )
+                    }
+
+                    // reset homework cache
+                    localStorage.removeItem('HomeworkCache');
+
+                    // reload timetable
+                    this.getTimetables();
+                })
+                .catch((error) => {
+                    let response = error.response;
+
+                    // untick checkbox
+                    let checkboxID = `checkbox_${hw.data.id}`;
+                    let checkbox = document.getElementById(checkboxID);
+
+                    setTimeout(() => {
+                        this.dontRetryCheck = true;
+                        checkbox.checked = !checkbox.checked;
+
+                        setTimeout(() => {
+                            this.dontRetryCheck = false;
+                        }, 100);
+                    }, 200);
+
+                    if(response.data == "expired" || response.data == "notfound") {
+                        GetToken();
+                        displayToast.presentToastFull(
+                            "Impossible de marquer ce devoir comme fait",
+                            "Le token à expiré (" + error + ")",
+                            "danger",
+                            alertCircle
+                        )
+                    }
+                    else if(response.data == "not found") {
+                        displayToast.presentToastFull(
+                            "Impossible de marquer ce devoir comme fait",
+                            "Nous n'avons pas pu trouver ce devoir sur nos serveurs. (" + error + ")",
+                            "danger",
+                            alertCircle
+                        )
+                    }
+                    else {
+                        displayToast.presentToastFull(
+                            "Impossible de marquer ce devoir comme fait",
+                            "Erreur inconnue (" + error + ")",
+                            "danger",
+                            alertCircle
+                        )
+                    }
+                });
+            }
+        }
     },
     data() {
         return {
@@ -136,6 +233,7 @@ export default defineComponent({
             tomorrow: [],
             shouldResetSwiper: false,
             openedHw: [],
+            dontRetryCheck: false,
         }
     },
     mounted() {
@@ -241,6 +339,7 @@ export default defineComponent({
                 <swiper-slide class="swiper-slide">
                     <ion-list>
                         <ion-item v-for="homework in yesterday" :key="homework.id" button>
+                            <ion-checkbox slot="start" :checked="homework.data.done"></ion-checkbox>
                             <ion-label>
                                 <p>{{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
@@ -265,8 +364,9 @@ export default defineComponent({
                 </swiper-slide>
                 <swiper-slide>
                     <ion-list>
-                        <ion-item v-for="homework in timetable" :key="homework.id" button @click="openHomework(homework)">
-                            <ion-label>
+                        <ion-item v-for="homework in timetable" :key="homework.id" button>
+                            <ion-checkbox :id="`checkbox_${homework.data.id}`" slot="start" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
+                            <ion-label @click="openHomework(homework)">
                                 <p>{{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
                             </ion-label>
@@ -291,6 +391,7 @@ export default defineComponent({
                 <swiper-slide>
                     <ion-list>
                         <ion-item v-for="homework in tomorrow" :key="homework.id" button>
+                            <ion-checkbox slot="start" :checked="homework.data.done"></ion-checkbox>
                             <ion-label>
                                 <p>{{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
@@ -401,5 +502,9 @@ export default defineComponent({
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    #noTouchZone {
+        width: 20px;
     }
 </style>
