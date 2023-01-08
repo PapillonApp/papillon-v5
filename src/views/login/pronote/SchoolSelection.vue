@@ -548,8 +548,8 @@
                     </div>
 
                     <div class="loginForm">
-                        <input ref="user" type="text" placeholder="Identifiant" class="loginInput" appAutofill autocomplete="username"/>
-                        <input ref="pass" type="password" placeholder="Mot de passe" class="loginInput" appAutofill autocomplete="password"/><br/>
+                        <input ref="user" type="text" placeholder="Identifiant" class="loginInput" appAutofill autocomplete="username" value=""/>
+                        <input ref="pass" type="password" placeholder="Mot de passe" class="loginInput" appAutofill autocomplete="password" value=""/><br/>
 
                         <button @click="login" class="loginButton">Se connecter</button>
                     </div>
@@ -562,24 +562,6 @@
             </ion-content>
         </ion-modal> 
 
-        <ion-modal ref="casModal" trigger="open-casModal" :swipeToClose="true">
-            <div class="choiceCas">
-                <ion-list>
-                    <ion-list-header>
-                        <ion-label>
-                            <p>Choisissez votre CAS</p>
-                        </ion-label>
-                    </ion-list-header>
-
-                    <ion-item button detail="true" v-for="(toChoose, index) in listToChoose" v-bind:key="index" @click="chooseCas(toChoose)">
-                        <ion-icon class="icon" slot="start" :ios="schoolOutline" :md="schoolSharp"></ion-icon>
-                        <ion-label>
-                            <h2>{{ toChoose.cas.name }}</h2>
-                        </ion-label>
-                    </ion-item>
-                </ion-list>
-            </div>
-        </ion-modal>
     </ion-content>
 </template>
   
