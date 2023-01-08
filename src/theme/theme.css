@@ -298,3 +298,8 @@ ion-list.list-inset ion-list-header, ion-list.list-inset ion-item {
 ion-list.list-inset.ios ion-list-header ion-label {
     margin-top: 0px;
 }
+
+/* action sheet */
+ion-action-sheet {
+    --ion-color-primary: #0075ff !important;
+}

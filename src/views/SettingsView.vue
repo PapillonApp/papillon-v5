@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonToggle } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonToggle, actionSheetController } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -38,7 +38,39 @@
             }
         },
         methods: {
-            logout() {
+            async logout() {
+                const actionSheet = await actionSheetController.create({
+                header: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+                subHeader: 'Vous perdrez vos paramètres et vos données seront supprimées de votre appareil.',
+                buttons: [
+                    {
+                        text: 'Se déconnecter',
+                        role: 'destructive',
+                        data: {
+                            action: 'delete',
+                        },
+                        handler: () => {
+                            this.logoutFunc();
+                        },
+                    },
+                    {
+                        text: 'Annuler',
+                        role: 'cancel',
+                        data: {
+                            action: 'cancel',
+                        },
+                    },
+                ],
+                });
+
+                await actionSheet.present();
+
+                const res = await actionSheet.onDidDismiss();
+                let result = JSON.stringify(res, null, 2);
+
+                console.log(result);
+            },
+            logoutFunc() {
                 // empty all local storage
                 localStorage.clear();
                 // go to login page
