@@ -196,6 +196,7 @@ export default defineComponent({
 
                     if(response.data == "expired" || response.data == "notfound") {
                         GetToken();
+
                         displayToast.presentToastFull(
                             "Impossible de marquer ce devoir comme fait",
                             "Le token à expiré (" + error + ")",
@@ -343,6 +344,16 @@ export default defineComponent({
                             <ion-label>
                                 <p>{{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
+
+                                <div class="innerChips" v-if="homework.files.length !== 0">
+                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true">
+                                        <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
+
+                                        <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
+
+                                        <p>{{attachment.name}}</p>
+                                    </ion-chip>
+                                </div>
                             </ion-label>
                         </ion-item>
 
@@ -369,6 +380,16 @@ export default defineComponent({
                             <ion-label @click="openHomework(homework)">
                                 <p>{{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
+
+                                <div class="innerChips" v-if="homework.files.length !== 0">
+                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" @click="openLink(attachment.url)" color="dark" :outline="true">
+                                        <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
+
+                                        <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
+
+                                        <p>{{attachment.name}}</p>
+                                    </ion-chip>
+                                </div>
                             </ion-label>
                         </ion-item>
 
@@ -395,6 +416,16 @@ export default defineComponent({
                             <ion-label>
                                 <p>{{ homework.homework.subject }}</p>
                                 <h2>{{ homework.homework.content }}</h2>
+
+                                <div class="innerChips" v-if="homework.files.length !== 0">
+                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true">
+                                        <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
+
+                                        <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
+
+                                        <p>{{attachment.name}}</p>
+                                    </ion-chip>
+                                </div>
                             </ion-label>
                         </ion-item>
 
@@ -487,17 +518,17 @@ export default defineComponent({
         flex-wrap: wrap;
     }
 
-    .hwModalContent .chips ion-chip {
+    ion-chip {
         margin-right: 5px;
         margin-bottom: 5px;
     }
 
-    .hwModalContent .chips span {
+    ion-chip span {
         opacity: 50%;
         margin-right: 8px;
     }
 
-    .hwModalContent .chips ion-chip p {
+    ion-chip p {
         max-width: 160px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -506,5 +537,16 @@ export default defineComponent({
 
     #noTouchZone {
         width: 20px;
+    }
+
+    .innerChips {
+        overflow-y: scroll;
+    }
+
+    .innerChips ion-chip p {
+        max-width: 50px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 </style>
