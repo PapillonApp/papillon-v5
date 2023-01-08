@@ -277,7 +277,7 @@
             </ion-card>
         </div>
         
-        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: ${ darkenHexColor(subject.id.substring(2,8).toString()) };`">
+        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: ${ subject.color };`">
             <div class="subject-name" @click="openAverageModal(subject)">
                 <h3>{{subject.name}}</h3>
                 <p class="avg" v-if="subject.significant">{{subject.average}}<small>/20</small></p>
