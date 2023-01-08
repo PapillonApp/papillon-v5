@@ -16,8 +16,8 @@
 default_platform(:android)
 
 begin 
-  lane :prod do
-    desc "Build and deploy for production release (Android)"
+  lane :deploy do
+    desc "Build and deploy for Google Play Store (Android)"
 
     set_version()
 
@@ -41,47 +41,7 @@ begin
     sh("echo AAB_LOCATION=#{AAB_LOCATION} >> $GITHUB_ENV")
 
     supply(
-        track: 'production',
-        package_name: ENV['APP_PACKAGE_NAME'],
-        version_code: ENV['APP_VERSION_CODE'],
-        release_status: "draft",
-        aab: "#{AAB_LOCATION}",
-        skip_upload_images: true,
-        skip_upload_metadata: true,
-        skip_upload_changelogs: true,
-        skip_upload_screenshots: true,
-        skip_upload_apk: true,
-        json_key: ENV['PLAY_CREDENTIALS_JSON']
-      )
-  end
-
-
-  lane :beta do
-    desc "Build and deploy for beta release (Android)"
-
-    set_version()
-
-    gradle(
-      tasks: ["bundleRelease", "assembleRelease"],
-      print_command: false,
-      properties: {
-        "android.injected.signing.store.file" => ENV['KEY_STORE'],
-        "android.injected.signing.store.password" => ENV['KEY_STORE_PASSWORD'],
-        "android.injected.signing.key.alias" => ENV['KEY_ALIAS'],
-        "android.injected.signing.key.password" => ENV['KEY_PASSWORD'],
-        "android.injected.version.code" => ENV['APP_VERSION_CODE'],
-        "android.injected.version.name" => ENV['APP_VERSION_NUMBER'],
-      }
-    ) 
-
-    APK_LOCATION = "#{lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH]}"
-    AAB_LOCATION = "#{lane_context[SharedValues::GRADLE_AAB_OUTPUT_PATH]}"
-
-    sh("echo APK_LOCATION=#{APK_LOCATION} >> $GITHUB_ENV")
-    sh("echo AAB_LOCATION=#{AAB_LOCATION} >> $GITHUB_ENV")
-
-    supply(
-        track: 'beta',
+        track: 'alpha',
         package_name: ENV['APP_PACKAGE_NAME'],
         version_code: ENV['APP_VERSION_CODE'],
         release_status: "inProgress",
