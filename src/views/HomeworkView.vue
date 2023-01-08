@@ -376,13 +376,17 @@ export default defineComponent({
                 <swiper-slide>
                     <ion-list>
                         <ion-item v-for="homework in timetable" :key="homework.id" button>
-                            <ion-checkbox :id="`checkbox_${homework.data.id}`" slot="start" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
-                            <ion-label @click="openHomework(homework)">
-                                <p>{{ homework.homework.subject }}</p>
-                                <h2>{{ homework.homework.content }}</h2>
+                            <div slot="start">
+                                <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
+                            </div>
+                            <ion-label >
+                                <div @click="openHomework(homework)">
+                                    <p>{{ homework.homework.subject }}</p>
+                                    <h2>{{ homework.homework.content }}</h2>
+                                </div>
 
                                 <div class="innerChips" v-if="homework.files.length !== 0">
-                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true">
+                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true" @click="openLink(attachment.url)">
                                         <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
 
                                         <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>

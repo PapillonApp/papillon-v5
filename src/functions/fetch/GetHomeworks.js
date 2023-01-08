@@ -92,6 +92,12 @@ function constructPronoteHomework(hw) {
             if (!file.name) {
                 file.name = "Document";
             }
+
+            // if file.url is not a link
+            if (!file.url.startsWith("http")) {
+                // remove file
+                homework.files.splice(homework.files.indexOf(file), 1);
+            }
         });
 
         // construct course
