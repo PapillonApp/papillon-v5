@@ -5,6 +5,8 @@ import axios from 'axios';
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
+import subjectColor from '@/functions/utils/subjectColor.js'
+
 // main function
 async function getTimetable(date) {
     // as only pronote is supported for now, we can just return the pronote timetable
@@ -124,6 +126,8 @@ function constructPronoteTimetable(timetable) {
                 status: course.status
             }
         };
+
+        subjectColor.setSubjectColor(newCourse.data.subject, newCourse.course.color, true);
 
         if (course.memo != null) {
             newCourse.data.hasMemo = true;
