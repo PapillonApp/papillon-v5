@@ -80,6 +80,9 @@
                 // empty cache
                 localStorage.removeItem('UserCache');
                 localStorage.removeItem('TimetableCache');
+                localStorage.removeItem('newsCache');
+                localStorage.removeItem('gradeCache');
+                localStorage.removeItem('HomeworkCache');
 
                 // show toast
                 setTimeout(() => {
