@@ -225,6 +225,7 @@
 
     .true {
         background: var(--ion-color-danger-dark) !important;
+        --backgroundColor: var(--ion-color-danger) !important;
     }
 
     .true .CoursColor {
