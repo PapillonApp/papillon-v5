@@ -89,5 +89,15 @@ function constructPronoteAbsences(absences) {
 				to: new Date(absence.to),
 			}
 		}
+		
+		absences.push(newAbsence)
 	})
+
+	absences.sort((a, b) => {
+		return a.date.from - b.date.from;
+	})
+
+	return absences
 }
+
+export default getPronoteAbsences;
