@@ -127,10 +127,23 @@ function constructPronoteTimetable(timetable) {
             }
         };
 
-        subjectColor.setSubjectColor(newCourse.data.subject, newCourse.course.color, true);
+        if (course.subject.name != "") {
+            subjectColor.setSubjectColor(newCourse.data.subject, newCourse.course.color, true);
+        }        
 
         if (course.memo != null) {
             newCourse.data.hasMemo = true;
+        }
+
+        if (course.is_detention) {
+            newCourse.data.subject = "🚨 Retenue";
+            newCourse.course.color = "#ff0000";
+            newCourse.status.status = "Vous êtes placé en retenue";
+        }
+
+        if (course.is_exempted) {
+            newCourse.course.color = "#739B73";
+            newCourse.status.status = "Vous êtes dispensé de cours";
         }
 
         // push course to courses
