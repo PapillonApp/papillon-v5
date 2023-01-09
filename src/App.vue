@@ -85,6 +85,11 @@
                 icon: "newspaper",
             },
             {
+                title: 'Menus',
+                url: '/menus',
+                icon: "restaurant",
+            },
+            {
                 title: 'Paramètres',
                 url: '/settings',
                 icon: "settings",
