@@ -5,6 +5,7 @@ import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, I
 import { calendarOutline, calendarSharp, todayOutline, todaySharp, alertCircle, checkmark } from 'ionicons/icons';
 
 import displayToast from '@/functions/utils/displayToast.js';
+import hapticsController from '@/functions/utils/hapticsController.js';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
@@ -140,6 +141,10 @@ export default defineComponent({
                 window.open(url, "_blank");
         },
         changeDone(hw) {
+            // microinteractions
+            hapticsController.notification('success');
+
+            // send request
             if(!this.dontRetryCheck) {
                 let homeworkID = hw.data.id;
 
@@ -186,6 +191,9 @@ export default defineComponent({
                 })
                 .catch((error) => {
                     let response = error.response;
+
+                    // microintéractions
+                    hapticsController.notification('error');
 
                     // untick checkbox
                     let checkboxID = `checkbox_${hw.data.id}`;
