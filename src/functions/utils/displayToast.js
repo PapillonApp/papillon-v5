@@ -1,6 +1,8 @@
 import { toastController, alertController } from '@ionic/vue';
 import { Dialog } from '@capacitor/dialog';
 
+import hapticsController from './hapticsController';
+
 async function presentToast(msg, color) {
 	const toast = await toastController.create({
 		message: msg,
@@ -25,6 +27,17 @@ async function presentToastIcon(msg, color, icon) {
 }
 
 async function presentToastFull(header, msg, color, icon) {
+	// vibration
+	if(color == "danger") {
+		hapticsController.notification("error");
+	}
+	else if(color == "success") {
+		hapticsController.notification("success");
+	}
+	else if(color == "warning") {
+		hapticsController.notification("warning");
+	}
+
 	const toast = await toastController.create({
 		header: header,
 		message: msg,
