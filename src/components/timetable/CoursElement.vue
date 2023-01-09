@@ -184,7 +184,7 @@
         opacity: 0.7;
 
         position: absolute;
-        top: 13px;
+        top: 11px;
         right: 16px;
     }
 
@@ -192,6 +192,11 @@
         font-size: 1.2em;
         font-weight: 600 !important;
         margin-top: 1px;
+
+        width: calc(100vw - 100px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .CoursColor {
