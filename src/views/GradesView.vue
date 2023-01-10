@@ -128,14 +128,11 @@
                 grades.forEach(subject => {
                     subject.marks.forEach(mark => {
                         // if out of 20 make it out of 20
-                        if (out_of_20) {
-                            mark.grade.original_value = mark.grade.value;
-                            mark.grade.original_out_of = mark.grade.out_of;
-                            
-                            mark.grade.value = parseFloat(mark.grade.value) / parseFloat(mark.grade.out_of) * 20;
+                        if (out_of_20) {                            
+                            mark.grade.updated_value = parseFloat(mark.grade.value) / parseFloat(mark.grade.out_of) * 20;
 
-                            mark.grade.value = mark.grade.value.toFixed(2);
-                            mark.grade.out_of = 20;
+                            mark.grade.updated_value = mark.grade.updated_value.toFixed(2);
+                            mark.grade.updated_out_of = 20;
                         }
                     });
                 });
@@ -187,6 +184,9 @@
                 this.isLoading = false;
 
                 this.classAverages = data.averages.class;
+
+                
+                console.log(this.grades)
             });
 
             this.getPeriods();
@@ -291,11 +291,13 @@
                         <p class="name">{{ mark.info.description }}</p>
                         <p class="coef">Coeff. : {{mark.grade.coefficient}}</p>
 
-                        <p class="grd" v-if="mark.info.significant">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
-                        <p class="coef" v-if="mark.grade.original_value">{{mark.grade.original_value}}/{{mark.grade.original_out_of}}</p>
+                        <p class="grd" v-if="mark.info.significant && !mark.grade.updated_value">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
+                        <p class="grd" v-else-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.updated_value}}/{{mark.grade.updated_out_of}}</p>
+                        <p class="coef" v-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
                         
                         <!-- si absent -->
                         <p class="grd" v-if="!mark.info.significant">{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></p>
+                        <p class="coef" v-if="mark.grade.original_value && !mark.info.significant"><br/></p>
                     </div>
                     <div class="averages" v-if="mark.info.significantAverage">
                         <div class="average">
