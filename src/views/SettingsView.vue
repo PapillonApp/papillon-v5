@@ -360,13 +360,21 @@ import getContributors from '@/functions/fetch/GetContributors';
                 </IonLabel>
             </IonItem>
         </IonList>
-
+        
         <IonList :inset="true" lines="inset">
             <IonListHeader>
                 <IonLabel>
                     <p>A propos de l'app</p>
                 </IonLabel>
             </IonListHeader>
+
+            <IonItem button @click="openURL('https://discord.gg/DMx3TDyz2U')">
+                <span class="material-symbols-outlined mdls" slot="start">support</span>
+                <IonLabel>
+                    <p>Discord</p>
+                    <h2>Rejoindre le serveur Discord</h2>
+                </IonLabel>
+            </IonItem>
 
             <IonItem>
                 <span class="material-symbols-outlined mdls" slot="start">security_update_good</span>
