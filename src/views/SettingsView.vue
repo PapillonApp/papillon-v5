@@ -13,6 +13,7 @@
     import { trash, refresh, checkmark, alertCircle } from 'ionicons/icons';
 
     import { FilePicker } from '@capawesome/capacitor-file-picker';
+import getContributors from '@/functions/fetch/GetContributors';
 
     export default defineComponent({
         name: 'FolderPage',
@@ -34,7 +35,12 @@
             return { 
                 appVersion: version,
                 appPlatform: Capacitor.getPlatform(),
-                localStorageSize: ''
+                localStorageSize: '',
+            }
+        },
+        data() {
+            return {
+                contributors: [],
             }
         },
         methods: {
@@ -220,6 +226,15 @@
                     'light',
                     trash
                 );
+            },
+            openURL(url) {
+                // open url in new tab
+                window.open(url, '_blank');
+            },
+            getContributorsList(){
+                getContributors(5).then((contributors) => {
+                    this.contributors = contributors;
+                });
             }
         },
         mounted() {
@@ -240,6 +255,7 @@
             // get tweakGrades20 ref
             let tweakGrades20 = this.$refs.tweakGrades20;
             tweakGrades20.$el.checked = localStorage.getItem('tweakGrades20') == 'true';
+            this.getContributorsList();
         }
     });
 </script>
@@ -377,11 +393,31 @@
             </IonItem>
         </IonList>
 
+        <IonList :inset="true" lines="inset">
+            <IonListHeader>
+                <IonLabel>
+                    <p>Top 5 des contributeurs</p>
+                </IonLabel>
+            </IonListHeader>
+
+            <IonItem v-for="contributor in contributors" :key="contributor.id" button @click="openURL(contributor.html_url)">
+            <img :src="contributor.avatar_url" slot="start" class="avatar" />
+            <IonLabel>
+                <p>{{ contributor.login }}</p>
+                <h2>{{ contributor.contributions }} contributions</h2>
+            </IonLabel>
+            </IonItem>
+        </IonList>
+
         <br /> <br /> 
       </ion-content>
     </ion-page>
 </template>
   
 <style scoped>
-    
+    .avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+    }
 </style>
