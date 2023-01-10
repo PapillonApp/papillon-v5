@@ -9,11 +9,11 @@
 
     import displayToast from '@/functions/utils/displayToast.js';
     import GetToken from '@/functions/login/GetToken.js';
+    import getContributors from '@/functions/fetch/GetContributors';
 
     import { trash, refresh, checkmark, alertCircle } from 'ionicons/icons';
 
     import { FilePicker } from '@capawesome/capacitor-file-picker';
-import getContributors from '@/functions/fetch/GetContributors';
 
     export default defineComponent({
         name: 'FolderPage',
@@ -46,27 +46,27 @@ import getContributors from '@/functions/fetch/GetContributors';
         methods: {
             async logout() {
                 const actionSheet = await actionSheetController.create({
-                header: 'Êtes-vous sûr de vouloir vous déconnecter ?',
-                subHeader: 'Vous perdrez vos paramètres et vos données seront supprimées de votre appareil.',
-                buttons: [
-                    {
-                        text: 'Se déconnecter',
-                        role: 'destructive',
-                        data: {
-                            action: 'delete',
+                    header: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+                    subHeader: 'Vous perdrez vos paramètres et vos données seront supprimées de votre appareil.',
+                    buttons: [
+                        {
+                            text: 'Se déconnecter',
+                            role: 'destructive',
+                            data: {
+                                action: 'delete',
+                            },
+                            handler: () => {
+                                this.logoutFunc();
+                            },
                         },
-                        handler: () => {
-                            this.logoutFunc();
+                        {
+                            text: 'Annuler',
+                            role: 'cancel',
+                            data: {
+                                action: 'cancel',
+                            },
                         },
-                    },
-                    {
-                        text: 'Annuler',
-                        role: 'cancel',
-                        data: {
-                            action: 'cancel',
-                        },
-                    },
-                ],
+                    ],
                 });
 
                 await actionSheet.present();
@@ -86,9 +86,12 @@ import getContributors from '@/functions/fetch/GetContributors';
                 // empty cache
                 localStorage.removeItem('UserCache');
                 localStorage.removeItem('TimetableCache');
-                localStorage.removeItem('newsCache');
-                localStorage.removeItem('gradeCache');
+                localStorage.removeItem('NewsCache');
+                localStorage.removeItem('GradeCache');
                 localStorage.removeItem('HomeworkCache');
+                localStorage.removeItem('AbsencesCache');
+                localStorage.removeItem('PunishmentsCache');
+                localStorage.removeItem('MenuCache');
 
                 // show toast
                 setTimeout(() => {

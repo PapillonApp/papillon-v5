@@ -25,7 +25,7 @@ function getPronoteNews() {
     let URL = `${API}/news?token=${token}`;
 
     // check if timetable is cached
-    let newsCache = localStorage.getItem('newsCache');
+    let newsCache = localStorage.getItem('NewsCache');
 
     if(newsCache != null) {
         // timetable is cached, check if it's up to date
@@ -57,7 +57,7 @@ function getPronoteNews() {
                 news: response.data
             }
 
-            localStorage.setItem('newsCache', JSON.stringify(newsCache));
+            localStorage.setItem('NewsCache', JSON.stringify(newsCache));
 
             // construct timetable and return it as a promise
             return new Promise((resolve, reject) => {
