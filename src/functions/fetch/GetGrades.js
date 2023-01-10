@@ -13,15 +13,15 @@ function isFloat(n){
 }
 
 // main function
-async function getGrades() {
+async function getGrades(forceReload) {
     // as only pronote is supported for now, we can just return the pronote grades
     
     // return pronote grades
-    return getPronoteGrades();
+    return getPronoteGrades(forceReload);
 }
 
 // pronote : get grades
-function getPronoteGrades() {
+function getPronoteGrades(forceReload) {
     // gather vars
     const API = app.config.globalProperties.$api;
 
@@ -34,7 +34,7 @@ function getPronoteGrades() {
     // check if grade is cached
     let gradeCache = localStorage.getItem('GradeCache');
 
-    if(gradeCache != null) {
+    if(gradeCache != null && !forceReload) {
         // grade is cached, check if it's up to date
         gradeCache = JSON.parse(gradeCache);
 

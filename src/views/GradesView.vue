@@ -140,7 +140,7 @@
                 return grades;
             },
             getGradesRefresh() {
-                GetGrades().then((data) => {
+                GetGrades(true).then((data) => {
                     this.grades = this.editMarks(data.marks);
                     this.fullGrades = this.editMarks(data.marks);
 
