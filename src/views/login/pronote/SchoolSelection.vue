@@ -4,6 +4,8 @@
 
     import axios from 'axios';
     import $ from "jquery";
+
+    import { BarcodeScanner, SupportedFormat } from '@capacitor-community/barcode-scanner';
     
     import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp } from 'ionicons/icons';
 
@@ -241,8 +243,12 @@
                         etaburl = etaburl.split('/').slice(0, -1).join('/');
                     }
 
-                    this.loginToEtab(etaburl);
+                    this.loginToEtab(etaburl, false);
                 }
+            },
+            async QRCodeLogin() {
+                this.methodLogin = "qrcode";
+                this.getQrCodeWithCamera();
             },
             loginToDemo() {
                 this.loginToEtab("https://demo.index-education.net/pronote");
@@ -339,9 +345,38 @@
                             educonnect : all_cas_same_host[0].educonnect == true,
                         }
 
+                        this.loginMethod = "url";
+
                         this.displayLogin(selected)
                     }
                 })
+            },
+            async getQrCodeWithCamera() {
+                try {
+                    await BarcodeScanner.checkPermission({ force: true });
+
+                    BarcodeScanner.hideBackground();
+
+                    const result = await BarcodeScanner.startScan({ targetedFormats: [SupportedFormat.QR_CODE] });
+
+                    if (result.hasContent) {
+                        this.qrcodeEncoded = result.content;
+                    }
+
+                    const { value, cancelled } = await Dialog.prompt({
+                        title: 'Connexion avec une URL Pronote',
+                        message: `Entrez l'URL Pronote fournie par votre établissement.`,
+                    });
+
+                    if(!cancelled) {
+                        this.qrPin = value;
+                        return true;
+                    }
+
+                    return false;
+                } catch (e) {
+                    displayToast.presentError("Une erreur est survenue lors de la lecture du QR Code.", "danger", e);
+                }
             },
             displayLogin(selected) {
                 this.etabUrl = selected.etab;
@@ -357,19 +392,40 @@
             login() {
                 const API = this.$api;
 
-                let username = this.$refs.user.value;
-                let password = this.$refs.pass.value;
-                let cas = this.etabCas;
-                let url = this.etabUrl;
-
                 var myHeaders = new Headers();
                 myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
                 
                 var urlencoded = new URLSearchParams();
+                let pin, qrToken, login, username, password, cas, url, checkCode;
+                if (this.loginMethod == "qrcode") {
+                    let qrcode = JSON.parse(this.qrcodeEncoded)
+
+                    qrToken = qrcode.jeton;
+                    url = qrcode.url;
+                    login = qrcode.login;
+
+                    pin = this.qrPin;
+
+                    if (pin.length != 4) {
+                        displayToast.presentToast("Le code PIN doit contenir 4 chiffres.", "danger")
+                        return;
+                    }
+
+                    urlencoded.append("qrToken", qrToken);
+                    urlencoded.append("login", login);
+                    urlencoded.append("pin", checkCode);
+                } else {
+                    username = this.$refs.user.value;
+                    password = this.$refs.pass.value;
+                    cas = this.etabCas;
+                    url = this.etabUrl;
+
+                    urlencoded.append("ent", cas);
+                    urlencoded.append("username", username);
+                    urlencoded.append("password", password);
+                }
                 urlencoded.append("url", url);
-                urlencoded.append("ent", cas);
-                urlencoded.append("username", username);
-                urlencoded.append("password", password);
+                urlencoded.append("method", this.loginMethod);
 
                 var requestOptions = {
                     method: 'POST',
@@ -400,19 +456,28 @@
                             else {
                                 displayToast.presentError("Une erreur s'est produite.", "danger", result.error)
                             }
-                        }
-                        else {
+                        } else {
                             let token = result.token;
 
                             // save token
                             localStorage.token = token;
                             localStorage.loggedIn = true;
-                            localStorage.loginData = JSON.stringify({
-                                username: username,
-                                password: password,
-                                cas: cas,
-                                url: url,
-                            });
+                            if (this.loginMethod == "qrcode") {
+                                localStorage.loginData = JSON.stringify({
+                                    qrToken: qrToken,
+                                    login: login,
+                                    url: url,
+                                    checkCode: pin,
+                                });
+                            } else {
+                                localStorage.loginData = JSON.stringify({
+                                    method: this.loginMethod,
+                                    username: username,
+                                    password: password,
+                                    cas: cas,
+                                    url: url,
+                                });
+                            }
                             localStorage.loginService = "pronote";
 
                             // go to home
@@ -514,7 +579,7 @@
                 </ion-label>
             </ion-item>
 
-            <ion-item button disabled>
+            <ion-item button @click="QRCodeLogin()">
                 <ion-icon class="icon" slot="start" :ios="qrCodeOutline" :md="qrCodeSharp"></ion-icon>
                 <ion-label>
                     <h2>Se connecter avec un QR-Code</h2>

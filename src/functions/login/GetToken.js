@@ -17,15 +17,26 @@ function getPronoteLogin() {
     let password = loginData.password;
     let cas = loginData.cas;
     let url = loginData.url;
+    let qrToken = loginData.qrToken;
+    let login = loginData.login;
+    let codeCheck = loginData.codeCheck;
+    let method = loginData.method;
 
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
                 
     var urlencoded = new URLSearchParams();
+    if (method == 'qrcode') {
+        urlencoded.append("qrToken", qrToken);
+        urlencoded.append("login", login);
+        urlencoded.append("codeCheck", codeCheck);
+    } else {
+        urlencoded.append("ent", cas);
+        urlencoded.append("username", username);
+        urlencoded.append("password", password);
+    }
+    urlencoded.append("method", method);
     urlencoded.append("url", url);
-    urlencoded.append("ent", cas);
-    urlencoded.append("username", username);
-    urlencoded.append("password", password);
 
     var requestOptions = {
         method: 'POST',
