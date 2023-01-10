@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // vars
 import { app } from '@/main.ts'
-import GetMenus from '@/functions/login/GetMenus.js';
+import GetToken from '@/functions/login/GetToken.js';
 
 // main function
 async function getMenus(date, forceReload) {
@@ -33,10 +33,10 @@ function getPronoteMenus(date, forceReload) {
     cacheSearch = cacheSearch.filter((element) => {
         return element.date == dayString && element.token == token;
     });
-    if (cacheSearch.length > 0 && !forceReload) {
+    if (cacheSearch != null && !forceReload) {
         // return cached menu in promise
         return new Promise((resolve, reject) => {
-            let menu = JSON.parse(cacheSearch[0].menu);
+            let menu = cacheSearch.menu;
             resolve(constructPronoteMenu(menu));
         });
     }
@@ -44,18 +44,15 @@ function getPronoteMenus(date, forceReload) {
         // get menu from API
         return axios.get(URL)
             .then((response) => {
-                // get menus
-                let menus = response.data;
-
                 // construct menus
-                menus = constructPronoteMenu(menus);
+                let menus = constructPronoteMenu(response.data);
 
                 // cache response
                 let cache = JSON.parse(localStorage.getItem('MenuCache')) || [];
                 let cacheElement = {
                     date: dayString,
                     token: token,
-                    menu: JSON.stringify(response.data)
+                    menu: menus,
                 };
                 cache.push(cacheElement);
                 localStorage.setItem('MenuCache', JSON.stringify(cache));
@@ -97,7 +94,7 @@ function constructPronoteMenu(mns) {
 				isLunch: menu.type.is_lunch,
 				isDinner: menu.type.is_dinner,
 			},
-            menu: {
+            menus: {
                 firstMeal: menu.first_meal,
 				dessert: menu.dessert,
                 cheese: menu.cheese,
