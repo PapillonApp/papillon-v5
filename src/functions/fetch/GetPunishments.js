@@ -74,7 +74,7 @@ async function getPronotePunishements(forceReload) {
 
 // pronote : construct punishments
 function constructPronotePunishments(punishments) {
-	let punishments = []
+	let punish = []
 
 	punishments.forEach((punishment) => {
 		let newPunishment = {
@@ -97,14 +97,14 @@ function constructPronotePunishments(punishments) {
 			}
 		}
 		
-		punishments.push(newPunishment)
+		punish.push(newPunishment)
 	})
 
-	punishments.sort((a, b) => {
+	punish.sort((a, b) => {
 		return a.date.givenDate - b.date.givenDate;
 	})
 
-	return punishments
+	return punish
 }
 
 export default getPronotePunishements;

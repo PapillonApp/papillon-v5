@@ -22,9 +22,10 @@ async function getPronoteAbsences(forceReload) {
 	// construct url
 	let URL = `${API}/absences?token=${token}`;
 
+	let absences = [];
 	let cache = JSON.parse(localStorage.getItem('AbsencesCache')) || [];
 	if (cache.length > 1 && !forceReload) {
-		let absences = JSON.parse(cache.absences);
+		absences = JSON.parse(cache.absences);
 
 		return new Promise((resolve, reject) => {
 			resolve(constructPronoteAbsences(absences));
@@ -33,7 +34,7 @@ async function getPronoteAbsences(forceReload) {
 	else {
 		return axios.get(URL)
 		.then((response) => {
-			let absences = response.data;
+			absences = response.data;
 
 			absences = constructPronoteAbsences(absences);
 
@@ -74,7 +75,7 @@ async function getPronoteAbsences(forceReload) {
 
 // pronote : construct absences
 function constructPronoteAbsences(absences) {
-	let absences = []
+	let abs = []
 
 	absences.forEach((absence) => {
 		let newAbsence = {
@@ -90,14 +91,14 @@ function constructPronoteAbsences(absences) {
 			}
 		}
 		
-		absences.push(newAbsence)
+		abs.push(newAbsence)
 	})
 
-	absences.sort((a, b) => {
+	abs.sort((a, b) => {
 		return a.date.from - b.date.from;
 	})
 
-	return absences
+	return abs
 }
 
 export default getPronoteAbsences;

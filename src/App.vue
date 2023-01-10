@@ -80,6 +80,11 @@
                 icon: "insights",
             },
             {
+                title: 'Vie scolaire',
+                url: '/school-life',
+                icon: "gavel",
+            },
+            {
                 title: 'Actualités',
                 url: '/news',
                 icon: "newspaper",
