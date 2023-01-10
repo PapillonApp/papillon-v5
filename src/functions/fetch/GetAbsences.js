@@ -22,10 +22,10 @@ async function getPronoteAbsences(forceReload) {
 	// construct url
 	let URL = `${API}/absences?token=${token}`;
 
-	let absences = [];
-	let cache = JSON.parse(localStorage.getItem('AbsencesCache')) || [];
-	if (cache.length > 1 && !forceReload) {
-		absences = JSON.parse(cache.absences);
+	let absences = {};
+	let cache = localStorage.getItem('AbsencesCache');
+	if (cache != null && !forceReload) {
+		absences = cache.absences;
 
 		return new Promise((resolve, reject) => {
 			resolve(constructPronoteAbsences(absences));
@@ -37,15 +37,13 @@ async function getPronoteAbsences(forceReload) {
 			absences = response.data;
 
 			absences = constructPronoteAbsences(absences);
-
-			// cache response
-			let cache = JSON.parse(localStorage.getItem('AbsencesCache')) || [];
+			
+            let today = new Date();
 			let cacheElement = {
-				token: token,
-				absences: JSON.stringify(response.data)
+				date: today,
+				absences: response.data
 			};
-			cache.push(cacheElement);
-			localStorage.setItem('AbsencesCache', JSON.stringify(cache));
+			localStorage.setItem('AbsencesCache', JSON.stringify(cacheElement));
 
 			return absences;
 		})

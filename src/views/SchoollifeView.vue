@@ -38,7 +38,8 @@
 			}
 		},
 		mounted() {
-			return;
+			GetAbsences();
+			GetPunishments();
 		}
 	});
 </script>

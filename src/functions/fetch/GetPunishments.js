@@ -22,9 +22,9 @@ async function getPronotePunishements(forceReload) {
 	// construct url
 	let URL = `${API}/punishments?token=${token}`;
 
-	let cache = JSON.parse(localStorage.getItem('PunishmentsCache')) || [];
-	if (cache.length > 1 && !forceReload) {
-		let punishments = JSON.parse(cache.punishments);
+	let cache = localStorage.getItem('PunishmentsCache');
+	if (cache != null && !forceReload) {
+		let punishments = cache.punishments;
 
 		return new Promise((resolve, reject) => {
 			resolve(constructPronotePunishments(punishments));
@@ -36,15 +36,13 @@ async function getPronotePunishements(forceReload) {
 			let punishments = response.data;
 
 			punishments = constructPronotePunishments(punishments);
-
-			// cache response
-			let cache = JSON.parse(localStorage.getItem('PunishmentsCache')) || [];
+			
+			let today = new Date();
 			let cacheElement = {
-				token: token,
-				punishments: JSON.stringify(response.data)
+				date: today,
+				punishments: response.data
 			};
-			cache.push(cacheElement);
-			localStorage.setItem('PunishmentsCache', JSON.stringify(cache));
+			localStorage.setItem('PunishmentsCache', JSON.stringify(cacheElement));
 
 			return punishments;
 		})
