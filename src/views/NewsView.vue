@@ -49,9 +49,6 @@
             closeNews() {
                 this.$refs.modal.$el.dismiss();
             },
-            urlController.openNewTabUrl(url) {
-                window.open(url, "_blank");
-            },
             getNewsRefresh() {
                 GetNews().then((data) => {
                     this.news = data;
