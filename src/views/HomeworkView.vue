@@ -68,34 +68,34 @@ export default defineComponent({
         openRnModal() {
             this.$refs.rnPickerModal.$el.present();
         },
-        editTimetable(timetable) {
-            // set timetable to edit
-            return timetable;
+        editHomeworks(homeworks) {
+            // set homeworks to edit
+            return homeworks;
         },
-        getTimetables(force) {
+        getHomeworks(force) {
             if(this.shouldResetSwiper) {
                 this.$refs.swiper.$el.swiper.slideTo(1, 0);
                 this.shouldResetSwiper = false;
 
-                this.timetable = [];
+                this.homeworks = [];
                 this.yesterday = [];
                 this.tomorrow = [];
 
-                this.timetable.loading = true;
+                this.homeworks.loading = true;
                 this.yesterday.loading = true;
                 this.tomorrow.loading = true;
 
-                this.timetable.error = "STILL_LOADING";
+                this.homeworks.error = "STILL_LOADING";
                 this.yesterday.error = "STILL_LOADING";
                 this.tomorrow.error = "STILL_LOADING";
             }
 
-            // get timetable for rn
+            // get homeworks for rn
             GetHomeworks(this.$rn, force).then((homeworks) => {
-                this.timetable = homeworks;
+                this.homeworks = homeworks;
 
                 this.loadedrnButtonString = this.createDateString(this.$rn);
-                this.timetable.loading = false;
+                this.homeworks.loading = false;
 
                 this.dontRetryCheck = true;
 
@@ -104,14 +104,14 @@ export default defineComponent({
                 }, 200);
             });
 
-            // get timetable for yesterday
+            // get homeworks for yesterday
             let yesterdayRN = new Date(this.$rn) - 86400000;
             GetHomeworks(yesterdayRN, force).then((homeworks) => {
                 this.yesterday = homeworks;
                 this.yesterday.loading = false;
             });
 
-            // get timetable for tomorrow
+            // get homeworks for tomorrow
             let tomorrowRN = new Date(this.$rn);
             tomorrowRN.setDate(tomorrowRN.getDate() + 1);
             GetHomeworks(tomorrowRN, force).then((homeworks) => {
@@ -120,11 +120,11 @@ export default defineComponent({
             });
         },
         handleRefresh(event) {
-            // get new timetable data
-            this.getTimetables(true);
+            // get new homeworks data
+            this.getHomeworks(true);
 
-            // stop refresh when this.timetable is updated
-            this.$watch('timetable', () => {
+            // stop refresh when this.homeworks is updated
+            this.$watch('homeworks', () => {
                 setTimeout(() => {
                     event.target.complete();
                 }, 200);
@@ -186,8 +186,8 @@ export default defineComponent({
                     // reset homework cache
                     localStorage.removeItem('HomeworkCache');
 
-                    // reload timetable
-                    this.getTimetables();
+                    // reload homeworks
+                    this.getHomeworks();
                 })
                 .catch((error) => {
                     let response = error.response;
@@ -243,7 +243,7 @@ export default defineComponent({
             rnButtonString: this.createDateString(this.$rn),
             loadedrnButtonString: this.createDateString(this.$rn),
             rnCalendarString: this.$rn.toISOString().split('T')[0],
-            timetable: [],
+            homeworks: [],
             yesterday: [],
             tomorrow: [],
             shouldResetSwiper: false,
@@ -260,17 +260,17 @@ export default defineComponent({
             this.rnButtonString = this.createDateString(e.detail);
         });
 
-        // get timetable data
-        this.getTimetables();
+        // get homeworks data
+        this.getHomeworks();
 
-        // on rnChanged, get new timetable data
+        // on rnChanged, get new homeworks data
         document.addEventListener('rnChanged', (e) => {
-            this.getTimetables();
+            this.getHomeworks();
         });
 
-        // on token changed, get new timetable data
+        // on token changed, get new homeworks data
         document.addEventListener('tokenUpdated', (e) => {
-            this.getTimetables();
+            this.getHomeworks();
         });
 
         // detect swiper slide change
@@ -393,7 +393,7 @@ export default defineComponent({
                 </swiper-slide>
                 <swiper-slide>
                     <ion-list>
-                        <ion-item v-for="homework in timetable" :key="homework.id" button>
+                        <ion-item v-for="homework in homeworks" :key="homework.id" button>
                             <div slot="start">
                                 <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
                             </div>
@@ -415,14 +415,14 @@ export default defineComponent({
                             </ion-label>
                         </ion-item>
 
-                        <div v-if="timetable.loading" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                        <div v-if="homeworks.loading" class="Error"><div class="NoCours" v-if="homeworks.length == 0">
                             <IonSpinner></IonSpinner>
                             <br/>
                             <h2>Téléchargement des prochains devoirs...</h2>
                             <p>Veuillez patienter pendant qu'on récupère vos devoirs depuis nos serveurs...</p>
                         </div></div>
 
-                        <div v-if="!timetable.loading"><div class="NoCours" v-if="timetable.length == 0">
+                        <div v-if="!homeworks.loading"><div class="NoCours" v-if="homeworks.length == 0">
                             <span class="material-symbols-outlined mdls">auto_stories</span>
                             <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
