@@ -1,318 +1,316 @@
 <script>
-import { defineComponent } from 'vue';
-import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonChip, IonCheckbox } from '@ionic/vue';
+    import { defineComponent } from 'vue';
+    import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonChip, IonCheckbox } from '@ionic/vue';
 
-import { calendarOutline, calendarSharp, todayOutline, todaySharp, alertCircle, checkmark } from 'ionicons/icons';
+    import { calendarOutline, calendarSharp, todayOutline, todaySharp, alertCircle, checkmark } from 'ionicons/icons';
 
-import displayToast from '@/functions/utils/displayToast.js';
-import hapticsController from '@/functions/utils/hapticsController.js';
+    import displayToast from '@/functions/utils/displayToast.js';
+    import hapticsController from '@/functions/utils/hapticsController.js';
+    import urlController from '@/functions/utils/urlController.js';
 
-import { Swiper, SwiperSlide } from 'swiper/vue';
-import 'swiper/css';
+    import { Swiper, SwiperSlide } from 'swiper/vue';
+    import 'swiper/css';
 
-import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
-import GetToken from "@/functions/login/GetToken.js";
+    import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
+    import GetToken from "@/functions/login/GetToken.js";
 
-import axios from 'axios';
+    import axios from 'axios';
 
-export default defineComponent({
-    name: 'FolderPage',
-    components: {
-        IonButtons,
-        IonButton,
-        IonContent,
-        IonHeader,
-        IonMenuButton,
-        IonPage,
-        IonTitle,
-        IonToolbar,
-        IonModal,
-        IonDatetime,
-        Swiper,
-        SwiperSlide,
-        IonRefresher,
-        IonRefresherContent,
-        IonSpinner,
-        IonChip,
-        IonCheckbox
-    },
-    setup() {
-        return {
-            calendarOutline,
-            calendarSharp,
-            todayOutline,
-            todaySharp,
-            presentingElement: null,
-        }
-    },
-    methods: {
-        createDateString(date) {
-            let dateObject = new Date(date);
-
-            // return string like "1 jan."
-            return `${dateObject.getDate()} ${dateObject.toLocaleString('default', { month: 'short' })}`;
+    export default defineComponent({
+        name: 'FolderPage',
+        components: {
+            IonButtons,
+            IonButton,
+            IonContent,
+            IonHeader,
+            IonMenuButton,
+            IonPage,
+            IonTitle,
+            IonToolbar,
+            IonModal,
+            IonDatetime,
+            Swiper,
+            SwiperSlide,
+            IonRefresher,
+            IonRefresherContent,
+            IonSpinner,
+            IonChip,
+            IonCheckbox
         },
-        rnInputChanged() {
-            // get new date from rnInput
-            let newDate = new Date(this.$refs.rnInput.$el.value);
-
-            // update rn
-            this.$rn = newDate;
-
-            // emit event
-            document.dispatchEvent(new CustomEvent('rnChanged', { detail: newDate }));
-        },
-        confirmRnInput() {
-            this.$refs.rnPickerModal.$el.dismiss();
-        },
-        openRnModal() {
-            this.$refs.rnPickerModal.$el.present();
-        },
-        editTimetable(timetable) {
-            // set timetable to edit
-            return timetable;
-        },
-        getTimetables(force) {
-            if(this.shouldResetSwiper) {
-                this.$refs.swiper.$el.swiper.slideTo(1, 0);
-                this.shouldResetSwiper = false;
-
-                this.timetable = [];
-                this.yesterday = [];
-                this.tomorrow = [];
-
-                this.timetable.loading = true;
-                this.yesterday.loading = true;
-                this.tomorrow.loading = true;
-
-                this.timetable.error = "STILL_LOADING";
-                this.yesterday.error = "STILL_LOADING";
-                this.tomorrow.error = "STILL_LOADING";
+        setup() {
+            return {
+                calendarOutline,
+                calendarSharp,
+                todayOutline,
+                todaySharp,
+                presentingElement: null,
             }
-
-            // get timetable for rn
-            GetHomeworks(this.$rn, force).then((homeworks) => {
-                this.timetable = homeworks;
-
-                this.loadedrnButtonString = this.createDateString(this.$rn);
-                this.timetable.loading = false;
-
-                this.dontRetryCheck = true;
-
-                setTimeout(() => {
-                    this.dontRetryCheck = false;
-                }, 200);
-            });
-
-            // get timetable for yesterday
-            let yesterdayRN = new Date(this.$rn) - 86400000;
-            GetHomeworks(yesterdayRN, force).then((homeworks) => {
-                this.yesterday = homeworks;
-                this.yesterday.loading = false;
-            });
-
-            // get timetable for tomorrow
-            let tomorrowRN = new Date(this.$rn);
-            tomorrowRN.setDate(tomorrowRN.getDate() + 1);
-            GetHomeworks(tomorrowRN, force).then((homeworks) => {
-                this.tomorrow = homeworks;
-                this.tomorrow.loading = false;
-            });
         },
-        handleRefresh(event) {
-            // get new timetable data
-            this.getTimetables(true);
+        methods: {
+            createDateString(date) {
+                let dateObject = new Date(date);
 
-            // stop refresh when this.timetable is updated
-            this.$watch('timetable', () => {
-                setTimeout(() => {
-                    event.target.complete();
-                }, 200);
-            });
-        },
-        openHomework(hw) {
-            this.openedHw = hw;
-            this.$refs.hwModal.$el.present();
-        },
-        closeHomework() {
-            this.$refs.hwModal.$el.dismiss();
-        },
-        openLink(url) {
-                window.open(url, "_blank");
-        },
-        changeDone(hw) {
-            // microinteractions
-            hapticsController.notification('success');
+                // return string like "1 jan."
+                return `${dateObject.getDate()} ${dateObject.toLocaleString('default', { month: 'short' })}`;
+            },
+            rnInputChanged() {
+                // get new date from rnInput
+                let newDate = new Date(this.$refs.rnInput.$el.value);
 
-            // send request
-            if(!this.dontRetryCheck) {
-                let homeworkID = hw.data.id;
+                // update rn
+                this.$rn = newDate;
 
-                const API = this.$api;
-                let token = localStorage.getItem('token');
+                // emit event
+                document.dispatchEvent(new CustomEvent('rnChanged', { detail: newDate }));
+            },
+            confirmRnInput() {
+                this.$refs.rnPickerModal.$el.dismiss();
+            },
+            openRnModal() {
+                this.$refs.rnPickerModal.$el.present();
+            },
+            editTimetable(timetable) {
+                // set timetable to edit
+                return timetable;
+            },
+            getTimetables(force) {
+                if(this.shouldResetSwiper) {
+                    this.$refs.swiper.$el.swiper.slideTo(1, 0);
+                    this.shouldResetSwiper = false;
 
-                let dayRequest = new Date(this.$rn);
-                let dayString = dayRequest.toISOString().split('T')[0];
+                    this.timetable = [];
+                    this.yesterday = [];
+                    this.tomorrow = [];
 
-                let URL = `${API}/homework/changeState`;
+                    this.timetable.loading = true;
+                    this.yesterday.loading = true;
+                    this.tomorrow.loading = true;
 
-                // post request with token, homeworkId, dateFrom and dateTo
-                axios.post(URL, {
-                    token: token,
-                    homeworkId: homeworkID,
-                    dateFrom: dayString,
-                    dateTo: dayString
-                }).then((response) => {
-                    let checkboxID = `checkbox_${hw.data.id}`;
-                    let checkbox = document.getElementById(checkboxID);
+                    this.timetable.error = "STILL_LOADING";
+                    this.yesterday.error = "STILL_LOADING";
+                    this.tomorrow.error = "STILL_LOADING";
+                }
 
-                    if(checkbox.checked) {
-                        displayToast.presentToastFull(
-                            "Devoir marqué comme fait",
-                            `Votre devoir de ${hw.homework.subject} a été marqué comme fait.`,
-                            "success",
-                            checkmark
-                        )
-                    }
-                    else {
-                        displayToast.presentToastFull(
-                            "Devoir marqué comme non fait",
-                            `Votre devoir de ${hw.homework.subject} a été marqué comme non fait.`,
-                            "success",
-                            checkmark
-                        )
-                    }
+                // get timetable for rn
+                GetHomeworks(this.$rn, force).then((homeworks) => {
+                    this.timetable = homeworks;
 
-                    // reset homework cache
-                    localStorage.removeItem('HomeworkCache');
+                    this.loadedrnButtonString = this.createDateString(this.$rn);
+                    this.timetable.loading = false;
 
-                    // reload timetable
-                    this.getTimetables();
-                })
-                .catch((error) => {
-                    let response = error.response;
-
-                    // microintéractions
-                    hapticsController.notification('error');
-
-                    // untick checkbox
-                    let checkboxID = `checkbox_${hw.data.id}`;
-                    let checkbox = document.getElementById(checkboxID);
+                    this.dontRetryCheck = true;
 
                     setTimeout(() => {
-                        this.dontRetryCheck = true;
-                        checkbox.checked = !checkbox.checked;
+                        this.dontRetryCheck = false;
+                    }, 200);
+                });
+
+                // get timetable for yesterday
+                let yesterdayRN = new Date(this.$rn) - 86400000;
+                GetHomeworks(yesterdayRN, force).then((homeworks) => {
+                    this.yesterday = homeworks;
+                    this.yesterday.loading = false;
+                });
+
+                // get timetable for tomorrow
+                let tomorrowRN = new Date(this.$rn);
+                tomorrowRN.setDate(tomorrowRN.getDate() + 1);
+                GetHomeworks(tomorrowRN, force).then((homeworks) => {
+                    this.tomorrow = homeworks;
+                    this.tomorrow.loading = false;
+                });
+            },
+            handleRefresh(event) {
+                // get new timetable data
+                this.getTimetables(true);
+
+                // stop refresh when this.timetable is updated
+                this.$watch('timetable', () => {
+                    setTimeout(() => {
+                        event.target.complete();
+                    }, 200);
+                });
+            },
+            openHomework(hw) {
+                this.openedHw = hw;
+                this.$refs.hwModal.$el.present();
+            },
+            closeHomework() {
+                this.$refs.hwModal.$el.dismiss();
+            },
+            changeDone(hw) {
+                // microinteractions
+                hapticsController.notification('success');
+
+                // send request
+                if(!this.dontRetryCheck) {
+                    let homeworkID = hw.data.id;
+
+                    const API = this.$api;
+                    let token = localStorage.getItem('token');
+
+                    let dayRequest = new Date(this.$rn);
+                    let dayString = dayRequest.toISOString().split('T')[0];
+
+                    let URL = `${API}/homework/changeState`;
+
+                    // post request with token, homeworkId, dateFrom and dateTo
+                    axios.post(URL, {
+                        token: token,
+                        homeworkId: homeworkID,
+                        dateFrom: dayString,
+                        dateTo: dayString
+                    }).then((response) => {
+                        let checkboxID = `checkbox_${hw.data.id}`;
+                        let checkbox = document.getElementById(checkboxID);
+
+                        if(checkbox.checked) {
+                            displayToast.presentToastFull(
+                                "Devoir marqué comme fait",
+                                `Votre devoir de ${hw.homework.subject} a été marqué comme fait.`,
+                                "success",
+                                checkmark
+                            )
+                        }
+                        else {
+                            displayToast.presentToastFull(
+                                "Devoir marqué comme non fait",
+                                `Votre devoir de ${hw.homework.subject} a été marqué comme non fait.`,
+                                "success",
+                                checkmark
+                            )
+                        }
+
+                        // reset homework cache
+                        localStorage.removeItem('HomeworkCache');
+
+                        // reload timetable
+                        this.getTimetables();
+                    })
+                    .catch((error) => {
+                        let response = error.response;
+
+                        // microintéractions
+                        hapticsController.notification('error');
+
+                        // untick checkbox
+                        let checkboxID = `checkbox_${hw.data.id}`;
+                        let checkbox = document.getElementById(checkboxID);
 
                         setTimeout(() => {
-                            this.dontRetryCheck = false;
-                        }, 100);
-                    }, 200);
+                            this.dontRetryCheck = true;
+                            checkbox.checked = !checkbox.checked;
 
-                    if(response.data == "expired" || response.data == "notfound") {
-                        GetToken();
+                            setTimeout(() => {
+                                this.dontRetryCheck = false;
+                            }, 100);
+                        }, 200);
 
-                        displayToast.presentToastFull(
-                            "Impossible de marquer ce devoir comme fait",
-                            "Le token à expiré (" + error + ")",
-                            "danger",
-                            alertCircle
-                        )
-                    }
-                    else if(response.data == "not found") {
-                        displayToast.presentToastFull(
-                            "Impossible de marquer ce devoir comme fait",
-                            "Nous n'avons pas pu trouver ce devoir sur nos serveurs. (" + error + ")",
-                            "danger",
-                            alertCircle
-                        )
-                    }
-                    else {
-                        displayToast.presentToastFull(
-                            "Impossible de marquer ce devoir comme fait",
-                            "Erreur inconnue (" + error + ")",
-                            "danger",
-                            alertCircle
-                        )
-                    }
-                });
+                        if(response.data == "expired" || response.data == "notfound") {
+                            GetToken();
+
+                            displayToast.presentToastFull(
+                                "Impossible de marquer ce devoir comme fait",
+                                "Le token à expiré (" + error + ")",
+                                "danger",
+                                alertCircle
+                            )
+                        }
+                        else if(response.data == "not found") {
+                            displayToast.presentToastFull(
+                                "Impossible de marquer ce devoir comme fait",
+                                "Nous n'avons pas pu trouver ce devoir sur nos serveurs. (" + error + ")",
+                                "danger",
+                                alertCircle
+                            )
+                        }
+                        else {
+                            displayToast.presentToastFull(
+                                "Impossible de marquer ce devoir comme fait",
+                                "Erreur inconnue (" + error + ")",
+                                "danger",
+                                alertCircle
+                            )
+                        }
+                    });
+                }
             }
-        }
-    },
-    data() {
-        return {
-            rnButtonString: this.createDateString(this.$rn),
-            loadedrnButtonString: this.createDateString(this.$rn),
-            rnCalendarString: this.$rn.toISOString().split('T')[0],
-            timetable: [],
-            yesterday: [],
-            tomorrow: [],
-            shouldResetSwiper: false,
-            openedHw: [],
-            dontRetryCheck: false,
-        }
-    },
-    mounted() {
-        // sets presentingElement
-        this.presentingElement = this.$refs.page.$el;
+        },
+        data() {
+            return {
+                rnButtonString: this.createDateString(this.$rn),
+                loadedrnButtonString: this.createDateString(this.$rn),
+                rnCalendarString: this.$rn.toISOString().split('T')[0],
+                timetable: [],
+                yesterday: [],
+                tomorrow: [],
+                shouldResetSwiper: false,
+                openedHw: [],
+                dontRetryCheck: false,
+            }
+        },
+        mounted() {
+            // sets presentingElement
+            this.presentingElement = this.$refs.page.$el;
 
-        // on rnChanged, update rnButtonString
-        document.addEventListener('rnChanged', (e) => {
-            this.rnButtonString = this.createDateString(e.detail);
-        });
+            // on rnChanged, update rnButtonString
+            document.addEventListener('rnChanged', (e) => {
+                this.rnButtonString = this.createDateString(e.detail);
+            });
 
-        // get timetable data
-        this.getTimetables();
-
-        // on rnChanged, get new timetable data
-        document.addEventListener('rnChanged', (e) => {
+            // get timetable data
             this.getTimetables();
-        });
 
-        // on token changed, get new timetable data
-        document.addEventListener('tokenUpdated', (e) => {
-            this.getTimetables();
-        });
+            // on rnChanged, get new timetable data
+            document.addEventListener('rnChanged', (e) => {
+                this.getTimetables();
+            });
 
-        // detect swiper slide change
-        let swiper = this.$refs.swiper.$el.swiper;
+            // on token changed, get new timetable data
+            document.addEventListener('tokenUpdated', (e) => {
+                this.getTimetables();
+            });
 
-        swiper.on('touchEnd', () => {
-            setTimeout(() => {
-                // get new rn
-                // check if swiper is on yesterday
-                if(swiper.activeIndex == 0) {
-                    let newRn = new Date(this.$rn);
-                    newRn.setDate(newRn.getDate() - 1);
+            // detect swiper slide change
+            let swiper = this.$refs.swiper.$el.swiper;
 
-                    this.$rn = newRn;
-                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
+            swiper.on('touchEnd', () => {
+                setTimeout(() => {
+                    // get new rn
+                    // check if swiper is on yesterday
+                    if(swiper.activeIndex == 0) {
+                        let newRn = new Date(this.$rn);
+                        newRn.setDate(newRn.getDate() - 1);
 
-                    // emit event
-                    document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
+                        this.$rn = newRn;
+                        this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
-                    // reset swiper
-                    this.shouldResetSwiper = true;
-                }
+                        // emit event
+                        document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
 
-                // check if swiper is on tomorrow
-                if(swiper.activeIndex == 2) {
-                    // add 1 day to rn
-                    let newRn = new Date(this.$rn);
-                    newRn.setDate(newRn.getDate() + 1);
+                        // reset swiper
+                        this.shouldResetSwiper = true;
+                    }
 
-                    this.$rn = newRn;
-                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
+                    // check if swiper is on tomorrow
+                    if(swiper.activeIndex == 2) {
+                        // add 1 day to rn
+                        let newRn = new Date(this.$rn);
+                        newRn.setDate(newRn.getDate() + 1);
 
-                    // emit event
-                    document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
+                        this.$rn = newRn;
+                        this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
-                    // reset swiper
-                    this.shouldResetSwiper = true;
-                }
-            }, 200);
-        });
-    }
-});
+                        // emit event
+                        document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
+
+                        // reset swiper
+                        this.shouldResetSwiper = true;
+                    }
+                }, 200);
+            });
+        }
+    });
 </script>
 
 <template>
@@ -364,7 +362,7 @@ export default defineComponent({
                                 </div>
 
                                 <div class="innerChips" v-if="homework.files.length !== 0">
-                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true" @click="openLink(attachment.url)">
+                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true" @click="urlController.openNewTabUrl(attachment.url)">
                                         <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
 
                                         <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
@@ -404,7 +402,7 @@ export default defineComponent({
                                 </div>
 
                                 <div class="innerChips" v-if="homework.files.length !== 0">
-                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true" @click="openLink(attachment.url)">
+                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true" @click="urlController.openNewTabUrl(attachment.url)">
                                         <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
 
                                         <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
@@ -444,7 +442,7 @@ export default defineComponent({
                                 </div>
 
                                 <div class="innerChips" v-if="homework.files.length !== 0">
-                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true" @click="openLink(attachment.url)">
+                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true" @click="urlController.openNewTabUrl(attachment.url)">
                                         <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
 
                                         <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
@@ -510,7 +508,7 @@ export default defineComponent({
                     </div>
 
                     <div class="chips" v-if="openedHw.files.length !== 0">
-                        <ion-chip v-for="(attachment, i) in openedHw.files" :key="i" @click="openLink(attachment.url)" color="dark" :outline="true">
+                        <ion-chip v-for="(attachment, i) in openedHw.files" :key="i" @click="urlController.openNewTabUrl(attachment.url)" color="dark" :outline="true">
                             <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
 
                             <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>

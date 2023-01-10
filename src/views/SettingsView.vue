@@ -9,7 +9,9 @@
 
     import displayToast from '@/functions/utils/displayToast.js';
     import GetToken from '@/functions/login/GetToken.js';
-    import getContributors from '@/functions/fetch/GetContributors';
+    import getContributors from '@/functions/fetch/GetContributors.js';
+
+    import urlController from '@/functions/utils/urlController.js'
 
     import { trash, refresh, checkmark, alertCircle } from 'ionicons/icons';
 
@@ -230,10 +232,6 @@
                     trash
                 );
             },
-            openURL(url) {
-                // open url in new tab
-                window.open(url, '_blank');
-            },
             getContributorsList(){
                 getContributors(5).then((contributors) => {
                     this.contributors = contributors;
@@ -371,7 +369,7 @@
                 </IonLabel>
             </IonListHeader>
 
-            <IonItem button @click="openURL('https://discord.gg/DMx3TDyz2U')">
+            <IonItem button @click="urlController.openNewTabUrl('https://discord.gg/DMx3TDyz2U')">
                 <span class="material-symbols-outlined mdls" slot="start">support</span>
                 <IonLabel>
                     <p>Discord</p>
@@ -411,7 +409,7 @@
                 </IonLabel>
             </IonListHeader>
 
-            <IonItem v-for="contributor in contributors" :key="contributor.id" button @click="openURL(contributor.html_url)">
+            <IonItem v-for="contributor in contributors" :key="contributor.id" button @click="urlController.openNewTabUrl(contributor.html_url)">
             <img :src="contributor.avatar_url" slot="start" class="avatar" />
             <IonLabel>
                 <p>{{ contributor.login }}</p>

@@ -10,6 +10,8 @@
     import GetToken from '@/functions/login/GetToken.js';
     import GetNews from '@/functions/fetch/GetNews.js';
 
+    import urlController from '@/functions/utils/urlController.js'
+
     export default defineComponent({
         name: 'FolderPage',
         components: {
@@ -47,7 +49,7 @@
             closeNews() {
                 this.$refs.modal.$el.dismiss();
             },
-            openLink(url) {
+            urlController.openNewTabUrl(url) {
                 window.open(url, "_blank");
             },
             getNewsRefresh() {
@@ -164,7 +166,7 @@
                 <div class="newsModalContentContent" v-html="openedNews.htmlContent"></div>
 
                 <div class="chips" v-if="openedNews.attachments.length !== 0">
-                    <ion-chip v-for="(attachment, i) in openedNews.attachments" :key="i" @click="openLink(attachment.url)" color="dark" :outline="true">
+                    <ion-chip v-for="(attachment, i) in openedNews.attachments" :key="i" @click="urlController.openNewTabUrl(attachment.url)" color="dark" :outline="true">
                         <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
 
                         <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
