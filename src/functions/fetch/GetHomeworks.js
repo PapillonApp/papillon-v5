@@ -77,6 +77,15 @@ function getPronoteHomework(date, forceReload) {
                         GetToken();
                     }
                 }
+
+                if(error.code) {
+                    // return empty timetable in promise
+                    return new Promise((resolve, reject) => {
+                        resolve({
+                            error: error.code
+                        });
+                    });
+                }
             });
     }
 }

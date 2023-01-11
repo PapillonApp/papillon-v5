@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonCheckbox, IonListHeader, IonButton } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonCheckbox, IonListHeader, IonButton, IonSpinner } from '@ionic/vue';
 
     import { informationCircle } from 'ionicons/icons';
 
@@ -34,7 +34,8 @@
             CoursElement,
             IonItem,
             IonLabel,
-            IonCheckbox
+            IonCheckbox,
+            IonSpinner
         },
         data() {
             return { 
@@ -92,10 +93,15 @@
                 return lessons;
             },
             getTimetable() {
+                this.timetable.loading = true;
                 GetTimetable(this.$rn, false).then((timetable) => {
                     if(timetable.error) {
                         this.timetable = [];
                         this.timetable.error = timetable.error;
+
+                        if(timetable.error == "ERR_BAD_REQUEST") {
+                            this.timetable.error = null;
+                        }
                     }
                     else {
                         this.timetable = this.editTimetable(timetable);
@@ -110,10 +116,21 @@
                 let tomorrow = new Date(this.$rn);
                 tomorrow.setDate(tomorrow.getDate() + 0);
 
+                this.homeworks.loading = true;
                 GetHomeworks(tomorrow, false).then((homeworks) => {
-                    this.homeworks = homeworks;
-                    console.log(this.homeworks)
-                    this.homeworks.loading = false;
+                    if(homeworks.error) {
+                        this.homeworks = [];
+                        this.homeworks.error = homeworks.error;
+
+                        if(homeworks.error == "ERR_BAD_REQUEST") {
+                            this.homeworks.error = null;
+                        }
+                    }
+                    else {
+                        this.homeworks = homeworks;
+                        console.log(this.homeworks)
+                        this.homeworks.loading = false;
+                    }
                 });
             },
             changeDone(hw) {
@@ -167,6 +184,7 @@
 
             document.addEventListener('tokenUpdated', (e) => {
                 this.getTimetable();
+                this.getHomeworks();
             });
 
             this.getHomeworks();
@@ -221,6 +239,28 @@
                     :isOuting="cours.status.isOuting"
                     :isTest="cours.status.isTest"
                 />
+
+                <ion-item v-if="timetable.error" lines="none">
+                    <ion-label>
+                        <h2>Erreur</h2>
+                        <p>{{ timetable.error }}</p>
+                    </ion-label>
+                </ion-item>
+
+                <ion-item v-if="timetable == []" lines="none">
+                    <ion-label>
+                        <h2>Aucun cours</h2>
+                        <p>Vous n'avez aucun cours aujourd'hui.</p>
+                    </ion-label>
+                </ion-item>
+
+                <ion-item v-if="timetable.loading" lines="none">
+                    <IonSpinner slot="start"></IonSpinner>
+                    <ion-label>
+                        <h2>Chargement...</h2>
+                        <p>Chargement des cours...</p>
+                    </ion-label>
+                </ion-item>
             </ion-list>
 
             <ion-list id="comp-hw" ref="comp-hw">
@@ -236,6 +276,28 @@
                     <ion-label :style="`--courseColor: ${homework.data.color};`">
                         <p><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
                         <h2>{{ homework.homework.content }}</h2>
+                    </ion-label>
+                </ion-item>
+
+                <ion-item v-if="homeworks.error" lines="none">
+                    <ion-label>
+                        <h2>Erreur</h2>
+                        <p>{{ homeworks.error }}</p>
+                    </ion-label>
+                </ion-item>
+
+                <ion-item v-if="homeworks == []" lines="none">
+                    <ion-label>
+                        <h2>Aucun devoir</h2>
+                        <p>Vous n'avez aucun devoir à faire aujourd'hui.</p>
+                    </ion-label>
+                </ion-item>
+
+                <ion-item v-if="homeworks.loading" lines="none">
+                    <IonSpinner slot="start"></IonSpinner>
+                    <ion-label>
+                        <h2>Chargement...</h2>
+                        <p>Chargement des devoirs...</p>
                     </ion-label>
                 </ion-item>
             </ion-list>
