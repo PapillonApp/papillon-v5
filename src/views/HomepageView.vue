@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonCheckbox, IonListHeader, IonButton, IonSpinner } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonCheckbox, IonListHeader, IonButton, IonSpinner, IonRefresher } from '@ionic/vue';
 
     import { informationCircle } from 'ionicons/icons';
 
@@ -35,7 +35,8 @@
             IonItem,
             IonLabel,
             IonCheckbox,
-            IonSpinner
+            IonSpinner,
+            IonRefresher
         },
         data() {
             return { 
@@ -92,9 +93,9 @@
                 
                 return lessons;
             },
-            getTimetable() {
+            getTimetable(force) {
                 this.timetable.loading = true;
-                GetTimetable(this.$rn, false).then((timetable) => {
+                GetTimetable(this.$rn, force).then((timetable) => {
                     if(timetable.error) {
                         this.timetable = [];
                         this.timetable.error = timetable.error;
@@ -111,13 +112,13 @@
                     }
                 });
             },
-            getHomeworks() {
+            getHomeworks(force) {
                 // get date for this.$rn + 1 day
                 let tomorrow = new Date(this.$rn);
                 tomorrow.setDate(tomorrow.getDate() + 0);
 
                 this.homeworks.loading = true;
-                GetHomeworks(tomorrow, false).then((homeworks) => {
+                GetHomeworks(tomorrow, force).then((homeworks) => {
                     if(homeworks.error) {
                         this.homeworks = [];
                         this.homeworks.error = homeworks.error;
@@ -169,6 +170,14 @@
                         }
                     }
                 }
+            },
+            handleRefresh(event) {
+                this.getTimetable(true);
+                this.getHomeworks(true);
+
+                setTimeout(() => {
+                    event.detail.complete();
+                }, 1000);
             }
         },
         mounted() {
@@ -215,6 +224,10 @@
                 <ion-title v-else size="large">Bonjour 👋</ion-title>
             </IonToolbar>
         </IonHeader>
+
+        <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+            <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
 
         <div id="components" ref="components">
             <ion-list id="comp-tt" ref="comp-tt">
