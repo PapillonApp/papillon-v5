@@ -4,7 +4,11 @@
 	} from 'vue';
 	import {
 		IonHeader,
-		IonToolbar
+		IonToolbar,
+		IonList,
+		IonListHeader,
+		IonItem,
+		IonChip
 	} from '@ionic/vue';
 
 	const displayToast = require('@/functions/utils/displayToast.js');
@@ -23,6 +27,10 @@
 		components: {
 			IonHeader,
 			IonToolbar,
+			IonList,
+			IonListHeader,
+			IonItem,
+			IonChip
 		},
 		setup() {
 			return {
@@ -34,12 +42,15 @@
 		},
 		data() {
 			return {
-
+				absences: [],
 			}
 		},
 		mounted() {
-			GetAbsences();
-			GetPunishments();
+			GetAbsences().then((res) => {
+				this.absences = res;
+				console.log(res)
+			});
+			// GetPunishments();
 		}
 	});
 </script>
@@ -68,11 +79,52 @@
 					<ion-title size="large">Vie scolaire</ion-title>
 				</IonToolbar>
 			</IonHeader>
+
+			<ion-list>
+				<ion-list-header>
+					<ion-label>Absences</ion-label>
+				</ion-list-header>
+
+				<ion-item v-for="(miss, i) in absences" :key="i">
+					<span class="material-symbols-outlined mdls" slot="start">door_open</span>
+
+					<ion-label>
+						<p>{{ miss.data.hours }} heures manquées le {{ new Date (miss.date.from).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }) }}</p>
+
+						<h2 v-if="miss.data.reasons.length !== 0">{{ miss.data.reasons[0] }}</h2>
+						<h2 v-else>Absence non justifiée</h2>
+					</ion-label>
+
+					<ion-chip slot="end" v-if="!miss.data.isJustified" color="warning">
+						<span class="material-symbols-outlined mdls">error</span>
+						Injustifié
+					</ion-chip>
+					<ion-chip slot="end" v-else color="success">
+						<span class="material-symbols-outlined mdls">check</span>
+						Justifié
+					</ion-chip>
+				</ion-item>
+			</ion-list>
+
+			<ion-list>
+				<ion-list-header>
+					<ion-label>Retards</ion-label>
+				</ion-list-header>
+
+				<ion-item>
+					<ion-label>
+						<p>Impossible de récupérer les retards pour le moment.</p>
+					</ion-label>
+				</ion-item>
+			</ion-list>
+
 		</ion-content>
 
 	</ion-page>
 </template>
 
 <style scoped>
-
+	ion-chip span {
+		margin-right: 5px;
+	}
 </style>

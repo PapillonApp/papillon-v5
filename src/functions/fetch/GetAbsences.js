@@ -25,7 +25,7 @@ async function getPronoteAbsences(forceReload) {
 	let absences = {};
 	let cache = localStorage.getItem('AbsencesCache');
 	if (cache != null && !forceReload) {
-		absences = cache.absences;
+		absences = JSON.parse(cache).absences;
 
 		return new Promise((resolve, reject) => {
 			resolve(constructPronoteAbsences(absences));
@@ -35,7 +35,6 @@ async function getPronoteAbsences(forceReload) {
 		return axios.get(URL)
 		.then((response) => {
 			absences = response.data;
-
 			absences = constructPronoteAbsences(absences);
 			
             let today = new Date();
