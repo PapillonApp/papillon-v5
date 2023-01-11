@@ -152,7 +152,7 @@
                 <h1>{{ openedNews.title }}</h1>
                 <small>de {{ openedNews.author }} - {{ openedNews.dateString }}</small>
                 <div v-if="openedNews.isSurvey">
-                    <IonItem class="survey-warning">
+                    <IonItem class="survey-warning" lines="none">
                         <span class="material-symbols-outlined mdls" slot="start">error</span>
                         <IonLabel>
                             <h2>Impossible de répondre</h2>
@@ -243,11 +243,17 @@
     }
 
     .survey-warning {
-        margin: 15px 0px;
+        margin: 25px 0px;
         color: var(--ion-color-danger);
+        --background: var(--ion-color-danger-dark);
     }
 
     .survey-warning p {
         white-space: pre-line;
+    }
+
+    .survey-warning::part(native) {
+        padding: 10px 18px;
+        border-radius: 11px;
     }
 </style>
