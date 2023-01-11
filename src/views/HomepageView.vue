@@ -266,7 +266,7 @@
             <ion-list id="comp-hw" ref="comp-hw">
                 <ion-list-header>
                     <ion-label>Travail à faire</ion-label>
-                    <ion-button @click="goto('homeworks')">Voir tout</ion-button>
+                    <ion-button @click="goto('homework')">Voir tout</ion-button>
                 </ion-list-header>
 
                 <ion-item v-for="homework in homeworks" :key="homework.id" button>
