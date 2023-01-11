@@ -43,12 +43,17 @@
 		data() {
 			return {
 				absences: [],
+				absError: false,
 			}
 		},
 		mounted() {
 			GetAbsences().then((res) => {
 				this.absences = res;
-				console.log(res)
+				this.absError = false;
+			})
+			.catch((err) => {
+				console.log(err);
+				this.absError = true;
 			});
 			// GetPunishments();
 		}
@@ -84,6 +89,12 @@
 				<ion-list-header>
 					<ion-label>Absences</ion-label>
 				</ion-list-header>
+
+				<ion-item v-if="absError">
+					<ion-label>
+						<p>Impossible de récupérer les absences pour le moment.</p>
+					</ion-label>
+				</ion-item>
 
 				<ion-item v-for="(miss, i) in absences" :key="i">
 					<span class="material-symbols-outlined mdls" slot="start">door_open</span>

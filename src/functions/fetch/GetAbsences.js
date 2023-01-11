@@ -61,7 +61,7 @@ async function getPronoteAbsences(forceReload) {
 
 			if(error.code) {
 				return new Promise((resolve, reject) => {
-					resolve({
+					reject({
 						error: error.code
 					});
 				});
