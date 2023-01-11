@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonToggle, actionSheetController } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonToggle, actionSheetController, } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -14,6 +14,8 @@
     import { trash, refresh, checkmark, alertCircle } from 'ionicons/icons';
 
     import { FilePicker } from '@capawesome/capacitor-file-picker';
+
+    import axios from 'axios';
 
     export default defineComponent({
         name: 'FolderPage',
@@ -407,15 +409,15 @@
         <IonList :inset="true" lines="inset">
             <IonListHeader>
                 <IonLabel>
-                    <p>Top 5 des contributeurs</p>
+                    <p>Meilleurs contributeurs</p>
                 </IonLabel>
             </IonListHeader>
 
-            <IonItem v-for="contributor in contributors" :key="contributor.id" button @click="openURL(contributor.html_url)">
+            <IonItem v-for="(contributor, i) in contributors" :key="i" button @click="openURL(contributor.html_url)">
             <img :src="contributor.avatar_url" slot="start" class="avatar" />
             <IonLabel>
-                <p>{{ contributor.login }}</p>
-                <h2>{{ contributor.contributions }} contributions</h2>
+                <h2>{{ contributor.login }}</h2>
+                <p>{{ contributor.contributions }} contributions</p>
             </IonLabel>
             </IonItem>
         </IonList>

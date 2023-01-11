@@ -17,13 +17,13 @@ async function getContributors(limit = 100) {
         }
 
         axios.get(github_api_url + "/contributors")
-        .then((response) => {
-            // return limit 
-            resolve(response.data.slice(0, limit));
-        })
-        .catch((error) => {
-            reject('Problem with fetching contributors (' + error + ')');
-        })
+            .then((response) => {
+                // return limit 
+                resolve(response.data.slice(0, limit));
+            })
+            .catch((error) => {
+                reject('Problem with fetching contributors (' + error + ')');
+            })
     })
 }
 
