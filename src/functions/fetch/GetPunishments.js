@@ -24,7 +24,7 @@ async function getPronotePunishements(forceReload) {
 
 	let cache = localStorage.getItem('PunishmentsCache');
 	if (cache != null && !forceReload) {
-		let punishments = cache.punishments;
+		let punishments = JSON.parse(cache).punishments;
 
 		return new Promise((resolve, reject) => {
 			resolve(constructPronotePunishments(punishments));
@@ -61,7 +61,7 @@ async function getPronotePunishements(forceReload) {
 
 			if(error.code) {
 				return new Promise((resolve, reject) => {
-					resolve({
+					reject({
 						error: error.code
 					});
 				});

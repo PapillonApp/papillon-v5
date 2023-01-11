@@ -44,6 +44,8 @@
 			return {
 				absences: [],
 				absError: false,
+				punishments: [],
+				punishmentsError: false
 			}
 		},
 		mounted() {
@@ -55,7 +57,11 @@
 				console.log(err);
 				this.absError = true;
 			});
-			// GetPunishments();
+
+			GetPunishments().then((res) => {
+				this.punishments = res;
+				console.log(res);
+			})
 		}
 	});
 </script>
@@ -96,6 +102,12 @@
 					</ion-label>
 				</ion-item>
 
+				<ion-item v-if="absences.length == 0">
+					<ion-label>
+						<p>Aucune absence.</p>
+					</ion-label>
+				</ion-item>
+
 				<ion-item v-for="(miss, i) in absences" :key="i">
 					<span class="material-symbols-outlined mdls" slot="start">door_open</span>
 
@@ -114,6 +126,36 @@
 						<span class="material-symbols-outlined mdls">check</span>
 						Justifié
 					</ion-chip>
+				</ion-item>
+			</ion-list>
+
+			<ion-list>
+				<ion-list-header>
+					<ion-label>Punitions</ion-label>
+				</ion-list-header>
+
+				<ion-item v-if="punishmentsError">
+					<ion-label>
+						<p>Impossible de récupérer les absences pour le moment.</p>
+					</ion-label>
+				</ion-item>
+
+				<ion-item v-if="punishments.length == 0">
+					<ion-label>
+						<p>Aucune punition.</p>
+					</ion-label>
+				</ion-item>
+
+				<ion-item v-for="(punish, i) in punishments" :key="i">
+					<span class="material-symbols-outlined mdls" slot="start">gavel</span>
+
+					<ion-label>
+						<p>{{ punish.data.nature }} le {{ new Date(punish.date.givenDate).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) }}</p>
+
+						<h2>{{ punish.homeworks.text }}</h2>
+
+						<h4>{{ punish.data.reasons.text[0] }} - {{ punish.data.reasons.circumstances }}</h4>
+					</ion-label>
 				</ion-item>
 			</ion-list>
 
