@@ -100,14 +100,6 @@
                 this.$refs.swiper.$el.swiper.slideTo(1, 0);
                 this.shouldResetSwiper = false;
 
-                this.timetable = [];
-                this.yesterday = [];
-                this.tomorrow = [];
-
-                this.timetable.loading = true;
-                this.yesterday.loading = true;
-                this.tomorrow.loading = true;
-
                 this.timetable.error = "STILL_LOADING";
                 this.yesterday.error = "STILL_LOADING";
                 this.tomorrow.error = "STILL_LOADING";
@@ -116,11 +108,12 @@
             // get timetable for rn
             GetTimetable(this.$rn, force).then((timetable) => {
                 if(timetable.error) {
-                    this.timetable = [];
-                    this.timetable.error = timetable.error;
-
                     if(timetable.error == "ERR_BAD_REQUEST") {
                         this.timetable.loading = true;
+                    }
+                    else {
+                        this.timetable = [];
+                        this.timetable.error = timetable.error;
                     }
                 }
                 else {
@@ -171,9 +164,11 @@
 
             // stop refresh when this.timetable is updated
             this.$watch('timetable', () => {
-                setTimeout(() => {
-                    event.target.complete();
-                }, 200);
+                if(this.timetable.error != "STILL_LOADING" && this.timetable.error != "ERR_BAD_REQUEST") {
+                    setTimeout(() => {
+                        event.target.complete();
+                    }, 200);
+                }
             });
         },
         openCoursModal(cours) {
