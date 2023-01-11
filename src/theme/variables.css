@@ -137,7 +137,7 @@ http://ionicframework.com/docs/theming/ */
 
     --ion-card-background: hsl(260, 7%, 9%);
 
-    --ion-inset-background: hsl(260, 7%, 12%);
+    --ion-inset-background: hsl(260, 7%, 10%);
   }
 
   .ios ion-modal {

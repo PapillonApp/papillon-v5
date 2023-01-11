@@ -68,7 +68,7 @@
                     return (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
             },
             darkenHexColor(col) {
-                return '#' + this.LightenColor(col, -20);
+                return '#' + this.LightenColor(col.split("#")[1], -40);
             },
             getPeriods() {
                 let allPeriods = JSON.parse(localStorage.getItem('userData')).periods;
@@ -277,7 +277,7 @@
             </ion-card>
         </div>
         
-        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: ${ subject.color };`">
+        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: ${ darkenHexColor(subject.color) };`">
             <div class="subject-name" @click="openAverageModal(subject)">
                 <h3>{{subject.name}}</h3>
                 <p class="avg" v-if="subject.significant">{{subject.average}}<small>/20</small></p>

@@ -1,3 +1,41 @@
+let colorList = [
+	'#00B562',
+	'#0FBA9B',
+	'#1A8DCE',
+	'#30B800',
+	'#4791FF',
+	'#898989',
+	'#8CBC4F',
+	'#9747FF',
+	'#A725C8',
+	'#AF5757',
+	'#C567FF',
+	'#C84325',
+	'#C87325',
+	'#E1006C',
+	'#F13232',
+	'#F422AD',
+	'FF6A3A',
+	'#FFB629',
+];
+
+function distance(a, b) {
+    return Math.sqrt(Math.pow(a.r - b.r, 2) + Math.pow(a.g - b.g, 2) + Math.pow(a.b - b.b, 2));
+}
+
+function nearestColor(color) {
+	// get closest color from colorList
+	let min = 1000000;
+	let closestColor = colorList[0];
+	for (let i = 0; i < colorList.length; i++) {
+		let dist = distance(color, colorList[i]);
+		if (dist < min) {
+			min = dist;
+			closestColor = colorList[i];
+		}
+	}
+}
+
 function getRandomColor() {
 	var color = '#';
 	for (var i = 0; i < 6; i++) {

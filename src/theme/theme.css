@@ -281,6 +281,25 @@ ion-header ion-toolbar ion-title.md {
 }
 
 /* items */
+ion-list.list-inset {
+    background : var(--ion-inset-background) !important;
+    border-radius: 10px !important;
+}
+
+ion-list.list-inset > * {
+    --background : var(--ion-inset-background) !important;
+}
+
+ion-list.list-inset ion-list-header {
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+ion-list.list-inset ion-list-header ion-button {
+    margin: 0 !important;
+}
+
 ion-list.list-inset.md ion-list-header {
     border-radius: 8px 8px 0px 0px !important;
     overflow: hidden;

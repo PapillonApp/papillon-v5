@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonCheckbox, IonListHeader, IonButton, IonSpinner, IonRefresher } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonCheckbox, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip } from '@ionic/vue';
 
     import { informationCircle } from 'ionicons/icons';
 
@@ -31,16 +31,18 @@
             IonList,
             IonListHeader,
             IonButton,
-            CoursElement,
             IonItem,
             IonLabel,
             IonCheckbox,
             IonSpinner,
-            IonRefresher
+            IonRefresher,
+            IonChip
         },
         data() {
             return { 
                 timetable: [],
+                nextCoursTime: "",
+                updateTime: null,
                 firstName: '',
                 homeworks: [],
                 blockChangeDone: false,
@@ -74,21 +76,40 @@
                     }
                 }
 
-                // remove all lessons before this.$rn (cours.time.start)
-                let lessons = [];
-                for(let i = 0; i < timetable.length; i++) {
-                    let lesson = timetable[i];
+                // get next lesson (cours.time.start)
+                let now = new Date();
+                let lessons = timetable.filter((lesson) => {
                     let lessonStart = new Date(lesson.time.start);
+                    let lessonEnd = new Date(lesson.time.end);
 
-                    if (lessonStart >= this.$rn) {
-                        lessons.push(lesson);
+                    if (lessonStart <= now && lessonEnd >= now) {
+                        // get minutes before next lesson
+                        let mins = Math.floor((lessonEnd - now) / 1000 / 60);
+
+                        // if less than 60 mins
+                        if (mins < 60) {
+                            this.nextCoursTime = `dans ${mins} minutes`;
+                        }
+                        else {
+                            let hours = Math.floor(mins / 60);
+                            mins = mins % 60;
+
+                            this.nextCoursTime = `dans ${hours} heures et ${mins} minutes`;
+                        }
+
+                        return true;
                     }
-                }
+                    else {
+                        return false;
+                    }
+                });
 
-                // if lessons is empty but not timetable
-                if (lessons.length == 0 && timetable.length != 0) {
-                    // add 3 last lessons
-                    lessons = timetable.slice(-4);
+                // if lessons is empty but not timetable, get last lesson
+                if (lessons.length == 0 && timetable.length > 0) {
+                    let lastLesson = timetable[timetable.length - 1];
+                    lessons.push(lastLesson);
+
+                    this.nextCoursTime = "Cours terminé"
                 }
                 
                 return lessons;
@@ -106,7 +127,10 @@
                     }
                     else {
                         this.timetable = this.editTimetable(timetable);
-                        console.log(this.timetable)
+                        
+                        this.updateTime = setInterval(() => {
+                            this.timetable = this.editTimetable(timetable);
+                        }, 1000);
 
                         this.timetable.loading = false;
                     }
@@ -218,40 +242,27 @@
       </IonHeader>
       
       <ion-content :fullscreen="true">
-        <IonHeader collapse="condense">
-            <IonToolbar>
-                <ion-title v-if="firstName" size="large">Bonjour, {{ firstName }} 👋</ion-title>
-                <ion-title v-else size="large">Bonjour 👋</ion-title>
-            </IonToolbar>
-        </IonHeader>
 
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
 
         <div id="components" ref="components">
-            <ion-list id="comp-tt" ref="comp-tt">
+            <ion-list id="comp-tt" class="nextCourse" ref="comp-tt">
                 <ion-list-header>
-                    <ion-label>Prochains cours</ion-label>
-                    <ion-button @click="goto('timetable')">Voir tout</ion-button>
+                    <ion-label>Prochain cours</ion-label>
+                    <ion-button @click="goto('timetable')">Ma journée</ion-button>
                 </ion-list-header>
 
-                <CoursElement v-for="cours in timetable" :key="cours.id"
-                    :subject="cours.data.subject"
-                    :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
-                    :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
-                    :memo="cours.data.hasMemo"
-                    :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
-                    :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
-                    :color="cours.course.color"
-                    :sameTime="cours.course.sameTime"
-                    :status="cours.status.status"
-                    :isCancelled="cours.status.isCancelled"
-                    :isDetention="cours.status.isDetention"
-                    :isExempted="cours.status.isExempted"
-                    :isOuting="cours.status.isOuting"
-                    :isTest="cours.status.isTest"
-                />
+                <ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none">
+                    <IonChip slot="start">{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</IonChip>
+                    <ion-label>
+                        <h2>{{ cours.data.subject }}</h2>
+                        <h3>{{ nextCoursTime }}</h3>
+                        <p>salle {{ cours.data.rooms.join(', ') || 'Pas de salle' }} - avec {{ cours.data.teachers.join(', ') || 'Pas de professeur' }}</p>
+                        <p v-if="cours.status.status">{{ cours.status.status }}</p>
+                    </ion-label>
+                </ion-item>
 
                 <ion-item v-if="timetable.error" lines="none">
                     <ion-label>
@@ -282,7 +293,7 @@
                     <ion-button @click="goto('homework')">Voir tout</ion-button>
                 </ion-list-header>
 
-                <ion-item v-for="homework in homeworks" :key="homework.id" button>
+                <ion-item v-for="homework in homeworks" :key="homework.id">
                     <div slot="start">
                         <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
                     </div>
@@ -321,5 +332,31 @@
 </template>
   
 <style scoped>
+    .nextCourse ion-chip {
+        padding: 6px 9px !important;
+        height: fit-content;
+        font-weight: 600;
+        font-size: 16px;
+        font-family: "Papillon";
+    }
 
+    .ios .nextCours {
+        padding: 5px 18px;
+    }
+
+    .ios .nextCours::part(native) {
+        background: var(--ion-color-step-50);
+        border-radius: 12px;
+        padding: 5px 15px;
+    }
+
+    .md .nextCours {
+        padding: 5px 12px;
+    }
+
+    .md .nextCours::part(native) {
+        border-radius: 8px;
+        padding: 3px 10px;
+        border: 1px solid var(--ion-color-step-150);
+    }
 </style>
