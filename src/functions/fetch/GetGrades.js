@@ -5,21 +5,23 @@ import axios from 'axios';
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
+import subjectColor from '@/functions/utils/subjectColor.js'
+
 // funcs
 function isFloat(n){
     return Number(n) === n && n % 1 !== 0;
 }
 
 // main function
-async function getGrades() {
+async function getGrades(forceReload) {
     // as only pronote is supported for now, we can just return the pronote grades
     
     // return pronote grades
-    return getPronoteGrades();
+    return getPronoteGrades(forceReload);
 }
 
 // pronote : get grades
-function getPronoteGrades() {
+function getPronoteGrades(forceReload) {
     // gather vars
     const API = app.config.globalProperties.$api;
 
@@ -30,9 +32,9 @@ function getPronoteGrades() {
     let URL = `${API}/grades?token=${token}`;
 
     // check if grade is cached
-    let gradeCache = localStorage.getItem('gradeCache');
+    let gradeCache = localStorage.getItem('GradeCache');
 
-    if(gradeCache != null) {
+    if(gradeCache != null && !forceReload) {
         // grade is cached, check if it's up to date
         gradeCache = JSON.parse(gradeCache);
 
@@ -62,7 +64,7 @@ function getPronoteGrades() {
                 grades: response.data
             }
 
-            localStorage.setItem('gradeCache', JSON.stringify(gradeCache));
+            localStorage.setItem('GradeCache', JSON.stringify(gradeCache));
 
             // construct grades and return it as a promise
             return new Promise((resolve, reject) => {
@@ -162,6 +164,7 @@ function constructPronoteGrades(grades) {
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
+                color: subjectColor.getSubjectColor(mark.subject.name, subjectColor.darkenHexColor(mark.subject.id.substring(2,8).toString())),
                 name: mark.subject.name,
                 marks: []
             }

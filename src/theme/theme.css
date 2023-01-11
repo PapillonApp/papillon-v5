@@ -101,6 +101,8 @@ input.sc-ion-searchbar-md {
 
     overflow: hidden;
     isolation: isolate;
+
+    transition: background 0.2s;
 }
 
 @media screen and (prefers-color-scheme: dark) {
@@ -124,6 +126,10 @@ input.sc-ion-searchbar-md {
 
 #rnPickerModalButton.ios {
     margin-right: 5px !important;
+}
+
+ion-header.ios:not(.header-collapse-condense-inactive) #rnPickerModalButton {
+    background: transparent !important;
 }
 
 /* Material Symbols */
@@ -239,6 +245,8 @@ ion-item .mdls[slot="start"] {
     margin-left: 0;
 }
 
+/* Modals */
+
 .md ion-modal {
     background: #00000055;
 }
@@ -270,4 +278,28 @@ ion-item .mdls[slot="start"] {
 ion-header ion-toolbar ion-title.md {
     font-size: 20px;
     font-weight: 600;
+}
+
+/* items */
+ion-list.list-inset.md ion-list-header {
+    border-radius: 8px 8px 0px 0px !important;
+    overflow: hidden;
+}
+
+ion-list.list-inset.md ion-item:last-child {
+    border-radius: 0px 0px 8px 8px !important;
+    overflow: hidden;
+}
+
+ion-list.list-inset ion-list-header, ion-list.list-inset ion-item {
+    --background : var(--ion-inset-background) !important;
+}
+
+ion-list.list-inset.ios ion-list-header ion-label {
+    margin-top: 0px;
+}
+
+/* action sheet */
+ion-action-sheet {
+    --ion-color-primary: #0075ff !important;
 }

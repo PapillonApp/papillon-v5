@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText, IonSegment, IonSegmentButton, IonModal } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText, IonSegment, IonSegmentButton, IonModal, IonSearchbar } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -28,11 +28,13 @@
             IonListHeader,
             IonSkeletonText,
             IonSegment,
-            IonSegmentButton
+            IonSegmentButton,
+            IonSearchbar
         },
         data() {
             return { 
                 grades: [],
+                fullGrades: [],
                 averages: [],
                 classAverages: [],
                 isLoading: false,
@@ -45,6 +47,7 @@
                     min_average: 0,
                     out_of: 0,
                 },
+                out_of_20: localStorage.getItem('tweakGrades20') == "true" ? true : false,
             }
         },
         methods: {
@@ -119,9 +122,27 @@
 
                 this.$refs.averageModal.$el.present(subject);
             },
+            editMarks(grades) {
+                let out_of_20 = this.out_of_20;
+
+                grades.forEach(subject => {
+                    subject.marks.forEach(mark => {
+                        // if out of 20 make it out of 20
+                        if (out_of_20) {                            
+                            mark.grade.updated_value = parseFloat(mark.grade.value) / parseFloat(mark.grade.out_of) * 20;
+
+                            mark.grade.updated_value = mark.grade.updated_value.toFixed(2);
+                            mark.grade.updated_out_of = 20;
+                        }
+                    });
+                });
+
+                return grades;
+            },
             getGradesRefresh() {
-                GetGrades().then((data) => {
-                    this.grades = data.marks;
+                GetGrades(true).then((data) => {
+                    this.grades = this.editMarks(data.marks);
+                    this.fullGrades = this.editMarks(data.marks);
 
                     this.averages = data.averages;
                     this.isLoading = false;
@@ -140,24 +161,52 @@
                     }, 200);
                 });
             },
+            searchGrades() {
+                let search = this.$refs.searchBar.$el.value;
+
+                if (search == "") {
+                    this.grades = this.fullGrades;
+                } else {
+                    this.grades = this.fullGrades.filter(subject => {
+                        return subject.name.toLowerCase().includes(search.toLowerCase());
+                    });
+                }
+            }
         },
         mounted() {
             this.isLoading = true;
 
             GetGrades().then((data) => {
-                this.grades = data.marks;
+                this.grades = this.editMarks(data.marks);
+                this.fullGrades = this.editMarks(data.marks);
 
                 this.averages = data.averages;
                 this.isLoading = false;
 
                 this.classAverages = data.averages.class;
+
+                
+                console.log(this.grades)
             });
 
             this.getPeriods();
 
             document.addEventListener('tokenUpdated', (ev) => {
                 GetGrades().then((data) => {
-                    this.grades = data.marks;
+                    this.grades = this.editMarks(data.marks);
+                    this.fullGrades = this.editMarks(data.marks);
+                    this.averages = data.averages;
+                    this.isLoading = false;
+
+                    this.classAverages = data.averages.class;
+                });
+            });
+
+            document.addEventListener('gradeSettingsUpdated', (ev) => {
+                GetGrades().then((data) => {
+                    this.out_of_20 = localStorage.getItem('tweakGrades20') == "true" ? true : false;
+                    this.grades = this.editMarks(data.marks);
+                    this.fullGrades = this.editMarks(data.marks);
                     this.averages = data.averages;
                     this.isLoading = false;
 
@@ -170,7 +219,7 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader">
+      <IonHeader class="AppHeader" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -189,6 +238,9 @@
         <IonHeader collapse="condense">
             <IonToolbar>
                 <ion-title size="large">Notes</ion-title>
+            </IonToolbar>
+            <IonToolbar>
+                <IonSearchbar ref="searchBar" placeholder="Chercher une matière..." @ionChange="searchGrades()"></IonSearchbar>
             </IonToolbar>
         </IonHeader>
 
@@ -225,7 +277,7 @@
             </ion-card>
         </div>
         
-        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: ${ darkenHexColor(subject.id.substring(2,8).toString()) };`">
+        <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: ${ subject.color };`">
             <div class="subject-name" @click="openAverageModal(subject)">
                 <h3>{{subject.name}}</h3>
                 <p class="avg" v-if="subject.significant">{{subject.average}}<small>/20</small></p>
@@ -239,10 +291,13 @@
                         <p class="name">{{ mark.info.description }}</p>
                         <p class="coef">Coeff. : {{mark.grade.coefficient}}</p>
 
-                        <p class="grd" v-if="mark.info.significant">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
+                        <p class="grd" v-if="mark.info.significant && !mark.grade.updated_value">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
+                        <p class="grd" v-else-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.updated_value}}/{{mark.grade.updated_out_of}}</p>
+                        <p class="coef" v-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
                         
                         <!-- si absent -->
                         <p class="grd" v-if="!mark.info.significant">{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></p>
+                        <p class="coef" v-if="mark.grade.original_value && !mark.info.significant"><br/></p>
                     </div>
                     <div class="averages" v-if="mark.info.significantAverage">
                         <div class="average">
@@ -313,7 +368,7 @@
 
         <br /> <br />
 
-        <IonModal ref="averageModal" :keep-contents-mounted="true" :initial-breakpoint="0.4" :breakpoints="[0, 0.4, 0.6]" :handle="true" :canDismiss="true">
+        <IonModal ref="averageModal" :keep-contents-mounted="true" :initial-breakpoint="0.5" :breakpoints="[0, 0.5, 0.9]" :handle="true" :canDismiss="true">
             <IonHeader>
               <IonToolbar>
                 <ion-title>{{ selectedMark.subject }}</ion-title>

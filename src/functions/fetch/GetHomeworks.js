@@ -5,16 +5,18 @@ import axios from 'axios';
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
+import subjectColor from '@/functions/utils/subjectColor.js'
+
 // main function
-async function getHomeworks(date) {
+async function getHomeworks(date, forceReload) {
     // as only pronote is supported for now, we can just return the pronote homework
 
     // return pronote homework
-    return getPronoteHomework(date);
+    return getPronoteHomework(date, forceReload);
 }
 
 // pronote : get homework
-function getPronoteHomework(date) {
+function getPronoteHomework(date, forceReload) {
     // gather vars
     const API = app.config.globalProperties.$api;
     const dayRequest = new Date(date);
@@ -33,7 +35,7 @@ function getPronoteHomework(date) {
     cacheSearch = cacheSearch.filter((element) => {
         return element.date == dayString && element.token == token;
     });
-    if (cacheSearch.length > 0) {
+    if (cacheSearch.length > 0 && !forceReload) {
         // return cached homework in promise
         return new Promise((resolve, reject) => {
             let homework = JSON.parse(cacheSearch[0].homework);
@@ -86,6 +88,20 @@ function constructPronoteHomework(hw) {
 
     // for each course in homework
     hw.forEach((homework) => {
+        // for each file in homework.files
+        homework.files.forEach((file) => {
+            // if no file.name, set it to "Document"
+            if (!file.name) {
+                file.name = "Document";
+            }
+
+            // if file.url is not a link
+            if (!file.url.startsWith("http")) {
+                // remove file
+                homework.files.splice(homework.files.indexOf(file), 1);
+            }
+        });
+
         // construct course
         let newHomework = {
             data: {
@@ -100,6 +116,8 @@ function constructPronoteHomework(hw) {
             },
             files: homework.files,
         };
+
+        subjectColor.setSubjectColor(newHomework.homework.subject, newHomework.data.color, true);
 
         // push course to courses
         homeworkArray.push(newHomework);

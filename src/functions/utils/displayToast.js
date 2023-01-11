@@ -1,7 +1,9 @@
 import { toastController, alertController } from '@ionic/vue';
 import { Dialog } from '@capacitor/dialog';
 
-async function presentToast(msg, color, isDismissible) {
+import hapticsController from './hapticsController';
+
+async function presentToast(msg, color) {
 	const toast = await toastController.create({
 		message: msg,
 		duration: 2000,
@@ -12,8 +14,32 @@ async function presentToast(msg, color, isDismissible) {
 	await toast.present();
 }
 
-async function presentToastIcon(msg, color, icon, isDismissible) {
+async function presentToastIcon(msg, color, icon) {
 	const toast = await toastController.create({
+		message: msg,
+		duration: 2000,
+		position: "bottom",
+		color: color,
+		icon: icon
+	});
+
+	await toast.present();
+}
+
+async function presentToastFull(header, msg, color, icon) {
+	// vibration
+	if(color == "danger") {
+		hapticsController.notification("error");
+	}
+	else if(color == "success") {
+		hapticsController.notification("success");
+	}
+	else if(color == "warning") {
+		hapticsController.notification("warning");
+	}
+
+	const toast = await toastController.create({
+		header: header,
 		message: msg,
 		duration: 2000,
 		position: "bottom",
@@ -70,6 +96,7 @@ async function presentToastTest() {
 }
 
 export default {
+	presentToastFull,
 	presentToast,
 	presentError,
 	presentToastIcon,

@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonModal, IonCard } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonModal, IonCard, IonSpinner, IonChip, IonSearchbar } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -24,13 +24,17 @@
             IonItem,
             IonLabel,
             IonModal,
-            IonList
+            IonList,
+            IonSpinner,
+            IonSearchbar
         },
         data() {
             return { 
                 news: [],
+                fullNews: [],
                 openedNews: [],
                 presentingElement: null,
+                isLoading: false
             }
         },
         methods: {
@@ -43,10 +47,28 @@
             closeNews() {
                 this.$refs.modal.$el.dismiss();
             },
+            openLink(url) {
+                window.open(url, "_blank");
+            },
             getNewsRefresh() {
-                GetNews().then((data) => {
+                GetNews(true).then((data) => {
                     this.news = data;
                 })
+            },
+            searchNews() {
+                let search = this.$refs.searchBar.$el.value;
+                let news = this.fullNews;
+
+                if (search == "") {
+                    this.news = news;
+                } else {
+                    // filter news by name, content and author
+                    let filteredNews = news.filter((news) => {
+                        return news.title.toLowerCase().includes(search.toLowerCase()) || news.content.toLowerCase().includes(search.toLowerCase()) || news.author.toLowerCase().includes(search.toLowerCase());
+                    });
+
+                    this.news = filteredNews;
+                }
             },
             handleRefresh(event) {
                 // get new News data
@@ -63,8 +85,13 @@
         mounted() {
             this.presentingElement = this.$refs.page.$el;
 
+            this.isLoading = true;
             GetNews().then((data) => {
                 this.news = data;
+                this.fullNews = data;
+                console.log(this.news);
+                
+                this.isLoading = false;
             });
 
             return false;
@@ -74,7 +101,7 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader">
+      <IonHeader class="AppHeader" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -83,6 +110,9 @@
 
           <ion-title mode="md">Actualités</ion-title>
         </IonToolbar>
+        <IonToolbar>
+                <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></ion-searchbar>
+            </IonToolbar>
       </IonHeader>
       
       <ion-content :fullscreen="true">
@@ -90,11 +120,12 @@
             <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
 
-        <IonHeader collapse="condense">
-            <IonToolbar>
-                <ion-title size="large">Actualités</ion-title>
-            </IonToolbar>
-        </IonHeader>
+        <div class="NoCours" v-if="isLoading">
+            <IonSpinner></IonSpinner>
+            <br/>
+            <h2>Téléchargement des actualités...</h2>
+            <p>Veuillez patienter pendant qu'on récupère les actualités depuis nos serveurs...</p>
+        </div>
 
         <IonList>
             <IonItem button v-for="(news, i) in news" v-bind:key="i" @click="openNews(news)">
@@ -109,11 +140,11 @@
         </IonList>
 
         <IonModal :presenting-element="presentingElement" :canDismiss="true" ref="modal">
-            <IonHeader>
+            <IonHeader translucent>
                 <IonToolbar>
                     <IonTitle>{{ openedNews.title }}</IonTitle>
                     <IonButtons slot="end">
-                        <IonButton @click="closeNews()">Close</IonButton>
+                        <IonButton @click="closeNews()">Fermer</IonButton>
                     </IonButtons>
                 </IonToolbar>
             </IonHeader>
@@ -131,21 +162,62 @@
                 </div>
                 <hr v-else />
                 <div class="newsModalContentContent" v-html="openedNews.htmlContent"></div>
+
+                <div class="chips" v-if="openedNews.attachments.length !== 0">
+                    <ion-chip v-for="(attachment, i) in openedNews.attachments" :key="i" @click="openLink(attachment.url)" color="dark" :outline="true">
+                        <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
+
+                        <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
+
+                        <p>{{attachment.name}}</p>
+                    </ion-chip>
+                </div>
+                
+                <div class="spacing"></div>
             </IonContent>
         </IonModal>
       </ion-content>
     </ion-page>
 </template>
   
-<style scoped>
+<style scoped>  
     .newsModalContent * {
         margin: 0;
+    }
+
+    .newsModalContent .spacing {
+        height: 80px;
     }
 
     .newsModalContent hr {
         margin: 15px 0px;
         background: #000;
         opacity: 25%;
+    }
+
+    .newsModalContent .chips {
+        margin-top: 20px !important;
+        margin-bottom: 20px !important;
+
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .newsModalContent .chips ion-chip {
+        margin-right: 5px;
+        margin-bottom: 5px;
+    }
+
+    .newsModalContent .chips span {
+        opacity: 50%;
+        margin-right: 8px;
+    }
+
+    .newsModalContent .chips ion-chip p {
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     @media screen and (prefers-color-scheme: dark) {
@@ -160,8 +232,8 @@
     }
 
     .newsModalContent small {
-        font-size: 0.8em;
-        font-weight: 500;
+        font-size: 0.9em;
+        font-weight: 400;
         opacity: 0.5;
     }
 
