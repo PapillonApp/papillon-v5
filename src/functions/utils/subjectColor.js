@@ -1,39 +1,53 @@
-let colorList = [
-	'#00B562',
-	'#0FBA9B',
-	'#1A8DCE',
-	'#30B800',
-	'#4791FF',
-	'#898989',
-	'#8CBC4F',
-	'#9747FF',
-	'#A725C8',
-	'#AF5757',
-	'#C567FF',
-	'#C84325',
-	'#C87325',
-	'#E1006C',
-	'#F13232',
-	'#F422AD',
-	'FF6A3A',
-	'#FFB629',
-];
+/* 
+make an array of colors from
+background: #00934F;
+background: #12957D;
+background: #1978AD;
+background: #7937CE;
+background: #931BB1;
+background: #AA611E;
+background: #AD125D;
+background: #BE381A;
+background: #C12C2C;
+*/
 
-function distance(a, b) {
-    return Math.sqrt(Math.pow(a.r - b.r, 2) + Math.pow(a.g - b.g, 2) + Math.pow(a.b - b.b, 2));
+const baseColors = [ '#00934F', '#12957D', '#1978AD', '#7937CE', '#931BB1', '#AA611E', '#AD125D', '#BE381A', '#C12C2C', "#BB7B1B", '#AA831E' ];
+
+function hexToRgb(hex) {
+	console.log(hex);
+
+	var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+	hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+		return r + r + g + g + b + b;
+	});
+	
+	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+	return result ? {
+		r: parseInt(result[1], 16),
+		g: parseInt(result[2], 16),
+		b: parseInt(result[3], 16)
+	} : null;
 }
 
-function nearestColor(color) {
-	// get closest color from colorList
-	let min = 1000000;
-	let closestColor = colorList[0];
-	for (let i = 0; i < colorList.length; i++) {
-		let dist = distance(color, colorList[i]);
-		if (dist < min) {
-			min = dist;
-			closestColor = colorList[i];
+function distance(a, b) {
+	return Math.sqrt(Math.pow(a.r - b.r, 2) + Math.pow(a.g - b.g, 2) + Math.pow(a.b - b.b, 2));
+}
+
+function nearestColor(colorHex){
+	console.log(colorHex);
+	var lowest = Number.POSITIVE_INFINITY;
+	var tmp;
+	let index = 0;
+
+	baseColors.forEach( (el, i) => {
+		tmp = distance(hexToRgb(colorHex), hexToRgb(el))
+		if (tmp < lowest) {
+			lowest = tmp;
+			index = i;
 		}
-	}
+	})
+
+	return baseColors[index];
 }
 
 function getRandomColor() {
@@ -63,6 +77,8 @@ function setSubjectColor(subjectName, color, force=false) {
 	if (!color.includes('#')) {
 		color = '#' + color;
 	}
+
+	color = nearestColor(color);
 
 	if (subjectColors[subjectName] && !force) {
 		return subjectColors[subjectName];
@@ -97,4 +113,4 @@ function getSubjectColor(subjectName, color) {
 	return setSubjectColor(subjectName, color);
 }
 
-export default { setSubjectColor, getSubjectColor, getRandomColor, lightenColor, darkenHexColor };
+export default { setSubjectColor, getSubjectColor, getRandomColor, lightenColor, darkenHexColor, nearestColor };
