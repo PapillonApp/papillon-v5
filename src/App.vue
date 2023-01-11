@@ -65,6 +65,11 @@
         const selectedIndex = ref(0);
         const appPages = [
             {
+                title: 'Accueil',
+                url: '/home',
+                icon: "home",
+            },
+            {
                 title: 'Emploi du temps',
                 url: '/timetable',
                 icon: "calendar_month"

@@ -4,7 +4,12 @@ import { RouteRecordRaw } from 'vue-router';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '',
-    redirect: '/timetable'
+    redirect: '/home'
+  },
+  {
+    path: '/home',
+    name: 'Home',
+    component: () => import ('../views/HomepageView.vue')
   },
   {
     path: '/timetable',
