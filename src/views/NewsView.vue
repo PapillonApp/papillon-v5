@@ -51,7 +51,7 @@
                 window.open(url, "_blank");
             },
             getNewsRefresh() {
-                GetNews().then((data) => {
+                GetNews(true).then((data) => {
                     this.news = data;
                 })
             },

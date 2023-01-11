@@ -9,6 +9,7 @@
 
     import displayToast from '@/functions/utils/displayToast.js';
     import GetToken from '@/functions/login/GetToken.js';
+    import getContributors from '@/functions/fetch/GetContributors';
 
     import { trash, refresh, checkmark, alertCircle } from 'ionicons/icons';
 
@@ -34,33 +35,38 @@
             return { 
                 appVersion: version,
                 appPlatform: Capacitor.getPlatform(),
-                localStorageSize: ''
+                localStorageSize: '',
+            }
+        },
+        data() {
+            return {
+                contributors: [],
             }
         },
         methods: {
             async logout() {
                 const actionSheet = await actionSheetController.create({
-                header: 'Êtes-vous sûr de vouloir vous déconnecter ?',
-                subHeader: 'Vous perdrez vos paramètres et vos données seront supprimées de votre appareil.',
-                buttons: [
-                    {
-                        text: 'Se déconnecter',
-                        role: 'destructive',
-                        data: {
-                            action: 'delete',
+                    header: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+                    subHeader: 'Vous perdrez vos paramètres et vos données seront supprimées de votre appareil.',
+                    buttons: [
+                        {
+                            text: 'Se déconnecter',
+                            role: 'destructive',
+                            data: {
+                                action: 'delete',
+                            },
+                            handler: () => {
+                                this.logoutFunc();
+                            },
                         },
-                        handler: () => {
-                            this.logoutFunc();
+                        {
+                            text: 'Annuler',
+                            role: 'cancel',
+                            data: {
+                                action: 'cancel',
+                            },
                         },
-                    },
-                    {
-                        text: 'Annuler',
-                        role: 'cancel',
-                        data: {
-                            action: 'cancel',
-                        },
-                    },
-                ],
+                    ],
                 });
 
                 await actionSheet.present();
@@ -80,9 +86,12 @@
                 // empty cache
                 localStorage.removeItem('UserCache');
                 localStorage.removeItem('TimetableCache');
-                localStorage.removeItem('newsCache');
-                localStorage.removeItem('gradeCache');
+                localStorage.removeItem('NewsCache');
+                localStorage.removeItem('GradeCache');
                 localStorage.removeItem('HomeworkCache');
+                localStorage.removeItem('AbsencesCache');
+                localStorage.removeItem('PunishmentsCache');
+                localStorage.removeItem('MenuCache');
 
                 // show toast
                 setTimeout(() => {
@@ -220,6 +229,15 @@
                     'light',
                     trash
                 );
+            },
+            openURL(url) {
+                // open url in new tab
+                window.open(url, '_blank');
+            },
+            getContributorsList(){
+                getContributors(5).then((contributors) => {
+                    this.contributors = contributors;
+                });
             }
         },
         mounted() {
@@ -240,6 +258,7 @@
             // get tweakGrades20 ref
             let tweakGrades20 = this.$refs.tweakGrades20;
             tweakGrades20.$el.checked = localStorage.getItem('tweakGrades20') == 'true';
+            this.getContributorsList();
         }
     });
 </script>
@@ -344,13 +363,21 @@
                 </IonLabel>
             </IonItem>
         </IonList>
-
+        
         <IonList :inset="true" lines="inset">
             <IonListHeader>
                 <IonLabel>
                     <p>A propos de l'app</p>
                 </IonLabel>
             </IonListHeader>
+
+            <IonItem button @click="openURL('https://discord.gg/DMx3TDyz2U')">
+                <span class="material-symbols-outlined mdls" slot="start">support</span>
+                <IonLabel>
+                    <p>Discord</p>
+                    <h2>Rejoindre le serveur Discord</h2>
+                </IonLabel>
+            </IonItem>
 
             <IonItem>
                 <span class="material-symbols-outlined mdls" slot="start">security_update_good</span>
@@ -377,11 +404,31 @@
             </IonItem>
         </IonList>
 
+        <IonList :inset="true" lines="inset">
+            <IonListHeader>
+                <IonLabel>
+                    <p>Top 5 des contributeurs</p>
+                </IonLabel>
+            </IonListHeader>
+
+            <IonItem v-for="contributor in contributors" :key="contributor.id" button @click="openURL(contributor.html_url)">
+            <img :src="contributor.avatar_url" slot="start" class="avatar" />
+            <IonLabel>
+                <p>{{ contributor.login }}</p>
+                <h2>{{ contributor.contributions }} contributions</h2>
+            </IonLabel>
+            </IonItem>
+        </IonList>
+
         <br /> <br /> 
       </ion-content>
     </ion-page>
 </template>
   
 <style scoped>
-    
+    .avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+    }
 </style>

@@ -6,15 +6,15 @@ import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
 // main function
-async function getNews() {
+async function getNews(forceReload) {
     // as only pronote is supported for now, we can just return the pronote timetable
     
     // return pronote timetable
-    return getPronoteNews();
+    return getPronoteNews(forceReload);
 }
 
 // pronote : get timetable
-function getPronoteNews() {
+function getPronoteNews(forceReload) {
     // gather vars
     const API = app.config.globalProperties.$api;
 
@@ -25,9 +25,9 @@ function getPronoteNews() {
     let URL = `${API}/news?token=${token}`;
 
     // check if timetable is cached
-    let newsCache = localStorage.getItem('newsCache');
+    let newsCache = localStorage.getItem('NewsCache');
 
-    if(newsCache != null) {
+    if(newsCache != null && !forceReload) {
         // timetable is cached, check if it's up to date
         newsCache = JSON.parse(newsCache);
 
@@ -57,7 +57,7 @@ function getPronoteNews() {
                 news: response.data
             }
 
-            localStorage.setItem('newsCache', JSON.stringify(newsCache));
+            localStorage.setItem('NewsCache', JSON.stringify(newsCache));
 
             // construct timetable and return it as a promise
             return new Promise((resolve, reject) => {
