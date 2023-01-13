@@ -49,19 +49,27 @@
 			}
 		},
 		mounted() {
-			GetAbsences().then((res) => {
-				this.absences = res;
-				this.absError = false;
-			})
-			.catch((err) => {
-				console.log(err);
-				this.absError = true;
-			});
+			try {
+				GetAbsences().then((res) => {
+					this.absences = res;
+					this.absError = false;
+				})
+				.catch((err) => {
+					console.log(err);
+					this.absError = true;
+				});
 
-			GetPunishments().then((res) => {
-				this.punishments = res;
-				console.log(res);
-			})
+				GetPunishments().then((res) => {
+					this.punishments = res;
+					console.log(res);
+				})
+			}
+			catch (err) {
+				console.log(err);
+				this.punishmentsError = true;
+				this.absError = true;
+				this.punishments = [];
+			}
 		}
 	});
 </script>
@@ -102,7 +110,7 @@
 					</ion-label>
 				</ion-item>
 
-				<ion-item v-if="absences.length == 0">
+				<ion-item v-if="absences.length == 0 && !absError">
 					<ion-label>
 						<p>Aucune absence.</p>
 					</ion-label>
@@ -140,7 +148,7 @@
 					</ion-label>
 				</ion-item>
 
-				<ion-item v-if="punishments.length == 0">
+				<ion-item v-if="punishments.length == 0 && !punishmentsError">
 					<ion-label>
 						<p>Aucune punition.</p>
 					</ion-label>
