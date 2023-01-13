@@ -74,7 +74,7 @@ async function getPronoteUser() {
                             let avatarURL = `${base64}`;
 
                             // save in cache
-                            localStorage.setItem('vatarCache', avatarURL);
+                            localStorage.setItem('avatarCache', avatarURL);
                         }
                     });
 

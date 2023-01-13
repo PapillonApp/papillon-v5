@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonChip, IonItemDivider } from '@ionic/vue';
+    import { IonLabel, IonChip, IonItemDivider } from '@ionic/vue';
 
     export default defineComponent({
         name: 'CoursElement',
@@ -74,11 +74,21 @@
                 type: Boolean,
                 required: false,
                 default: false
+            },
+            distance: {
+                type: Boolean,
+                required: false,
+                default: false
+            },
+            lengthCours: {
+                type: Number,
+                required: false,
+                default: 0
             }
         },
         data() {
             return { 
-                classes: "ion-activatable ripple-parent rounded-rectangle cours ",
+                classes: "mainElemCours ion-activatable ripple-parent rounded-rectangle ",
             }
         },
         setup() {
@@ -90,6 +100,16 @@
             }
         },
         mounted() {
+            if(this.distance) {
+                this.classes += "distance "
+            }
+
+            console.log(this.lengthCours)
+
+            if(this.lengthCours > 1.2) {
+                this.classes += "long "
+            }
+
             return false
         }
     });
@@ -97,27 +117,32 @@
 
 <template>
     <div :class="classes + isCancelled" :style="`--backgroundColor: ${color};`" v-if="!sameTime" @click="openCours()">
-        <div class="bg"></div>
-        
-        <div class="CoursColor" slot="start"></div>
+        <div class="CoursTime">
+            <p class="start">{{ start }}</p>
+            <p class="end">{{ end }}</p>
+        </div>
+        <div class="cours">
+            <div class="bg"></div>
+            
+            <div class="CoursColor" slot="start"></div>
 
-        <ion-label>
-            <small class="CoursStart"> {{ start }} </small>
+            <ion-label>
+                <div class="CoursData">
+                    <h3 class="CoursName">{{subject}}</h3>
 
-            <div class="CoursData">
-                <h3 class="CoursName">{{subject}}</h3>
+                    <div class="CoursInfoContainer">
+                        <div class="CoursInfo room" v-if="(rooms !== null)">
+                            <span class="material-symbols-outlined smol" slot="start">location_on</span>
 
-                <div class="CoursInfoContainer">
-                    <p class="CoursInfo">
-                        <span class="material-symbols-outlined smol" slot="start">face</span>
+                            <p>{{rooms}}</p>
+                        </div>
+                        <div class="separator" v-if="(rooms !== null)"></div>
+                        <div class="CoursInfo">
+                            <span class="material-symbols-outlined smol" slot="start">face</span>
 
-                        {{teachers}}
-                    </p>
-                    <p class="CoursInfo" v-if="(rooms !== null)">
-                        <span class="material-symbols-outlined smol" slot="start">meeting_room</span>
-
-                        {{rooms}}
-                    </p>
+                            <p>{{teachers}}</p>
+                        </div>
+                    </div>
 
                     <p class="CoursInfo Status" v-if="status">
                         <span v-if="!isCancelled" class="material-symbols-outlined smol" slot="start">info</span>
@@ -126,23 +151,49 @@
                         {{status}}
                     </p>
                 </div>
-            </div>
-        </ion-label>
+            </ion-label>
+        </div>
     </div>
+
+    <div class="dist" v-if="distance"></div>
 </template>
 
 <style scoped>
+    .mainElemCours {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        gap: 20px;
+
+        margin: 8px 14px;
+        margin-bottom: 10px;
+    }
+
+    .mainElemCours.long .cours .CoursData {
+        padding: 15px 0px;
+    }
+
+    .dist {
+        width: 90vw;
+        height: 3px;
+
+        margin: 15px 5vw;
+
+        background: var(--ion-color-step-50);
+        border-radius: 9px;
+    }
+
     .cours {
+        width: 100%;
+
         display: flex;
         align-items: stretch;
 
         background: var(--ion-color-step-50);
         border-radius: 9px;
 
-        margin: 8px 14px;
         padding: 0px 0px;
-
-        margin-bottom: 10px;
 
         overflow: hidden;
         isolation: isolate;
@@ -192,21 +243,54 @@
         font-size: 1.2em;
         font-weight: 600 !important;
         margin-top: 1px;
-
-        width: calc(100vw - 100px);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
+    @media screen and (prefers-color-scheme: light) {
+        .cours {
+            background: none;
+        }
+
+        .cours .bg {
+            background: var(--backgroundColor);
+            opacity: 0.15;
+        }
+
+        .CoursName {
+            color: var(--backgroundColor);
+            filter: brightness(0.7);
+        }
+    }
+
     .CoursColor {
-        width: 4px;  
+        width: 4px;
         margin-right: 15px !important;
         background: var(--backgroundColor);
     }
 
     .CoursInfoContainer {
         margin-top: 2px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+
+        width: calc(100vw - 135px);
+    }
+
+    .CoursInfoContainer .separator {
+        width: 1px;
+        height: 100%;
+        background: var(--ion-color-step-200);
+    }
+
+    .CoursInfoContainer .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 1,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 14 !important;
     }
 
     .CoursInfo {
@@ -217,10 +301,23 @@
         font-weight: 400;
 
         opacity: 0.7;
+
+        width: fit-content;
+        max-width: 55%;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-bottom: 3px;
     }
 
     .CoursInfo span {
         margin-right: 5px;
+    }
+
+    .CoursInfo.room {
+        opacity: 100%;
+        font-weight: 600;
     }
 
     .Status {
@@ -239,5 +336,37 @@
 
     .true .Status {
         color: var(--ion-color-danger);
+    }
+
+    .CoursTime {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        height: 100%;
+
+        padding: 0px 0px;
+        padding-left: 3px;
+    }
+
+    .CoursTime * {
+        margin: 0;
+        padding: 0;
+    }
+
+    .CoursTime .start {
+        margin-bottom: 3px;
+
+        font-size: 1.2em;
+        font-weight: 600;
+
+        font-family: 'Papillon';
+    }
+
+    .CoursTime .end {
+        opacity: 0.7;
+        font-size: 0.9em;
+        font-weight: 400;
     }
 </style>

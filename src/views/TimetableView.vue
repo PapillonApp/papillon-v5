@@ -76,6 +76,7 @@
                 let lessonEnd = new Date(lesson.time.end);
 
                 for(let j = 0; j < timetable.length; j++) {
+                    // check if lesson is at the same time as lesson2
                     let lesson2 = timetable[j];
                     let lesson2Start = new Date(lesson2.time.start);
                     let lesson2End = new Date(lesson2.time.end);
@@ -88,8 +89,26 @@
                             timetable[i].course.sameTime = true;
                         }
                     }
+
+                    // check if lesson2 starts at least 1 hour after lesson ends
+                    if (lessonEnd < lesson2Start && lessonEnd.getHours() + 1 == lesson2Start.getHours()) {
+                        
+                        timetable[i].course.distance = true;
+                    }
                 }
 
+            }
+
+            // for each lesson, add course.length property
+            for(let i = 0; i < timetable.length; i++) {
+                let lesson = timetable[i];
+                let lessonStart = new Date(lesson.time.start);
+                let lessonEnd = new Date(lesson.time.end);
+
+                let length = lessonEnd - lessonStart;
+                length = length / 1000 / 60 / 60;
+
+                timetable[i].course.lengthCours = length;
             }
             
             return timetable;
@@ -355,6 +374,8 @@
                         :isExempted="cours.status.isExempted"
                         :isOuting="cours.status.isOuting"
                         :isTest="cours.status.isTest"
+                        :distance="cours.course.distance"
+                        :lengthCours="cours.course.lengthCours"
                         @open="openCoursModal(cours)"
                     />
 
@@ -397,6 +418,8 @@
                         :isExempted="cours.status.isExempted"
                         :isOuting="cours.status.isOuting"
                         :isTest="cours.status.isTest"
+                        :distance="cours.course.distance"
+                        :lengthCours="cours.course.lengthCours"
                         @open="openCoursModal(cours)"
                     />
 
@@ -439,6 +462,8 @@
                         :isExempted="cours.status.isExempted"
                         :isOuting="cours.status.isOuting"
                         :isTest="cours.status.isTest"
+                        :distance="cours.course.distance"
+                        :lengthCours="cours.course.lengthCours"
                         @open="openCoursModal(cours)"
                     />
 
