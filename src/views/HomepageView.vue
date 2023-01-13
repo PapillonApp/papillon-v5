@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonCheckbox, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip } from '@ionic/vue';
 
     import { informationCircle } from 'ionicons/icons';
 
@@ -33,7 +33,6 @@
             IonButton,
             IonItem,
             IonLabel,
-            IonCheckbox,
             IonSpinner,
             IonRefresher,
             IonChip
@@ -255,7 +254,9 @@
                 </ion-list-header>
 
                 <ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none">
-                    <IonChip slot="start">{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</IonChip>
+                    <div slot="start">
+                        <IonChip>{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</IonChip>
+                    </div>
                     <ion-label>
                         <h2>{{ cours.data.subject }}</h2>
                         <h3>{{ nextCoursTime }}</h3>
@@ -294,13 +295,18 @@
                 </ion-list-header>
 
                 <ion-item v-for="homework in homeworks" :key="homework.id">
-                    <div slot="start">
-                        <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
-                    </div>
                     <ion-label :style="`--courseColor: ${homework.data.color};`">
                         <p><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
                         <h2>{{ homework.homework.content }}</h2>
                     </ion-label>
+                    <ion-chip slot="end" v-if="!homework.data.done" color="danger">
+						<span class="material-symbols-outlined mdls">close</span>
+						Non fait
+					</ion-chip>
+					<ion-chip slot="end" v-else color="success">
+						<span class="material-symbols-outlined mdls">check</span>
+						Fait
+					</ion-chip>
                 </ion-item>
 
                 <ion-item v-if="homeworks.error" lines="none">
