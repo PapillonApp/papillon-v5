@@ -2,6 +2,8 @@
     import { defineComponent } from 'vue';
     import { IonLabel, IonChip, IonItemDivider } from '@ionic/vue';
 
+    import subjectColor from '@/functions/utils/subjectColor.js';
+
     export default defineComponent({
         name: 'CoursElement',
         components: {
@@ -89,6 +91,7 @@
         data() {
             return { 
                 classes: "mainElemCours ion-activatable ripple-parent rounded-rectangle ",
+                newColor: ""
             }
         },
         setup() {
@@ -104,11 +107,11 @@
                 this.classes += "distance "
             }
 
-            console.log(this.lengthCours)
-
             if(this.lengthCours > 1.2) {
                 this.classes += "long "
             }
+
+            this.newColor = subjectColor.lightenColor(this.color, -20)
 
             return false
         }

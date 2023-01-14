@@ -54,9 +54,6 @@ function setSubjectColor(subjectName, color, force=false) {
 		color = '#' + color;
 	}
 
-	// make color a random element from baseColors (avoid duplicates)
-	color = getRandomColor()
-
 	if (subjectColors[subjectName] && !force) {
 		return subjectColors[subjectName];
 	}
@@ -83,11 +80,11 @@ function getSubjectColor(subjectName, color) {
 		subjectName = subjectName.split(' ')[0];
 	} 
 
-	if (subjectColors[subjectName]) {
+	if (subjectColors[subjectName]) {	
 		return subjectColors[subjectName];
 	}
-
-	return setSubjectColor(subjectName, color);
+	
+	return setSubjectColor(subjectName, getRandomColor());
 }
 
 export default { setSubjectColor, getSubjectColor, getRandomColor, lightenColor, darkenHexColor };

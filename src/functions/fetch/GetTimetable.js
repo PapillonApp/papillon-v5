@@ -101,7 +101,7 @@ function constructPronoteTimetable(timetable) {
         let newCourse = {
             course: {
                 id: course.id,
-                color:  subjectColor.getSubjectColor(course.subject.name, course.background_color),
+                color: course.background_color,
                 num: course.num,
             },
             data: {
