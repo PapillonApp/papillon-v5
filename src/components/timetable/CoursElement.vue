@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonLabel, IonChip, IonItemDivider } from '@ionic/vue';
+    import { IonLabel, IonChip, IonItemDivider, IonRippleEffect } from '@ionic/vue';
 
     import subjectColor from '@/functions/utils/subjectColor.js';
 
@@ -8,6 +8,7 @@
         name: 'CoursElement',
         components: {
             IonLabel,
+            IonRippleEffect
         },
         props: {
             subject: {
@@ -125,6 +126,7 @@
             <p class="end">{{ end }}</p>
         </div>
         <div class="cours">
+            <ion-ripple-effect></ion-ripple-effect>
             <div class="bg"></div>
             
             <div class="CoursColor" slot="start"></div>
@@ -158,7 +160,7 @@
         </div>
     </div>
 
-    <div class="dist" v-if="distance"></div>
+    <div class="dist" v-if="distance && !sameTime"></div>
 </template>
 
 <style scoped>
@@ -185,6 +187,12 @@
 
         background: var(--ion-color-step-50);
         border-radius: 9px;
+    }
+
+    .md .dist {
+        border-radius: 0;
+        height: 2px;
+        background: var(--ion-color-step-100);
     }
 
     .cours {

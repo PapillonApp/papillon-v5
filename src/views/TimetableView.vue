@@ -315,7 +315,7 @@
                     // reset swiper
                     this.shouldResetSwiper = true;
                 }
-            }, 0);
+            }, 100);
         });
     }
   });
