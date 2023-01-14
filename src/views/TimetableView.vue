@@ -1,10 +1,11 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonFabButton } from '@ionic/vue';
 
   const displayToast = require('@/functions/utils/displayToast.js');
+  import subjectColor from '@/functions/utils/subjectColor.js'
   
-  import { calendarOutline, calendarSharp, todayOutline, todaySharp } from 'ionicons/icons';
+  import { calendarOutline, calendarSharp, todayOutline, todaySharp, add } from 'ionicons/icons';
 
   import { Swiper, SwiperSlide } from 'swiper/vue';
   import 'swiper/css';
@@ -34,7 +35,8 @@
         IonRefresherContent,
         IonItem,
         IonLabel,
-        IonSpinner
+        IonSpinner,
+        IonFab,
     },
     setup() {
         return { 
@@ -68,7 +70,7 @@
         openRnPicker() {
             this.$refs.rnPickerModal.$el.present();
         },
-        editTimetable(timetable) {
+        editTimetable(timetable, date) {
             // add sameTime property to courses that are at the same time
             for(let i = 0; i < timetable.length; i++) {
                 let lesson = timetable[i];
@@ -99,6 +101,33 @@
 
             }
 
+            // add custom courses
+            let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
+            customCourses.forEach((customCourse) => {
+                // if course is in the same day
+                let customDay = new Date(customCourse.day);
+                let currentDay = new Date(date);
+
+                let st = new Date(customCourse.course.time.start);
+                let en = new Date(customCourse.course.time.end);
+
+                // make st and en the same day as currentDay
+                st.setDate(currentDay.getDate());
+                st.setMonth(currentDay.getMonth());
+                st.setFullYear(currentDay.getFullYear());
+
+                en.setDate(currentDay.getDate());
+                en.setMonth(currentDay.getMonth());
+                en.setFullYear(currentDay.getFullYear());
+
+                if (customDay.getDate() == currentDay.getDate() && customDay.getMonth() == currentDay.getMonth() && customDay.getFullYear() == currentDay.getFullYear()) {
+                    customCourse.course.time.start = st;
+                    customCourse.course.time.end = en;
+                    customCourse.course.course.color = subjectColor.getSubjectColor(customCourse.course.data.subject, subjectColor.getRandomColor());
+                    timetable.push(customCourse.course);
+                }
+            });
+
             // for each lesson, add course.length property
             for(let i = 0; i < timetable.length; i++) {
                 let lesson = timetable[i];
@@ -110,6 +139,14 @@
 
                 timetable[i].course.lengthCours = length;
             }
+
+            // order timetable by time
+            timetable.sort((a, b) => {
+                let aStart = new Date(a.time.start);
+                let bStart = new Date(b.time.start);
+
+                return aStart - bStart;
+            });
             
             return timetable;
         },
@@ -136,7 +173,7 @@
                     }
                 }
                 else {
-                    this.timetable = this.editTimetable(timetable);
+                    this.timetable = this.editTimetable(timetable, this.$rn);
                     this.loadedrnButtonString = this.createDateString(this.$rn);
                     this.timetable.loading = false;
                 }
@@ -154,7 +191,7 @@
                     }
                 }
                 else {
-                    this.yesterday = this.editTimetable(timetable);
+                    this.yesterday = this.editTimetable(timetable, yesterdayRN);
                     this.yesterday.loading = false;
                 }
             });
@@ -168,7 +205,7 @@
                     this.tomorrow.error = timetable.error;
                 }
                 else {
-                    this.tomorrow = this.editTimetable(timetable);
+                    this.tomorrow = this.editTimetable(timetable, tomorrowRN);
                     this.tomorrow.loading = false;
 
                     if(timetable.error == "ERR_BAD_REQUEST") {
@@ -229,12 +266,89 @@
                 length: len,
                 status: status,
                 hasStatus: hasStatus,
-                isCancelled: cours.status.isCancelled
+                isCancelled: cours.status.isCancelled,
+                custom: cours.status.isCustom,
+                id: cours.course.id
             }
 
             // open cours modal
             this.$refs.coursModal.$el.present(cours);
-        }
+        },
+        addNewCours() {
+            let st = new Date();
+            let en = new Date();
+
+            // this.$refs.newCoursStart.value returns HH:mm
+            st.setHours(this.$refs.newCoursStart.value.split(':')[0]);
+            st.setMinutes(this.$refs.newCoursStart.value.split(':')[1]);
+
+            // this.$refs.newCoursEnd.value returns HH:mm
+            en.setHours(this.$refs.newCoursEnd.value.split(':')[0]);
+            en.setMinutes(this.$refs.newCoursEnd.value.split(':')[1]);
+
+            // create new cours
+            let newCourse = {
+                course: {
+                    id: Math.floor(Math.random() * 10000000),
+                    color: "#0066ff",
+                    num: Math.floor(Math.random() * 10000000),
+                },
+                data: {
+                    subject: this.$refs.newCoursName.value,
+                    teachers: [this.$refs.newCoursTeacher.value],
+                    rooms: [this.$refs.newCoursRoom.value],
+                    groupNames: [],
+                    memo: null,
+                    hasMemo: false,
+                    linkVirtual: null,
+                },
+                time: {
+                    start: st,
+                    end: en
+                },
+                status: {
+                    isCancelled: false,
+                    isExempted: false,
+                    isDetention: false,
+                    isOuting: false,
+                    isTest: false,
+                    isCustom: true,
+                    status: null
+                }
+            };
+
+            let customCourse = {
+                "day": this.$rn,
+                "course": newCourse
+            };
+
+            // save to local storage
+            let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
+            customCourses.push(customCourse);
+            localStorage.setItem('customCourses', JSON.stringify(customCourses));
+
+            // close newCoursModal
+            this.$refs.newCoursModal.$el.dismiss();
+
+            // refresh timetable
+            this.getTimetables(true);
+        },
+        deleteCustomCourse(id) {
+            // get custom courses
+            let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
+
+            // remove custom course
+            customCourses = customCourses.filter(course => course.course.course.id != id);
+
+            // save to local storage
+            localStorage.setItem('customCourses', JSON.stringify(customCourses));
+
+            // close cours modal
+            this.$refs.coursModal.$el.dismiss();
+
+            // refresh timetable
+            this.getTimetables(true);
+        },
     },
     data() {
         return {
@@ -254,7 +368,8 @@
                 end: '',
                 length: '',
                 status: '',
-            }
+            },
+            newCoursModalOpen: false,
         }
     },
     mounted() {
@@ -346,7 +461,13 @@
       <ion-content :fullscreen="true">
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
-          </ion-refresher>
+        </ion-refresher>
+
+        <IonFab slot="fixed" vertical="bottom" horizontal="end" class="newCoursBtnFab">
+            <ion-button @click="newCoursModalOpen = true" size="large" shape="round" class="newCoursBtn" mode="md">
+                <span class="material-symbols-outlined mdls" slot="icon-only">add</span>
+            </ion-button>
+        </IonFab>
 
         <IonHeader collapse="condense">
             <IonToolbar>
@@ -403,6 +524,59 @@
                 </IonList>
             </swiper-slide>
         </swiper>
+
+        <IonModal ref="newCoursModal" class="newCoursModal" :is-open="newCoursModalOpen">
+            <IonHeader>
+                <IonToolbar>
+                    <ion-buttons slot="start">
+                        <ion-button @click="newCoursModalOpen = false">Annuler</ion-button>
+                    </ion-buttons>
+                    <ion-title>Ajouter un cours</ion-title>
+                    <ion-buttons slot="end">
+                        <ion-button @click="addNewCours()" color="primary">Ajouter</ion-button>
+                    </ion-buttons>
+                </IonToolbar>
+            </IonHeader>
+            <ion-content class="ion-padding">
+
+                <ion-list mode="md">
+
+                    <ion-item class="input">
+                        <span slot="start" class="material-symbols-outlined mdls">drive_file_rename_outline</span>
+                        <ion-label position="floating">Nom du cours</ion-label>
+                        <ion-input ref="newCoursName" placeholder="Réunion"></ion-input>
+                    </ion-item>
+
+                    <ion-item class="input">
+                        <span slot="start" class="material-symbols-outlined mdls">face</span>
+                        <ion-label position="floating">Professeur</ion-label>
+                        <ion-input ref="newCoursTeacher" placeholder="CPE"></ion-input>
+                    </ion-item>
+
+                    <ion-item class="input">
+                        <span slot="start" class="material-symbols-outlined mdls">location_on</span>
+                        <ion-label position="floating">Lieu</ion-label>
+                        <ion-input ref="newCoursRoom" placeholder="A210"></ion-input>
+                    </ion-item>
+
+                    <ion-item class="input">
+                        <span slot="start" class="material-symbols-outlined mdls">schedule</span>
+                        <ion-label position="floating">Heure de début</ion-label>
+                        <ion-input ref="newCoursStart" type="time" placeholder="12:30"></ion-input>
+                    </ion-item>
+
+                    <ion-item class="input">
+                        <span slot="start" class="material-symbols-outlined mdls">hourglass_empty</span>
+                        <ion-label position="floating">Heure de fin</ion-label>
+                        <ion-input ref="newCoursEnd" type="time" placeholder="13:30"></ion-input>
+                    </ion-item>
+
+                </ion-list>
+
+                <ion-button mode="md" @click="addNewCours()" expand="block">Ajouter</ion-button>
+
+            </ion-content>
+        </IonModal>
 
 
         <IonModal ref="rnPickerModal" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
@@ -506,6 +680,13 @@
                             <h2>{{selectedCourse.status}}</h2>
                         </ion-label>
                     </ion-item>
+
+                    <ion-item button v-if="selectedCourse.custom" @click="deleteCustomCourse(selectedCourse.id)">
+                        <span class="material-symbols-outlined mdls" slot="start" color="danger">delete</span>
+                        <ion-label color="danger">
+                            <h2>Supprimer le cours personnalisé</h2>
+                        </ion-label>
+                    </ion-item>
                 </ion-list>
             </ion-content>
         </IonModal>
@@ -528,5 +709,19 @@
     
     .coursModal h2 {
         font-size: 16px !important;
+    }
+
+    .ios .newCoursBtnFab {
+        bottom: 32px;
+        right: 18px;
+    }
+
+    .newCoursBtn {
+        width: 56px;
+        height: 56px;
+    }
+
+    .input span {
+        margin-top: 15px;
     }
 </style>

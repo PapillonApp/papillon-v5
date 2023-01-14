@@ -460,7 +460,7 @@
 
     .grade {
         width: 100%;
-        border-radius: 5px;
+        border-radius: 8px;
         display: flex;
         flex-direction: column;
         min-width: fit-content;
@@ -571,5 +571,12 @@
     .ios #segment {
         width: calc(100vw - 24px);
         margin: 0 12px;
+    }
+
+    .md .grade {
+        border: 1px solid var(--ion-color-step-150);
+        --background: none;
+        box-shadow: none;
+        border-radius: 8px;
     }
 </style>

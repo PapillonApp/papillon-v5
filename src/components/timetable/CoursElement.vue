@@ -368,6 +368,8 @@
 
         padding: 0px 0px;
         padding-left: 3px;
+
+        width: 60px;
     }
 
     .CoursTime * {
