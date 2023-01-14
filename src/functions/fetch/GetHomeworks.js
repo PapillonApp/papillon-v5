@@ -116,7 +116,7 @@ function constructPronoteHomework(hw) {
             data: {
                 id: homework.id,
                 date: homework.date,
-                color: homework.background_color,
+                color: subjectColor.getSubjectColor(homework.subject.name, subjectColor.getRandomColor()),
                 done: homework.done,
             },
             homework: {

@@ -40,12 +40,12 @@ function setNavigationBarStyle() {
 }
 
 // Constantly check for dark mode
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+setTimeout(() => {
   setStatusBarStyle();
   if (Capacitor.getPlatform() === 'android') {
     setNavigationBarStyle();
   }
-});
+}, 1000);
 
 // Set status bar and navigation bar style
 setStatusBarStyle();
