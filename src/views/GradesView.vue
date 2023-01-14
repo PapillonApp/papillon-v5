@@ -202,7 +202,7 @@
                 });
             });
 
-            document.addEventListener('gradeSettingsUpdated', (ev) => {
+            document.addEventListener('settingsUpdated', (ev) => {
                 GetGrades().then((data) => {
                     this.out_of_20 = localStorage.getItem('tweakGrades20') == "true" ? true : false;
                     this.grades = this.editMarks(data.marks);

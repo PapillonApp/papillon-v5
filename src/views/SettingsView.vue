@@ -175,6 +175,20 @@
                     checkmark
                 );
             },
+            changeTick(option) {
+                let el = this.$refs[option];
+                let elChecked = el.$el.checked;
+
+                localStorage.setItem(option, elChecked);
+
+                document.dispatchEvent(new CustomEvent('settingsUpdated'));
+                displayToast.presentToastFull(
+                    'Paramètres enregistrés',
+                    'Les paramètres ont été enregistrées avec succès.',
+                    'light',
+                    checkmark
+                );
+            },
             async tweakChangeAvatar() {
                 try {
                     const result = await FilePicker.pickImages({
@@ -261,6 +275,10 @@
             let tweakGrades20 = this.$refs.tweakGrades20;
             tweakGrades20.$el.checked = localStorage.getItem('tweakGrades20') == 'true';
             this.getContributorsList();
+
+            // get viescolaireEnabled ref
+            let viescolaireEnabled = this.$refs.viescolaireEnabled;
+            viescolaireEnabled.$el.checked = localStorage.getItem('viescolaireEnabled') == 'true';
         }
     });
 </script>
@@ -347,7 +365,16 @@
                     <h2>Remettre les notes sur 20</h2>
                     <p>Uniformise le barème de toutes les notes</p>
                 </IonLabel>
-                <IonToggle slot="end" ref="tweakGrades20" @ionChange="tweakGrades20Change()"></IonToggle>
+                <IonToggle slot="end" ref="tweakGrades20" @ionChange="changeTick('tweakGrades20')"></IonToggle>
+            </IonItem>
+
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">gavel</span>
+                <IonLabel>
+                    <h2>Activer l'onglet vie scolaire</h2>
+                    <p>(Expérimental) Active l'onglet de vie scolaire</p>
+                </IonLabel>
+                <IonToggle slot="end" ref="viescolaireEnabled" @ionChange="changeTick('viescolaireEnabled')"></IonToggle>
             </IonItem>
 
             <IonItem button @click="tweakChangeAvatar()">
