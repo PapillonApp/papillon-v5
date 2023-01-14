@@ -53,6 +53,7 @@ ion-title, h2, h3 {
 .ios ion-title.md {
     font-size: 18px;
     font-weight: 600 !important;
+    margin-top: 2px;
 }
 
 /* (MD) Searchbar */
@@ -90,6 +91,12 @@ input.sc-ion-searchbar-md {
 
 .header-md .buttons-last-slot {
     padding-right: 5px;
+}
+
+.md ion-tab-bar ion-label {
+    font-size: 13.5px;
+    margin-top: 3px;
+    margin-bottom: 6px;
 }
 
 /* (MD) Calendar button */

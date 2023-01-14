@@ -327,13 +327,13 @@
         <IonToolbar>
 
           <ion-buttons slot="start">
-            <ion-menu-button color="dark" mode="md"></ion-menu-button>
+            <ion-menu-button color="dark"></ion-menu-button>
           </ion-buttons>
 
-          <ion-title mode="md">Ma journée</ion-title>
+          <ion-title>Ma journée</ion-title>
 
           <ion-buttons slot="end">
-            <ion-button mode="md" id="rnPickerModalButton" color="dark" @click="openRnPicker()">
+            <ion-button id="rnPickerModalButton" color="dark" @click="openRnPicker()">
               <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
               <p>{{ rnButtonString }}</p>
@@ -347,12 +347,6 @@
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
           </ion-refresher>
-
-        <IonHeader collapse="condense">
-            <IonToolbar>
-                <ion-title size="large">Ma journée</ion-title>
-            </IonToolbar>
-        </IonHeader>
 
         <div id="noTouchZone"></div>
       

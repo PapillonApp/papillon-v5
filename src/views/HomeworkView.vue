@@ -324,7 +324,7 @@ export default defineComponent({
                     <ion-menu-button color="dark" mode="md"></ion-menu-button>
                 </ion-buttons>
 
-                <ion-title mode="md">Travail à faire</ion-title>
+                <ion-title>Travail à faire</ion-title>
 
                 <ion-buttons slot="end">
                     <ion-button mode="md" color="dark" id="rnPickerModalButton" @click="openRnModal">
@@ -341,12 +341,6 @@ export default defineComponent({
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
-
-            <IonHeader collapse="condense">
-                <IonToolbar>
-                    <ion-title size="large">Travail à faire</ion-title>
-                </IonToolbar>
-            </IonHeader>
 
             <div id="noTouchZone"></div>
 

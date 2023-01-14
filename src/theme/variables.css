@@ -131,9 +131,9 @@ http://ionicframework.com/docs/theming/ */
 
     --ion-item-background: #141316;
 
-    --ion-toolbar-background: #141316;
+    --ion-inset-background: hsl(260, 7%, 9%);
 
-    --ion-tab-bar-background: #141316;
+    --ion-inset-background: hsl(260, 7%, 9%);
 
     --ion-card-background: hsl(260, 7%, 9%);
 

@@ -226,23 +226,18 @@
             <ion-menu-button color="dark" mode="md"></ion-menu-button>
           </ion-buttons>
 
-          <ion-title mode="md">Notes</ion-title>
+          <ion-title>Notes</ion-title>
         </IonToolbar>
+
+        <IonToolbar>
+                <IonSearchbar ref="searchBar" placeholder="Chercher une matière..." @ionChange="searchGrades()"></IonSearchbar>
+            </IonToolbar>
       </IonHeader>
       
       <ion-content :fullscreen="true">
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
-
-        <IonHeader collapse="condense">
-            <IonToolbar>
-                <ion-title size="large">Notes</ion-title>
-            </IonToolbar>
-            <IonToolbar>
-                <IonSearchbar ref="searchBar" placeholder="Chercher une matière..." @ionChange="searchGrades()"></IonSearchbar>
-            </IonToolbar>
-        </IonHeader>
 
         <div id="noTouchZone"></div>
 
