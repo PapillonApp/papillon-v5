@@ -95,7 +95,12 @@
                 icon: "settings",
             },
         ];
-        const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+        
+        // disable some tabs
+        if(localStorage.getItem('viescolaireEnabled') !== 'true') {
+            // remove school life tab
+            appPages.splice(3, 1);
+        }
         
         const path = window.location.pathname.split('folder/')[1];
         if (path !== undefined) {
@@ -106,8 +111,8 @@
         
         return { 
             selectedIndex,
-            appPages, 
-            labels,
+            appPages,
+            labels : [],
             isSelected: (url: string) => url === route.path ? 'selected' : ''
         }
     },
@@ -184,6 +189,23 @@
         if(!navigator.onLine) {
             this.presentToast('Vous n\'êtes pas connecté à Internet.', 'Vous n\'aurez accès qu\'aux informations déjà téléchargées.', 'danger', globeOutline)
         }
+
+        // on settingsUpdated event, setup the app
+        document.addEventListener('settingsUpdated', () => {
+            // if viescolaireEnabled is set to false, remove school life tab
+            if(localStorage.getItem('viescolaireEnabled') !== 'true') {
+                // remove school life tab
+                this.appPages.splice(3, 1);
+            }
+            else {
+                // add school life tab
+                this.appPages.splice(3, 0, {
+                    title: 'Vie scolaire',
+                    url: '/school-life',
+                    icon: "gavel",
+                });
+            }
+        });
     }
   });
 </script>
