@@ -245,6 +245,7 @@
             yesterday: [],
             tomorrow: [],
             shouldResetSwiper: false,
+            days: ['yesterday', 'timetable', 'tomorrow'],
             selectedCourse: {
                 name: '',
                 teacher: '',
@@ -281,7 +282,7 @@
         // detect swiper slide change
         let swiper = this.$refs.swiper.$el.swiper;
 
-        swiper.on('touchEnd', () => {
+        swiper.on('slideChangeTransitionEnd', () => {
             setTimeout(() => {
                 // get new rn
                 // check if swiper is on yesterday
@@ -314,7 +315,7 @@
                     // reset swiper
                     this.shouldResetSwiper = true;
                 }
-            }, 220);
+            }, 0);
         });
     }
   });
@@ -356,10 +357,11 @@
         <div id="noTouchZone"></div>
       
         <!-- faudrait un moyen de retirer cette répétition -->
-        <swiper :initialSlide="1" ref="swiper">
-            <swiper-slide class="swiper-slide">
+        <swiper :initialSlide="1" ref="swiper" :speed="300" :spaceBetween="10" :preventClicks="true" :effect="'fade'">
+            <swiper-slide v-for="(day, i) in days" :key="i">
                 <IonList>
-                    <CoursElement v-for="cours in yesterday" :key="cours.id"
+                    <p>{{ day }}</p>
+                    <CoursElement v-for="cours in $data[`${day}`]" :key="cours.id"
                         :subject="cours.data.subject"
                         :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
                         :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
@@ -379,7 +381,7 @@
                         @open="openCoursModal(cours)"
                     />
 
-                    <div v-if="!yesterday.error"><div class="NoCours" v-if="yesterday.length == 0">
+                    <div v-if="!$data[`${day}`].error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
                         <span class="material-symbols-outlined mdls">upcoming</span>
                         <h2>Pas de cours enregistrés pour cette journée</h2>
                         <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
@@ -387,101 +389,13 @@
                         <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div></div>
 
-                    <div v-if="yesterday.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="yesterday.length == 0">
+                    <div v-if="$data[`${day}`].error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
                     </div></div>
 
-                    <div v-if="yesterday.loading" class="Error"><div class="NoCours" v-if="timetable.length == 0">
-                        <IonSpinner></IonSpinner>
-                        <br/>
-                        <h2>Téléchargement des prochains cours...</h2>
-                        <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
-                    </div></div>
-                </IonList>
-            </swiper-slide>
-            <swiper-slide>
-                <IonList>
-                    <CoursElement v-for="cours in timetable" :key="cours.id"
-                        :subject="cours.data.subject"
-                        :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
-                        :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
-                        :memo="cours.data.hasMemo"
-                        :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
-                        :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
-                        :color="cours.course.color"
-                        :sameTime="cours.course.sameTime"
-                        :status="cours.status.status"
-                        :isCancelled="cours.status.isCancelled"
-                        :isDetention="cours.status.isDetention"
-                        :isExempted="cours.status.isExempted"
-                        :isOuting="cours.status.isOuting"
-                        :isTest="cours.status.isTest"
-                        :distance="cours.course.distance"
-                        :lengthCours="cours.course.lengthCours"
-                        @open="openCoursModal(cours)"
-                    />
-
-                    <div v-if="!timetable.error"><div class="NoCours" v-if="timetable.length == 0">
-                        <span class="material-symbols-outlined mdls">upcoming</span>
-                        <h2>Pas de cours enregistrés pour cette journée</h2>
-                        <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-
-                        <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                    </div></div>
-
-                    <div v-if="timetable.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
-                        <span class="material-symbols-outlined mdls">wifi_off</span>
-                        <h2>Pas de connexion à Internet</h2>
-                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
-                    </div></div>
-
-                    <div v-if="timetable.loading" class="Error"><div class="NoCours" v-if="timetable.length == 0">
-                        <IonSpinner></IonSpinner>
-                        <br/>
-                        <h2>Téléchargement des prochains cours...</h2>
-                        <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
-                    </div></div>
-                </IonList>
-            </swiper-slide>
-            <swiper-slide>
-                <IonList>
-                    <CoursElement v-for="cours in tomorrow" :key="cours.id"
-                        :subject="cours.data.subject"
-                        :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
-                        :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
-                        :memo="cours.data.hasMemo"
-                        :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
-                        :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
-                        :color="cours.course.color"
-                        :sameTime="cours.course.sameTime"
-                        :status="cours.status.status"
-                        :isCancelled="cours.status.isCancelled"
-                        :isDetention="cours.status.isDetention"
-                        :isExempted="cours.status.isExempted"
-                        :isOuting="cours.status.isOuting"
-                        :isTest="cours.status.isTest"
-                        :distance="cours.course.distance"
-                        :lengthCours="cours.course.lengthCours"
-                        @open="openCoursModal(cours)"
-                    />
-
-                    <div v-if="!tomorrow.error"><div class="NoCours" v-if="tomorrow.length == 0">
-                        <span class="material-symbols-outlined mdls">upcoming</span>
-                        <h2>Pas de cours enregistrés pour cette journée</h2>
-                        <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-
-                        <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                    </div></div>
-
-                    <div v-if="tomorrow.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="tomorrow.length == 0">
-                        <span class="material-symbols-outlined mdls">wifi_off</span>
-                        <h2>Pas de connexion à Internet</h2>
-                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
-                    </div></div>
-
-                    <div v-if="tomorrow.loading" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                    <div v-if="$data[`${day}`].loading" class="Error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
                         <IonSpinner></IonSpinner>
                         <br/>
                         <h2>Téléchargement des prochains cours...</h2>

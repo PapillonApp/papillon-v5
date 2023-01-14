@@ -264,6 +264,13 @@
         }
     }
 
+    @media screen and (prefers-color-scheme: dark) {
+        .cours .bg {
+            background: var(--backgroundColor);
+            opacity: 0.1;
+        }
+    }
+
     .CoursColor {
         width: 4px;
         margin-right: 15px !important;
@@ -323,18 +330,19 @@
     .Status {
         opacity: 1;
         color: var(--ion-color-warning);
+        max-width: 100% !important;
     }
 
-    .true {
+    .true .cours {
         background: var(--ion-color-danger-dark) !important;
         --backgroundColor: var(--ion-color-danger) !important;
     }
 
-    .true .CoursColor {
+    .true .cours .CoursColor {
         background: var(--ion-color-danger) !important;
     }
 
-    .true .Status {
+    .true .cours .Status {
         color: var(--ion-color-danger);
     }
 
