@@ -360,7 +360,6 @@
         <swiper :initialSlide="1" ref="swiper" :speed="300" :spaceBetween="10" :preventClicks="true" :effect="'fade'">
             <swiper-slide v-for="(day, i) in days" :key="i">
                 <IonList>
-                    <p>{{ day }}</p>
                     <CoursElement v-for="cours in $data[`${day}`]" :key="cours.id"
                         :subject="cours.data.subject"
                         :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
