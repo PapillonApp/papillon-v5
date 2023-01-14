@@ -271,7 +271,7 @@
 
         .CoursName {
             color: var(--backgroundColor);
-            filter: brightness(0.8);
+            filter: brightness(0.6);
         }
     }
 

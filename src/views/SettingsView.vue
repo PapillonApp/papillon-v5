@@ -94,6 +94,7 @@
                 localStorage.removeItem('AbsencesCache');
                 localStorage.removeItem('PunishmentsCache');
                 localStorage.removeItem('MenuCache');
+                localStorage.removeItem('SubjectColors');
 
                 // show toast
                 setTimeout(() => {

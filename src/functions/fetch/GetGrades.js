@@ -164,7 +164,7 @@ function constructPronoteGrades(grades) {
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
-                color: subjectColor.getSubjectColor(mark.subject.name, subjectColor.darkenHexColor(mark.subject.id.substring(2,8).toString())),
+                color: subjectColor.getSubjectColor(mark.subject.name, subjectColor.getRandomColor()),
                 name: mark.subject.name,
                 marks: []
             }

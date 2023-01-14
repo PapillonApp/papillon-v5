@@ -421,7 +421,7 @@
         justify-content: space-between;
         align-items: center;
         padding: 10px 15px;
-        background: var(--backgroundTheme);
+        background: linear-gradient(90deg, #00000055 0%, #00000055 100%), var(--backgroundTheme);
     }
 
     .subject-name * {
@@ -561,7 +561,7 @@
 
     .ios .myGrade {
         border: none;
-        background: var(--backgroundTheme);
+        background: linear-gradient(90deg, #00000055 0%, #00000055 100%), var(--backgroundTheme);
     }
 
     .ios .myGrade * {
