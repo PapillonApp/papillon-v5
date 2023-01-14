@@ -274,17 +274,11 @@
             <ion-menu-button color="dark" mode="md"></ion-menu-button>
           </ion-buttons>
 
-          <ion-title mode="md">Paramètres</ion-title>
+          <ion-title>Paramètres</ion-title>
         </IonToolbar>
       </IonHeader>
       
       <ion-content :fullscreen="true">
-        <IonHeader collapse="condense">
-            <IonToolbar>
-                <ion-title size="large">Paramètres</ion-title>
-            </IonToolbar>
-        </IonHeader>
-
         <IonList :inset="true" lines="inset">
             <IonListHeader>
                 <IonLabel>

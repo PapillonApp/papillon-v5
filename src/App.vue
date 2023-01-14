@@ -87,6 +87,11 @@
                 url: '/news',
                 icon: "newspaper",
             },
+            {
+                title: 'Réglages',
+                url: '/settings',
+                icon: "settings",
+            },
         ];
         const labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
         
@@ -184,21 +189,21 @@
 <template>
   <ion-app>
     <ion-tabs>
-      <!-- https://ionicframework.com/docs/vue/navigation#working-with-tabs -->
-      <ion-router-outlet id="main-content" v-slot="{ Component }" animated="true">
-            <keep-alive>
-                <component :is="Component" />
-            </keep-alive>
-    </ion-router-outlet>
+        <!-- https://ionicframework.com/docs/vue/navigation#working-with-tabs -->
+        <ion-router-outlet id="main-content" v-slot="{ Component }" animated="true">
+                <keep-alive>
+                    <component :is="Component" />
+                </keep-alive>
+            </ion-router-outlet>
 
-      <ion-tab-bar slot="bottom">
+        <ion-tab-bar slot="bottom">
 
-        <ion-tab-button :tab="`${p.url}`" :href="`${p.url}`" v-for="(p, i) in appPages" :key="i">
-            <span class="material-symbols-outlined mdls">{{ p.icon }}</span>
-            <ion-label>{{ p.title }}</ion-label>
-        </ion-tab-button>
+            <ion-tab-button :tab="`${p.url}`" :href="`${p.url}`" v-for="(p, i) in appPages" :key="i">
+                <span class="material-symbols-outlined mdls">{{ p.icon }}</span>
+                <ion-label>{{ p.title }}</ion-label>
+            </ion-tab-button>
 
-      </ion-tab-bar>
+        </ion-tab-bar>
     </ion-tabs>
   </ion-app>
 </template>
