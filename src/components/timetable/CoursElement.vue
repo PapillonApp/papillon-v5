@@ -255,12 +255,12 @@
 
         .cours .bg {
             background: var(--backgroundColor);
-            opacity: 0.15;
+            opacity: 0.10;
         }
 
         .CoursName {
             color: var(--backgroundColor);
-            filter: brightness(0.7);
+            filter: brightness(0.8);
         }
     }
 
