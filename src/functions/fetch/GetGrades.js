@@ -305,6 +305,18 @@ function constructPronoteGrades(grades) {
         }
     }
 
+    // order all subjects by date
+    markArray.forEach(subject => {
+        subject.marks.sort((a, b) => {
+            return new Date(b.info.date) - new Date(a.info.date);
+        });
+    });
+
+    // order markArray by date
+    markArray.sort((a, b) => {
+        return new Date(b.marks[0].date) - new Date(a.marks[0].date);
+    });
+
     let finalArray = {
         marks: markArray,
         averages: avgs
