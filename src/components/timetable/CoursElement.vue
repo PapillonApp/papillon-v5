@@ -257,6 +257,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        width: calc(100vw - 135px);
     }
 
     @media screen and (prefers-color-scheme: light) {
