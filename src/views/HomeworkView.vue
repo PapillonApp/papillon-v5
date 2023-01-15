@@ -317,7 +317,7 @@ export default defineComponent({
 
 <template>
     <ion-page ref="page">
-        <IonHeader class="AppHeader" translucent>
+        <IonHeader class="AppHeader" collapse="fade" translucent>
             <IonToolbar>
 
                 <ion-buttons slot="start">
@@ -341,12 +341,6 @@ export default defineComponent({
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
-
-            <IonHeader collapse="condense">
-                <IonToolbar>
-                    <ion-title size="large">Travail à faire</ion-title>
-                </IonToolbar>
-            </IonHeader>
 
             <div id="noTouchZone"></div>
 

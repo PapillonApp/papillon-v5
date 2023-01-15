@@ -290,7 +290,7 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader" translucent>
+      <IonHeader class="AppHeader" collapse="fade" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -302,11 +302,6 @@
       </IonHeader>
       
       <ion-content :fullscreen="true">
-        <IonHeader collapse="condense">
-            <IonToolbar>
-                <ion-title size="large">Paramètres</ion-title>
-            </IonToolbar>
-        </IonHeader>
 
         <IonList :inset="true" lines="inset">
             <IonListHeader>

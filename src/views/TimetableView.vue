@@ -1,6 +1,6 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonFabButton } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonFabButton, IonInput } from '@ionic/vue';
 
   import displayToast from '@/functions/utils/displayToast.js';
   import subjectColor from '@/functions/utils/subjectColor.js'
@@ -39,6 +39,7 @@
         IonLabel,
         IonSpinner,
         IonFab,
+        IonInput
     },
     setup() {
         return { 
@@ -485,7 +486,7 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader" translucent>
+      <IonHeader class="AppHeader" collapse="fade" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -516,11 +517,7 @@
             </ion-button>
         </IonFab>
 
-        <IonHeader collapse="condense">
-            <IonToolbar>
-                <ion-title size="large">Ma journée</ion-title>
-            </IonToolbar>
-        </IonHeader>
+        
 
         <div id="noTouchZone"></div>
       
