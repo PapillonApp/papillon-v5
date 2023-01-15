@@ -162,11 +162,14 @@
                 });
             },
             searchGrades() {
-                let search = this.$refs.searchBar.$el.value;
+                let search1 = this.$refs.searchBarIos.$el.value;
+                let search2 = this.$refs.searchBarMd.$el.value;
 
-                if (search == "") {
+
+                if (search1 == "" && search2 == "") {
                     this.grades = this.fullGrades;
                 } else {
+                    let search = search1 == "" ? search2 : search1;
                     this.grades = this.fullGrades.filter(subject => {
                         return subject.name.toLowerCase().includes(search.toLowerCase());
                     });
@@ -228,6 +231,9 @@
 
           <ion-title mode="md">Notes</ion-title>
         </IonToolbar>
+        <IonToolbar class="only-md">
+            <IonSearchbar ref="searchBarMd" placeholder="Chercher une matière..." @ionChange="searchGrades()"></IonSearchbar>
+        </IonToolbar>
       </IonHeader>
       
       <ion-content :fullscreen="true">
@@ -240,7 +246,7 @@
                 <ion-title size="large">Notes</ion-title>
             </IonToolbar>
             <IonToolbar>
-                <IonSearchbar ref="searchBar" placeholder="Chercher une matière..." @ionChange="searchGrades()"></IonSearchbar>
+                <IonSearchbar ref="searchBarIos" placeholder="Chercher une matière..." @ionChange="searchGrades()"></IonSearchbar>
             </IonToolbar>
         </IonHeader>
 
@@ -416,6 +422,10 @@
 </template>
   
 <style scoped>
+    .ios .only-md {
+        display: none;
+    }
+
     .subject-name {
         display: flex;
         justify-content: space-between;
