@@ -294,13 +294,22 @@
             let st = new Date();
             let en = new Date();
 
+            let stValue = this.$refs.newCoursStartRef.$el.value;
+            console.log(stValue);
+
             // this.$refs.newCoursStart.value returns HH:mm
-            st.setHours(this.$refs.newCoursStart.value.split(':')[0]);
-            st.setMinutes(this.$refs.newCoursStart.value.split(':')[1]);
+            st.setHours(stValue.split(':')[0]);
+            st.setMinutes(stValue.split(':')[1]);
 
             // this.$refs.newCoursEnd.value returns HH:mm
-            en.setHours(this.$refs.newCoursEnd.value.split(':')[0]);
-            en.setMinutes(this.$refs.newCoursEnd.value.split(':')[1]);
+            en.setHours(this.$refs.newCoursEndRef.$el.value.split(':')[0]);
+            en.setMinutes(this.$refs.newCoursEndRef.$el.value.split(':')[1]);
+
+            // check if cours is valid
+            if(stValue == "" || this.$refs.newCoursEndRef.$el.value == "" || this.$refs.newCoursName.value == "" || this.$refs.newCoursTeacher.value == "" || this.$refs.newCoursRoom.value == "") {
+                displayToast.presentError("Veuillez remplir tous les champs", "danger", "Tous les champs sont obligatoires");
+                return;
+            }
 
             // create new cours
             let newCourse = {
@@ -608,13 +617,13 @@
                         <ion-item class="input">
                             <span slot="start" class="material-symbols-outlined mdls">schedule</span>
                             <ion-label position="floating">Heure de début</ion-label>
-                            <ion-input ref="newCoursStart" type="time" placeholder="12:30"></ion-input>
+                            <ion-input ref="newCoursStartRef" type="time" placeholder="12:30"></ion-input>
                         </ion-item>
 
                         <ion-item class="input">
                             <span slot="start" class="material-symbols-outlined mdls">hourglass_empty</span>
                             <ion-label position="floating">Heure de fin</ion-label>
-                            <ion-input ref="newCoursEnd" type="time" placeholder="13:30"></ion-input>
+                            <ion-input ref="newCoursEndRef" type="time" placeholder="13:30"></ion-input>
                         </ion-item>
 
                     </ion-list>
