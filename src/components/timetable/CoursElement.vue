@@ -120,6 +120,7 @@
 </script>
 
 <template>
+    <div class="dist" v-if="distance && !sameTime"></div>
     <div :class="classes + isCancelled" :style="`--backgroundColor: ${color};`" v-if="!sameTime" @click="openCours()">
         <div class="CoursTime">
             <p class="start">{{ start }}</p>
@@ -159,8 +160,6 @@
             </ion-label>
         </div>
     </div>
-
-    <div class="dist" v-if="distance && !sameTime"></div>
 </template>
 
 <style scoped>
