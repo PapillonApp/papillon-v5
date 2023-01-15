@@ -527,7 +527,6 @@
 
         <div id="noTouchZone"></div>
       
-        <!-- faudrait un moyen de retirer cette répétition -->
         <swiper :initialSlide="1" ref="swiper" :speed="300" :spaceBetween="10" :preventClicks="true" :effect="'fade'">
             <swiper-slide v-for="(day, i) in days" :key="i">
                 <IonList>
@@ -554,7 +553,7 @@
                     <div v-if="!$data[`${day}`].loading"><div v-if="!$data[`${day}`].error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
                         <span class="material-symbols-outlined mdls">upcoming</span>
                         <h2>Pas de cours enregistrés pour cette journée</h2>
-                        <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
+                        <p>Réessayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
                         <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div></div></div>
