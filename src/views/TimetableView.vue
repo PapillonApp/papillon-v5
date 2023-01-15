@@ -501,13 +501,13 @@
                         @open="openCoursModal(cours)"
                     />
 
-                    <div v-if="!$data[`${day}`].error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
+                    <div v-if="!$data[`${day}`].loading"><div v-if="!$data[`${day}`].error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
                         <span class="material-symbols-outlined mdls">upcoming</span>
                         <h2>Pas de cours enregistrés pour cette journée</h2>
                         <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
                         <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                    </div></div>
+                    </div></div></div>
 
                     <div v-if="$data[`${day}`].error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
