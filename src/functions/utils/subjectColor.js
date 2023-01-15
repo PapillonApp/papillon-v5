@@ -1,10 +1,15 @@
-let colors = ['#DF2020', '#DF8820', '#0FBD26', '#0F4EBD', '#0FBDBD', '#5E0FBD', '#B130D1', '#D1309E', '#BEBB0E', '#9BCA1F', '#9D4225', '#6DA19C', '#773797', '#BF0000', '#58A348'];
+/* give 50 random colors of all hues but with enough contrast with white text */
+let colors = ['#1E90FF ', '#228B22 ', '#8B008B ', '#FF8C00 ', '#4B0082 ', '#43C59E', '#5C80BC', '#F15152', '#0A2463', '#17BEBB', '#6B8E23', '#9932CC', '#B8860B', '#9400D3', '#F0E68C', '#FF69B4', '#008080', '#CE5C00', '#005A51', '#008704'];
 
 function getRandomColor() {
 	let attributedColors = JSON.parse(localStorage.getItem('SubjectColors')) || {};
 	
 	// remove all colors that are already attributed
 	colors = colors.filter(color => !Object.values(attributedColors).includes(color));
+
+	if (colors.length == 0) {
+		return '#E63746';
+	}
 
 	// return a random color from the colors array
 	return colors[Math.floor(Math.random() * colors.length)];
