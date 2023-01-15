@@ -1,8 +1,10 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonToggle, actionSheetController, } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonToggle, actionSheetController, IonAvatar, IonNavLink } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
+
+    import ThemeView from './ThemeView.vue';
 
     import { version } from '/package'
     import { Capacitor } from '@capacitor/core';
@@ -25,13 +27,14 @@
             IonToolbar,
             IonTitle,
             IonMenuButton,
-            IonPage,
             IonButtons,
             IonList,
             IonListHeader,
             IonLabel,
             IonItem,
-            IonToggle
+            IonToggle,
+            IonAvatar,
+            IonNavLink,
         },
         setup() {
             return { 
@@ -43,6 +46,8 @@
         data() {
             return {
                 contributors: [],
+                userAvatar: '',
+                ThemeView: ThemeView,
             }
         },
         methods: {
@@ -255,7 +260,7 @@
                 getContributors(5).then((contributors) => {
                     this.contributors = contributors;
                 });
-            }
+            },
         },
         mounted() {
             // Get user data
@@ -263,6 +268,17 @@
 
             if (userData) {
                 this.userName = userData.student.name;
+                this.userClass = userData.class.name;
+                this.userSchool = userData.class.school;
+                this.userAvatar = userData.student.avatar;
+
+                // check if user has custom avatar
+                if (localStorage.getItem('customAvatar')) {
+                    this.userAvatar = localStorage.getItem('customAvatar');
+                }
+                else if(localStorage.getItem('avatarCache')) {
+                    this.userAvatar = localStorage.getItem('avatarCache');
+                }
             }
 
             this.getServerStatus();
@@ -289,7 +305,6 @@
 </script>
 
 <template>
-    <ion-page ref="page">
       <IonHeader class="AppHeader" collapse="fade" translucent>
         <IonToolbar>
 
@@ -311,10 +326,13 @@
             </IonListHeader>
 
             <IonItem>
-                <span class="material-symbols-outlined mdls" slot="start">account_circle</span>
+                <IonAvatar slot="start">
+                    <img :src="userAvatar" />
+                </IonAvatar>
                 <IonLabel>
                     <p>Utilisateur connecté</p>
                     <h2>{{ userName }}</h2>
+                    <p>{{ userClass }} - {{ userSchool }}</p>
                 </IonLabel>
             </IonItem>
         </IonList>
@@ -385,6 +403,24 @@
                 </IonLabel>
                 <IonToggle slot="end" ref="homepageEnabled" @ionChange="changeTick('homepageEnabled')"></IonToggle>
             </IonItem>
+        </IonList>
+
+        <IonList :inset="true" lines="inset">
+            <IonListHeader>
+                <IonLabel>
+                    <p>Personnalisation</p>
+                </IonLabel>
+            </IonListHeader>
+
+            <ion-nav-link router-direction="forward" :component="ThemeView">
+                <IonItem button>
+                    <span class="material-symbols-outlined mdls" slot="start">palette</span>
+                    <IonLabel>
+                        <h2>Personnaliser Papillon</h2>
+                        <p>Ouvrir le menu de customisation de l'app</p>
+                    </IonLabel>
+                </IonItem>
+            </ion-nav-link>
 
             <IonItem button @click="tweakChangeAvatar()">
                 <span class="material-symbols-outlined mdls" slot="start">person_pin</span>
@@ -460,7 +496,6 @@
 
         <br /> <br /> 
       </ion-content>
-    </ion-page>
 </template>
   
 <style scoped>

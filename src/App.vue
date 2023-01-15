@@ -223,6 +223,18 @@
                 });
             }
         });
+
+        // apply customizations
+        if(localStorage.getItem('customizations')) {
+            let customizations = JSON.parse(localStorage.getItem('customizations') as string);
+
+            if(customizations.mainColor) {
+                document.body.style.setProperty('--ion-color-primary', customizations.mainColor.hex);
+                document.body.style.setProperty('--ion-color-primary-rgb', customizations.mainColor.rgb);
+                document.body.style.setProperty('--ion-color-primary-shade', customizations.mainColor.hex);
+                document.body.style.setProperty('--ion-color-primary-tint', customizations.mainColor.hex);
+            }
+        }
     }
   });
 </script>
