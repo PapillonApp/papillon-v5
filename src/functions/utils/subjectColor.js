@@ -1,11 +1,15 @@
 /* give 50 random colors of all hues but with enough contrast with white text */
-let colors = ['#2E3A59', '#4A68A3', '#5B86C3', '#619AD0', '#7CAFD8', '#9CBDBA', '#A9B7A8', '#BCBCBC', '#B2D1B2', '#4A766E', '#5B86C3', '#5E8A71', '#5FA98A', '#6FCF9C', '#7CAFD8', '#8A8A8E', '#A29A9C', '#B9D1B9', '#737373', '#847A97', '#A29A9C', '#AFB3B7', '#B2D1B2', '#4A766E', '#5E8A71', '#5FA98A', '#6FCF9C', '#7CAFD8', '#8A8A8E', '#A29A9C', '#B9D1B9'];
+let colors = ['#1E90FF ', '#228B22 ', '#8B008B ', '#FF8C00 ', '#4B0082 ', '#43C59E', '#5C80BC', '#F15152', '#0A2463', '#17BEBB', '#6B8E23', '#9932CC', '#B8860B', '#9400D3', '#F0E68C', '#FF69B4', '#008080', '#CE5C00', '#005A51', '#008704'];
 
 function getRandomColor() {
 	let attributedColors = JSON.parse(localStorage.getItem('SubjectColors')) || {};
 	
 	// remove all colors that are already attributed
 	colors = colors.filter(color => !Object.values(attributedColors).includes(color));
+
+	if (colors.length == 0) {
+		return '#E63746';
+	}
 
 	// return a random color from the colors array
 	return colors[Math.floor(Math.random() * colors.length)];
