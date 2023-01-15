@@ -339,7 +339,7 @@
                 <span class="material-symbols-outlined mdls" slot="start">person</span>
                 <IonLabel>
                     <p>Moyenne générale</p>
-                    <h2>{{ averages.average }}<small>/20</small></h2>
+                    <h2>{{ averages.average.toFixed(2) }}<small>/20</small></h2>
                 </IonLabel>
             </IonItem>
             <IonItem>

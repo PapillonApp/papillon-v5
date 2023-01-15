@@ -294,10 +294,9 @@ function constructPronoteGrades(grades) {
     classMin /= markArray.length;
     classMax /= markArray.length;
 
-    // replace StudentAverage with the actual average
-    studentAverage = grades.overall_average;
+    studentAverage = grades.overall_average?? studentAverage;
+    classAverage = grades.class_overall_average?? classAverage;
 
-    // add averages to array
     let avgs = {
         average: studentAverage,
         class: {
@@ -314,10 +313,10 @@ function constructPronoteGrades(grades) {
         });
     });
 
-    // order markArray by date
     markArray.sort((a, b) => {
-        return new Date(b.marks[0].date) - new Date(a.marks[0].date);
+        return a.name.localeCompare(b.name);
     });
+
 
     let finalArray = {
         marks: markArray,
