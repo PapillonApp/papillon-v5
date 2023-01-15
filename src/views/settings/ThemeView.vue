@@ -13,6 +13,8 @@
         IonButtons,
         IonButton,
         IonLabel,
+        IonSelect,
+        IonSelectOption,
 	} from '@ionic/vue';
 
 	const displayToast = require('@/functions/utils/displayToast.js');
@@ -29,10 +31,12 @@
             IonItem,
             IonList,
             IonListHeader,
+            IonSelect,
+            IonSelectOption,
 		},
 		setup() {
 			return {
-
+                availableFonts: ["Hind", "Asap"]
 			}
 		},
 		methods: {
@@ -62,6 +66,20 @@
                 let mainColor = getComputedStyle(document.body).getPropertyValue('--ion-color-primary');
                 // apply it to the input
                 this.$refs.mainColorInput.value = mainColor;
+
+                // reset the font select
+                this.$refs.fontSelect.value = this.availableFonts[0];
+            },
+            fontChange() {
+                let font = this.$refs.fontSelect.$el.value;
+                document.body.style.setProperty('--papillon-font', '"' + font + '"');
+
+                // save it in local storage
+                let customizations = JSON.parse(localStorage.getItem('customizations')) || {};
+
+                customizations.font = font;
+
+                localStorage.setItem('customizations', JSON.stringify(customizations));
             }
 		},
 		data() {
@@ -70,7 +88,6 @@
 			}
 		},
 		mounted() {
-            // -------------------------------------------------------
             // mainColorInput
             // get --ion-color-primary from css
             let mainColor = getComputedStyle(document.body).getPropertyValue('--ion-color-primary');
@@ -97,9 +114,12 @@
 
                 localStorage.setItem('customizations', JSON.stringify(customizations));
             });
-            // -------------------------------------------------------
 
-			return false
+            // fontSelect
+            // get --papillon-font from css
+            let font = getComputedStyle(document.body).getPropertyValue('--papillon-font');
+            // apply it to the input
+            this.$refs.fontSelect.$el.value = font.replace(/"/g, '');
 		}
 	});
 </script>
@@ -136,6 +156,24 @@
                         <p>Couleur dominante de l'application</p>
                     </IonLabel>
                     <input type="color" ref="mainColorInput" class="colorInput" slot="end"/>
+                </IonItem>
+            </IonList>
+
+            <IonList :inset="true" lines="inset">
+                <IonListHeader>
+                    <IonLabel>
+                        <p>Polices</p>
+                    </IonLabel>
+                </IonListHeader>
+
+                <IonItem>
+                    <IonLabel>
+                        <h2>Police principale</h2>
+                        <p>Police utilisée dans les titres et autres..</p>
+                    </IonLabel>
+                    <ion-select placeholder="Police" slot="end" @ionChange="fontChange" ref="fontSelect" okText="Sélectionner" cancelText="Annuler">
+                        <ion-select-option :key="i" v-for="(font, i) in availableFonts" :value="font">{{ font }}</ion-select-option>
+                    </ion-select>
                 </IonItem>
             </IonList>
 

@@ -382,7 +382,7 @@
         font-size: 1.2em;
         font-weight: 600;
 
-        font-family: 'Papillon';
+        font-family: var(--papillon-font);
     }
 
     .CoursTime .end {

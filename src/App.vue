@@ -234,6 +234,10 @@
                 document.body.style.setProperty('--ion-color-primary-shade', customizations.mainColor.hex);
                 document.body.style.setProperty('--ion-color-primary-tint', customizations.mainColor.hex);
             }
+
+            if(customizations.font) {
+                document.body.style.setProperty('--papillon-font', customizations.font);
+            }
         }
     }
   });
@@ -352,7 +356,7 @@
     .ios .userItem p {
         font-size: 15px;
         margin-top: 0;
-        font-family: "Papillon";
+        font-family: var(--papillon-font);
     }
 
 
@@ -425,7 +429,7 @@
     }
 
     ion-item *:not(span) {
-        font-family: 'Papillon', sans-serif !important;
+        font-family: var(--papillon-font), sans-serif !important;
     }
 
     ion-menu ion-item {

@@ -297,12 +297,12 @@
                         <p class="name">{{ mark.info.description }}</p>
                         <p class="coef">Coeff. : {{mark.grade.coefficient}}</p>
 
-                        <p class="grd" v-if="mark.info.significant && !mark.grade.updated_value">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
-                        <p class="grd" v-else-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.updated_value}}/{{mark.grade.updated_out_of}}</p>
+                        <p class="grd main" v-if="mark.info.significant && !mark.grade.updated_value">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
+                        <p class="grd main" v-else-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.updated_value}}<small>/{{mark.grade.updated_out_of}}</small></p>
                         <p class="coef" v-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
                         
                         <!-- si absent -->
-                        <p class="grd" v-if="!mark.info.significant">{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></p>
+                        <p class="grd main" v-if="!mark.info.significant">{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></p>
                         <p class="coef" v-if="mark.grade.original_value && !mark.info.significant"><br/></p>
                     </div>
                     <div class="averages" v-if="mark.info.significantAverage">
@@ -499,6 +499,7 @@
         font-weight: 600;
         color: var(--ion-text-color);
         margin-top: 5px;
+        font-family: var(--papillon-font) !important;
     }
 
     .myGrade p.name {
@@ -542,6 +543,7 @@
         font-size: 1rem;
         font-weight: 500;
         color: var(--ion-text-color);
+        font-family: var(--papillon-font) !important;
     }
 
     .average p.grd small {
