@@ -51,6 +51,11 @@ async function presentToastFull(header, msg, color, icon) {
 }
 
 async function presentError(msg, color, error) {
+	// vibration
+	if(color == "danger") {
+		hapticsController.notification("error");
+	}
+	
 	const toast = await toastController.create({
 		message: msg,
 		duration: 2000,

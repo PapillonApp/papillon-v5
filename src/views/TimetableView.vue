@@ -366,38 +366,42 @@
             this.getTimetables(true);
         },
         async setNotif(course) {
-            let subject = course.data.subject;
-            let room = course.data.rooms[0];
-            let teacher = course.data.teachers[0];
+            try {
+                let subject = course.data.subject;
+                let room = course.data.rooms[0];
+                let teacher = course.data.teachers[0];
 
-            let time = new Date(course.time.start);
-            time.setMinutes(time.getMinutes() - 5);
+                let time = new Date(course.time.start);
+                time.setMinutes(time.getMinutes() - 5);
 
-            await LocalNotifications.schedule({
-                notifications: [
-                    {
-                        title: "🗓️ C'est l'heure d'aller en " + subject + " !",
-                        body: `Vous êtes en ${room} avec ${teacher}`,
-                        id: 1,
-                        schedule: { at: time },
-                        sound: "tone.ogg",
-                        attachments: null,
-                        actionTypeId: "",
-                        extra: null
-                    }
-                ]
-            });
+                await LocalNotifications.schedule({
+                    notifications: [
+                        {
+                            title: "🗓️ C'est l'heure d'aller en " + subject + " !",
+                            body: `Vous êtes en ${room} avec ${teacher}`,
+                            id: 1,
+                            schedule: { at: time },
+                            sound: "tone.ogg",
+                            attachments: null,
+                            actionTypeId: "",
+                            extra: null
+                        }
+                    ]
+                });
 
-            // close cours modal
-            this.$refs.coursModal.$el.dismiss();
+                // close cours modal
+                this.$refs.coursModal.$el.dismiss();
 
-            // notify user
-            displayToast.presentToastFull(
-                'Notifications activées pour ' + subject,
-                'Vous receverez une notification 5 minutes avant le début du cours',
-                'light',
-                notifications
-            );
+                // notify user
+                displayToast.presentToastFull(
+                    'Notifications activées pour ' + subject,
+                    'Vous receverez une notification 5 minutes avant le début du cours',
+                    'light',
+                    notifications
+                );
+            } catch (error) {
+                displayToast.presentError("Une erreur est survenue lors de l'activation des notifications", "danger", error);
+            }
         }
     },
     data() {
