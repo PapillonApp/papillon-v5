@@ -159,13 +159,14 @@ function constructPronoteGrades(grades) {
     // for each mark, add it to the corresponding subject in the array
     marks.forEach(mark => {
         // check if subject exists
-        let subject = markArray.find(subject => subject.name == mark.subject.name);
+        let subject = markArray.find(subject => subject.id == mark.subject.id);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
                 color: subjectColor.getSubjectColor(mark.subject.name, subjectColor.getRandomColor()),
                 name: mark.subject.name,
+                id: mark.subject.id,
                 marks: []
             }
 
@@ -235,12 +236,13 @@ function constructPronoteGrades(grades) {
     // add averages
     averages.forEach(average => {
         // check if subject exists
-        let subject = markArray.find(subject => subject.name == average.subject.name);
+        let subject = markArray.find(subject => subject.id == average.subject.id);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
                 name: average.subject,
+                id: average.subject.id,
                 marks: []
             }
 
@@ -322,6 +324,7 @@ function constructPronoteGrades(grades) {
         averages: avgs
     }
     
+    console.log(finalArray);
     return finalArray;
 }
 
