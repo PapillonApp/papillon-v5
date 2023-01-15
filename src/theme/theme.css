@@ -219,8 +219,14 @@ ion-item .mdls[slot="start"] {
 }
 
 .md ion-modal.modal-sheet::part(content) {
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+}
+
+.ios ion-modal.modal-sheet::part(content) {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
     overflow: hidden;
 }
 
