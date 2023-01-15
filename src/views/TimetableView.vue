@@ -375,38 +375,42 @@
             this.getTimetables(true);
         },
         async setNotif(course) {
-            let subject = course.data.subject;
-            let room = course.data.rooms[0];
-            let teacher = course.data.teachers[0];
+            try {
+                let subject = course.data.subject;
+                let room = course.data.rooms[0];
+                let teacher = course.data.teachers[0];
 
-            let time = new Date(course.time.start);
-            time.setMinutes(time.getMinutes() - 5);
+                let time = new Date(course.time.start);
+                time.setMinutes(time.getMinutes() - 5);
 
-            await LocalNotifications.schedule({
-                notifications: [
-                    {
-                        title: "🗓️ C'est l'heure d'aller en " + subject + " !",
-                        body: `Vous êtes en ${room} avec ${teacher}`,
-                        id: 1,
-                        schedule: { at: time },
-                        sound: "tone.ogg",
-                        attachments: null,
-                        actionTypeId: "",
-                        extra: null
-                    }
-                ]
-            });
+                await LocalNotifications.schedule({
+                    notifications: [
+                        {
+                            title: "🗓️ C'est l'heure d'aller en " + subject + " !",
+                            body: `Vous êtes en ${room} avec ${teacher}`,
+                            id: 1,
+                            schedule: { at: time },
+                            sound: "tone.ogg",
+                            attachments: null,
+                            actionTypeId: "",
+                            extra: null
+                        }
+                    ]
+                });
 
-            // close cours modal
-            this.$refs.coursModal.$el.dismiss();
+                // close cours modal
+                this.$refs.coursModal.$el.dismiss();
 
-            // notify user
-            displayToast.presentToastFull(
-                'Notifications activées pour ' + subject,
-                'Vous receverez une notification 5 minutes avant le début du cours',
-                'light',
-                notifications
-            );
+                // notify user
+                displayToast.presentToastFull(
+                    'Notifications activées pour ' + subject,
+                    'Vous receverez une notification 5 minutes avant le début du cours',
+                    'light',
+                    notifications
+                );
+            } catch (error) {
+                displayToast.presentError("Une erreur est survenue lors de l'activation des notifications", "danger", error);
+            }
         }
     },
     data() {
@@ -532,7 +536,6 @@
 
         <div id="noTouchZone"></div>
       
-        <!-- faudrait un moyen de retirer cette répétition -->
         <swiper :initialSlide="1" ref="swiper" :speed="300" :spaceBetween="10" :preventClicks="true" :effect="'fade'">
             <swiper-slide v-for="(day, i) in days" :key="i">
                 <IonList>
@@ -559,7 +562,7 @@
                     <div v-if="!$data[`${day}`].loading"><div v-if="!$data[`${day}`].error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
                         <span class="material-symbols-outlined mdls">upcoming</span>
                         <h2>Pas de cours enregistrés pour cette journée</h2>
-                        <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
+                        <p>Réessayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
                         <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div></div></div>
