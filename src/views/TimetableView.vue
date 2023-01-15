@@ -306,7 +306,7 @@
             en.setMinutes(this.$refs.newCoursEndRef.$el.value.split(':')[1]);
 
             // check if cours is valid
-            if(stValue == "" || this.$refs.newCoursEndRef.$el.value == "" || this.$refs.newCoursName.value == "" || this.$refs.newCoursTeacher.value == "" || this.$refs.newCoursRoom.value == "") {
+            if(stValue == "" || this.$refs.newCoursEndRef.$el.value == "" || this.$refs.newCoursNameRef.$el.value == "" || this.$refs.newCoursTeacherRef.$el.value == "" || this.$refs.newCoursRoomRef.$el.value == "") {
                 displayToast.presentError("Veuillez remplir tous les champs", "danger", "Tous les champs sont obligatoires");
                 return;
             }
@@ -319,9 +319,9 @@
                     num: Math.floor(Math.random() * 10000000),
                 },
                 data: {
-                    subject: this.$refs.newCoursName.value,
-                    teachers: [this.$refs.newCoursTeacher.value],
-                    rooms: [this.$refs.newCoursRoom.value],
+                    subject: this.$refs.newCoursNameRef.$el.value,
+                    teachers: [this.$refs.newCoursTeacherRef.$el.value],
+                    rooms: [this.$refs.newCoursRoomRef.$el.value],
                     groupNames: [],
                     memo: null,
                     hasMemo: false,
@@ -599,31 +599,31 @@
                         <ion-item class="input">
                             <span slot="start" class="material-symbols-outlined mdls">drive_file_rename_outline</span>
                             <ion-label position="floating">Nom du cours</ion-label>
-                            <ion-input ref="newCoursName" placeholder="Réunion"></ion-input>
+                            <ion-input type="text" name="Title" ref="newCoursNameRef" placeholder="Conseil de classe"></ion-input>
                         </ion-item>
 
                         <ion-item class="input">
                             <span slot="start" class="material-symbols-outlined mdls">face</span>
                             <ion-label position="floating">Professeur</ion-label>
-                            <ion-input ref="newCoursTeacher" placeholder="CPE"></ion-input>
+                            <ion-input type="text" name="Person" ref="newCoursTeacherRef" placeholder="Prof. principal"></ion-input>
                         </ion-item>
 
                         <ion-item class="input">
                             <span slot="start" class="material-symbols-outlined mdls">location_on</span>
                             <ion-label position="floating">Lieu</ion-label>
-                            <ion-input ref="newCoursRoom" placeholder="A210"></ion-input>
+                            <ion-input type="text" name="Place" ref="newCoursRoomRef" placeholder="A210"></ion-input>
                         </ion-item>
 
                         <ion-item class="input">
                             <span slot="start" class="material-symbols-outlined mdls">schedule</span>
                             <ion-label position="floating">Heure de début</ion-label>
-                            <ion-input ref="newCoursStartRef" type="time" placeholder="12:30"></ion-input>
+                            <ion-input ref="newCoursStartRef" name="Start" type="time" placeholder="12:30"></ion-input>
                         </ion-item>
 
                         <ion-item class="input">
                             <span slot="start" class="material-symbols-outlined mdls">hourglass_empty</span>
                             <ion-label position="floating">Heure de fin</ion-label>
-                            <ion-input ref="newCoursEndRef" type="time" placeholder="13:30"></ion-input>
+                            <ion-input name="End" ref="newCoursEndRef" type="time" placeholder="13:30"></ion-input>
                         </ion-item>
 
                     </ion-list>
@@ -671,6 +671,10 @@
                             <p>Nom de la matière</p>
                             <h2>{{selectedCourse.name}}</h2>
                         </ion-label>
+                        <ion-button color="danger" fill="clear" class="itemBtn" slot="end" v-if="selectedCourse.custom" @click="deleteCustomCourse(selectedCourse.id)">
+                            <span class="material-symbols-outlined mdls" slot="start">delete</span>
+                            Supprimer
+                        </ion-button>
                     </ion-item>
 
                     <ion-item class="info-item">
@@ -703,7 +707,7 @@
                             <p>Horaires</p>
                             <h2>De {{selectedCourse.start}} à {{selectedCourse.end}}</h2>
                         </ion-label>
-                        <ion-button class="itemBtn" slot="end" @click="setNotif(selectedCourse.originalCourse)">
+                        <ion-button class="itemBtn" fill="clear" slot="end" @click="setNotif(selectedCourse.originalCourse)">
                             <span class="material-symbols-outlined mdls" slot="start">notifications</span>
                             Me notifier
                         </ion-button>
@@ -738,13 +742,6 @@
                         <ion-label>
                             <p>Statut</p>
                             <h2>{{selectedCourse.status}}</h2>
-                        </ion-label>
-                    </ion-item>
-
-                    <ion-item button v-if="selectedCourse.custom" @click="deleteCustomCourse(selectedCourse.id)">
-                        <span class="material-symbols-outlined mdls" slot="start" color="danger">delete</span>
-                        <ion-label color="danger">
-                            <h2>Supprimer le cours personnalisé</h2>
                         </ion-label>
                     </ion-item>
                 </ion-list>
