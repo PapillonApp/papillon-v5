@@ -1,5 +1,4 @@
-/* give 50 random colors of all hues but with enough contrast with white text */
-let colors = ['#2E3A59', '#4A68A3', '#5B86C3', '#619AD0', '#7CAFD8', '#9CBDBA', '#A9B7A8', '#BCBCBC', '#B2D1B2', '#4A766E', '#5B86C3', '#5E8A71', '#5FA98A', '#6FCF9C', '#7CAFD8', '#8A8A8E', '#A29A9C', '#B9D1B9', '#737373', '#847A97', '#A29A9C', '#AFB3B7', '#B2D1B2', '#4A766E', '#5E8A71', '#5FA98A', '#6FCF9C', '#7CAFD8', '#8A8A8E', '#A29A9C', '#B9D1B9'];
+let colors = ['#DF2020', '#DF8820', '#0FBD26', '#0F4EBD', '#0FBDBD', '#5E0FBD', '#B130D1', '#D1309E', '#BEBB0E', '#9BCA1F', '#9D4225', '#6DA19C', '#773797', '#BF0000', '#58A348'];
 
 function getRandomColor() {
 	let attributedColors = JSON.parse(localStorage.getItem('SubjectColors')) || {};

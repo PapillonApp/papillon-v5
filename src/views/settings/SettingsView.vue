@@ -242,7 +242,7 @@
                 }
             },
             resetColors() {
-                localStorage.removeItem('subjectColors');
+                localStorage.removeItem('SubjectColors');
 
                 // show toast
                 setTimeout(() => {
