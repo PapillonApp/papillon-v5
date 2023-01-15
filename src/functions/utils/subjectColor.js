@@ -8,7 +8,7 @@ function getRandomColor() {
 	colors = colors.filter(color => !Object.values(attributedColors).includes(color));
 
 	if (colors.length == 0) {
-		return '#E63746';
+		return '#6AB764';
 	}
 
 	// return a random color from the colors array
