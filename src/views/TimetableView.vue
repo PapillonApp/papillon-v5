@@ -525,7 +525,7 @@
             </swiper-slide>
         </swiper>
 
-        <IonModal ref="newCoursModal" class="newCoursModal" :is-open="newCoursModalOpen">
+        <IonModal ref="newCoursModal" class="newCoursModal" :is-open="newCoursModalOpen" :presenting-element="presentingElement">
             <IonHeader>
                 <IonToolbar>
                     <ion-buttons slot="start">
@@ -537,43 +537,44 @@
                     </ion-buttons>
                 </IonToolbar>
             </IonHeader>
-            <ion-content class="ion-padding">
+            <ion-content>
+                <div class="newCoursContent">
+                    <ion-list mode="md">
 
-                <ion-list mode="md">
+                        <ion-item class="input">
+                            <span slot="start" class="material-symbols-outlined mdls">drive_file_rename_outline</span>
+                            <ion-label position="floating">Nom du cours</ion-label>
+                            <ion-input ref="newCoursName" placeholder="Réunion"></ion-input>
+                        </ion-item>
 
-                    <ion-item class="input">
-                        <span slot="start" class="material-symbols-outlined mdls">drive_file_rename_outline</span>
-                        <ion-label position="floating">Nom du cours</ion-label>
-                        <ion-input ref="newCoursName" placeholder="Réunion"></ion-input>
-                    </ion-item>
+                        <ion-item class="input">
+                            <span slot="start" class="material-symbols-outlined mdls">face</span>
+                            <ion-label position="floating">Professeur</ion-label>
+                            <ion-input ref="newCoursTeacher" placeholder="CPE"></ion-input>
+                        </ion-item>
 
-                    <ion-item class="input">
-                        <span slot="start" class="material-symbols-outlined mdls">face</span>
-                        <ion-label position="floating">Professeur</ion-label>
-                        <ion-input ref="newCoursTeacher" placeholder="CPE"></ion-input>
-                    </ion-item>
+                        <ion-item class="input">
+                            <span slot="start" class="material-symbols-outlined mdls">location_on</span>
+                            <ion-label position="floating">Lieu</ion-label>
+                            <ion-input ref="newCoursRoom" placeholder="A210"></ion-input>
+                        </ion-item>
 
-                    <ion-item class="input">
-                        <span slot="start" class="material-symbols-outlined mdls">location_on</span>
-                        <ion-label position="floating">Lieu</ion-label>
-                        <ion-input ref="newCoursRoom" placeholder="A210"></ion-input>
-                    </ion-item>
+                        <ion-item class="input">
+                            <span slot="start" class="material-symbols-outlined mdls">schedule</span>
+                            <ion-label position="floating">Heure de début</ion-label>
+                            <ion-input ref="newCoursStart" type="time" placeholder="12:30"></ion-input>
+                        </ion-item>
 
-                    <ion-item class="input">
-                        <span slot="start" class="material-symbols-outlined mdls">schedule</span>
-                        <ion-label position="floating">Heure de début</ion-label>
-                        <ion-input ref="newCoursStart" type="time" placeholder="12:30"></ion-input>
-                    </ion-item>
+                        <ion-item class="input">
+                            <span slot="start" class="material-symbols-outlined mdls">hourglass_empty</span>
+                            <ion-label position="floating">Heure de fin</ion-label>
+                            <ion-input ref="newCoursEnd" type="time" placeholder="13:30"></ion-input>
+                        </ion-item>
 
-                    <ion-item class="input">
-                        <span slot="start" class="material-symbols-outlined mdls">hourglass_empty</span>
-                        <ion-label position="floating">Heure de fin</ion-label>
-                        <ion-input ref="newCoursEnd" type="time" placeholder="13:30"></ion-input>
-                    </ion-item>
+                    </ion-list>
 
-                </ion-list>
-
-                <ion-button mode="md" @click="addNewCours()" expand="block">Ajouter</ion-button>
+                    <ion-button mode="md" @click="addNewCours()" expand="block">Ajouter</ion-button>
+                </div>
 
             </ion-content>
         </IonModal>
@@ -723,5 +724,9 @@
 
     .input span {
         margin-top: 15px;
+    }
+
+    .newCoursContent {
+        padding: 0px 10px !important;
     }
 </style>
