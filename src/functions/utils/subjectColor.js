@@ -2,6 +2,11 @@
 let colors = ['#2E3A59', '#4A68A3', '#5B86C3', '#619AD0', '#7CAFD8', '#9CBDBA', '#A9B7A8', '#BCBCBC', '#B2D1B2', '#4A766E', '#5B86C3', '#5E8A71', '#5FA98A', '#6FCF9C', '#7CAFD8', '#8A8A8E', '#A29A9C', '#B9D1B9', '#737373', '#847A97', '#A29A9C', '#AFB3B7', '#B2D1B2', '#4A766E', '#5E8A71', '#5FA98A', '#6FCF9C', '#7CAFD8', '#8A8A8E', '#A29A9C', '#B9D1B9'];
 
 function getRandomColor() {
+	let attributedColors = JSON.parse(localStorage.getItem('SubjectColors')) || {};
+	
+	// remove all colors that are already attributed
+	colors = colors.filter(color => !Object.values(attributedColors).includes(color));
+
 	// return a random color from the colors array
 	return colors[Math.floor(Math.random() * colors.length)];
 }

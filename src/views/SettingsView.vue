@@ -236,6 +236,23 @@
                     );
                 }
             },
+            resetColors() {
+                localStorage.removeItem('subjectColors');
+
+                // show toast
+                setTimeout(() => {
+                    displayToast.presentToastFull(
+                        'Couleurs des matières réinitialisées',
+                        'Les couleurs des matières ont été réinitialisées avec succès.',
+                        'light',
+                        checkmark
+                    );
+                    
+                    setTimeout(() => {
+                        this.localStorageSize = this.getLocalStorageSize() + ' kb';
+                    }, 1000);
+                }, 100);
+            },
             tweakDeleteAvatar() {
                 localStorage.removeItem('customAvatar');
                 document.dispatchEvent(new CustomEvent('userDataUpdated'));
@@ -269,8 +286,6 @@
 
             // Get localStorage size
             this.localStorageSize = this.getLocalStorageSize() + ' kb';
-
-            // displayToast.presentToastTest();
 
             // get tweakGrades20 ref
             let tweakGrades20 = this.$refs.tweakGrades20;
@@ -345,6 +360,14 @@
                 <IonLabel>
                     <h2>Vider le cache des données</h2>
                     <p>Réinitialise les données pré-téléchargées hors ligne</p>  
+                </IonLabel>
+            </IonItem>
+
+            <IonItem button @click="resetColors()">
+                <span class="material-symbols-outlined mdls" slot="start">palette</span>
+                <IonLabel>
+                    <h2>Réattribuer les couleurs de matières</h2>
+                    <p>Réinitialise les couleurs des matières pour en obtenir de nouvelles</p>  
                 </IonLabel>
             </IonItem>
 
