@@ -26,6 +26,8 @@
 	import GetToken from '@/functions/login/GetToken.js';
 	import GetMenus from '@/functions/fetch/GetMenus.js';
 
+	import MenuElement from '@/components/menu/MenuElement.vue';
+
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
@@ -48,7 +50,7 @@
 				rnButtonString: this.createDateString(this.$rn),
 				loadedrnButtonString: this.createDateString(this.$rn),
 				rnCalendarString: this.$rn.toISOString().split('T')[0],
-				menu: [],
+				today: [],
 				yesterday: [],
 				tomorrow: [],
 				shouldResetSwiper: false,
@@ -84,7 +86,7 @@
 				// get new menu data
 				this.getMenus(true);
 
-				// stop refresh when this.menu is updated
+				// stop refresh when this.today is updated
 				this.$watch('menu', () => {
 					setTimeout(() => {
 						event.target.complete();
@@ -97,24 +99,24 @@
 					this.$refs.swiper.$el.swiper.slideTo(1, 0);
 					this.shouldResetSwiper = false;
 
-					this.menu = [];
+					this.today = [];
 					this.yesterday = [];
 					this.tomorrow = [];
 
-					this.menu.loading = true;
+					this.today.loading = true;
 					this.yesterday.loading = true;
 					this.tomorrow.loading = true;
 
-					this.menu.error = "STILL_LOADING";
+					this.today.error = "STILL_LOADING";
 					this.yesterday.error = "STILL_LOADING";
 					this.tomorrow.error = "STILL_LOADING";
 				}
 
 				// get menus for rn
 				GetMenus(this.$rn, force).then((menu) => {
-					this.menu = menu
+					this.today = menu
 					this.loadedrnButtonString = this.createDateString(this.$rn);
-					this.menu.loading = false;
+					this.today.loading = false;
 
 					this.dontRetryCheck = true;
 
@@ -241,7 +243,96 @@
 
 			<swiper :initialSlide="1" ref="swiper">
 				<swiper-slide>
-					<menu-card :menu="yesterday" :loading="yesterday.loading"></menu-card>
+					<MenuElement v-for="menu in yesterday"
+						:isLunch="menu.type.isLunch"
+						:isDiner="menu.type.isDinner"
+						:key="menu.data.id"
+						:name="menu.data.name"
+						:menus="menu.menus"
+					/>
+
+					<div v-if="!yesterday.error"><div class="NoCours" v-if="yesterday.length == 0">
+                        <span class="material-symbols-outlined mdls">upcoming</span>
+                        <h2>Pas de menu enregistrés pour cette journée</h2>
+                        <p>Réessayez un autre jour dans le calendrier ou balayez l'écran.</p>
+
+                        <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                    </div></div>
+
+                    <div v-if="yesterday.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="yesterday.length == 0">
+                        <span class="material-symbols-outlined mdls">wifi_off</span>
+                        <h2>Pas de connexion à Internet</h2>
+                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div></div>
+
+                    <div v-if="yesterday.loading" class="Error"><div class="NoCours" v-if="yesterday.length == 0">
+                        <IonSpinner></IonSpinner>
+                        <br/>
+                        <h2>Téléchargement des prochains menus...</h2>
+                        <p>Veuillez patienter pendant qu'on récupère les menus depuis nos serveurs...</p>
+                    </div></div>
+				</swiper-slide>
+
+				<swiper-slide>
+					<MenuElement v-for="menu in today"
+						:isLunch="menu.type.isLunch"
+						:isDiner="menu.type.isDinner"
+						:key="menu.data.id"
+						:name="menu.data.name"
+						:menus="menu.menus"
+					/>
+
+					<div v-if="!today.error"><div class="NoCours" v-if="today.length == 0">
+                        <span class="material-symbols-outlined mdls">upcoming</span>
+                        <h2>Pas de menu enregistrés pour cette journée</h2>
+                        <p>Réessayez un autre jour dans le calendrier ou balayez l'écran.</p>
+
+                        <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                    </div></div>
+
+                    <div v-if="today.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="today.length == 0">
+                        <span class="material-symbols-outlined mdls">wifi_off</span>
+                        <h2>Pas de connexion à Internet</h2>
+                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div></div>
+
+                    <div v-if="today.loading" class="Error"><div class="NoCours" v-if="today.length == 0">
+                        <IonSpinner></IonSpinner>
+                        <br/>
+                        <h2>Téléchargement des prochains menus...</h2>
+                        <p>Veuillez patienter pendant qu'on récupère les menus depuis nos serveurs...</p>
+                    </div></div>
+				</swiper-slide>
+
+				<swiper-slide>
+					<MenuElement v-for="menu in tomorrow"
+						:isLunch="menu.type.isLunch"
+						:isDiner="menu.type.isDinner"
+						:key="menu.data.id"
+						:name="menu.data.name"
+						:menus="menu.menus"
+					/>
+
+					<div v-if="!tomorrow.error"><div class="NoCours" v-if="tomorrow.length == 0">
+                        <span class="material-symbols-outlined mdls">upcoming</span>
+                        <h2>Pas de menu enregistrés pour cette journée</h2>
+                        <p>Réessayez un autre jour dans le calendrier ou balayez l'écran.</p>
+
+                        <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                    </div></div>
+
+                    <div v-if="tomorrow.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="tomorrow.length == 0">
+                        <span class="material-symbols-outlined mdls">wifi_off</span>
+                        <h2>Pas de connexion à Internet</h2>
+                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div></div>
+
+                    <div v-if="tomorrow.loading" class="Error"><div class="NoCours" v-if="tomorrow.length == 0">
+                        <IonSpinner></IonSpinner>
+                        <br/>
+                        <h2>Téléchargement des prochains menus...</h2>
+                        <p>Veuillez patienter pendant qu'on récupère les menus depuis nos serveurs...</p>
+                    </div></div>
 				</swiper-slide>
 			</swiper>
 
