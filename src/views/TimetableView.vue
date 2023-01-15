@@ -102,12 +102,12 @@
                 let lessonStart = new Date(lesson.time.start);
                 let lessonEnd = new Date(lesson.time.end);
 
-                if (i > 0 && i < timetable.length - 1) {
+                if (i > 0) {
                     let previousLesson = timetable[i - 1];
                     let previousLessonStart = new Date(previousLesson.time.start);
                     let previousLessonEnd = new Date(previousLesson.time.end);
 
-                    if (lessonStart - previousLessonEnd >= 1000 * 60 * 60) {
+                    if (lessonStart - previousLessonEnd >= 1000 * 60 * 15) {
                         timetable[i].course.distance = true;
                     }
                 }
@@ -159,6 +159,8 @@
 
                 return aStart - bStart;
             });
+
+            console.log(timetable);
             
             return timetable;
         },
