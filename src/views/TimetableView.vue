@@ -2,10 +2,12 @@
   import { defineComponent } from 'vue';
   import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonFabButton } from '@ionic/vue';
 
-  const displayToast = require('@/functions/utils/displayToast.js');
+  import displayToast from '@/functions/utils/displayToast.js';
   import subjectColor from '@/functions/utils/subjectColor.js'
   
-  import { calendarOutline, calendarSharp, todayOutline, todaySharp, add } from 'ionicons/icons';
+  import { calendarOutline, calendarSharp, todayOutline, todaySharp, add, checkmark, notifications } from 'ionicons/icons';
+
+  import { LocalNotifications } from '@capacitor/local-notifications';
 
   import { Swiper, SwiperSlide } from 'swiper/vue';
   import 'swiper/css';
@@ -268,7 +270,8 @@
                 hasStatus: hasStatus,
                 isCancelled: cours.status.isCancelled,
                 custom: cours.status.isCustom,
-                id: cours.course.id
+                id: cours.course.id,
+                originalCourse: cours
             }
 
             // open cours modal
@@ -349,6 +352,40 @@
             // refresh timetable
             this.getTimetables(true);
         },
+        async setNotif(course) {
+            let subject = course.data.subject;
+            let room = course.data.rooms[0];
+            let teacher = course.data.teachers[0];
+
+            let time = new Date(course.time.start);
+            time.setMinutes(time.getMinutes() - 5);
+
+            await LocalNotifications.schedule({
+                notifications: [
+                    {
+                        title: "🗓️ C'est l'heure d'aller en " + subject + " !",
+                        body: `Vous êtes en ${room} avec ${teacher}`,
+                        id: 1,
+                        schedule: { at: time },
+                        sound: "tone.ogg",
+                        attachments: null,
+                        actionTypeId: "",
+                        extra: null
+                    }
+                ]
+            });
+
+            // close cours modal
+            this.$refs.coursModal.$el.dismiss();
+
+            // notify user
+            displayToast.presentToastFull(
+                'Notifications activées pour ' + subject,
+                'Vous receverez une notification 5 minutes avant le début du cours',
+                'light',
+                notifications
+            );
+        }
     },
     data() {
         return {
@@ -648,6 +685,10 @@
                             <p>Horaires</p>
                             <h2>De {{selectedCourse.start}} à {{selectedCourse.end}}</h2>
                         </ion-label>
+                        <ion-button class="itemBtn" slot="end" @click="setNotif(selectedCourse.originalCourse)">
+                            <span class="material-symbols-outlined mdls" slot="start">notifications</span>
+                            Me notifier
+                        </ion-button>
                     </ion-item>
 
                     <ion-item class="info-item">
@@ -728,5 +769,14 @@
 
     .newCoursContent {
         padding: 0px 10px !important;
+    }
+
+    .itemBtn {
+        height: 36px;
+        font-size: 14px;
+    }
+
+    .itemBtn span {
+        margin-right: 5px;
     }
 </style>

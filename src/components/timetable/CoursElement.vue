@@ -210,8 +210,6 @@
         isolation: isolate;
 
         position: relative;
-
-        box-shadow: 0px 1px 2px var(--ion-color-step-50), 0px 2px 4px var(--ion-color-step-50);
     }
 
     .cours .bg {

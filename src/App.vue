@@ -9,6 +9,8 @@
   const GetUser = require('./functions/fetch/GetUserData');
   const displayToast = require('./functions/utils/displayToast.js');
 
+  import { LocalNotifications } from '@capacitor/local-notifications';
+
   import { SplashScreen } from '@capacitor/splash-screen';
 
   interface UserData {
@@ -150,6 +152,9 @@
                 // set userData in localStorage
                 localStorage.userData = JSON.stringify(data);
             });
+        },
+        async askNotifPerms() {
+            await LocalNotifications.requestPermissions();
         }
     },
     mounted() {
@@ -199,6 +204,8 @@
         if(!navigator.onLine) {
             this.presentToast('Vous n\'êtes pas connecté à Internet.', 'Vous n\'aurez accès qu\'aux informations déjà téléchargées.', 'danger', globeOutline)
         }
+
+        this.askNotifPerms();
 
         // on settingsUpdated event, setup the app
         document.addEventListener('settingsUpdated', () => {

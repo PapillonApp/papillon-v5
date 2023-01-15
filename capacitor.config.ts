@@ -9,7 +9,12 @@ const config: CapacitorConfig = {
   plugins: {
     "SplashScreen": {
       "launchAutoHide": false,
-    }
+    },
+    LocalNotifications: {
+      smallIcon: "ic_stat_notify",
+      iconColor: "#27A057",
+      sound: "/public/audio/tone.ogg",
+    },
   },
   /* server: {
     url: "http://192.168.1.22:8100",
