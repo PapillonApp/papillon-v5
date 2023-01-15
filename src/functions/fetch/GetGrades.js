@@ -323,7 +323,6 @@ function constructPronoteGrades(grades) {
         averages: avgs
     }
     
-    console.log(finalArray);
     return finalArray;
 }
 
