@@ -65,6 +65,11 @@
         const selectedIndex = ref(0);
         const appPages = [
             {
+                title: 'Accueil',
+                url: '/home',
+                icon: "home",
+            },
+            {
                 title: 'Emploi du temps',
                 url: '/timetable',
                 icon: "calendar_month"
@@ -99,7 +104,12 @@
         // disable some tabs
         if(localStorage.getItem('viescolaireEnabled') !== 'true') {
             // remove school life tab
-            appPages.splice(3, 1);
+            appPages.splice(4, 1);
+        }
+
+        if(localStorage.getItem('homepageEnabled') !== 'true') {
+            // remove home tab
+            appPages.splice(0, 1);
         }
         
         const path = window.location.pathname.split('folder/')[1];
