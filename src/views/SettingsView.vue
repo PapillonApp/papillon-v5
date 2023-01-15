@@ -280,6 +280,10 @@
             // get viescolaireEnabled ref
             let viescolaireEnabled = this.$refs.viescolaireEnabled;
             viescolaireEnabled.$el.checked = localStorage.getItem('viescolaireEnabled') == 'true';
+
+            // get homepageEnabled ref
+            let homepageEnabled = this.$refs.homepageEnabled;
+            homepageEnabled.$el.checked = localStorage.getItem('homepageEnabled') == 'true';
         }
     });
 </script>
@@ -376,6 +380,15 @@
                     <p>(Expérimental) Active l'onglet de vie scolaire</p>
                 </IonLabel>
                 <IonToggle slot="end" ref="viescolaireEnabled" @ionChange="changeTick('viescolaireEnabled')"></IonToggle>
+            </IonItem>
+
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">home</span>
+                <IonLabel>
+                    <h2>Activer la page d'accueil</h2>
+                    <p>(Expérimental) Active la page d'accueil</p>
+                </IonLabel>
+                <IonToggle slot="end" ref="homepageEnabled" @ionChange="changeTick('homepageEnabled')"></IonToggle>
             </IonItem>
 
             <IonItem button @click="tweakChangeAvatar()">
