@@ -294,8 +294,13 @@ function constructPronoteGrades(grades) {
     classMin /= markArray.length;
     classMax /= markArray.length;
 
-    studentAverage = grades.overall_average?? studentAverage;
-    classAverage = grades.class_overall_average?? classAverage;
+    if (studentAverage != -1 && studentAverage != undefined) {
+        studentAverage = grades.overall_average;
+    }
+
+    if (grades.class_overall_average != -1 && grades.class_overall_average != undefined) {
+        classAverage = grades.class_overall_average;
+    }
 
     let avgs = {
         average: studentAverage,
