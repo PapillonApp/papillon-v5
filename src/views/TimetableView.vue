@@ -93,14 +93,24 @@
                             timetable[i].course.sameTime = true;
                         }
                     }
+                }
+            }
 
-                    // check if lesson2 starts at least 1 hour after lesson ends
-                    if (lessonEnd < lesson2Start && lessonEnd.getHours() + 1 == lesson2Start.getHours()) {
-                        
+            // for each lesson, check if it starts 1 hour after the previous lesson ends, if so course.distance = true
+            for(let i = 0; i < timetable.length; i++) {
+                let lesson = timetable[i];
+                let lessonStart = new Date(lesson.time.start);
+                let lessonEnd = new Date(lesson.time.end);
+
+                if (i > 0 && i < timetable.length - 1) {
+                    let prevLesson = timetable[i - 1];
+                    let prevLessonStart = new Date(prevLesson.time.start);
+                    let prevLessonEnd = new Date(prevLesson.time.end);
+
+                    if (lessonStart.getHours() - prevLessonEnd.getHours() == 1) {
                         timetable[i].course.distance = true;
                     }
                 }
-
             }
 
             // add custom courses
