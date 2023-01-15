@@ -167,7 +167,7 @@
                 </IonListHeader>
 
                 <IonItem>
-                    <IonLabel>
+                    <IonLabel class="paddingFixMd">
                         <h2>Police principale</h2>
                         <p>Police utilisée dans les titres et autres..</p>
                     </IonLabel>
@@ -181,5 +181,7 @@
 </template>
 
 <style scoped>
-	
+	.md .paddingFixMd {
+        padding-left: 15px;
+    }
 </style>
