@@ -37,35 +37,35 @@
 /* Asap */
 @font-face {
     font-family: 'Asap';
-    src: url('/public/fonts/Asap/Asap-Light.ttf') format('truetype');
+    src: url('/public/fonts/Asap/Asap-Light.woff2') format('woff2');
     font-weight: 300;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Asap';
-    src: url('/public/fonts/Asap/Asap-Regular.ttf') format('truetype');
+    src: url('/public/fonts/Asap/Asap-Regular.woff2') format('woff2');
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Asap';
-    src: url('/public/fonts/Asap/Asap-Medium.ttf') format('truetype');
+    src: url('/public/fonts/Asap/Asap-Medium.woff2') format('woff2');
     font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Asap';
-    src: url('/public/fonts/Asap/Asap-SemiBold.ttf') format('truetype');
+    src: url('/public/fonts/Asap/Asap-SemiBold.woff2') format('woff2');
     font-weight: 600;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Asap';
-    src: url('/public/fonts/Asap/Asap-Bold.ttf') format('truetype');
+    src: url('/public/fonts/Asap/Asap-Bold.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
 }
