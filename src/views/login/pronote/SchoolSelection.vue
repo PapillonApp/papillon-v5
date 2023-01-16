@@ -596,7 +596,7 @@
 
     .introData h2 {
         font-size: 24px;
-        font-family: 'Papillon' !important;
+        font-family: var(--papillon-font) !important;
         font-weight: 700;
     }
     
@@ -642,7 +642,7 @@
 
         font-size: 16px;
         font-weight: 500;
-        font-family: 'Papillon' !important;
+        font-family: var(--papillon-font) !important;
     }
 
     .loginButton {
@@ -657,6 +657,6 @@
         cursor: pointer;
         overflow: hidden;
         isolation: isolate;
-        font-family: 'Papillon' !important;
+        font-family: var(--papillon-font) !important;
     }
 </style>
