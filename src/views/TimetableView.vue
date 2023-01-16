@@ -377,7 +377,7 @@
         async setNotif(course) {
             try {
                 let subject = course.data.subject;
-                let room = course.data.rooms[0];
+                let room = course.data.rooms[0] || "salle inconnue";
                 let teacher = course.data.teachers[0];
 
                 let time = new Date(course.time.start);
@@ -386,8 +386,12 @@
                 await LocalNotifications.schedule({
                     notifications: [
                         {
-                            title: "🗓️ C'est l'heure d'aller en " + subject + " !",
-                            body: `Vous êtes en ${room} avec ${teacher}`,
+                            title: `${subject} - Ça commence bientôt !`,
+                            largeBody: `
+                                Vous êtes avec ${teacher} dans la ${room}.
+                                Le cours commence dans 5 minutes.
+                            `,
+                            summaryText: `Vous êtes avec ${teacher} dans la ${room}`,
                             id: 1,
                             schedule: { at: time },
                             sound: "tone.ogg",
