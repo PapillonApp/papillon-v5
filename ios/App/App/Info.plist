@@ -46,9 +46,9 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Privacy - Location Always Usage Description</string>
+	<string>On utilise ta localisation pour déterminer automatiquement ton établissement.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Privacy - Location When In Use Usage Description</string>
+	<string>On utilise ta localisation pour déterminer automatiquement ton établissement.</string>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
