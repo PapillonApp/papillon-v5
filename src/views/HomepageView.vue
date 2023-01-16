@@ -343,7 +343,7 @@
         height: fit-content;
         font-weight: 600;
         font-size: 16px;
-        font-family: "Papillon";
+        font-family: var(--papillon-font);
     }
 
     .ios .nextCours {
