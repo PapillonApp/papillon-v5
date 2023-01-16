@@ -152,7 +152,7 @@
 
                     <p class="CoursInfo Status" v-if="status">
                         <span v-if="!isCancelled" class="material-symbols-outlined smol" slot="start">info</span>
-                        <span v-if="isCancelled" class="material-symbols-outlined smol" slot="start">emergency_home</span>
+                        <span v-if="isCancelled" class="material-symbols-outlined smol" slot="start">error</span>
 
                         {{status}}
                     </p>
@@ -303,11 +303,11 @@
         background: var(--ion-color-step-200);
     }
 
-    .CoursInfoContainer .material-symbols-outlined {
+    .cours .material-symbols-outlined {
         font-variation-settings:
         'FILL' 1,
         'wght' 400,
-        'GRAD' 0,
+        'GRAD' 1,
         'opsz' 14 !important;
     }
 
@@ -340,8 +340,18 @@
 
     .Status {
         opacity: 1;
-        color: var(--ion-color-warning);
-        max-width: 100% !important;
+        color: #fff;
+        padding: 5px 10px;
+        background: #ffffff10;
+        border-radius: 300px;
+        margin-top: 5px;
+    }
+
+    @media screen and (prefers-color-scheme: light) {
+        .Status {
+            color: var(--ion-color-warning);
+            background: rgba(var(--ion-color-warning-rgb), 0.1);
+        }
     }
 
     .true .cours {
@@ -354,7 +364,8 @@
     }
 
     .true .cours .Status {
-        color: var(--ion-color-danger);
+            color: var(--ion-color-danger);
+            background: rgba(var(--ion-color-danger-rgb), 0.1);
     }
 
     .CoursTime {
