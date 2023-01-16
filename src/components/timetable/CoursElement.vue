@@ -252,7 +252,7 @@
         flex-direction: column;
         justify-content: center;
     
-        width: 100%;
+        width: calc(100% - 20px);
         height: 100%;
 
         padding: 8px 0px;
@@ -276,7 +276,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        width: calc(100vw - 135px);
+        width: calc(100vw - 145px);
     }
 
     @media screen and (prefers-color-scheme: light) {
@@ -314,7 +314,7 @@
         align-items: flex-start;
         gap: 10px;
 
-        width: calc(100vw - 135px);
+        width: calc(100vw - 145px);
     }
 
     .CoursInfoContainer .separator {
