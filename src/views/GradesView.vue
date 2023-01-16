@@ -386,31 +386,31 @@
                         <span class="material-symbols-outlined mdls" slot="start">face</span>
                         <ion-label>
                             <p>Ma moyenne</p>
-                            <h3>{{ selectedMark.average }}/20</h3>
+                            <h2>{{ selectedMark.average }}<small>/20</small></h2>
                         </ion-label>
                     </ion-item>
 
                     <ion-item>
                         <span class="material-symbols-outlined mdls" slot="start">school</span>
                         <ion-label>
-                            <p>Moyenne de la classe</p>
-                            <h3>{{ selectedMark.class_average }}/20</h3>
+                            <p>Moyenne de classe</p>
+                            <h2>{{ selectedMark.class_average }}<small>/20</small></h2>
                         </ion-label>
                     </ion-item>
 
                     <ion-item>
                         <span class="material-symbols-outlined mdls" slot="start">person_remove</span>
                         <ion-label>
-                            <p>La moyenne basse</p>
-                            <h3>{{ selectedMark.min_average }}/20</h3>
+                            <p>Moyenne la plus basse</p>
+                            <h2>{{ selectedMark.min_average }}<small>/20</small></h2>
                         </ion-label>
                     </ion-item>
 
                     <ion-item>
                         <span class="material-symbols-outlined mdls" slot="start">person_add</span>
                         <ion-label>
-                            <p>La moyenne haute</p>
-                            <h3>{{ selectedMark.max_average }}/20</h3>
+                            <p>Moyenne la haute</p>
+                            <h2>{{ selectedMark.max_average }}<small>/20</small></h2>
                         </ion-label>
                     </ion-item>
                 </ion-list>
