@@ -345,6 +345,7 @@
         background: #ffffff10;
         border-radius: 300px;
         margin-top: 5px;
+        max-width: fit-content;
     }
 
     @media screen and (prefers-color-scheme: light) {
