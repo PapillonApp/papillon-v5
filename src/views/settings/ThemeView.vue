@@ -100,10 +100,10 @@
                 let newColor = e.target.value;
                 console.log(newColor);
                 // apply it to the css variable
-                document.body.style.setProperty('--ion-color-primary', this.hexToRgb(newColor));
+                document.body.style.setProperty('--ion-color-primary', newColor);
                 document.body.style.setProperty('--ion-color-primary-rgb', this.hexToRgb(newColor));
-                document.body.style.setProperty('--ion-color-primary-shade', this.hexToRgb(newColor));
-                document.body.style.setProperty('--ion-color-primary-tint', this.hexToRgb(newColor));
+                document.body.style.setProperty('--ion-color-primary-shade', newColor);
+                document.body.style.setProperty('--ion-color-primary-tint', newColor);
                 // save it in local storage
                 let customizations = JSON.parse(localStorage.getItem('customizations')) || {};
 
