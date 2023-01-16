@@ -39,4 +39,4 @@ router.isReady().then(() => {
 
 // Global vars in Vue
 app.config.globalProperties.$rn = new Date;
-app.config.globalProperties.$api = "https://api.pronote.plus";
+app.config.globalProperties.$api = "https://api.getpapillon.xyz";

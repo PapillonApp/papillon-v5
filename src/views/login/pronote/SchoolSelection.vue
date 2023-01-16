@@ -145,7 +145,7 @@
                 this.terms = e.detail.value;
                 this.isLoading = true;
                 
-                axios.get('https://cors.api.pronote.plus/https://positionstack.com/geo_api.php?query=france+' + postal, {
+                axios.get('https://cors.api.getpapillon.xyz/https://positionstack.com/geo_api.php?query=france+' + postal, {
                     headers: {
                         'Access-Control-Allow-Origin': '*',
                         'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',

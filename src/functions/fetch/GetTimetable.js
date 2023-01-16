@@ -145,7 +145,7 @@ function constructPronoteTimetable(timetable, date) {
         }
 
         if (course.is_exempted) {
-            newCourse.course.color = "#739B73";
+            newCourse.course.color = "#627E66";
             newCourse.status.status = "Vous êtes dispensé de cours";
         }
 
