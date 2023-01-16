@@ -263,8 +263,13 @@
             let status = cours.status.status;
             let hasStatus = status != undefined;
 
-            // set status if it's undefined
-            if(status == undefined) {
+            if (cours.status.isOuting) {
+                status = "Vous êtes en sortie"
+                hasStatus = true;
+            } else if (cours.status.isTest) {
+                status = "Vous avez un contrôle"
+                hasStatus = true;
+            } else if(status == undefined) {
                 status = "Le cours se déroule normalement";
             }
 

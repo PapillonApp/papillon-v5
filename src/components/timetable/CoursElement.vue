@@ -158,11 +158,31 @@
                     </p>
                 </div>
             </ion-label>
+
+            <div slot="end" class="TypeIcon">
+                <span v-if="isTest">
+                    <span class="material-symbols-outlined smol">quiz</span>
+                </span>
+
+                <span v-if="isOuting">
+                    <span class="material-symbols-outlined smol">directions_walk</span>
+                </span>
+
+                <span v-if="memo">
+                    <span class="material-symbols-outlined smol">sticky_note_2</span>
+                </span>
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+    .TypeIcon {
+        position: absolute;
+        right: 10px;
+        top: 40%;
+    }
+
     .mainElemCours {
         display: flex;
         align-items: center;
