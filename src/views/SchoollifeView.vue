@@ -15,6 +15,7 @@
 
 	import GetAbsences from '@/functions/fetch/GetAbsences.js';
 	import GetPunishments from '@/functions/fetch/GetPunishments.js';
+	import GetDelays from '@/functions/fetch/GetDelays.js';
 
 	import {
 		Swiper,
@@ -38,38 +39,58 @@
 			}
 		},
 		methods: {
+			getDatas(force) {
+				try {
+					GetAbsences(force).then((res) => {
+						this.absences = res;
+						this.absError = false;
+					})
+					.catch((err) => {
+						this.absError = true;
+					});
 
+					GetPunishments(force).then((res) => {
+						this.punishments = res;
+					})
+					.catch((err) => {
+						this.punishmentsError = true;
+					});
+
+					GetDelays(force).then((res) => {
+						this.delays = res;
+					})
+					.catch((err) => {
+						this.delaysError = true;
+					});
+				}
+				catch (err) {
+					console.log(err);
+					this.punishmentsError = true;
+					this.absError = true;
+					this.delaysError = true;
+					this.punishments = [];
+				}
+			},
+			handleRefresh(event) {
+				this.getDatas(true);
+
+				setTimeout(() => {
+					event.detail.complete();
+				}, 2000);
+			}
 		},
 		data() {
 			return {
 				absences: [],
 				absError: false,
 				punishments: [],
-				punishmentsError: false
+				punishmentsError: false,
+				delays: [],
+				delaysError: false
 			}
 		},
 		mounted() {
-			try {
-				GetAbsences().then((res) => {
-					this.absences = res;
-					this.absError = false;
-				})
-				.catch((err) => {
-					console.log(err);
-					this.absError = true;
-				});
-
-				GetPunishments().then((res) => {
-					this.punishments = res;
-					console.log(res);
-				})
-			}
-			catch (err) {
-				console.log(err);
-				this.punishmentsError = true;
-				this.absError = true;
-				this.punishments = [];
-			}
+			this.getDatas(false);
 		}
 	});
 </script>
@@ -172,10 +193,36 @@
 					<ion-label>Retards</ion-label>
 				</ion-list-header>
 
-				<ion-item>
+				<ion-item v-if="delaysError">
 					<ion-label>
 						<p>Impossible de récupérer les retards pour le moment.</p>
 					</ion-label>
+				</ion-item>
+
+				<ion-item v-if="delays.length == 0 && !delaysError">
+					<ion-label>
+						<p>Aucun retard.</p>
+					</ion-label>
+				</ion-item>
+
+				<ion-item v-for="(delay, i) in delays" :key="i">
+					<span class="material-symbols-outlined mdls" slot="start">schedule</span>
+
+					<ion-label>
+						<p>{{ delay.duration }} minutes manquées le {{ new Date (delay.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }) }}</p>
+
+						<h2 v-if="delay.reasons.length !== 0">{{ delay.reasons[0] }}</h2>
+						<h2 v-else>Absence non justifiée</h2>
+					</ion-label>
+
+					<ion-chip slot="end" v-if="!delay.justified" color="warning">
+						<span class="material-symbols-outlined mdls">error</span>
+						Injustifié
+					</ion-chip>
+					<ion-chip slot="end" v-else color="success">
+						<span class="material-symbols-outlined mdls">check</span>
+						Justifié
+					</ion-chip>
 				</ion-item>
 			</ion-list>
 
