@@ -48,7 +48,8 @@
                 homeworks: [],
                 blockChangeDone: false,
                 editMode: false,
-                emoji: this.randomEmoji(),
+                noCoursesEmoji: this.randomEmoji(),
+                noCoursesMsg: this.randomMsg(),
                 noCourses: false
             }
         },
@@ -57,7 +58,25 @@
                 this.$router.push(url);
             },
             randomEmoji() {
-                let list = ["😊", "😎", "😴", "👌", "🌞", "📚", "💪", "💤"]
+                let list = ["😊", "😎", "😴", "👌", "🌞", "📚", "💪", "💤", "😉", "🥱"]
+                return list[Math.floor(Math.random() * list.length)];
+            },
+            randomMsg() {
+                let list = [
+                    "Temps calme",
+                    "Pas de cours, on révise ?",
+                    "C'est la sieste (ou pas)",
+                    "Je suis sûr qu'il reste des devoirs",
+                    "Il n'y a jamais vraiment rien à faire",
+                    "Il est temps de commencer ce joli DM",
+                    "Il fait beau dehors ?",
+                    "Ca tombe bien, ce livre ne se finira pas tout seul !",
+                    "Flûte, le cours de maths est fini",
+                    "Après l'effort le réconfort",
+                    "Alors, ça se la coule douce ?",
+                    "Prenons de l'avance sur la semaine prochaine !",
+                    "Il est temps de reprendre la lecture !"
+                ]
                 return list[Math.floor(Math.random() * list.length)];
             },
             editTimetable(timetable) {
@@ -163,30 +182,6 @@
                     }
                 });
             },
-            changeDone(hw) {
-                if(!this.blockChangeDone) {
-                    displayToast.presentToastFull(
-                        "Allez dans la page devoirs pour marquer un devoir comme fait",
-                        `Vous ne pouvez pas changer l'état d'un devoir depuis l'écran d'accueil.`,
-                        "warning",
-                        informationCircle
-                    )
-
-                    let checkboxID = `checkbox_${hw.data.id}`;
-                    let checkbox = document.getElementById(checkboxID);
-
-                    if (checkbox) {
-                        setTimeout(() => {
-                            this.blockChangeDone = true;
-                            setTimeout(() => {
-                                this.blockChangeDone = false;
-                            }, 100);
-
-                            checkbox.checked = !checkbox.checked;
-                        }, 300);
-                    }
-                }
-            },
             reorder() {
                 let order = ["comp-hw", "comp-tt"]
 
@@ -201,8 +196,11 @@
                 }
             },
             handleRefresh(event) {
-                this.getTimetable();
+                this.getTimetable(true);
                 this.getHomeworks(true);
+
+                this.noCoursesMsg = this.randomMsg();
+                this.noCoursesEmoji = this.randomEmoji();
 
                 setTimeout(() => {
                     event.detail.complete();
@@ -274,14 +272,14 @@
                     </ion-label>
                 </ion-item>
 
-                <ion-item v-if="noCourses" style="margin-top: 12px;" class="nextCours" lines="none" @click="goto('timetable')">
+                <ion-item v-if="!noCourses" style="margin-top: 12px;" class="nextCours" lines="none" @click="goto('timetable')">
                     <ion-ripple-effect></ion-ripple-effect>
                     <div slot="start" class="emoji">
-                        {{ emoji }}
+                        {{ noCoursesEmoji }}
                     </div>
                     <ion-label>
                         <h2>Aucun cours</h2>
-                        <p>Vous n'avez aucun cours aujourd'hui.</p>
+                        <p>{{ noCoursesMsg }}</p>
                     </ion-label>
                 </ion-item>
 
