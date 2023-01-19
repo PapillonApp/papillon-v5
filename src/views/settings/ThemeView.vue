@@ -36,7 +36,7 @@
 		},
 		setup() {
 			return {
-                availableFonts: ["Hind", "Asap"]
+                availableFonts: ["Hind", "Asap", "Roboto Slab", "system-ui"]
 			}
 		},
 		methods: {
