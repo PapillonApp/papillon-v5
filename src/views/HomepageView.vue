@@ -163,30 +163,6 @@
                     }
                 });
             },
-            changeDone(hw) {
-                if(!this.blockChangeDone) {
-                    displayToast.presentToastFull(
-                        "Allez dans la page devoirs pour marquer un devoir comme fait",
-                        `Vous ne pouvez pas changer l'état d'un devoir depuis l'écran d'accueil.`,
-                        "warning",
-                        informationCircle
-                    )
-
-                    let checkboxID = `checkbox_${hw.data.id}`;
-                    let checkbox = document.getElementById(checkboxID);
-
-                    if (checkbox) {
-                        setTimeout(() => {
-                            this.blockChangeDone = true;
-                            setTimeout(() => {
-                                this.blockChangeDone = false;
-                            }, 100);
-
-                            checkbox.checked = !checkbox.checked;
-                        }, 300);
-                    }
-                }
-            },
             reorder() {
                 let order = ["comp-hw", "comp-tt"]
 
