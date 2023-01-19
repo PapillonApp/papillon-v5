@@ -69,30 +69,33 @@
                     let lessonStart = new Date(lesson.time.start);
                     let lessonEnd = new Date(lesson.time.end);
 
-                    if (lessonStart <= now && lessonEnd >= now) {
-                        // get minutes before next lesson
-                        let mins = Math.floor((lessonEnd - now) / 1000 / 60);
+                    // get minutes before next lesson
+                    let mins = Math.floor((lessonStart - now) / 1000 / 60);
+                    let gap = -((Math.floor((lessonEnd - lessonStart) / 1000 / 60))/2);
 
-                        // if less than 60 mins
-                        if (mins < 60) {
-                            this.nextCoursTime = `dans ${mins} minutes`;
-                        }
-                        else {
-                            let hours = Math.floor(mins / 60);
-                            mins = mins % 60;
+                    // if less than 60 mins
+                    if (mins < 60 && mins > 0) {
+                        this.nextCoursTime = `dans ${mins} minutes`;
+                    }
+                    else if (mins <= 0) {
+                        this.nextCoursTime = "Cours commencé";
 
-                            this.nextCoursTime = `dans ${hours} heures et ${mins} minutes`;
-                        }
-
-                        if (lesson.status.isCancelled) {
+                        if (lessonEnd <= now) {
                             return false;
                         }
-
-                        return true;
-                    }
+                    } 
                     else {
+                        let hours = Math.floor(mins / 60);
+                        mins = mins % 60;
+
+                        this.nextCoursTime = `dans ${hours} heures et ${mins} minutes`;
+                    }
+
+                    if (lesson.status.isCancelled || mins < gap) {
                         return false;
                     }
+
+                    return true;
                 });
 
                 // if lessons is empty but not timetable, get last lesson
@@ -198,7 +201,7 @@
                 }
             },
             handleRefresh(event) {
-                this.getTimetable(true);
+                this.getTimetable();
                 this.getHomeworks(true);
 
                 setTimeout(() => {
