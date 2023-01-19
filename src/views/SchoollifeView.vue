@@ -209,13 +209,13 @@
 					<span class="material-symbols-outlined mdls" slot="start">schedule</span>
 
 					<ion-label>
-						<p>{{ delay.duration }} minutes manquées le {{ new Date (delay.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }) }}</p>
+						<p>{{ delay.date.duration }} minutes manquées le {{ new Date (delay.date.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }) }}</p>
 
-						<h2 v-if="delay.reasons.length !== 0">{{ delay.reasons[0] }}</h2>
+						<h2 v-if="delay.data.reasons.length !== 0">{{ delay.data.reasons[0] }}</h2>
 						<h2 v-else>Absence non justifiée</h2>
 					</ion-label>
 
-					<ion-chip slot="end" v-if="!delay.justified" color="warning">
+					<ion-chip slot="end" v-if="!delay.data.isJustified" color="warning">
 						<span class="material-symbols-outlined mdls">error</span>
 						Injustifié
 					</ion-chip>
