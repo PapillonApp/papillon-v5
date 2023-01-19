@@ -257,8 +257,8 @@
                     <div slot="start">
                         <IonChip>{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</IonChip>
                     </div>
-                    <ion-label>
-                        <h2>{{ cours.data.subject }}</h2>
+                    <ion-label :style="`--courseColor: ${cours.course.color};`">
+                        <h2><span class="courseColor"></span> {{ cours.data.subject }}</h2>
                         <h3>{{ nextCoursTime }}</h3>
                         <p>salle {{ cours.data.rooms.join(', ') || 'Pas de salle' }} - avec {{ cours.data.teachers.join(', ') || 'Pas de professeur' }}</p>
                         <p v-if="cours.status.status">{{ cours.status.status }}</p>
@@ -364,5 +364,14 @@
         border-radius: 8px;
         padding: 3px 10px;
         border: 1px solid var(--ion-color-step-150);
+    }
+
+    .courseColor {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--courseColor);
+        display: inline-block;
+        margin-right: 5px;
     }
 </style>
