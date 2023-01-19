@@ -48,9 +48,9 @@ export default defineComponent({
     methods: {
         createDateString(date) {
             let dateObject = new Date(date);
-
-            // return string like "1 jan."
-            return `${dateObject.getDate()} ${dateObject.toLocaleString('default', { month: 'short' })}`;
+            let day_string = dateObject.toLocaleString('default', { weekday: 'long' });
+            // return string like "jeudi 1 jan."
+            return `${day_string} ${dateObject.getDate()} ${dateObject.toLocaleString('default', { month: 'short' })}`;
         },
         rnInputChanged() {
             // get new date from rnInput
