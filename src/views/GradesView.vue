@@ -81,8 +81,11 @@
                 // find period with actual = true
                 let actualPeriod = allPeriods.find(period => period.actual == true);
 
+                if(localStorage.getItem('currentPeriod')) {
+                    actualPeriod = JSON.parse(localStorage.getItem('currentPeriod'));
+                }
+                
                 this.current_period = actualPeriod;
-                console.log(actualPeriod.name);
 
                 // if first period contains "Trimestre", add all trimesters
                 if (actualPeriod.name.includes("Trimestre")) {
@@ -108,6 +111,9 @@
 
                     // get corresponding period name from id
                     let newPeriod = this.periods.find(period => period.id == newSegment);
+
+                    // save in localstorage
+                    localStorage.setItem('currentPeriod', JSON.stringify(newPeriod));
 
                     // change current period
                     ChangePeriod(newPeriod.name).then((data) => {
