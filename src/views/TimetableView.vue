@@ -344,7 +344,7 @@
                     notifications: [
                         {
                             title: `${subject} - Ça commence bientôt !`,
-                            body: `Vous êtes avec ${teacher} dans la ${room}. Le cours commence dans 5 minutes.`,
+                            body: `Vous êtes en ${room} avec ${teacher}. Le cours commence dans 5 minutes.`,
                             id: 1,
                             schedule: { at: time },
                             sound: "tone.ogg",
@@ -673,7 +673,7 @@
                     </ion-item>
 
                     <ion-item class="info-item" v-if="selectedCourse.isCancelled" style="color: var(--ion-color-danger);">
-                        <span class="material-symbols-outlined mdls" slot="start">emergency_home</span>
+                        <span class="material-symbols-outlined mdls" slot="start">error</span>
                         <ion-label>
                             <p>Statut</p>
                             <h2>Ce cours n'est pas maintenu<br>Motif : {{selectedCourse.status}}</h2>
@@ -744,6 +744,20 @@
 
     .ios .newCoursModal ion-list.list-inset > * {
         --background : var(--ion-background-color) !important;
+    }
+
+    @media screen and (prefers-color-scheme: dark) {
+        .ios .newCoursModal ion-list.list-inset {
+            background : var(--ion-color-step-100) !important;
+        }
+
+        .ios .newCoursModal ion-list.list-inset > * {
+            --background : var(--ion-color-step-100) !important;
+        }
+
+        .ios .newCoursModal .timeInput {
+            background: var(--ion-color-step-150) !important;
+        }
     }
 
     .ios .newCoursModal .timeInput {
