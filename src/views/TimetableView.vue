@@ -3,7 +3,8 @@
   import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonFabButton, IonInput } from '@ionic/vue';
 
   import displayToast from '@/functions/utils/displayToast.js';
-  import subjectColor from '@/functions/utils/subjectColor.js'
+  import subjectColor from '@/functions/utils/subjectColor.js';
+  import timetableEdit from '@/functions/utils/timetableEdit.js';
   
   import { calendarOutline, calendarSharp, todayOutline, todaySharp, add, checkmark, notifications } from 'ionicons/icons';
 
@@ -74,45 +75,7 @@
             this.$refs.rnPickerModal.$el.present();
         },
         editTimetable(timetable, date) {
-            // add sameTime property to courses that are at the same time
-            for(let i = 0; i < timetable.length; i++) {
-                let lesson = timetable[i];
-                let lessonStart = new Date(lesson.time.start);
-                let lessonEnd = new Date(lesson.time.end);
-
-                for(let j = 0; j < timetable.length; j++) {
-                    // check if lesson is at the same time as lesson2
-                    let lesson2 = timetable[j];
-                    let lesson2Start = new Date(lesson2.time.start);
-                    let lesson2End = new Date(lesson2.time.end);
-
-                    if (lessonStart <= lesson2Start && lessonEnd >= lesson2End && lesson.course.num != lesson2.course.num) {
-                        if (lesson.course.num > lesson2.course.num) {
-                            timetable[j].course.sameTime = true;
-                        }
-                        else {
-                            timetable[i].course.sameTime = true;
-                        }
-                    }
-                }
-            }
-
-            // for each lesson, check if it starts at least 1 hour after the previous lesson ends, if so course.distance = true
-            for(let i = 0; i < timetable.length; i++) {
-                let lesson = timetable[i];
-                let lessonStart = new Date(lesson.time.start);
-                let lessonEnd = new Date(lesson.time.end);
-
-                if (i > 0) {
-                    let previousLesson = timetable[i - 1];
-                    let previousLessonStart = new Date(previousLesson.time.start);
-                    let previousLessonEnd = new Date(previousLesson.time.end);
-
-                    if (lessonStart - previousLessonEnd >= 1000 * 60 * 15) {
-                        timetable[i].course.distance = true;
-                    }
-                }
-            }
+            timetable = timetableEdit(timetable);
 
             // add custom courses
             let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
@@ -141,18 +104,6 @@
                 }
             });
 
-            // for each lesson, add course.length property
-            for(let i = 0; i < timetable.length; i++) {
-                let lesson = timetable[i];
-                let lessonStart = new Date(lesson.time.start);
-                let lessonEnd = new Date(lesson.time.end);
-
-                let length = lessonEnd - lessonStart;
-                length = length / 1000 / 60 / 60;
-
-                timetable[i].course.lengthCours = length;
-            }
-
             // order timetable by time
             timetable.sort((a, b) => {
                 let aStart = new Date(a.time.start);
@@ -161,8 +112,6 @@
                 return aStart - bStart;
             });
 
-            console.log(timetable);
-            
             return timetable;
         },
         getTimetables(force) {

@@ -8,6 +8,7 @@
 
     import displayToast from '@/functions/utils/displayToast.js';
     import hapticsController from '@/functions/utils/hapticsController.js';
+    import timetableEdit from '@/functions/utils/timetableEdit.js';
 
     import GetToken from '@/functions/login/GetToken.js';
     import GetNews from '@/functions/fetch/GetNews.js';
@@ -53,27 +54,7 @@
                 this.$router.push(url);
             },
             editTimetable(timetable) {
-                // add sameTime property to courses that are at the same time
-                for(let i = 0; i < timetable.length; i++) {
-                    let lesson = timetable[i];
-                    let lessonStart = new Date(lesson.time.start);
-                    let lessonEnd = new Date(lesson.time.end);
-
-                    for(let j = 0; j < timetable.length; j++) {
-                        let lesson2 = timetable[j];
-                        let lesson2Start = new Date(lesson2.time.start);
-                        let lesson2End = new Date(lesson2.time.end);
-
-                        if (lessonStart <= lesson2Start && lessonEnd >= lesson2End && lesson.course.num != lesson2.course.num) {
-                            if (lesson.course.num > lesson2.course.num) {
-                                timetable[j].course.sameTime = true;
-                            }
-                            else {
-                                timetable[i].course.sameTime = true;
-                            }
-                        }
-                    }
-                }
+                timetable = timetableEdit(timetable);
 
                 // get next lesson (cours.time.start)
                 let now = new Date();
@@ -248,12 +229,7 @@
 
         <div id="components" ref="components">
             <ion-list id="comp-tt" class="nextCourse" ref="comp-tt">
-                <ion-list-header>
-                    <ion-label>Prochain cours</ion-label>
-                    <ion-button @click="goto('timetable')">Ma journée</ion-button>
-                </ion-list-header>
-
-                <ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none">
+                <ion-item style="margin-top: 12px;" class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none">
                     <div slot="start">
                         <IonChip>{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</IonChip>
                     </div>
