@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip, IonRippleEffect } from '@ionic/vue';
 
     import { informationCircle } from 'ionicons/icons';
 
@@ -36,7 +36,8 @@
             IonLabel,
             IonSpinner,
             IonRefresher,
-            IonChip
+            IonChip,
+            IonRippleEffect
         },
         data() {
             return { 
@@ -46,12 +47,18 @@
                 firstName: '',
                 homeworks: [],
                 blockChangeDone: false,
-                editMode: false
+                editMode: false,
+                emoji: this.randomEmoji(),
+                noCourses: false
             }
         },
         methods: {
             goto(url) {
                 this.$router.push(url);
+            },
+            randomEmoji() {
+                let list = ["😊", "😎", "😴", "👌", "🌞", "📚", "💪", "💤"]
+                return list[Math.floor(Math.random() * list.length)];
             },
             editTimetable(timetable) {
                 timetable = timetableEdit(timetable);
@@ -77,6 +84,10 @@
                             this.nextCoursTime = `dans ${hours} heures et ${mins} minutes`;
                         }
 
+                        if (lesson.status.isCancelled) {
+                            return false;
+                        }
+
                         return true;
                     }
                     else {
@@ -86,10 +97,21 @@
 
                 // if lessons is empty but not timetable, get last lesson
                 if (lessons.length == 0 && timetable.length > 0) {
-                    let lastLesson = timetable[timetable.length - 1];
-                    lessons.push(lastLesson);
+                    for (let i = timetable.length - 1; i >= 0; i--) {
+                        let lesson = timetable[i];
 
-                    this.nextCoursTime = "Cours terminé"
+                        if (lesson.status.isCancelled) {
+                            continue;
+                        }
+
+                        this.nextCoursTime = "Cours terminé";
+                        lessons.push(lesson);
+                        break;
+                    }
+                }
+
+                if (lessons.length == 0 && timetable.length == 0) {
+                    this.noCourses = true;
                 }
                 
                 return lessons;
@@ -229,7 +251,8 @@
 
         <div id="components" ref="components">
             <ion-list id="comp-tt" class="nextCourse" ref="comp-tt">
-                <ion-item style="margin-top: 12px;" class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none">
+                <ion-item style="margin-top: 12px;" class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none" @click="goto('timetable')">
+                    <ion-ripple-effect></ion-ripple-effect>
                     <div slot="start">
                         <IonChip>{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</IonChip>
                     </div>
@@ -248,7 +271,11 @@
                     </ion-label>
                 </ion-item>
 
-                <ion-item v-if="timetable == []" lines="none">
+                <ion-item v-if="noCourses" style="margin-top: 12px;" class="nextCours" lines="none" @click="goto('timetable')">
+                    <ion-ripple-effect></ion-ripple-effect>
+                    <div slot="start" class="emoji">
+                        {{ emoji }}
+                    </div>
                     <ion-label>
                         <h2>Aucun cours</h2>
                         <p>Vous n'avez aucun cours aujourd'hui.</p>
@@ -314,6 +341,11 @@
 </template>
   
 <style scoped>
+    .emoji {
+        font-size: 1.5em;
+        margin-right: 10px;
+    }
+
     .nextCourse ion-chip {
         padding: 6px 9px !important;
         height: fit-content;
