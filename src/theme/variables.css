@@ -228,5 +228,6 @@ http://ionicframework.com/docs/theming/ */
 
   .ios body {
     --ion-inset-background: hsl(255, 0%, 97%);
+    --ion-border-color: hsl(0, 0%, 90%) !important;
   }
 }

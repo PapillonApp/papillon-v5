@@ -295,6 +295,9 @@
             // open cours modal
             this.$refs.coursModal.$el.present(cours);
         },
+        setNewCoursModalOpen(state) {
+            this.newCoursModalOpen = state;
+        },
         addNewCours() {
             let st = new Date();
             let en = new Date();
@@ -536,7 +539,7 @@
         </ion-refresher>
 
         <IonFab slot="fixed" vertical="bottom" horizontal="end" class="newCoursBtnFab">
-            <ion-button @click="newCoursModalOpen = true" size="large" shape="round" class="newCoursBtn" mode="md">
+            <ion-button @click="setNewCoursModalOpen(true)" size="large" shape="round" class="newCoursBtn" mode="md">
                 <span class="material-symbols-outlined mdls" slot="icon-only">add</span>
             </ion-button>
         </IonFab>
@@ -596,7 +599,7 @@
             <IonHeader>
                 <IonToolbar>
                     <ion-buttons slot="start">
-                        <ion-button @click="newCoursModalOpen = false">Annuler</ion-button>
+                        <ion-button @click="setNewCoursModalOpen(false)">Annuler</ion-button>
                     </ion-buttons>
                     <ion-title>Ajouter un cours</ion-title>
                     <ion-buttons slot="end">
@@ -605,44 +608,35 @@
                 </IonToolbar>
             </IonHeader>
             <ion-content>
-                <div class="newCoursContent">
-                    <ion-list mode="md">
+                <ion-list inset>
+                    <ion-item>
+                        <ion-input type="text" name="CourseTitle" ref="newCoursNameRef" placeholder="Nom du cours"></ion-input>
+                    </ion-item>
 
-                        <ion-item class="input">
-                            <span slot="start" class="material-symbols-outlined mdls">drive_file_rename_outline</span>
-                            <ion-label position="floating">Nom du cours</ion-label>
-                            <ion-input type="text" name="Title" ref="newCoursNameRef" placeholder="Conseil de classe"></ion-input>
-                        </ion-item>
+                    <ion-item>
+                        <ion-input type="text" name="Place" ref="newCoursRoomRef" placeholder="Lieu"></ion-input>
+                    </ion-item>
 
-                        <ion-item class="input">
-                            <span slot="start" class="material-symbols-outlined mdls">face</span>
-                            <ion-label position="floating">Professeur</ion-label>
-                            <ion-input type="text" name="Person" ref="newCoursTeacherRef" placeholder="Prof. principal"></ion-input>
-                        </ion-item>
+                    <ion-item>
+                        <ion-input type="text" name="Person" ref="newCoursTeacherRef" placeholder="Professeur"></ion-input>
+                    </ion-item>
+                </ion-list>
 
-                        <ion-item class="input">
-                            <span slot="start" class="material-symbols-outlined mdls">location_on</span>
-                            <ion-label position="floating">Lieu</ion-label>
-                            <ion-input type="text" name="Place" ref="newCoursRoomRef" placeholder="A210"></ion-input>
-                        </ion-item>
+                <ion-list inset>
+                    <ion-item class="input">
+                        <ion-label>Heure de début</ion-label>
+                        <div class="timeInput" slot="end">
+                            <ion-input ref="newCoursStartRef" class="timeInInput" name="Start" type="time" value="12:30"></ion-input>
+                        </div>
+                    </ion-item>
 
-                        <ion-item class="input">
-                            <span slot="start" class="material-symbols-outlined mdls">schedule</span>
-                            <ion-label position="floating">Heure de début</ion-label>
-                            <ion-input ref="newCoursStartRef" name="Start" type="time" placeholder="12:30"></ion-input>
-                        </ion-item>
-
-                        <ion-item class="input">
-                            <span slot="start" class="material-symbols-outlined mdls">hourglass_empty</span>
-                            <ion-label position="floating">Heure de fin</ion-label>
-                            <ion-input name="End" ref="newCoursEndRef" type="time" placeholder="13:30"></ion-input>
-                        </ion-item>
-
-                    </ion-list>
-
-                    <ion-button mode="md" @click="addNewCours()" expand="block">Ajouter</ion-button>
-                </div>
-
+                    <ion-item class="input">
+                        <ion-label>Heure de fin</ion-label>
+                        <div class="timeInput" slot="end">
+                            <ion-input class="timeInInput" name="End" ref="newCoursEndRef" type="time" value="13:30"></ion-input>
+                        </div>
+                    </ion-item>
+                </ion-list>
             </ion-content>
         </IonModal>
 
@@ -790,20 +784,49 @@
         height: 56px;
     }
 
-    .input span {
-        margin-top: 15px;
+    .ios .newCoursModal .header-ios ion-toolbar:last-of-type {
+        --border-width: 0 0 0 0 !important;
     }
 
-    .newCoursContent {
-        padding: 0px 10px !important;
+    .ios .newCoursModal ion-content::part(scroll) {
+        background: var(--ion-toolbar-background, var(--ion-color-step-50, #f7f7f7));
     }
 
-    .itemBtn {
-        height: 36px;
-        font-size: 14px;
+    .ios .newCoursModal ion-list.list-inset {
+        background : var(--ion-background-color) !important;
+        border-radius: 10px !important;
     }
 
-    .itemBtn span {
-        margin-right: 5px;
+    .ios .newCoursModal ion-list.list-inset > * {
+        --background : var(--ion-background-color) !important;
+    }
+
+    .ios .newCoursModal .timeInput {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        background: var(--ion-color-step-50);
+        border-radius: 8px;
+
+        width: 70px;
+        height: 34px;
+        padding-left: 9px;
+
+    }
+
+    .ios .newCoursModal .timeInInput {
+        all: unset;
+        font-size: 18px;
+    }
+
+    .ios .timeInInput::-webkit-calendar-picker-indicator {
+        background: none !important;
+        display:none;
+    }
+
+    .md .newCoursModal ion-list {
+        padding: 0 15px;
     }
 </style>
