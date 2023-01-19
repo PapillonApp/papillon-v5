@@ -25,26 +25,18 @@ function setSameTimeCourses(timetable) {
 
 function setActualCourse(timetable) {
 	let now = new Date();
-	// timetable.filter((lesson) => {
-	// 	let lessonStart = new Date(lesson.time.start);
-	// 	let lessonEnd = new Date(lesson.time.end);
 
-	// 	if (lessonStart <= now && lessonEnd >= now) {
-	// 		// get minutes before next lesson
-	// 		let mins = Math.floor((lessonEnd - now) / 1000 / 60);
+	for(let i = 0; i < timetable.length; i++) {
+		let lesson = timetable[i];
+		let lessonStart = new Date(lesson.time.start);
+		let lessonEnd = new Date(lesson.time.end);
 
-	// 		// if less than 60 mins
-	// 		if (mins < 60) {
-	// 			this.nextCoursTime = `dans ${mins} minutes`;
-	// 		}
-	// 		else {
-	// 			let hours = Math.floor(mins / 60);
-	// 			mins = mins % 60;
-
-	// 			this.nextCoursTime = `dans ${hours} heures et ${mins} minutes`;
-	// 		}
-	// 	}
-	// });
+		if (lessonStart <= now && lessonEnd >= now && lesson.course.sameTime == false) {
+			timetable[i].course.actual = true;
+		} else {
+			timetable[i].course.actual = false;
+		}
+	}
 
 	return timetable;
 }
@@ -84,9 +76,9 @@ function setCoursesLength(timetable) {
 
 function editTimetable(timetable) {
 	timetable = setSameTimeCourses(timetable);
-	timetable = setActualCourse(timetable);
 	timetable = setCoursesLength(timetable);
 	timetable = setCoursesGap(timetable);
+	timetable = setActualCourse(timetable);
 
 	return timetable;
 }
