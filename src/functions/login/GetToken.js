@@ -1,6 +1,8 @@
 import { app } from '@/main.ts'
 import displayToast from '@/functions/utils/displayToast.js';
 
+import { checkmark, refresh } from 'ionicons/icons';
+
 let waitingForToken = false;
 
 // get token
@@ -39,7 +41,12 @@ function getPronoteLogin() {
 
         waitingForToken = true;
 
-        displayToast.presentToast("Connexion en cours...", "primary")
+        displayToast.presentToastFull(
+            "Reconnexion en cours...",
+            "Vous avez été déconnecté. Nous vous reconnectons...",
+            "light",
+            refresh
+        )
 
         // get token from API
         fetch(API + "/generatetoken", requestOptions)
@@ -58,6 +65,14 @@ function getPronoteLogin() {
 
                 // set waitingForToken to false
                 waitingForToken = false;
+
+                // display toast
+                displayToast.presentToastFull(
+                    "Vous êtes à nouveau connecté.",
+                    "Nous vous avons reconnecté à Pronote.",
+                    "success",
+                    checkmark
+                );
             }
             else {
                 if(result == "missingpassword" || result == "missingusername" || result.error.includes("probably wrong login information")) {
