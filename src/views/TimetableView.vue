@@ -344,11 +344,7 @@
                     notifications: [
                         {
                             title: `${subject} - Ça commence bientôt !`,
-                            largeBody: `
-                                Vous êtes avec ${teacher} dans la ${room}.
-                                Le cours commence dans 5 minutes.
-                            `,
-                            summaryText: `Vous êtes avec ${teacher} dans la ${room}`,
+                            body: `Vous êtes avec ${teacher} dans la ${room}. Le cours commence dans 5 minutes.`,
                             id: 1,
                             schedule: { at: time },
                             sound: "tone.ogg",
