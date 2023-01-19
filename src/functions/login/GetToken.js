@@ -39,6 +39,8 @@ function getPronoteLogin() {
 
         waitingForToken = true;
 
+        displayToast.presentToast("Connexion en cours...", "primary")
+
         // get token from API
         fetch(API + "/generatetoken", requestOptions)
         .then(response => response.json())
