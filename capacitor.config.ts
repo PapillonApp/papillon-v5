@@ -1,7 +1,7 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'plus.pronote.app',
+  appId: 'plus.pronote.devbuild',
   appName: 'Papillon',
   webDir: 'dist',
   bundledWebRuntime: false,
