@@ -55,8 +55,8 @@
         createDateString(date) {
             let dateObject = new Date(date);
             let day_string = dateObject.toLocaleString('default', { weekday: 'long' }).slice(0, 3);
-            // return string like "jeu. 1 jan."
-            return `${day_string}. ${dateObject.getDate()} ${dateObject.toLocaleString('default', { month: 'short' })}`;
+            // return string like "jeu. 1"
+            return day_string + ". " + dateObject.getDate();
         },
         rnInputChanged() {
             // get new date from rnInput
