@@ -299,3 +299,5 @@ ion-list.list-inset.ios ion-list-header ion-label {
 ion-action-sheet {
     --ion-color-primary: #0075ff !important;
 }
+
+/* modals on rounded iPhones */

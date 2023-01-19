@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText, IonSegment, IonSegmentButton, IonModal, IonSearchbar } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText, IonSegment, IonSegmentButton, IonModal, IonSearchbar, IonSpinner } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -9,6 +9,8 @@
 
     import GetToken from '@/functions/login/GetToken.js';
     import GetGrades from '@/functions/fetch/GetGrades.js';
+    import GetUserData from '@/functions/fetch/GetUserData.js';
+    import ChangePeriod from '@/functions/login/ChangePeriod.js';
 
     export default defineComponent({
         name: 'FolderPage',
@@ -29,7 +31,8 @@
             IonSkeletonText,
             IonSegment,
             IonSegmentButton,
-            IonSearchbar
+            IonSearchbar,
+            IonSpinner
         },
         data() {
             return { 
@@ -39,6 +42,8 @@
                 classAverages: [],
                 isLoading: false,
                 periods: [],
+                current_period: [],
+                segChangeTimeout: false,
                 selectedMark: {
                     subject: "",
                     average: 0,
@@ -73,8 +78,14 @@
             getPeriods() {
                 let allPeriods = JSON.parse(localStorage.getItem('userData')).periods;
 
+                // find period with actual = true
+                let actualPeriod = allPeriods.find(period => period.actual == true);
+
+                this.current_period = actualPeriod;
+                console.log(actualPeriod.name);
+
                 // if first period contains "Trimestre", add all trimesters
-                if (allPeriods[0].name.includes("Trimestre")) {
+                if (actualPeriod.name.includes("Trimestre")) {
                     for (let i = 0; i < allPeriods.length; i++) {
                         if (allPeriods[i].name.includes("Trimestre")) {
                             this.periods.push(allPeriods[i]);
@@ -83,31 +94,27 @@
                 }
 
                 // if first period contains "Semestre", add all semesters
-                if (allPeriods[0].name.includes("Semestre")) {
+                if (actualPeriod.name.includes("Semestre")) {
                     for (let i = 0; i < allPeriods.length; i++) {
                         if (allPeriods[i].name.includes("Semestre")) {
                             this.periods.push(allPeriods[i]);
                         }
                     }
                 }
-
-                // for each period, if actual is True, set status to "default"
-                for (let i = 0; i < this.periods.length; i++) {
-                    this.periods[i].status = this.periods[i].id;
-
-                    if (this.periods[i].actual) {
-                        this.$refs.segment.$el.value = this.periods[i].id;
-                    }
-                }
-
-                console.log(this.periods);
             },
             segChange() {
-                let newSegment = this.$refs.segment.$el.value;
+                if(!this.segChangeTimeout) {
+                    let newSegment = this.$refs.segment.$el.value;
 
-                // get corresponding period name from id
-                let newPeriod = this.periods.find(period => period.id == newSegment);
-                console.log(newPeriod);
+                    // get corresponding period name from id
+                    let newPeriod = this.periods.find(period => period.id == newSegment);
+
+                    // change current period
+                    ChangePeriod(newPeriod.name).then((data) => {
+                        this.getGradesRefresh(true);
+                        this.current_period = newPeriod;
+                    });
+                }
             },
             openAverageModal(subject) {
 
@@ -139,8 +146,19 @@
 
                 return grades;
             },
-            getGradesRefresh() {
+            getGradesRefresh(fromSegChange) {
+                if(fromSegChange) {
+                    this.segChangeTimeout = true;
+                    this.isLoading = true;
+                }
+
                 GetGrades(true).then((data) => {
+                    if(fromSegChange) {
+                        this.segChangeTimeout = false;
+
+                        this.isLoading = false;
+                    }
+
                     this.grades = this.editMarks(data.marks);
                     this.fullGrades = this.editMarks(data.marks);
 
@@ -230,6 +248,8 @@
           </ion-buttons>
 
           <ion-title mode="md">Notes</ion-title>
+
+          <ion-spinner slot="end" v-if="isLoading"></ion-spinner>
         </IonToolbar>
         <IonToolbar class="only-md">
             <IonSearchbar ref="searchBarMd" placeholder="Chercher une matière..." @ionChange="searchGrades()"></IonSearchbar>
@@ -252,8 +272,8 @@
 
         <div id="noTouchZone"></div>
 
-        <ion-segment style="display: none;" id="segment" value="default" ref="segment" @ionChange="segChange()">
-            <ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.status" :id="period.id">
+        <ion-segment v-if="periods.length > 0" id="segment" :value="current_period.id" ref="segment" @ionChange="segChange()">
+            <ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.id" :id="period.id">
                 <ion-label>{{period.name}}</ion-label>
             </ion-segment-button>
         </ion-segment>
@@ -333,6 +353,12 @@
                 
             </div>
         </ion-card>
+
+        <div v-if="!isLoading"><div class="NoCours" v-if="this.grades.length == 0">
+            <span class="material-symbols-outlined mdls">insights</span>
+            <h2>Pas de notes ajoutées pour cette période</h2>
+            <p>Réesayez avec une autre période à l'aide du sélecteur.</p>
+        </div></div>
 
         <IonList v-if="this.grades.length != 0">
             <IonListHeader>
@@ -590,5 +616,9 @@
         --background: none;
         box-shadow: none;
         border-radius: 8px;
+    }
+
+    ion-spinner {
+        margin-right: 20px;
     }
 </style>
