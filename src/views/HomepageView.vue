@@ -272,7 +272,7 @@
                     </ion-label>
                 </ion-item>
 
-                <ion-item v-if="!noCourses" style="margin-top: 12px;" class="nextCours" lines="none" @click="goto('timetable')">
+                <ion-item v-if="noCourses" style="margin-top: 12px;" class="nextCours" lines="none" @click="goto('timetable')">
                     <ion-ripple-effect></ion-ripple-effect>
                     <div slot="start" class="emoji">
                         {{ noCoursesEmoji }}
