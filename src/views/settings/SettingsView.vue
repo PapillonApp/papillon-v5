@@ -334,12 +334,6 @@
       <ion-content :fullscreen="true">
 
         <IonList :inset="true" lines="inset">
-            <IonListHeader>
-                <IonLabel>
-                    <p>Mon compte</p>
-                </IonLabel>
-            </IonListHeader>
-
             <IonItem>
                 <IonAvatar slot="start">
                     <img :src="userAvatar" />
@@ -352,54 +346,7 @@
             </IonItem>
         </IonList>
 
-
         <IonList :inset="true" lines="inset">
-            <IonListHeader>
-                <IonLabel>
-                    <p>Options</p>
-                </IonLabel>
-            </IonListHeader>
-
-            <IonItem button @click="logout()">
-                <span class="material-symbols-outlined mdls" slot="start">logout</span>
-                <IonLabel>
-                    <h2>Se déconnecter de Papillon</h2>
-                    <p>Supprime toutes les données de connexion de l'application</p>  
-                </IonLabel>
-            </IonItem>
-
-            <IonItem button @click="emptyCache()">
-                <span class="material-symbols-outlined mdls" slot="start">autorenew</span>
-                <IonLabel>
-                    <h2>Vider le cache des données</h2>
-                    <p>Réinitialise les données pré-téléchargées hors ligne</p>  
-                </IonLabel>
-            </IonItem>
-
-            <IonItem button @click="resetColors()">
-                <span class="material-symbols-outlined mdls" slot="start">palette</span>
-                <IonLabel>
-                    <h2>Réattribuer les couleurs de matières</h2>
-                    <p>Réinitialise les couleurs des matières pour en obtenir de nouvelles</p>  
-                </IonLabel>
-            </IonItem>
-
-            <IonItem button @click="refreshToken()">
-                <span class="material-symbols-outlined mdls" slot="start">key</span>
-                <IonLabel>
-                    <h2>Regénerer les clés de connexion (avancé)</h2>
-                    <p>Permet de demander une nouvelle autorisation à votre établissement</p>  
-                </IonLabel>
-            </IonItem>
-        </IonList>
-
-        <IonList :inset="true" lines="inset">
-            <IonListHeader>
-                <IonLabel>
-                    <p>Tweaks</p>
-                </IonLabel>
-            </IonListHeader>
-
             <IonItem>
                 <span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
                 <IonLabel>
@@ -429,12 +376,6 @@
         </IonList>
 
         <IonList :inset="true" lines="inset">
-            <IonListHeader>
-                <IonLabel>
-                    <p>Personnalisation</p>
-                </IonLabel>
-            </IonListHeader>
-
             <ion-nav-link router-direction="forward" :component="ThemeView">
                 <IonItem button>
                     <span class="material-symbols-outlined mdls" slot="start">palette</span>
@@ -444,7 +385,9 @@
                     </IonLabel>
                 </IonItem>
             </ion-nav-link>
+        </IonList>
 
+        <IonList :inset="true" lines="inset">
             <IonItem button @click="tweakChangeAvatar()">
                 <span class="material-symbols-outlined mdls" slot="start">person_pin</span>
                 <IonLabel>
@@ -462,20 +405,6 @@
         </IonList>
         
         <IonList :inset="true" lines="inset">
-            <IonListHeader>
-                <IonLabel>
-                    <p>A propos de l'app</p>
-                </IonLabel>
-            </IonListHeader>
-
-            <IonItem button @click="openURL('https://discord.gg/DMx3TDyz2U')">
-                <span class="material-symbols-outlined mdls" slot="start">support</span>
-                <IonLabel>
-                    <p>Discord</p>
-                    <h2>Rejoindre le serveur Discord</h2>
-                </IonLabel>
-            </IonItem>
-
             <IonItem>
                 <span class="material-symbols-outlined mdls" slot="start">security_update_good</span>
                 <IonLabel>
@@ -497,6 +426,57 @@
                 <IonLabel>
                     <p>Taille du cache</p>
                     <h2>{{ localStorageSize }}</h2>
+                </IonLabel>
+            </IonItem>
+        </IonList>
+
+        <IonList :inset="true" lines="inset">
+            <IonItem button @click="openURL('https://discord.gg/DMx3TDyz2U')">
+                <span class="material-symbols-outlined mdls" slot="start">support</span>
+                <IonLabel>
+                    <p>Discord</p>
+                    <h2>Rejoindre le serveur Discord</h2>
+                </IonLabel>
+            </IonItem>
+            <IonItem button @click="openURL('https://github.com/PapillonApp/papillon-v5/')">
+                <span class="material-symbols-outlined mdls" slot="start">data_object</span>
+                <IonLabel>
+                    <p>GitHub</p>
+                    <h2>Contribuer au projet Papillon</h2>
+                </IonLabel>
+            </IonItem>
+        </IonList>
+
+        <IonList :inset="true" lines="inset">
+            <IonItem button @click="logout()">
+                <span class="material-symbols-outlined mdls" slot="start">logout</span>
+                <IonLabel>
+                    <h2>Se déconnecter de Papillon</h2>
+                    <p>Supprime toutes les données de connexion de l'application</p>  
+                </IonLabel>
+            </IonItem>
+
+            <IonItem button @click="emptyCache()">
+                <span class="material-symbols-outlined mdls" slot="start">autorenew</span>
+                <IonLabel>
+                    <h2>Vider le cache des données</h2>
+                    <p>Réinitialise les données pré-téléchargées hors ligne</p>  
+                </IonLabel>
+            </IonItem>
+
+            <IonItem button @click="resetColors()">
+                <span class="material-symbols-outlined mdls" slot="start">palette</span>
+                <IonLabel>
+                    <h2>Réattribuer les couleurs de matières</h2>
+                    <p>Réinitialise les couleurs des matières pour en obtenir de nouvelles</p>  
+                </IonLabel>
+            </IonItem>
+
+            <IonItem button @click="refreshToken()">
+                <span class="material-symbols-outlined mdls" slot="start">key</span>
+                <IonLabel>
+                    <h2>Regénerer les clés de connexion (avancé)</h2>
+                    <p>Permet de demander une nouvelle autorisation à votre établissement</p>  
                 </IonLabel>
             </IonItem>
         </IonList>
