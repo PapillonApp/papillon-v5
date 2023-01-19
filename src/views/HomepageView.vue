@@ -48,7 +48,8 @@
                 homeworks: [],
                 blockChangeDone: false,
                 editMode: false,
-                emoji: this.randomEmoji(),
+                noCoursesEmoji: this.randomEmoji(),
+                noCoursesMsg: this.randomMsg(),
                 noCourses: false
             }
         },
@@ -57,7 +58,25 @@
                 this.$router.push(url);
             },
             randomEmoji() {
-                let list = ["😊", "😎", "😴", "👌", "🌞", "📚", "💪", "💤"]
+                let list = ["😊", "😎", "😴", "👌", "🌞", "📚", "💪", "💤", "😉", "🥱"]
+                return list[Math.floor(Math.random() * list.length)];
+            },
+            randomMsg() {
+                let list = [
+                    "Temps calme",
+                    "Pas de cours, on révise ?",
+                    "C'est la sieste (ou pas)",
+                    "Je suis sûr qu'il reste des devoirs",
+                    "Il n'y a jamais vraiment rien à faire",
+                    "Il est temps de commencer ce joli DM",
+                    "Il fait beau dehors ?",
+                    "Ca tombe bien, ce livre ne se finira pas tout seul !",
+                    "Flûte, le cours de maths est fini",
+                    "Après l'effort le réconfort",
+                    "Alors, ça se la coule douce ?",
+                    "Prenons de l'avance sur la semaine prochaine !",
+                    "Il est temps de reprendre la lecture !"
+                ]
                 return list[Math.floor(Math.random() * list.length)];
             },
             editTimetable(timetable) {
@@ -253,11 +272,11 @@
                 <ion-item v-if="noCourses" style="margin-top: 12px;" class="nextCours" lines="none" @click="goto('timetable')">
                     <ion-ripple-effect></ion-ripple-effect>
                     <div slot="start" class="emoji">
-                        {{ emoji }}
+                        {{ noCoursesEmoji }}
                     </div>
                     <ion-label>
                         <h2>Aucun cours</h2>
-                        <p>Vous n'avez aucun cours aujourd'hui.</p>
+                        <p>{{ noCoursesMsg }}</p>
                     </ion-label>
                 </ion-item>
 
