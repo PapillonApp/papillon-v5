@@ -84,13 +84,18 @@
 
                 // get next lesson (cours.time.start)
                 let now = new Date();
-                let lessons = timetable.filter((lesson) => {
+                let lessons = []
+                lessons = timetable.filter((lesson) => {
                     let lessonStart = new Date(lesson.time.start);
                     let lessonEnd = new Date(lesson.time.end);
 
                     // get minutes before next lesson
                     let mins = Math.floor((lessonStart - now) / 1000 / 60);
                     let gap = -((Math.floor((lessonEnd - lessonStart) / 1000 / 60))/2);
+
+                    if (lessons.length != 0) {
+                        return false;
+                    }
 
                     // if less than 60 mins
                     if (mins < 60 && mins > 0) {
@@ -114,6 +119,7 @@
                         return false;
                     }
 
+                    lessons.push(lesson)
                     return true;
                 });
 
@@ -177,7 +183,6 @@
                     }
                     else {
                         this.homeworks = homeworks;
-                        console.log(this.homeworks)
                         this.homeworks.loading = false;
                     }
                 });
@@ -252,7 +257,7 @@
 
         <div id="components" ref="components">
             <ion-list id="comp-tt" class="nextCourse" ref="comp-tt">
-                <ion-item style="margin-top: 12px;" class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none" @click="goto('timetable')">
+                <ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none" @click="goto('timetable')">
                     <ion-ripple-effect></ion-ripple-effect>
                     <div slot="start">
                         <IonChip>{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</IonChip>
