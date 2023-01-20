@@ -69,7 +69,7 @@
             document.dispatchEvent(new CustomEvent('rnChanged', { detail: newDate }));
         },
         confirmRnInput() {
-            this.$refs.rnPickerModal.$el.dismiss();
+            this.changernPickerModalOpen(false);
         },
         openRnPicker() {
             this.$refs.rnPickerModal.$el.present();
@@ -315,6 +315,9 @@
             // refresh timetable
             this.getTimetables(true);
         },
+        changernPickerModalOpen(state) {
+            this.rnPickerModalOpen = state;
+        },
         deleteCustomCourse(id) {
             // get custom courses
             let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
@@ -390,6 +393,7 @@
                 status: '',
             },
             newCoursModalOpen: false,
+            rnPickerModalOpen: false,
         }
     },
     mounted() {
@@ -468,7 +472,7 @@
           <ion-title mode="md">Ma journée</ion-title>
 
           <ion-buttons slot="end">
-            <ion-button mode="md" id="rnPickerModalButton" color="dark" @click="openRnPicker()">
+            <ion-button mode="md" id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
               <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
               <p>{{ rnButtonString }}</p>
@@ -521,7 +525,7 @@
                         <h2>Pas de cours enregistrés pour cette journée</h2>
                         <p>Réessayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
-                        <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                        <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div></div></div>
 
                     <div v-if="$data[`${day}`].error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
@@ -586,7 +590,7 @@
         </IonModal>
 
 
-        <IonModal ref="rnPickerModal" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
+        <IonModal :is-open="rnPickerModalOpen" ref="rnPickerModal" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
           <IonHeader>
             <IonToolbar>
               <ion-title>Sélection de la date</ion-title>
