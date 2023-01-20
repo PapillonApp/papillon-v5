@@ -44,6 +44,7 @@
                 periods: [],
                 current_period: [],
                 segChangeTimeout: false,
+                changePeriodSelection: localStorage.getItem('changePeriodSelection') == "true" ? true : false,
                 selectedMark: {
                     subject: "",
                     average: 0,
@@ -239,6 +240,8 @@
 
                     this.classAverages = data.averages.class;
                 });
+
+                this.changePeriodSelection = localStorage.getItem('changePeriodSelection') == "true" ? true : false;
             });
         }
     });
@@ -278,7 +281,7 @@
 
         <div id="noTouchZone"></div>
 
-        <ion-segment v-if="periods.length > 0" id="segment" :value="current_period.id" ref="segment" @ionChange="segChange()">
+        <ion-segment v-if="periods.length > 0 && changePeriodSelection" id="segment" :value="current_period.id" ref="segment" @ionChange="segChange()">
             <ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.id" :id="period.id">
                 <ion-label>{{period.name}}</ion-label>
             </ion-segment-button>

@@ -315,6 +315,10 @@
             // get homepageEnabled ref
             let homepageEnabled = this.$refs.homepageEnabled;
             homepageEnabled.$el.checked = localStorage.getItem('homepageEnabled') == 'true';
+
+            // get changePeriodSelection ref
+            let changePeriodSelection = this.$refs.changePeriodSelection;
+            changePeriodSelection.$el.checked = localStorage.getItem('changePeriodSelection') == 'true';
         }
     });
 </script>
@@ -354,6 +358,16 @@
                     <p>Uniformise le barème de toutes les notes</p>
                 </IonLabel>
                 <IonToggle slot="end" ref="tweakGrades20" @ionChange="changeTick('tweakGrades20')"></IonToggle>
+            </IonItem>
+
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">toggle_off</span>
+                <IonLabel>
+                    <h5>Onglet notes</h5>
+                    <h2>Activer la séléction de période</h2>
+                    <p>(Expérimental) Permet de changer de trimestre/semestre</p>
+                </IonLabel>
+                <IonToggle slot="end" ref="changePeriodSelection" @ionChange="changeTick('changePeriodSelection')"></IonToggle>
             </IonItem>
 
             <IonItem>
