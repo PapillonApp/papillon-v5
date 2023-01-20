@@ -20,7 +20,7 @@ async function getPronoteDelays(forceReload) {
 	const token = localStorage.getItem('token');
 
 	// construct url
-	let URL = `${API}/delays?token=${token}`;
+	let URL = `${API}/infos?token=${token}`;
 
 	let delays = {};
 	let cache = localStorage.getItem('DelaysCache');
