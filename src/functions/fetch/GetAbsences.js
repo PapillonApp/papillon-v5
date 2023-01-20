@@ -22,9 +22,11 @@ async function getPronoteAbsences(forceReload) {
 	// construct url
 	let URL = `${API}/infos?token=${token}`;
 
+	let alwaysTrueLol = 0
+
 	let absences = {};
 	let cache = localStorage.getItem('AbsencesCache');
-	if (cache != null && !forceReload) {
+	if (cache != null && !forceReload && alwaysTrueLol !== 0) {
 		absences = JSON.parse(cache).absences;
 
 		return new Promise((resolve, reject) => {
