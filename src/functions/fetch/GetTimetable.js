@@ -7,6 +7,8 @@ import GetToken from '@/functions/login/GetToken.js';
 
 import subjectColor from '@/functions/utils/subjectColor.js'
 
+let dayRequest;
+
 // main function
 async function getTimetable(date, forceReload) {
     // as only pronote is supported for now, we can just return the pronote timetable
@@ -19,7 +21,7 @@ async function getTimetable(date, forceReload) {
 function getPronoteTimetable(date, forceReload) {
     // gather vars
     const API = app.config.globalProperties.$api;
-    const dayRequest = new Date(date);
+    dayRequest = new Date(date);
 
     // get token
     const token = localStorage.getItem('token');
@@ -39,7 +41,7 @@ function getPronoteTimetable(date, forceReload) {
         // return cached timetable in promise
         return new Promise((resolve, reject) => {
             let timetable = JSON.parse(cacheSearch[0].timetable);
-            resolve(constructPronoteTimetable(timetable));
+            resolve(constructPronoteTimetable(timetable, dayRequest));
         });
     }
     else {
@@ -50,7 +52,7 @@ function getPronoteTimetable(date, forceReload) {
             let timetable = response.data;
 
             // construct timetable
-            timetable = constructPronoteTimetable(timetable);
+            timetable = constructPronoteTimetable(timetable, dayRequest);
 
             // cache response
             let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
@@ -91,7 +93,7 @@ function getPronoteTimetable(date, forceReload) {
 }
 
 // pronote : construct timetable
-function constructPronoteTimetable(timetable) {
+function constructPronoteTimetable(timetable, date) {
     // declaring vars
     let courses = [];
 
@@ -103,6 +105,10 @@ function constructPronoteTimetable(timetable) {
                 id: course.id,
                 color: subjectColor.getSubjectColor(course.subject.name, subjectColor.getRandomColor()),
                 num: course.num,
+                sameTime: false,
+                actual: false,
+                distance: false,
+                lengthCours: 0,
             },
             data: {
                 subject: course.subject.name,
@@ -123,6 +129,7 @@ function constructPronoteTimetable(timetable) {
                 isDetention: course.is_detention,
                 isOuting: course.is_outing,
                 isTest: course.is_test,
+                isCustom: false,
                 status: course.status
             }
         };
@@ -142,7 +149,7 @@ function constructPronoteTimetable(timetable) {
         }
 
         if (course.is_exempted) {
-            newCourse.course.color = "#739B73";
+            newCourse.course.color = "#627E66";
             newCourse.status.status = "Vous êtes dispensé de cours";
         }
 
@@ -152,7 +159,7 @@ function constructPronoteTimetable(timetable) {
 
     // put courses in start order
     courses.sort((a, b) => {
-        return a.time.start - b.time.start;
+        return new Date(a.time.start) - new Date(b.time.start);
     });
 
     // return courses

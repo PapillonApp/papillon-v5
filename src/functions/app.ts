@@ -5,10 +5,14 @@ import { Capacitor } from '@capacitor/core';
 // Constantes
 
 // Variables
-const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 // Status bar
 import { StatusBar, Style } from '@capacitor/status-bar';
+
+function checkDarkMode() {
+  isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
 
 function setStatusBarStyle() {
   if (isDarkMode) {
@@ -40,12 +44,13 @@ function setNavigationBarStyle() {
 }
 
 // Constantly check for dark mode
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+setTimeout(() => {
+  checkDarkMode();
   setStatusBarStyle();
   if (Capacitor.getPlatform() === 'android') {
     setNavigationBarStyle();
   }
-});
+}, 1000);
 
 // Set status bar and navigation bar style
 setStatusBarStyle();

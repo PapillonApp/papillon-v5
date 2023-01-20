@@ -56,12 +56,14 @@
                 })
             },
             searchNews() {
-                let search = this.$refs.searchBar.$el.value;
+                let search1 = this.$refs.searchBarIos.$el.value;
+                let search2 = this.$refs.searchBarMd.$el.value;
                 let news = this.fullNews;
 
-                if (search == "") {
+                if (search1 == "" && search2 == "") {
                     this.news = news;
                 } else {
+                    let search = search1 == "" ? search2 : search1;
                     // filter news by name, content and author
                     let filteredNews = news.filter((news) => {
                         return news.title.toLowerCase().includes(search.toLowerCase()) || news.content.toLowerCase().includes(search.toLowerCase()) || news.author.toLowerCase().includes(search.toLowerCase());
@@ -101,7 +103,7 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader" translucent>
+      <IonHeader class="AppHeader" collapse="fade" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -110,15 +112,24 @@
 
           <ion-title mode="md">Actualités</ion-title>
         </IonToolbar>
-        <IonToolbar>
-                <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></ion-searchbar>
-            </IonToolbar>
+        <IonToolbar class="only-md">
+            <ion-searchbar ref="searchBarMd" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></ion-searchbar>
+        </IonToolbar>
       </IonHeader>
       
       <ion-content :fullscreen="true">
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
+
+        <IonHeader collapse="condense">
+            <IonToolbar>
+                <ion-title size="large">Actualités</ion-title>
+            </IonToolbar>
+            <IonToolbar>
+                <IonSearchbar ref="searchBarIos" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></IonSearchbar>
+            </IonToolbar>
+        </IonHeader>
 
         <div class="NoCours" v-if="isLoading">
             <IonSpinner></IonSpinner>
@@ -180,7 +191,11 @@
     </ion-page>
 </template>
   
-<style scoped>  
+<style scoped>
+    .ios .only-md {
+        display: none;
+    }
+
     .newsModalContent * {
         margin: 0;
     }

@@ -48,9 +48,9 @@ export default defineComponent({
     methods: {
         createDateString(date) {
             let dateObject = new Date(date);
-
-            // return string like "1 jan."
-            return `${dateObject.getDate()} ${dateObject.toLocaleString('default', { month: 'short' })}`;
+            let day_string = dateObject.toLocaleString('default', { weekday: 'long' }).slice(0, 3);
+            // return string like "jeu. 1"
+            return day_string + ". " + dateObject.getDate();
         },
         rnInputChanged() {
             // get new date from rnInput
@@ -63,7 +63,7 @@ export default defineComponent({
             document.dispatchEvent(new CustomEvent('rnChanged', { detail: newDate }));
         },
         confirmRnInput() {
-            this.$refs.rnPickerModal.$el.dismiss();
+            this.changernPickerModalOpen(false);
         },
         openRnModal() {
             this.$refs.rnPickerModal.$el.present();
@@ -139,6 +139,9 @@ export default defineComponent({
         },
         openLink(url) {
                 window.open(url, "_blank");
+        },
+        changernPickerModalOpen(state) {
+            this.rnPickerModalOpen = state;
         },
         changeDone(hw) {
             // microinteractions
@@ -249,6 +252,7 @@ export default defineComponent({
             shouldResetSwiper: false,
             openedHw: [],
             dontRetryCheck: false,
+            rnPickerModalOpen: false,
         }
     },
     mounted() {
@@ -317,7 +321,7 @@ export default defineComponent({
 
 <template>
     <ion-page ref="page">
-        <IonHeader class="AppHeader" translucent>
+        <IonHeader class="AppHeader" collapse="fade" translucent>
             <IonToolbar>
 
                 <ion-buttons slot="start">
@@ -327,7 +331,7 @@ export default defineComponent({
                 <ion-title mode="md">Travail à faire</ion-title>
 
                 <ion-buttons slot="end">
-                    <ion-button mode="md" color="dark" id="rnPickerModalButton" @click="openRnModal">
+                    <ion-button mode="md" color="dark" id="rnPickerModalButton" @click="changernPickerModalOpen(true)">
                         <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
                         <p>{{ rnButtonString }}</p>
@@ -341,12 +345,6 @@ export default defineComponent({
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
-
-            <IonHeader collapse="condense">
-                <IonToolbar>
-                    <ion-title size="large">Travail à faire</ion-title>
-                </IonToolbar>
-            </IonHeader>
 
             <div id="noTouchZone"></div>
 
@@ -387,7 +385,7 @@ export default defineComponent({
                             <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
-                            <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                         </div></div>
                     </ion-list>
                 </swiper-slide>
@@ -427,7 +425,7 @@ export default defineComponent({
                             <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
-                            <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                         </div></div>
                     </ion-list>
                 </swiper-slide>
@@ -467,13 +465,13 @@ export default defineComponent({
                             <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
-                            <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                         </div></div>
                     </ion-list>
                 </swiper-slide>
             </swiper>
 
-            <IonModal ref="rnPickerModal" trigger="rnPickerModalButton" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
+            <IonModal ref="rnPickerModal" :is-open="rnPickerModalOpen" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
                 <IonHeader>
                     <IonToolbar>
                         <ion-title>Sélection de la date</ion-title>

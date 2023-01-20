@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText, IonSegment, IonSegmentButton, IonModal, IonSearchbar } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText, IonSegment, IonSegmentButton, IonModal, IonSearchbar, IonSpinner } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -9,6 +9,8 @@
 
     import GetToken from '@/functions/login/GetToken.js';
     import GetGrades from '@/functions/fetch/GetGrades.js';
+    import GetUserData from '@/functions/fetch/GetUserData.js';
+    import ChangePeriod from '@/functions/login/ChangePeriod.js';
 
     export default defineComponent({
         name: 'FolderPage',
@@ -29,7 +31,8 @@
             IonSkeletonText,
             IonSegment,
             IonSegmentButton,
-            IonSearchbar
+            IonSearchbar,
+            IonSpinner
         },
         data() {
             return { 
@@ -39,6 +42,9 @@
                 classAverages: [],
                 isLoading: false,
                 periods: [],
+                current_period: [],
+                segChangeTimeout: false,
+                changePeriodSelection: localStorage.getItem('changePeriodSelection') == "true" ? true : false,
                 selectedMark: {
                     subject: "",
                     average: 0,
@@ -73,8 +79,17 @@
             getPeriods() {
                 let allPeriods = JSON.parse(localStorage.getItem('userData')).periods;
 
+                // find period with actual = true
+                let actualPeriod = allPeriods.find(period => period.actual == true);
+
+                if(localStorage.getItem('currentPeriod')) {
+                    actualPeriod = JSON.parse(localStorage.getItem('currentPeriod'));
+                }
+                
+                this.current_period = actualPeriod;
+
                 // if first period contains "Trimestre", add all trimesters
-                if (allPeriods[0].name.includes("Trimestre")) {
+                if (actualPeriod.name.includes("Trimestre")) {
                     for (let i = 0; i < allPeriods.length; i++) {
                         if (allPeriods[i].name.includes("Trimestre")) {
                             this.periods.push(allPeriods[i]);
@@ -83,31 +98,30 @@
                 }
 
                 // if first period contains "Semestre", add all semesters
-                if (allPeriods[0].name.includes("Semestre")) {
+                if (actualPeriod.name.includes("Semestre")) {
                     for (let i = 0; i < allPeriods.length; i++) {
                         if (allPeriods[i].name.includes("Semestre")) {
                             this.periods.push(allPeriods[i]);
                         }
                     }
                 }
-
-                // for each period, if actual is True, set status to "default"
-                for (let i = 0; i < this.periods.length; i++) {
-                    this.periods[i].status = this.periods[i].id;
-
-                    if (this.periods[i].actual) {
-                        this.$refs.segment.$el.value = this.periods[i].id;
-                    }
-                }
-
-                console.log(this.periods);
             },
             segChange() {
-                let newSegment = this.$refs.segment.$el.value;
+                if(!this.segChangeTimeout) {
+                    let newSegment = this.$refs.segment.$el.value;
 
-                // get corresponding period name from id
-                let newPeriod = this.periods.find(period => period.id == newSegment);
-                console.log(newPeriod);
+                    // get corresponding period name from id
+                    let newPeriod = this.periods.find(period => period.id == newSegment);
+
+                    // save in localstorage
+                    localStorage.setItem('currentPeriod', JSON.stringify(newPeriod));
+
+                    // change current period
+                    ChangePeriod(newPeriod.name).then((data) => {
+                        this.getGradesRefresh(true);
+                        this.current_period = newPeriod;
+                    });
+                }
             },
             openAverageModal(subject) {
 
@@ -139,8 +153,19 @@
 
                 return grades;
             },
-            getGradesRefresh() {
+            getGradesRefresh(fromSegChange) {
+                if(fromSegChange) {
+                    this.segChangeTimeout = true;
+                    this.isLoading = true;
+                }
+
                 GetGrades(true).then((data) => {
+                    if(fromSegChange) {
+                        this.segChangeTimeout = false;
+
+                        this.isLoading = false;
+                    }
+
                     this.grades = this.editMarks(data.marks);
                     this.fullGrades = this.editMarks(data.marks);
 
@@ -162,11 +187,14 @@
                 });
             },
             searchGrades() {
-                let search = this.$refs.searchBar.$el.value;
+                let search1 = this.$refs.searchBarIos.$el.value;
+                let search2 = this.$refs.searchBarMd.$el.value;
 
-                if (search == "") {
+
+                if (search1 == "" && search2 == "") {
                     this.grades = this.fullGrades;
                 } else {
+                    let search = search1 == "" ? search2 : search1;
                     this.grades = this.fullGrades.filter(subject => {
                         return subject.name.toLowerCase().includes(search.toLowerCase());
                     });
@@ -212,6 +240,8 @@
 
                     this.classAverages = data.averages.class;
                 });
+
+                this.changePeriodSelection = localStorage.getItem('changePeriodSelection') == "true" ? true : false;
             });
         }
     });
@@ -227,6 +257,11 @@
           </ion-buttons>
 
           <ion-title mode="md">Notes</ion-title>
+
+          <ion-spinner slot="end" v-if="isLoading"></ion-spinner>
+        </IonToolbar>
+        <IonToolbar class="only-md">
+            <IonSearchbar ref="searchBarMd" placeholder="Chercher une matière..." @ionChange="searchGrades()"></IonSearchbar>
         </IonToolbar>
       </IonHeader>
       
@@ -240,14 +275,14 @@
                 <ion-title size="large">Notes</ion-title>
             </IonToolbar>
             <IonToolbar>
-                <IonSearchbar ref="searchBar" placeholder="Chercher une matière..." @ionChange="searchGrades()"></IonSearchbar>
+                <IonSearchbar ref="searchBarIos" placeholder="Chercher une matière..." @ionChange="searchGrades()"></IonSearchbar>
             </IonToolbar>
         </IonHeader>
 
         <div id="noTouchZone"></div>
 
-        <ion-segment style="display: none;" id="segment" value="default" ref="segment" @ionChange="segChange()">
-            <ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.status" :id="period.id">
+        <ion-segment v-if="periods.length > 0 && changePeriodSelection" id="segment" :value="current_period.id" ref="segment" @ionChange="segChange()">
+            <ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.id" :id="period.id">
                 <ion-label>{{period.name}}</ion-label>
             </ion-segment-button>
         </ion-segment>
@@ -291,12 +326,12 @@
                         <p class="name">{{ mark.info.description }}</p>
                         <p class="coef">Coeff. : {{mark.grade.coefficient}}</p>
 
-                        <p class="grd" v-if="mark.info.significant && !mark.grade.updated_value">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
-                        <p class="grd" v-else-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.updated_value}}/{{mark.grade.updated_out_of}}</p>
+                        <p class="grd main" v-if="mark.info.significant && !mark.grade.updated_value">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
+                        <p class="grd main" v-else-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.updated_value}}<small>/{{mark.grade.updated_out_of}}</small></p>
                         <p class="coef" v-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
                         
                         <!-- si absent -->
-                        <p class="grd" v-if="!mark.info.significant">{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></p>
+                        <p class="grd main" v-if="!mark.info.significant">{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></p>
                         <p class="coef" v-if="mark.grade.original_value && !mark.info.significant"><br/></p>
                     </div>
                     <div class="averages" v-if="mark.info.significantAverage">
@@ -328,6 +363,12 @@
             </div>
         </ion-card>
 
+        <div v-if="!isLoading"><div class="NoCours" v-if="this.grades.length == 0">
+            <span class="material-symbols-outlined mdls">insights</span>
+            <h2>Pas de notes ajoutées pour cette période</h2>
+            <p>Réesayez avec une autre période à l'aide du sélecteur.</p>
+        </div></div>
+
         <IonList v-if="this.grades.length != 0">
             <IonListHeader>
                 <IonLabel>
@@ -339,7 +380,7 @@
                 <span class="material-symbols-outlined mdls" slot="start">person</span>
                 <IonLabel>
                     <p>Moyenne générale</p>
-                    <h2>{{ averages.average }}<small>/20</small></h2>
+                    <h2>{{ averages.average.toFixed(2) }}<small>/20</small></h2>
                 </IonLabel>
             </IonItem>
             <IonItem>
@@ -380,31 +421,31 @@
                         <span class="material-symbols-outlined mdls" slot="start">face</span>
                         <ion-label>
                             <p>Ma moyenne</p>
-                            <h3>{{ selectedMark.average }}/20</h3>
+                            <h2>{{ selectedMark.average }}<small>/20</small></h2>
                         </ion-label>
                     </ion-item>
 
                     <ion-item>
                         <span class="material-symbols-outlined mdls" slot="start">school</span>
                         <ion-label>
-                            <p>Moyenne de la classe</p>
-                            <h3>{{ selectedMark.class_average }}/20</h3>
+                            <p>Moyenne de classe</p>
+                            <h2>{{ selectedMark.class_average }}<small>/20</small></h2>
                         </ion-label>
                     </ion-item>
 
                     <ion-item>
                         <span class="material-symbols-outlined mdls" slot="start">person_remove</span>
                         <ion-label>
-                            <p>La moyenne basse</p>
-                            <h3>{{ selectedMark.min_average }}/20</h3>
+                            <p>Moyenne la plus basse</p>
+                            <h2>{{ selectedMark.min_average }}<small>/20</small></h2>
                         </ion-label>
                     </ion-item>
 
                     <ion-item>
                         <span class="material-symbols-outlined mdls" slot="start">person_add</span>
                         <ion-label>
-                            <p>La moyenne haute</p>
-                            <h3>{{ selectedMark.max_average }}/20</h3>
+                            <p>Moyenne la haute</p>
+                            <h2>{{ selectedMark.max_average }}<small>/20</small></h2>
                         </ion-label>
                     </ion-item>
                 </ion-list>
@@ -416,6 +457,10 @@
 </template>
   
 <style scoped>
+    .ios .only-md {
+        display: none;
+    }
+
     .subject-name {
         display: flex;
         justify-content: space-between;
@@ -460,7 +505,7 @@
 
     .grade {
         width: 100%;
-        border-radius: 5px;
+        border-radius: 8px;
         display: flex;
         flex-direction: column;
         min-width: fit-content;
@@ -489,6 +534,7 @@
         font-weight: 600;
         color: var(--ion-text-color);
         margin-top: 5px;
+        font-family: var(--papillon-font) !important;
     }
 
     .myGrade p.name {
@@ -532,6 +578,7 @@
         font-size: 1rem;
         font-weight: 500;
         color: var(--ion-text-color);
+        font-family: var(--papillon-font) !important;
     }
 
     .average p.grd small {
@@ -571,5 +618,16 @@
     .ios #segment {
         width: calc(100vw - 24px);
         margin: 0 12px;
+    }
+
+    .md .grade {
+        border: 1px solid var(--ion-color-step-150);
+        --background: none;
+        box-shadow: none;
+        border-radius: 8px;
+    }
+
+    ion-spinner {
+        margin-right: 20px;
     }
 </style>

@@ -120,6 +120,7 @@
 </script>
 
 <template>
+    <div class="dist" v-if="distance && !sameTime"></div>
     <div :class="classes + isCancelled" :style="`--backgroundColor: ${color};`" v-if="!sameTime" @click="openCours()">
         <div class="CoursTime">
             <p class="start">{{ start }}</p>
@@ -151,19 +152,37 @@
 
                     <p class="CoursInfo Status" v-if="status">
                         <span v-if="!isCancelled" class="material-symbols-outlined smol" slot="start">info</span>
-                        <span v-if="isCancelled" class="material-symbols-outlined smol" slot="start">emergency_home</span>
+                        <span v-if="isCancelled" class="material-symbols-outlined smol" slot="start">error</span>
 
                         {{status}}
                     </p>
                 </div>
             </ion-label>
+
+            <div slot="end" class="TypeIcon">
+                <span v-if="isTest">
+                    <span class="material-symbols-outlined smol">quiz</span>
+                </span>
+
+                <span v-if="isOuting">
+                    <span class="material-symbols-outlined smol">directions_walk</span>
+                </span>
+
+                <span v-if="memo">
+                    <span class="material-symbols-outlined smol">sticky_note_2</span>
+                </span>
+            </div>
         </div>
     </div>
-
-    <div class="dist" v-if="distance && !sameTime"></div>
 </template>
 
 <style scoped>
+    .TypeIcon {
+        position: absolute;
+        right: 10px;
+        top: 40%;
+    }
+
     .mainElemCours {
         display: flex;
         align-items: center;
@@ -233,7 +252,7 @@
         flex-direction: column;
         justify-content: center;
     
-        width: 100%;
+        width: calc(100% - 20px);
         height: 100%;
 
         padding: 8px 0px;
@@ -257,6 +276,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        width: calc(100vw - 145px);
     }
 
     @media screen and (prefers-color-scheme: light) {
@@ -294,7 +314,7 @@
         align-items: flex-start;
         gap: 10px;
 
-        width: calc(100vw - 135px);
+        width: calc(100vw - 145px);
     }
 
     .CoursInfoContainer .separator {
@@ -303,11 +323,11 @@
         background: var(--ion-color-step-200);
     }
 
-    .CoursInfoContainer .material-symbols-outlined {
+    .cours .material-symbols-outlined {
         font-variation-settings:
         'FILL' 1,
         'wght' 400,
-        'GRAD' 0,
+        'GRAD' 1,
         'opsz' 14 !important;
     }
 
@@ -340,8 +360,19 @@
 
     .Status {
         opacity: 1;
-        color: var(--ion-color-warning);
-        max-width: 100% !important;
+        color: #fff;
+        padding: 5px 10px;
+        background: #ffffff10;
+        border-radius: 300px;
+        margin-top: 5px;
+        max-width: fit-content;
+    }
+
+    @media screen and (prefers-color-scheme: light) {
+        .Status {
+            color: var(--ion-color-warning);
+            background: rgba(var(--ion-color-warning-rgb), 0.1);
+        }
     }
 
     .true .cours {
@@ -354,7 +385,8 @@
     }
 
     .true .cours .Status {
-        color: var(--ion-color-danger);
+            color: var(--ion-color-danger);
+            background: rgba(var(--ion-color-danger-rgb), 0.1);
     }
 
     .CoursTime {
@@ -367,6 +399,8 @@
 
         padding: 0px 0px;
         padding-left: 3px;
+
+        width: 60px;
     }
 
     .CoursTime * {
@@ -380,7 +414,7 @@
         font-size: 1.2em;
         font-weight: 600;
 
-        font-family: 'Papillon';
+        font-family: var(--papillon-font);
     }
 
     .CoursTime .end {

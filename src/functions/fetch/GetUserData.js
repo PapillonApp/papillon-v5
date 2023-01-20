@@ -6,13 +6,13 @@ import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
 // main function
-function getUser() {
+function getUser(force) {
     // as only pronote is supported for now, we can just return the pronote user
-    return getPronoteUser();
+    return getPronoteUser(force);
 }
 
 // pronote : get user
-async function getPronoteUser() {
+async function getPronoteUser(force) {
     // gather vars
     const API = app.config.globalProperties.$api;
 
@@ -24,7 +24,7 @@ async function getPronoteUser() {
 
     // check if user is in cache
     let cache = JSON.parse(localStorage.getItem('UserCache')) || [];
-    if (cache.user) {
+    if (cache.user && !force) {
         // get user
         let user = JSON.parse(cache.user);
 
@@ -55,7 +55,7 @@ async function getPronoteUser() {
                 let avatar = response.data.profile_picture;
 
                 // download avatar
-                let url = `https://cors.api.pronote.plus/` + avatar;
+                let url = `https://cors.api.getpapillon.xyz/` + avatar;
                 axios.get(url, { responseType: 'blob' })
                     .then((response) => {
                         // get blob

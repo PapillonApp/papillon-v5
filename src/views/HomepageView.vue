@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip, IonRippleEffect } from '@ionic/vue';
 
     import { informationCircle } from 'ionicons/icons';
 
@@ -8,6 +8,7 @@
 
     import displayToast from '@/functions/utils/displayToast.js';
     import hapticsController from '@/functions/utils/hapticsController.js';
+    import timetableEdit from '@/functions/utils/timetableEdit.js';
 
     import GetToken from '@/functions/login/GetToken.js';
     import GetNews from '@/functions/fetch/GetNews.js';
@@ -35,7 +36,8 @@
             IonLabel,
             IonSpinner,
             IonRefresher,
-            IonChip
+            IonChip,
+            IonRippleEffect
         },
         data() {
             return { 
@@ -45,70 +47,99 @@
                 firstName: '',
                 homeworks: [],
                 blockChangeDone: false,
-                editMode: false
+                editMode: false,
+                noCoursesEmoji: this.randomEmoji(),
+                noCoursesMsg: this.randomMsg(),
+                noCourses: false
             }
         },
         methods: {
             goto(url) {
                 this.$router.push(url);
             },
+            randomEmoji() {
+                let list = ["😊", "😎", "😴", "👌", "🌞", "📚", "💪", "💤", "😉", "🥱"]
+                return list[Math.floor(Math.random() * list.length)];
+            },
+            randomMsg() {
+                let list = [
+                    "Temps calme",
+                    "Pas de cours, on révise ?",
+                    "C'est la sieste (ou pas)",
+                    "Je suis sûr qu'il reste des devoirs",
+                    "Il n'y a jamais vraiment rien à faire",
+                    "Il est temps de commencer ce joli DM",
+                    "Il fait beau dehors ?",
+                    "Ca tombe bien, ce livre ne se finira pas tout seul !",
+                    "Flûte, le cours de maths est fini",
+                    "Après l'effort le réconfort",
+                    "Alors, ça se la coule douce ?",
+                    "Prenons de l'avance sur la semaine prochaine !",
+                    "Il est temps de reprendre la lecture !"
+                ]
+                return list[Math.floor(Math.random() * list.length)];
+            },
             editTimetable(timetable) {
-                // add sameTime property to courses that are at the same time
-                for(let i = 0; i < timetable.length; i++) {
-                    let lesson = timetable[i];
-                    let lessonStart = new Date(lesson.time.start);
-                    let lessonEnd = new Date(lesson.time.end);
-
-                    for(let j = 0; j < timetable.length; j++) {
-                        let lesson2 = timetable[j];
-                        let lesson2Start = new Date(lesson2.time.start);
-                        let lesson2End = new Date(lesson2.time.end);
-
-                        if (lessonStart <= lesson2Start && lessonEnd >= lesson2End && lesson.course.num != lesson2.course.num) {
-                            if (lesson.course.num > lesson2.course.num) {
-                                timetable[j].course.sameTime = true;
-                            }
-                            else {
-                                timetable[i].course.sameTime = true;
-                            }
-                        }
-                    }
-                }
+                timetable = timetableEdit(timetable);
 
                 // get next lesson (cours.time.start)
                 let now = new Date();
-                let lessons = timetable.filter((lesson) => {
+                let lessons = []
+                lessons = timetable.filter((lesson) => {
                     let lessonStart = new Date(lesson.time.start);
                     let lessonEnd = new Date(lesson.time.end);
 
-                    if (lessonStart <= now && lessonEnd >= now) {
-                        // get minutes before next lesson
-                        let mins = Math.floor((lessonEnd - now) / 1000 / 60);
+                    // get minutes before next lesson
+                    let mins = Math.floor((lessonStart - now) / 1000 / 60);
+                    let gap = -((Math.floor((lessonEnd - lessonStart) / 1000 / 60))/2);
 
-                        // if less than 60 mins
-                        if (mins < 60) {
-                            this.nextCoursTime = `dans ${mins} minutes`;
-                        }
-                        else {
-                            let hours = Math.floor(mins / 60);
-                            mins = mins % 60;
-
-                            this.nextCoursTime = `dans ${hours} heures et ${mins} minutes`;
-                        }
-
-                        return true;
-                    }
-                    else {
+                    if (lessons.length != 0) {
                         return false;
                     }
+
+                    // if less than 60 mins
+                    if (mins < 60 && mins > 0) {
+                        this.nextCoursTime = `dans ${mins} minutes`;
+                    }
+                    else if (mins <= 0) {
+                        this.nextCoursTime = "Cours commencé";
+
+                        if (lessonEnd <= now) {
+                            return false;
+                        }
+                    } 
+                    else {
+                        let hours = Math.floor(mins / 60);
+                        mins = mins % 60;
+
+                        this.nextCoursTime = `dans ${hours} heures et ${mins} minutes`;
+                    }
+
+                    if (lesson.status.isCancelled || mins < gap) {
+                        return false;
+                    }
+
+                    lessons.push(lesson)
+                    return true;
                 });
 
                 // if lessons is empty but not timetable, get last lesson
                 if (lessons.length == 0 && timetable.length > 0) {
-                    let lastLesson = timetable[timetable.length - 1];
-                    lessons.push(lastLesson);
+                    for (let i = timetable.length - 1; i >= 0; i--) {
+                        let lesson = timetable[i];
 
-                    this.nextCoursTime = "Cours terminé"
+                        if (lesson.status.isCancelled) {
+                            continue;
+                        }
+
+                        this.nextCoursTime = "Cours terminé";
+                        lessons.push(lesson);
+                        break;
+                    }
+                }
+
+                if (lessons.length == 0 && timetable.length == 0) {
+                    this.noCourses = true;
                 }
                 
                 return lessons;
@@ -152,34 +183,9 @@
                     }
                     else {
                         this.homeworks = homeworks;
-                        console.log(this.homeworks)
                         this.homeworks.loading = false;
                     }
                 });
-            },
-            changeDone(hw) {
-                if(!this.blockChangeDone) {
-                    displayToast.presentToastFull(
-                        "Allez dans la page devoirs pour marquer un devoir comme fait",
-                        `Vous ne pouvez pas changer l'état d'un devoir depuis l'écran d'accueil.`,
-                        "warning",
-                        informationCircle
-                    )
-
-                    let checkboxID = `checkbox_${hw.data.id}`;
-                    let checkbox = document.getElementById(checkboxID);
-
-                    if (checkbox) {
-                        setTimeout(() => {
-                            this.blockChangeDone = true;
-                            setTimeout(() => {
-                                this.blockChangeDone = false;
-                            }, 100);
-
-                            checkbox.checked = !checkbox.checked;
-                        }, 300);
-                    }
-                }
             },
             reorder() {
                 let order = ["comp-hw", "comp-tt"]
@@ -197,6 +203,9 @@
             handleRefresh(event) {
                 this.getTimetable(true);
                 this.getHomeworks(true);
+
+                this.noCoursesMsg = this.randomMsg();
+                this.noCoursesEmoji = this.randomEmoji();
 
                 setTimeout(() => {
                     event.detail.complete();
@@ -248,17 +257,13 @@
 
         <div id="components" ref="components">
             <ion-list id="comp-tt" class="nextCourse" ref="comp-tt">
-                <ion-list-header>
-                    <ion-label>Prochain cours</ion-label>
-                    <ion-button @click="goto('timetable')">Ma journée</ion-button>
-                </ion-list-header>
-
-                <ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none">
+                <ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none" @click="goto('timetable')">
+                    <ion-ripple-effect></ion-ripple-effect>
                     <div slot="start">
                         <IonChip>{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</IonChip>
                     </div>
-                    <ion-label>
-                        <h2>{{ cours.data.subject }}</h2>
+                    <ion-label :style="`--courseColor: ${cours.course.color};`">
+                        <h2><span class="courseColor"></span> {{ cours.data.subject }}</h2>
                         <h3>{{ nextCoursTime }}</h3>
                         <p>salle {{ cours.data.rooms.join(', ') || 'Pas de salle' }} - avec {{ cours.data.teachers.join(', ') || 'Pas de professeur' }}</p>
                         <p v-if="cours.status.status">{{ cours.status.status }}</p>
@@ -272,10 +277,14 @@
                     </ion-label>
                 </ion-item>
 
-                <ion-item v-if="timetable == []" lines="none">
+                <ion-item v-if="noCourses" style="margin-top: 12px;" class="nextCours" lines="none" @click="goto('timetable')">
+                    <ion-ripple-effect></ion-ripple-effect>
+                    <div slot="start" class="emoji">
+                        {{ noCoursesEmoji }}
+                    </div>
                     <ion-label>
                         <h2>Aucun cours</h2>
-                        <p>Vous n'avez aucun cours aujourd'hui.</p>
+                        <p>{{ noCoursesMsg }}</p>
                     </ion-label>
                 </ion-item>
 
@@ -338,12 +347,17 @@
 </template>
   
 <style scoped>
+    .emoji {
+        font-size: 1.5em;
+        margin-right: 10px;
+    }
+
     .nextCourse ion-chip {
         padding: 6px 9px !important;
         height: fit-content;
         font-weight: 600;
         font-size: 16px;
-        font-family: "Papillon";
+        font-family: var(--papillon-font);
     }
 
     .ios .nextCours {
@@ -364,5 +378,14 @@
         border-radius: 8px;
         padding: 3px 10px;
         border: 1px solid var(--ion-color-step-150);
+    }
+
+    .courseColor {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--courseColor);
+        display: inline-block;
+        margin-right: 5px;
     }
 </style>

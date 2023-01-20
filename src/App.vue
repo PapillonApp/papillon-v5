@@ -9,6 +9,8 @@
   const GetUser = require('./functions/fetch/GetUserData');
   const displayToast = require('./functions/utils/displayToast.js');
 
+  import { LocalNotifications } from '@capacitor/local-notifications';
+
   import { SplashScreen } from '@capacitor/splash-screen';
 
   interface UserData {
@@ -65,6 +67,11 @@
         const selectedIndex = ref(0);
         const appPages = [
             {
+                title: 'Accueil',
+                url: '/home',
+                icon: "home",
+            },
+            {
                 title: 'Emploi du temps',
                 url: '/timetable',
                 icon: "calendar_month"
@@ -99,7 +106,12 @@
         // disable some tabs
         if(localStorage.getItem('viescolaireEnabled') !== 'true') {
             // remove school life tab
-            appPages.splice(3, 1);
+            appPages.splice(4, 1);
+        }
+
+        if(localStorage.getItem('homepageEnabled') !== 'true') {
+            // remove home tab
+            appPages.splice(0, 1);
         }
         
         const path = window.location.pathname.split('folder/')[1];
@@ -140,6 +152,9 @@
                 // set userData in localStorage
                 localStorage.userData = JSON.stringify(data);
             });
+        },
+        async askNotifPerms() {
+            await LocalNotifications.requestPermissions();
         }
     },
     mounted() {
@@ -190,6 +205,8 @@
             this.presentToast('Vous n\'êtes pas connecté à Internet.', 'Vous n\'aurez accès qu\'aux informations déjà téléchargées.', 'danger', globeOutline)
         }
 
+        this.askNotifPerms();
+
         // on settingsUpdated event, setup the app
         document.addEventListener('settingsUpdated', () => {
             // if viescolaireEnabled is set to false, remove school life tab
@@ -206,6 +223,22 @@
                 });
             }
         });
+
+        // apply customizations
+        if(localStorage.getItem('customizations')) {
+            let customizations = JSON.parse(localStorage.getItem('customizations') as string);
+
+            if(customizations.mainColor) {
+                document.body.style.setProperty('--ion-color-primary', customizations.mainColor.hex);
+                document.body.style.setProperty('--ion-color-primary-rgb', customizations.mainColor.rgb);
+                document.body.style.setProperty('--ion-color-primary-shade', customizations.mainColor.hex);
+                document.body.style.setProperty('--ion-color-primary-tint', customizations.mainColor.hex);
+            }
+
+            if(customizations.font) {
+                document.body.style.setProperty('--papillon-font', customizations.font);
+            }
+        }
     }
   });
 </script>
@@ -323,7 +356,7 @@
     .ios .userItem p {
         font-size: 15px;
         margin-top: 0;
-        font-family: "Papillon";
+        font-family: var(--papillon-font);
     }
 
 
@@ -396,7 +429,7 @@
     }
 
     ion-item *:not(span) {
-        font-family: 'Papillon', sans-serif !important;
+        font-family: var(--papillon-font), sans-serif !important;
     }
 
     ion-menu ion-item {

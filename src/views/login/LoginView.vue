@@ -317,7 +317,7 @@
         font-size: 27.5px;
         line-height: 28px;
         font-weight: 600 !important;
-        font-family: 'Papillon';
+        font-family: var(--papillon-font);
         color: var(--ion-color-primary);
         margin-bottom: 10px;
         text-align: left;

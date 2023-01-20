@@ -159,13 +159,14 @@ function constructPronoteGrades(grades) {
     // for each mark, add it to the corresponding subject in the array
     marks.forEach(mark => {
         // check if subject exists
-        let subject = markArray.find(subject => subject.name == mark.subject.name);
+        let subject = markArray.find(subject => subject.id == mark.subject.id);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
                 color: subjectColor.getSubjectColor(mark.subject.name, subjectColor.getRandomColor()),
                 name: mark.subject.name,
+                id: mark.subject.id,
                 marks: []
             }
 
@@ -235,12 +236,13 @@ function constructPronoteGrades(grades) {
     // add averages
     averages.forEach(average => {
         // check if subject exists
-        let subject = markArray.find(subject => subject.name == average.subject.name);
+        let subject = markArray.find(subject => subject.id == average.subject.id);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
                 name: average.subject,
+                id: average.subject.id,
                 marks: []
             }
 
@@ -292,10 +294,14 @@ function constructPronoteGrades(grades) {
     classMin /= markArray.length;
     classMax /= markArray.length;
 
-    // replace StudentAverage with the actual average
-    studentAverage = grades.overall_average;
+    if (studentAverage != -1 && studentAverage != undefined) {
+        studentAverage = grades.overall_average;
+    }
 
-    // add averages to array
+    if (grades.class_overall_average != -1 && grades.class_overall_average != undefined) {
+        classAverage = grades.class_overall_average;
+    }
+
     let avgs = {
         average: studentAverage,
         class: {
@@ -312,10 +318,10 @@ function constructPronoteGrades(grades) {
         });
     });
 
-    // order markArray by date
     markArray.sort((a, b) => {
-        return new Date(b.marks[0].date) - new Date(a.marks[0].date);
+        return a.name.localeCompare(b.name);
     });
+
 
     let finalArray = {
         marks: markArray,
