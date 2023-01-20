@@ -105,6 +105,10 @@ function constructPronoteTimetable(timetable, date) {
                 id: course.id,
                 color: subjectColor.getSubjectColor(course.subject.name, subjectColor.getRandomColor()),
                 num: course.num,
+                sameTime: false,
+                actual: false,
+                distance: false,
+                lengthCours: 0,
             },
             data: {
                 subject: course.subject.name,
@@ -157,8 +161,6 @@ function constructPronoteTimetable(timetable, date) {
     courses.sort((a, b) => {
         return new Date(a.time.start) - new Date(b.time.start);
     });
-
-    console.log(courses);
 
     // return courses
     return courses;
