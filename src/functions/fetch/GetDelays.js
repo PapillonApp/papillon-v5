@@ -22,9 +22,11 @@ async function getPronoteDelays(forceReload) {
 	// construct url
 	let URL = `${API}/infos?token=${token}`;
 
+	let alwaysTrueLol = 0
+
 	let delays = {};
 	let cache = localStorage.getItem('DelaysCache');
-	if (cache != null && !forceReload) {
+	if (cache != null && !forceReload && alwaysTrueLol !== 0) {
 		delays = JSON.parse(cache).delays;
 
 		return new Promise((resolve, reject) => {

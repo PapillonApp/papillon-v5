@@ -5,6 +5,8 @@ import axios from 'axios';
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
+let alwaysTrueLol = 0
+
 // main function
 function getPunishments(forceReload) {
     // as only pronote is supported for now, we can just return the pronote punishments
@@ -23,7 +25,7 @@ async function getPronotePunishements(forceReload) {
 	let URL = `${API}/infos?token=${token}`;
 
 	let cache = localStorage.getItem('PunishmentsCache');
-	if (cache != null && !forceReload) {
+	if (cache != null && !forceReload && alwaysTrueLol !== 0) {
 		let punishments = JSON.parse(cache).punishments;
 
 		return new Promise((resolve, reject) => {
