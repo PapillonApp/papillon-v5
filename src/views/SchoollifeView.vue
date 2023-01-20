@@ -44,6 +44,8 @@
 					GetAbsences(force).then((res) => {
 						this.absences = res;
 						this.absError = false;
+
+						console.log(res);
 					})
 					.catch((err) => {
 						this.absError = true;
@@ -51,6 +53,7 @@
 
 					GetPunishments(force).then((res) => {
 						this.punishments = res;
+						console.log(res);
 					})
 					.catch((err) => {
 						this.punishmentsError = true;
@@ -58,6 +61,7 @@
 
 					GetDelays(force).then((res) => {
 						this.delays = res;
+						console.log(res);
 					})
 					.catch((err) => {
 						this.delaysError = true;
@@ -141,10 +145,12 @@
 					<span class="material-symbols-outlined mdls" slot="start">door_open</span>
 
 					<ion-label>
-						<p>{{ miss.data.hours }} heures manquées le {{ new Date (miss.date.from).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }) }}</p>
-
 						<h2 v-if="miss.data.reasons.length !== 0">{{ miss.data.reasons[0] }}</h2>
 						<h2 v-else>Absence non justifiée</h2>
+
+						<p>{{ miss.data.hours }} heures manquées</p>
+
+						<h3>le {{ new Date (miss.date.from).toLocaleDateString('fr-FR', { weekday: 'long', month: 'long', day: 'numeric' }) }} à {{ new Date (miss.date.from).toLocaleDateString('fr-FR', {hour: '2-digit', minute: '2-digit'}).split(' ')[1] }}</h3>
 					</ion-label>
 
 					<ion-chip slot="end" v-if="!miss.data.isJustified" color="warning">
@@ -179,11 +185,11 @@
 					<span class="material-symbols-outlined mdls" slot="start">gavel</span>
 
 					<ion-label>
-						<p>{{ punish.data.nature }} le {{ new Date(punish.date.givenDate).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }) }}</p>
-
 						<h2>{{ punish.homeworks.text }}</h2>
 
-						<h4>{{ punish.data.reasons.text[0] }} - {{ punish.data.reasons.circumstances }}</h4>
+						<p>{{ punish.data.reasons.text[0] }} - {{ punish.data.reasons.circumstances }}</p>
+
+						<h3>le {{ new Date (punish.date.givenDate).toLocaleDateString('fr-FR', { weekday: 'long', month: 'long', day: 'numeric' }) }} à {{ new Date (punish.date.givenDate).toLocaleDateString('fr-FR', {hour: '2-digit', minute: '2-digit'}).split(' ')[1] }}</h3>
 					</ion-label>
 				</ion-item>
 			</ion-list>
@@ -209,10 +215,12 @@
 					<span class="material-symbols-outlined mdls" slot="start">schedule</span>
 
 					<ion-label>
-						<p>{{ delay.date.duration }} minutes manquées le {{ new Date (delay.date.date).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }) }}</p>
-
 						<h2 v-if="delay.data.reasons.length !== 0">{{ delay.data.reasons[0] }}</h2>
 						<h2 v-else>Absence non justifiée</h2>
+
+						<p>{{ delay.date.duration }} minutes manquées</p>
+
+						<h3>le {{ new Date (delay.date.date).toLocaleDateString('fr-FR', { weekday: 'long', month: 'long', day: 'numeric' }) }} à {{ new Date (delay.date.date).toLocaleDateString('fr-FR', {hour: '2-digit', minute: '2-digit'}).split(' ')[1] }}</h3>
 					</ion-label>
 
 					<ion-chip slot="end" v-if="!delay.data.isJustified" color="warning">
@@ -225,6 +233,8 @@
 					</ion-chip>
 				</ion-item>
 			</ion-list>
+
+			<br /><br /><br /><br /><br />
 
 		</ion-content>
 
