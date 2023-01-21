@@ -310,7 +310,7 @@
             localStorage.setItem('customCourses', JSON.stringify(customCourses));
 
             // close newCoursModal
-            this.$refs.newCoursModal.$el.dismiss();
+            this.setNewCoursModalOpen(false);
 
             // refresh timetable
             this.getTimetables(true);
