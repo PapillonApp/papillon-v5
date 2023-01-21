@@ -75,7 +75,7 @@
                 .then(response => {
                     setTimeout(() => {
                         loading.dismiss();
-                    }, 200);
+                    }, 300);
                     this.ents = response.data.ent_list;
                 })
             },    
@@ -442,15 +442,16 @@
     <ion-header>
         <ion-toolbar>
             <ion-buttons slot="start">
-                <ion-back-button></ion-back-button>
+                <ion-back-button class="only-ios" text="Retour"></ion-back-button>
+                <ion-back-button class="only-md"></ion-back-button>
             </ion-buttons>
-            <ion-title>Sélection de l'établissement</ion-title>
+            <ion-title>Connexion à Pronote</ion-title>
             <ion-buttons slot="end" style="padding-right: 10px;">
                 <ion-spinner v-if="isLoading"></ion-spinner>
             </ion-buttons>
         </ion-toolbar>
         <ion-toolbar>
-            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Entrez un code postal..." type="number" :debounce="1000" animated="true" @ionChange="getPostal($event)" @ionClear="clearEtabs()" v-bind="terms"></ion-searchbar>
+            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Chercher avec un code postal..." type="number" :debounce="1000" @ionChange="getPostal($event)" @ionClear="clearEtabs()" v-bind="terms"></ion-searchbar>
         </ion-toolbar>
     </ion-header>
       
@@ -552,7 +553,7 @@
                     </div>
 
                     <div class="loginConditions">
-                        Vos données ne sont pas stockées sur nos serveurs. En vous connectant avec cette application, vous acceptez les <a href="https://papillon.app/conditions">conditions d'utilisation</a> de Papillon.
+                        Vos données ne sont pas stockées sur nos serveurs. En vous connectant avec cette application, vous acceptez les <a href="https://getpapillon.xyz/privacy.pdf">conditions d'utilisation</a> de Papillon.
                     </div>
 
                 </div>
