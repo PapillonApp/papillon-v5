@@ -22,12 +22,40 @@ async function getPronoteConversations(forceReload) {
 	// construct url
 	let URL = `${API}/discussions?token=${token}`;
 
+	// check if cached
+    let convCache = localStorage.getItem('ConversationsCache');
+
+    if(convCache != null && !forceReload) {
+        // grade is cached, check if it's up to date
+        convCache = JSON.parse(convCache);
+
+        let today = new Date();
+        let cacheDate = new Date(convCache.date);
+
+        if(today.toDateString() == cacheDate.toDateString()) {
+            // grade is up to date, return it
+            return new Promise((resolve, reject) => {
+                resolve(constructPronoteConversations(convCache.conversations));
+            });
+        }
+    }
+
 	let Conversations = {};
 	return axios.get(URL)
 		.then((response) => {
             console.log(response.data);
 
 			Conversations = response.data;
+
+			// save conversations to localstorage cache with today's date
+            let today = new Date();
+            let convCache = {
+                date: today,
+                conversations: response.data
+            }
+
+            localStorage.setItem('ConversationsCache', JSON.stringify(convCache));
+
 			Conversations = constructPronoteConversations(Conversations);
 			
 			return Conversations;
@@ -57,9 +85,7 @@ async function getPronoteConversations(forceReload) {
 
 // pronote : construct Conversations
 function constructPronoteConversations(Conversations) {
-	let abs = []
-
-	return abs
+	return Conversations
 }
 
 export default getPronoteConversations;

@@ -8,18 +8,24 @@
 		IonList,
 		IonListHeader,
 		IonItem,
-		IonChip
+		IonChip,
+		IonLabel,
+		IonNavLink
 	} from '@ionic/vue';
 
 	const displayToast = require('@/functions/utils/displayToast.js');
 
     import GetConversations from '@/functions/fetch/GetConversations.js';
+	import ConversationView from './ConversationView.vue';
 
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
 			IonHeader,
 			IonToolbar,
+			IonList,
+			IonItem,
+			IonNavLink
 		},
 		setup() {
 			return {
@@ -31,11 +37,13 @@
 		},
 		data() {
 			return {
-				
+				conversations: [],
+				ConversationView: ConversationView,
 			}
 		},
 		mounted() {
             GetConversations().then((res) => {
+				this.conversations = res;
                 console.log(res);
             })
 
@@ -45,7 +53,6 @@
 </script>
 
 <template>
-	<ion-page ref="page">
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
 
@@ -69,9 +76,22 @@
 				</IonToolbar>
 			</IonHeader>
 
-		</ion-content>
+			<IonList>
+				<IonNavLink v-for="(chat, i) in conversations" :key="i" router-direction="forward" :component="ConversationView" :componentProps="{conversation: chat}">		
+						<IonItem button>
+							<span class="material-symbols-outlined mdls" slot="start">forum</span>
+							<ion-label>
+								<h2>{{ chat.subject }}</h2>
+								<p>{{ chat.messages[chat.messages.length - 1].content }}</p>
+								<small>{{ chat.creator }}</small>
+							</ion-label>
+						</IonItem>
+				</IonNavLink>
+			</IonList>
 
-	</ion-page>
+			<br /><br /><br /><br /><br />
+
+		</ion-content>
 </template>
 
 <style scoped>
