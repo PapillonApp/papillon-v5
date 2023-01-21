@@ -7,6 +7,11 @@ const routes: Array<RouteRecordRaw> = [
     redirect: '/timetable'
   },
   {
+    path: '/home',
+    name: 'Home',
+    component: () => import ('../views/HomepageView.vue')
+  },
+  {
     path: '/timetable',
     name: 'Timetable',
     component: () => import ('../views/TimetableView.vue')
@@ -22,6 +27,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import ('../views/GradesView.vue')
   },
   {
+    path: '/school-life',
+    name: 'School life',
+    component: () => import ('../views/SchoollifeView.vue')
+  },
+  {
     path: '/news',
     name: 'News',
     component: () => import ('../views/NewsView.vue')
@@ -29,7 +39,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/settings',
     name: 'Settings',
-    component: () => import ('../views/SettingsView.vue')
+    component: () => import ('../views/settings/SettingsController.vue')
   },
 ]
 

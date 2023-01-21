@@ -51,17 +51,19 @@
                 window.open(url, "_blank");
             },
             getNewsRefresh() {
-                GetNews().then((data) => {
+                GetNews(true).then((data) => {
                     this.news = data;
                 })
             },
             searchNews() {
-                let search = this.$refs.searchBar.$el.value;
+                let search1 = this.$refs.searchBarIos.$el.value;
+                let search2 = this.$refs.searchBarMd.$el.value;
                 let news = this.fullNews;
 
-                if (search == "") {
+                if (search1 == "" && search2 == "") {
                     this.news = news;
                 } else {
+                    let search = search1 == "" ? search2 : search1;
                     // filter news by name, content and author
                     let filteredNews = news.filter((news) => {
                         return news.title.toLowerCase().includes(search.toLowerCase()) || news.content.toLowerCase().includes(search.toLowerCase()) || news.author.toLowerCase().includes(search.toLowerCase());
@@ -101,7 +103,7 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader" translucent>
+      <IonHeader class="AppHeader" collapse="fade" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -110,15 +112,24 @@
 
           <ion-title mode="md">Actualités</ion-title>
         </IonToolbar>
-        <IonToolbar>
-                <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></ion-searchbar>
-            </IonToolbar>
+        <IonToolbar class="only-md">
+            <ion-searchbar ref="searchBarMd" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></ion-searchbar>
+        </IonToolbar>
       </IonHeader>
       
       <ion-content :fullscreen="true">
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
+
+        <IonHeader collapse="condense">
+            <IonToolbar>
+                <ion-title size="large">Actualités</ion-title>
+            </IonToolbar>
+            <IonToolbar>
+                <IonSearchbar ref="searchBarIos" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></IonSearchbar>
+            </IonToolbar>
+        </IonHeader>
 
         <div class="NoCours" v-if="isLoading">
             <IonSpinner></IonSpinner>
@@ -152,7 +163,7 @@
                 <h1>{{ openedNews.title }}</h1>
                 <small>de {{ openedNews.author }} - {{ openedNews.dateString }}</small>
                 <div v-if="openedNews.isSurvey">
-                    <IonItem class="survey-warning">
+                    <IonItem class="survey-warning" lines="none">
                         <span class="material-symbols-outlined mdls" slot="start">error</span>
                         <IonLabel>
                             <h2>Impossible de répondre</h2>
@@ -180,7 +191,11 @@
     </ion-page>
 </template>
   
-<style scoped>  
+<style scoped>
+    .ios .only-md {
+        display: none;
+    }
+
     .newsModalContent * {
         margin: 0;
     }
@@ -243,11 +258,17 @@
     }
 
     .survey-warning {
-        margin: 15px 0px;
+        margin: 25px 0px;
         color: var(--ion-color-danger);
+        --background: var(--ion-color-danger-dark);
     }
 
     .survey-warning p {
         white-space: pre-line;
+    }
+
+    .survey-warning::part(native) {
+        padding: 10px 18px;
+        border-radius: 11px;
     }
 </style>

@@ -13,15 +13,15 @@ function isFloat(n){
 }
 
 // main function
-async function getGrades() {
+async function getGrades(forceReload) {
     // as only pronote is supported for now, we can just return the pronote grades
     
     // return pronote grades
-    return getPronoteGrades();
+    return getPronoteGrades(forceReload);
 }
 
 // pronote : get grades
-function getPronoteGrades() {
+function getPronoteGrades(forceReload) {
     // gather vars
     const API = app.config.globalProperties.$api;
 
@@ -32,9 +32,9 @@ function getPronoteGrades() {
     let URL = `${API}/grades?token=${token}`;
 
     // check if grade is cached
-    let gradeCache = localStorage.getItem('gradeCache');
+    let gradeCache = localStorage.getItem('GradeCache');
 
-    if(gradeCache != null) {
+    if(gradeCache != null && !forceReload) {
         // grade is cached, check if it's up to date
         gradeCache = JSON.parse(gradeCache);
 
@@ -64,7 +64,7 @@ function getPronoteGrades() {
                 grades: response.data
             }
 
-            localStorage.setItem('gradeCache', JSON.stringify(gradeCache));
+            localStorage.setItem('GradeCache', JSON.stringify(gradeCache));
 
             // construct grades and return it as a promise
             return new Promise((resolve, reject) => {
@@ -159,13 +159,14 @@ function constructPronoteGrades(grades) {
     // for each mark, add it to the corresponding subject in the array
     marks.forEach(mark => {
         // check if subject exists
-        let subject = markArray.find(subject => subject.name == mark.subject.name);
+        let subject = markArray.find(subject => subject.id == mark.subject.id);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
-                color: subjectColor.getSubjectColor(mark.subject.name, subjectColor.darkenHexColor(mark.subject.id.substring(2,8).toString())),
+                color: subjectColor.getSubjectColor(mark.subject.name, subjectColor.getRandomColor()),
                 name: mark.subject.name,
+                id: mark.subject.id,
                 marks: []
             }
 
@@ -235,12 +236,13 @@ function constructPronoteGrades(grades) {
     // add averages
     averages.forEach(average => {
         // check if subject exists
-        let subject = markArray.find(subject => subject.name == average.subject.name);
+        let subject = markArray.find(subject => subject.id == average.subject.id);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
                 name: average.subject,
+                id: average.subject.id,
                 marks: []
             }
 
@@ -292,10 +294,14 @@ function constructPronoteGrades(grades) {
     classMin /= markArray.length;
     classMax /= markArray.length;
 
-    // replace StudentAverage with the actual average
-    studentAverage = grades.overall_average;
+    if (studentAverage != -1 && studentAverage != undefined) {
+        studentAverage = grades.overall_average;
+    }
 
-    // add averages to array
+    if (grades.class_overall_average != -1 && grades.class_overall_average != undefined) {
+        classAverage = grades.class_overall_average;
+    }
+
     let avgs = {
         average: studentAverage,
         class: {
@@ -304,6 +310,18 @@ function constructPronoteGrades(grades) {
             max: classMax
         }
     }
+
+    // order all subjects by date
+    markArray.forEach(subject => {
+        subject.marks.sort((a, b) => {
+            return new Date(b.info.date) - new Date(a.info.date);
+        });
+    });
+
+    markArray.sort((a, b) => {
+        return a.name.localeCompare(b.name);
+    });
+
 
     let finalArray = {
         marks: markArray,

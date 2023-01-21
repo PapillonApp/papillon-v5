@@ -103,41 +103,41 @@ http://ionicframework.com/docs/theming/ */
    */
 
   .ios body {
-    --ion-background-color: #141316;
-    --ion-background-color-rgb: 20,19,22;
+    --ion-background-color: #121314;
+    --ion-background-color-rgb: 18,19,20;
 
-    --ion-text-color: #fff;
+    --ion-text-color: #ffffff;
     --ion-text-color-rgb: 255,255,255;
 
-    --ion-color-step-50: #201f22;
-    --ion-color-step-100: #2c2b2d;
-    --ion-color-step-150: #373639;
-    --ion-color-step-200: #434245;
-    --ion-color-step-250: #4f4e50;
-    --ion-color-step-300: #5b5a5c;
-    --ion-color-step-350: #666668;
-    --ion-color-step-400: #727173;
-    --ion-color-step-450: #7e7d7f;
-    --ion-color-step-500: #8a898b;
-    --ion-color-step-550: #959596;
-    --ion-color-step-600: #a1a1a2;
-    --ion-color-step-650: #adacad;
-    --ion-color-step-700: #b9b8b9;
-    --ion-color-step-750: #c4c4c5;
+    --ion-color-step-50: #1e1f20;
+    --ion-color-step-100: #2a2b2c;
+    --ion-color-step-150: #363637;
+    --ion-color-step-200: #414243;
+    --ion-color-step-250: #4d4e4f;
+    --ion-color-step-300: #595a5b;
+    --ion-color-step-350: #656666;
+    --ion-color-step-400: #717172;
+    --ion-color-step-450: #7d7d7e;
+    --ion-color-step-500: #89898a;
+    --ion-color-step-550: #949595;
+    --ion-color-step-600: #a0a1a1;
+    --ion-color-step-650: #acacad;
+    --ion-color-step-700: #b8b8b9;
+    --ion-color-step-750: #c4c4c4;
     --ion-color-step-800: #d0d0d0;
-    --ion-color-step-850: #dcdcdc;
-    --ion-color-step-900: #e8e7e8;
+    --ion-color-step-850: #dbdcdc;
+    --ion-color-step-900: #e7e7e8;
     --ion-color-step-950: #f3f3f3;
 
-    --ion-item-background: #141316;
+    --ion-item-background: #121314;
 
-    --ion-toolbar-background: #141316;
+    --ion-toolbar-background: hsl(210, 5%, 10%);
 
-    --ion-tab-bar-background: #141316;
+    --ion-tab-bar-background: hsl(210, 5%, 7%);
 
-    --ion-card-background: hsl(260, 7%, 9%);
+    --ion-card-background: hsl(210, 5%, 9%);
 
-    --ion-inset-background: hsl(260, 7%, 12%);
+    --ion-inset-background: hsl(210, 5%, 10%);
   }
 
   .ios ion-modal {
@@ -228,5 +228,7 @@ http://ionicframework.com/docs/theming/ */
 
   .ios body {
     --ion-inset-background: hsl(255, 0%, 97%);
+    --ion-toolbar-background: hsl(255, 0%, 96%);
+    --ion-border-color: hsl(0, 0%, 90%) !important;
   }
 }

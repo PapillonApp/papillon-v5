@@ -1,10 +1,14 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonFabButton, IonInput } from '@ionic/vue';
 
-  const displayToast = require('@/functions/utils/displayToast.js');
+  import displayToast from '@/functions/utils/displayToast.js';
+  import subjectColor from '@/functions/utils/subjectColor.js';
+  import timetableEdit from '@/functions/utils/timetableEdit.js';
   
-  import { calendarOutline, calendarSharp, todayOutline, todaySharp } from 'ionicons/icons';
+  import { calendarOutline, calendarSharp, todayOutline, todaySharp, add, checkmark, notifications } from 'ionicons/icons';
+
+  import { LocalNotifications } from '@capacitor/local-notifications';
 
   import { Swiper, SwiperSlide } from 'swiper/vue';
   import 'swiper/css';
@@ -34,7 +38,9 @@
         IonRefresherContent,
         IonItem,
         IonLabel,
-        IonSpinner
+        IonSpinner,
+        IonFab,
+        IonInput
     },
     setup() {
         return { 
@@ -48,9 +54,9 @@
     methods: {
         createDateString(date) {
             let dateObject = new Date(date);
-
-            // return string like "1 jan."
-            return `${dateObject.getDate()} ${dateObject.toLocaleString('default', { month: 'short' })}`;
+            let day_string = dateObject.toLocaleString('default', { weekday: 'long' }).slice(0, 3);
+            // return string like "jeu. 1"
+            return day_string + ". " + dateObject.getDate();
         },
         rnInputChanged() {
             // get new date from rnInput
@@ -63,35 +69,49 @@
             document.dispatchEvent(new CustomEvent('rnChanged', { detail: newDate }));
         },
         confirmRnInput() {
-            this.$refs.rnPickerModal.$el.dismiss();
+            this.changernPickerModalOpen(false);
         },
         openRnPicker() {
             this.$refs.rnPickerModal.$el.present();
         },
-        editTimetable(timetable) {
-            // add sameTime property to courses that are at the same time
-            for(let i = 0; i < timetable.length; i++) {
-                let lesson = timetable[i];
-                let lessonStart = new Date(lesson.time.start);
-                let lessonEnd = new Date(lesson.time.end);
+        editTimetable(timetable, date) {
+            timetable = timetableEdit(timetable);
 
-                for(let j = 0; j < timetable.length; j++) {
-                    let lesson2 = timetable[j];
-                    let lesson2Start = new Date(lesson2.time.start);
-                    let lesson2End = new Date(lesson2.time.end);
+            // add custom courses
+            let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
+            customCourses.forEach((customCourse) => {
+                // if course is in the same day
+                let customDay = new Date(customCourse.day);
+                let currentDay = new Date(date);
 
-                    if (lessonStart <= lesson2Start && lessonEnd >= lesson2End && lesson.course.num != lesson2.course.num) {
-                        if (lesson.course.num > lesson2.course.num) {
-                            timetable[j].course.sameTime = true;
-                        }
-                        else {
-                            timetable[i].course.sameTime = true;
-                        }
-                    }
+                let st = new Date(customCourse.course.time.start);
+                let en = new Date(customCourse.course.time.end);
+
+                // make st and en the same day as currentDay
+                st.setDate(currentDay.getDate());
+                st.setMonth(currentDay.getMonth());
+                st.setFullYear(currentDay.getFullYear());
+
+                en.setDate(currentDay.getDate());
+                en.setMonth(currentDay.getMonth());
+                en.setFullYear(currentDay.getFullYear());
+
+                if (customDay.getDate() == currentDay.getDate() && customDay.getMonth() == currentDay.getMonth() && customDay.getFullYear() == currentDay.getFullYear()) {
+                    customCourse.course.time.start = st;
+                    customCourse.course.time.end = en;
+                    customCourse.course.course.color = subjectColor.getSubjectColor(customCourse.course.data.subject, subjectColor.getRandomColor());
+                    timetable.push(customCourse.course);
                 }
+            });
 
-            }
-            
+            // order timetable by time
+            timetable.sort((a, b) => {
+                let aStart = new Date(a.time.start);
+                let bStart = new Date(b.time.start);
+
+                return aStart - bStart;
+            });
+
             return timetable;
         },
         getTimetables(force) {
@@ -99,14 +119,6 @@
             if(this.shouldResetSwiper) {
                 this.$refs.swiper.$el.swiper.slideTo(1, 0);
                 this.shouldResetSwiper = false;
-
-                this.timetable = [];
-                this.yesterday = [];
-                this.tomorrow = [];
-
-                this.timetable.loading = true;
-                this.yesterday.loading = true;
-                this.tomorrow.loading = true;
 
                 this.timetable.error = "STILL_LOADING";
                 this.yesterday.error = "STILL_LOADING";
@@ -116,15 +128,16 @@
             // get timetable for rn
             GetTimetable(this.$rn, force).then((timetable) => {
                 if(timetable.error) {
-                    this.timetable = [];
-                    this.timetable.error = timetable.error;
-
                     if(timetable.error == "ERR_BAD_REQUEST") {
                         this.timetable.loading = true;
                     }
+                    else {
+                        this.timetable = [];
+                        this.timetable.error = timetable.error;
+                    }
                 }
                 else {
-                    this.timetable = this.editTimetable(timetable);
+                    this.timetable = this.editTimetable(timetable, this.$rn);
                     this.loadedrnButtonString = this.createDateString(this.$rn);
                     this.timetable.loading = false;
                 }
@@ -142,7 +155,7 @@
                     }
                 }
                 else {
-                    this.yesterday = this.editTimetable(timetable);
+                    this.yesterday = this.editTimetable(timetable, yesterdayRN);
                     this.yesterday.loading = false;
                 }
             });
@@ -156,7 +169,7 @@
                     this.tomorrow.error = timetable.error;
                 }
                 else {
-                    this.tomorrow = this.editTimetable(timetable);
+                    this.tomorrow = this.editTimetable(timetable, tomorrowRN);
                     this.tomorrow.loading = false;
 
                     if(timetable.error == "ERR_BAD_REQUEST") {
@@ -171,9 +184,11 @@
 
             // stop refresh when this.timetable is updated
             this.$watch('timetable', () => {
-                setTimeout(() => {
-                    event.target.complete();
-                }, 200);
+                if(this.timetable.error != "STILL_LOADING" && this.timetable.error != "ERR_BAD_REQUEST") {
+                    setTimeout(() => {
+                        event.target.complete();
+                    }, 200);
+                }
             });
         },
         openCoursModal(cours) {
@@ -197,8 +212,13 @@
             let status = cours.status.status;
             let hasStatus = status != undefined;
 
-            // set status if it's undefined
-            if(status == undefined) {
+            if (cours.status.isOuting) {
+                status = "Vous êtes en sortie"
+                hasStatus = true;
+            } else if (cours.status.isTest) {
+                status = "Vous avez un contrôle"
+                hasStatus = true;
+            } else if(status == undefined) {
                 status = "Le cours se déroule normalement";
             }
 
@@ -215,11 +235,142 @@
                 length: len,
                 status: status,
                 hasStatus: hasStatus,
-                isCancelled: cours.status.isCancelled
+                isCancelled: cours.status.isCancelled,
+                custom: cours.status.isCustom,
+                id: cours.course.id,
+                originalCourse: cours
             }
 
             // open cours modal
             this.$refs.coursModal.$el.present(cours);
+        },
+        setNewCoursModalOpen(state) {
+            this.newCoursModalOpen = state;
+        },
+        addNewCours() {
+            let st = new Date();
+            let en = new Date();
+
+            let stValue = this.$refs.newCoursStartRef.$el.value;
+            console.log(stValue);
+
+            // this.$refs.newCoursStart.value returns HH:mm
+            st.setHours(stValue.split(':')[0]);
+            st.setMinutes(stValue.split(':')[1]);
+
+            // this.$refs.newCoursEnd.value returns HH:mm
+            en.setHours(this.$refs.newCoursEndRef.$el.value.split(':')[0]);
+            en.setMinutes(this.$refs.newCoursEndRef.$el.value.split(':')[1]);
+
+            // check if cours is valid
+            if(stValue == "" || this.$refs.newCoursEndRef.$el.value == "" || this.$refs.newCoursNameRef.$el.value == "" || this.$refs.newCoursTeacherRef.$el.value == "" || this.$refs.newCoursRoomRef.$el.value == "") {
+                displayToast.presentError("Veuillez remplir tous les champs", "danger", "Tous les champs sont obligatoires");
+                return;
+            }
+
+            // create new cours
+            let newCourse = {
+                course: {
+                    id: Math.floor(Math.random() * 10000000),
+                    color: "#0066ff",
+                    num: Math.floor(Math.random() * 10000000),
+                },
+                data: {
+                    subject: this.$refs.newCoursNameRef.$el.value,
+                    teachers: [this.$refs.newCoursTeacherRef.$el.value],
+                    rooms: [this.$refs.newCoursRoomRef.$el.value],
+                    groupNames: [],
+                    memo: null,
+                    hasMemo: false,
+                    linkVirtual: null,
+                },
+                time: {
+                    start: st,
+                    end: en
+                },
+                status: {
+                    isCancelled: false,
+                    isExempted: false,
+                    isDetention: false,
+                    isOuting: false,
+                    isTest: false,
+                    isCustom: true,
+                    status: null
+                }
+            };
+
+            let customCourse = {
+                "day": this.$rn,
+                "course": newCourse
+            };
+
+            // save to local storage
+            let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
+            customCourses.push(customCourse);
+            localStorage.setItem('customCourses', JSON.stringify(customCourses));
+
+            // close newCoursModal
+            this.$refs.newCoursModal.$el.dismiss();
+
+            // refresh timetable
+            this.getTimetables(true);
+        },
+        changernPickerModalOpen(state) {
+            this.rnPickerModalOpen = state;
+        },
+        deleteCustomCourse(id) {
+            // get custom courses
+            let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
+
+            // remove custom course
+            customCourses = customCourses.filter(course => course.course.course.id != id);
+
+            // save to local storage
+            localStorage.setItem('customCourses', JSON.stringify(customCourses));
+
+            // close cours modal
+            this.$refs.coursModal.$el.dismiss();
+
+            // refresh timetable
+            this.getTimetables(true);
+        },
+        async setNotif(course) {
+            try {
+                let subject = course.data.subject;
+                let room = course.data.rooms[0] || "salle inconnue";
+                let teacher = course.data.teachers[0];
+
+                let time = new Date(course.time.start);
+                time.setMinutes(time.getMinutes() - 5);
+
+                await LocalNotifications.schedule({
+                    notifications: [
+                        {
+                            title: `${subject} - Ça commence bientôt !`,
+                            body: `Vous êtes en ${room} avec ${teacher}. Le cours commence dans 5 minutes.`,
+                            id: 1,
+                            schedule: { at: time },
+                            sound: "tone.ogg",
+                            attachments: null,
+                            actionTypeId: "",
+                            extra: null
+                        }
+                    ]
+                });
+
+                // close cours modal
+                this.$refs.coursModal.$el.dismiss();
+
+                // notify user
+                displayToast.presentToastFull(
+                    'Notifications activées pour ' + subject,
+                    'Vous receverez une notification 5 minutes avant le début du cours',
+                    'light',
+                    notifications
+                );
+            } catch (error) {
+                displayToast.presentError("Une erreur est survenue lors de l'activation des notifications", "danger", error);
+            }
         }
     },
     data() {
@@ -231,6 +382,7 @@
             yesterday: [],
             tomorrow: [],
             shouldResetSwiper: false,
+            days: ['yesterday', 'timetable', 'tomorrow'],
             selectedCourse: {
                 name: '',
                 teacher: '',
@@ -239,7 +391,9 @@
                 end: '',
                 length: '',
                 status: '',
-            }
+            },
+            newCoursModalOpen: false,
+            rnPickerModalOpen: false,
         }
     },
     mounted() {
@@ -267,7 +421,7 @@
         // detect swiper slide change
         let swiper = this.$refs.swiper.$el.swiper;
 
-        swiper.on('touchEnd', () => {
+        swiper.on('slideChangeTransitionEnd', () => {
             setTimeout(() => {
                 // get new rn
                 // check if swiper is on yesterday
@@ -300,7 +454,7 @@
                     // reset swiper
                     this.shouldResetSwiper = true;
                 }
-            }, 200);
+            }, 100);
         });
     }
   });
@@ -308,7 +462,7 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader" translucent>
+      <IonHeader class="AppHeader" collapse="fade" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -318,7 +472,7 @@
           <ion-title mode="md">Ma journée</ion-title>
 
           <ion-buttons slot="end">
-            <ion-button mode="md" id="rnPickerModalButton" color="dark" @click="openRnPicker()">
+            <ion-button mode="md" id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
               <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
               <p>{{ rnButtonString }}</p>
@@ -331,21 +485,22 @@
       <ion-content :fullscreen="true">
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
-          </ion-refresher>
+        </ion-refresher>
 
-        <IonHeader collapse="condense">
-            <IonToolbar>
-                <ion-title size="large">Ma journée</ion-title>
-            </IonToolbar>
-        </IonHeader>
+        <IonFab slot="fixed" vertical="bottom" horizontal="end" class="newCoursBtnFab">
+            <ion-button @click="setNewCoursModalOpen(true)" size="large" shape="round" class="newCoursBtn" mode="md">
+                <span class="material-symbols-outlined mdls" slot="icon-only">add</span>
+            </ion-button>
+        </IonFab>
+
+        
 
         <div id="noTouchZone"></div>
       
-        <!-- faudrait un moyen de retirer cette répétition -->
-        <swiper :initialSlide="1" ref="swiper">
-            <swiper-slide class="swiper-slide">
+        <swiper :initialSlide="1" ref="swiper" :speed="300" :spaceBetween="10" :preventClicks="true" :effect="'fade'">
+            <swiper-slide v-for="(day, i) in days" :key="i">
                 <IonList>
-                    <CoursElement v-for="cours in yesterday" :key="cours.id"
+                    <CoursElement v-for="cours in $data[`${day}`]" :key="cours.id"
                         :subject="cours.data.subject"
                         :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
                         :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
@@ -360,108 +515,26 @@
                         :isExempted="cours.status.isExempted"
                         :isOuting="cours.status.isOuting"
                         :isTest="cours.status.isTest"
+                        :distance="cours.course.distance"
+                        :lengthCours="cours.course.lengthCours"
                         @open="openCoursModal(cours)"
                     />
 
-                    <div v-if="!yesterday.error"><div class="NoCours" v-if="yesterday.length == 0">
+                    <div v-if="!$data[`${day}`].loading"><div v-if="!$data[`${day}`].error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
                         <span class="material-symbols-outlined mdls">upcoming</span>
                         <h2>Pas de cours enregistrés pour cette journée</h2>
-                        <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
+                        <p>Réessayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
-                        <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                    </div></div>
+                        <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                    </div></div></div>
 
-                    <div v-if="yesterday.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="yesterday.length == 0">
+                    <div v-if="$data[`${day}`].error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
                     </div></div>
 
-                    <div v-if="yesterday.loading" class="Error"><div class="NoCours" v-if="timetable.length == 0">
-                        <IonSpinner></IonSpinner>
-                        <br/>
-                        <h2>Téléchargement des prochains cours...</h2>
-                        <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
-                    </div></div>
-                </IonList>
-            </swiper-slide>
-            <swiper-slide>
-                <IonList>
-                    <CoursElement v-for="cours in timetable" :key="cours.id"
-                        :subject="cours.data.subject"
-                        :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
-                        :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
-                        :memo="cours.data.hasMemo"
-                        :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
-                        :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
-                        :color="cours.course.color"
-                        :sameTime="cours.course.sameTime"
-                        :status="cours.status.status"
-                        :isCancelled="cours.status.isCancelled"
-                        :isDetention="cours.status.isDetention"
-                        :isExempted="cours.status.isExempted"
-                        :isOuting="cours.status.isOuting"
-                        :isTest="cours.status.isTest"
-                        @open="openCoursModal(cours)"
-                    />
-
-                    <div v-if="!timetable.error"><div class="NoCours" v-if="timetable.length == 0">
-                        <span class="material-symbols-outlined mdls">upcoming</span>
-                        <h2>Pas de cours enregistrés pour cette journée</h2>
-                        <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-
-                        <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                    </div></div>
-
-                    <div v-if="timetable.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="timetable.length == 0">
-                        <span class="material-symbols-outlined mdls">wifi_off</span>
-                        <h2>Pas de connexion à Internet</h2>
-                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
-                    </div></div>
-
-                    <div v-if="timetable.loading" class="Error"><div class="NoCours" v-if="timetable.length == 0">
-                        <IonSpinner></IonSpinner>
-                        <br/>
-                        <h2>Téléchargement des prochains cours...</h2>
-                        <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
-                    </div></div>
-                </IonList>
-            </swiper-slide>
-            <swiper-slide>
-                <IonList>
-                    <CoursElement v-for="cours in tomorrow" :key="cours.id"
-                        :subject="cours.data.subject"
-                        :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
-                        :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
-                        :memo="cours.data.hasMemo"
-                        :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
-                        :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
-                        :color="cours.course.color"
-                        :sameTime="cours.course.sameTime"
-                        :status="cours.status.status"
-                        :isCancelled="cours.status.isCancelled"
-                        :isDetention="cours.status.isDetention"
-                        :isExempted="cours.status.isExempted"
-                        :isOuting="cours.status.isOuting"
-                        :isTest="cours.status.isTest"
-                        @open="openCoursModal(cours)"
-                    />
-
-                    <div v-if="!tomorrow.error"><div class="NoCours" v-if="tomorrow.length == 0">
-                        <span class="material-symbols-outlined mdls">upcoming</span>
-                        <h2>Pas de cours enregistrés pour cette journée</h2>
-                        <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-
-                        <ion-button fill="clear" @click="openRnPicker" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                    </div></div>
-
-                    <div v-if="tomorrow.error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="tomorrow.length == 0">
-                        <span class="material-symbols-outlined mdls">wifi_off</span>
-                        <h2>Pas de connexion à Internet</h2>
-                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
-                    </div></div>
-
-                    <div v-if="tomorrow.loading" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                    <div v-if="$data[`${day}`].loading" class="Error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
                         <IonSpinner></IonSpinner>
                         <br/>
                         <h2>Téléchargement des prochains cours...</h2>
@@ -471,8 +544,53 @@
             </swiper-slide>
         </swiper>
 
+        <IonModal ref="newCoursModal" class="newCoursModal" :is-open="newCoursModalOpen" :presenting-element="presentingElement">
+            <IonHeader>
+                <IonToolbar>
+                    <ion-buttons slot="start">
+                        <ion-button @click="setNewCoursModalOpen(false)">Annuler</ion-button>
+                    </ion-buttons>
+                    <ion-title>Ajouter un cours</ion-title>
+                    <ion-buttons slot="end">
+                        <ion-button @click="addNewCours()" color="primary">Ajouter</ion-button>
+                    </ion-buttons>
+                </IonToolbar>
+            </IonHeader>
+            <ion-content>
+                <ion-list inset>
+                    <ion-item>
+                        <ion-input type="text" name="CourseTitle" ref="newCoursNameRef" placeholder="Nom du cours"></ion-input>
+                    </ion-item>
 
-        <IonModal ref="rnPickerModal" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
+                    <ion-item>
+                        <ion-input type="text" name="Place" ref="newCoursRoomRef" placeholder="Lieu"></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-input type="text" name="Person" ref="newCoursTeacherRef" placeholder="Professeur"></ion-input>
+                    </ion-item>
+                </ion-list>
+
+                <ion-list inset>
+                    <ion-item class="input">
+                        <ion-label>Heure de début</ion-label>
+                        <div class="timeInput" slot="end">
+                            <ion-input ref="newCoursStartRef" class="timeInInput" name="Start" type="time" value="12:30"></ion-input>
+                        </div>
+                    </ion-item>
+
+                    <ion-item class="input">
+                        <ion-label>Heure de fin</ion-label>
+                        <div class="timeInput" slot="end">
+                            <ion-input class="timeInInput" name="End" ref="newCoursEndRef" type="time" value="13:30"></ion-input>
+                        </div>
+                    </ion-item>
+                </ion-list>
+            </ion-content>
+        </IonModal>
+
+
+        <IonModal :is-open="rnPickerModalOpen" ref="rnPickerModal" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
           <IonHeader>
             <IonToolbar>
               <ion-title>Sélection de la date</ion-title>
@@ -508,6 +626,10 @@
                             <p>Nom de la matière</p>
                             <h2>{{selectedCourse.name}}</h2>
                         </ion-label>
+                        <ion-button color="danger" fill="clear" class="itemBtn" slot="end" v-if="selectedCourse.custom" @click="deleteCustomCourse(selectedCourse.id)">
+                            <span class="material-symbols-outlined mdls" slot="start">delete</span>
+                            Supprimer
+                        </ion-button>
                     </ion-item>
 
                     <ion-item class="info-item">
@@ -540,6 +662,10 @@
                             <p>Horaires</p>
                             <h2>De {{selectedCourse.start}} à {{selectedCourse.end}}</h2>
                         </ion-label>
+                        <ion-button class="itemBtn" fill="clear" slot="end" @click="setNotif(selectedCourse.originalCourse)">
+                            <span class="material-symbols-outlined mdls" slot="start">notifications</span>
+                            Me notifier
+                        </ion-button>
                     </ion-item>
 
                     <ion-item class="info-item">
@@ -551,7 +677,7 @@
                     </ion-item>
 
                     <ion-item class="info-item" v-if="selectedCourse.isCancelled" style="color: var(--ion-color-danger);">
-                        <span class="material-symbols-outlined mdls" slot="start">emergency_home</span>
+                        <span class="material-symbols-outlined mdls" slot="start">error</span>
                         <ion-label>
                             <p>Statut</p>
                             <h2>Ce cours n'est pas maintenu<br>Motif : {{selectedCourse.status}}</h2>
@@ -595,5 +721,75 @@
     
     .coursModal h2 {
         font-size: 16px !important;
+    }
+
+    .ios .newCoursBtnFab {
+        bottom: 32px;
+        right: 18px;
+    }
+
+    .newCoursBtn {
+        width: 56px;
+        height: 56px;
+    }
+
+    .ios .newCoursModal .header-ios ion-toolbar:last-of-type {
+        --border-width: 0 0 0 0 !important;
+    }
+
+    .ios .newCoursModal ion-content::part(scroll) {
+        background: var(--ion-toolbar-background, var(--ion-color-step-50, #f7f7f7));
+    }
+
+    .ios .newCoursModal ion-list.list-inset {
+        background : var(--ion-background-color) !important;
+        border-radius: 10px !important;
+    }
+
+    .ios .newCoursModal ion-list.list-inset > * {
+        --background : var(--ion-background-color) !important;
+    }
+
+    @media screen and (prefers-color-scheme: dark) {
+        .ios .newCoursModal ion-list.list-inset {
+            background : var(--ion-color-step-100) !important;
+        }
+
+        .ios .newCoursModal ion-list.list-inset > * {
+            --background : var(--ion-color-step-100) !important;
+        }
+
+        .ios .newCoursModal .timeInput {
+            background: var(--ion-color-step-150) !important;
+        }
+    }
+
+    .ios .newCoursModal .timeInput {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+
+        background: var(--ion-color-step-50);
+        border-radius: 8px;
+
+        width: 70px;
+        height: 34px;
+        padding-left: 9px;
+
+    }
+
+    .ios .newCoursModal .timeInInput {
+        all: unset;
+        font-size: 18px;
+    }
+
+    .ios .timeInInput::-webkit-calendar-picker-indicator {
+        background: none !important;
+        display:none;
+    }
+
+    .md .newCoursModal ion-list {
+        padding: 0 15px;
     }
 </style>

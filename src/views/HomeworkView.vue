@@ -5,6 +5,7 @@ import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, I
 import { calendarOutline, calendarSharp, todayOutline, todaySharp, alertCircle, checkmark } from 'ionicons/icons';
 
 import displayToast from '@/functions/utils/displayToast.js';
+import hapticsController from '@/functions/utils/hapticsController.js';
 
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
@@ -47,9 +48,9 @@ export default defineComponent({
     methods: {
         createDateString(date) {
             let dateObject = new Date(date);
-
-            // return string like "1 jan."
-            return `${dateObject.getDate()} ${dateObject.toLocaleString('default', { month: 'short' })}`;
+            let day_string = dateObject.toLocaleString('default', { weekday: 'long' }).slice(0, 3);
+            // return string like "jeu. 1"
+            return day_string + ". " + dateObject.getDate();
         },
         rnInputChanged() {
             // get new date from rnInput
@@ -62,39 +63,39 @@ export default defineComponent({
             document.dispatchEvent(new CustomEvent('rnChanged', { detail: newDate }));
         },
         confirmRnInput() {
-            this.$refs.rnPickerModal.$el.dismiss();
+            this.changernPickerModalOpen(false);
         },
         openRnModal() {
             this.$refs.rnPickerModal.$el.present();
         },
-        editTimetable(timetable) {
-            // set timetable to edit
-            return timetable;
+        editHomeworks(homeworks) {
+            // set homeworks to edit
+            return homeworks;
         },
-        getTimetables(force) {
+        getHomeworks(force) {
             if(this.shouldResetSwiper) {
                 this.$refs.swiper.$el.swiper.slideTo(1, 0);
                 this.shouldResetSwiper = false;
 
-                this.timetable = [];
+                this.homeworks = [];
                 this.yesterday = [];
                 this.tomorrow = [];
 
-                this.timetable.loading = true;
+                this.homeworks.loading = true;
                 this.yesterday.loading = true;
                 this.tomorrow.loading = true;
 
-                this.timetable.error = "STILL_LOADING";
+                this.homeworks.error = "STILL_LOADING";
                 this.yesterday.error = "STILL_LOADING";
                 this.tomorrow.error = "STILL_LOADING";
             }
 
-            // get timetable for rn
+            // get homeworks for rn
             GetHomeworks(this.$rn, force).then((homeworks) => {
-                this.timetable = homeworks;
+                this.homeworks = homeworks;
 
                 this.loadedrnButtonString = this.createDateString(this.$rn);
-                this.timetable.loading = false;
+                this.homeworks.loading = false;
 
                 this.dontRetryCheck = true;
 
@@ -103,14 +104,14 @@ export default defineComponent({
                 }, 200);
             });
 
-            // get timetable for yesterday
+            // get homeworks for yesterday
             let yesterdayRN = new Date(this.$rn) - 86400000;
             GetHomeworks(yesterdayRN, force).then((homeworks) => {
                 this.yesterday = homeworks;
                 this.yesterday.loading = false;
             });
 
-            // get timetable for tomorrow
+            // get homeworks for tomorrow
             let tomorrowRN = new Date(this.$rn);
             tomorrowRN.setDate(tomorrowRN.getDate() + 1);
             GetHomeworks(tomorrowRN, force).then((homeworks) => {
@@ -119,11 +120,11 @@ export default defineComponent({
             });
         },
         handleRefresh(event) {
-            // get new timetable data
-            this.getTimetables(true);
+            // get new homeworks data
+            this.getHomeworks(true);
 
-            // stop refresh when this.timetable is updated
-            this.$watch('timetable', () => {
+            // stop refresh when this.homeworks is updated
+            this.$watch('homeworks', () => {
                 setTimeout(() => {
                     event.target.complete();
                 }, 200);
@@ -139,7 +140,14 @@ export default defineComponent({
         openLink(url) {
                 window.open(url, "_blank");
         },
+        changernPickerModalOpen(state) {
+            this.rnPickerModalOpen = state;
+        },
         changeDone(hw) {
+            // microinteractions
+            hapticsController.notification('success');
+
+            // send request
             if(!this.dontRetryCheck) {
                 let homeworkID = hw.data.id;
 
@@ -181,11 +189,14 @@ export default defineComponent({
                     // reset homework cache
                     localStorage.removeItem('HomeworkCache');
 
-                    // reload timetable
-                    this.getTimetables();
+                    // reload homeworks
+                    this.getHomeworks();
                 })
                 .catch((error) => {
                     let response = error.response;
+
+                    // microintéractions
+                    hapticsController.notification('error');
 
                     // untick checkbox
                     let checkboxID = `checkbox_${hw.data.id}`;
@@ -235,12 +246,13 @@ export default defineComponent({
             rnButtonString: this.createDateString(this.$rn),
             loadedrnButtonString: this.createDateString(this.$rn),
             rnCalendarString: this.$rn.toISOString().split('T')[0],
-            timetable: [],
+            homeworks: [],
             yesterday: [],
             tomorrow: [],
             shouldResetSwiper: false,
             openedHw: [],
             dontRetryCheck: false,
+            rnPickerModalOpen: false,
         }
     },
     mounted() {
@@ -252,17 +264,17 @@ export default defineComponent({
             this.rnButtonString = this.createDateString(e.detail);
         });
 
-        // get timetable data
-        this.getTimetables();
+        // get homeworks data
+        this.getHomeworks();
 
-        // on rnChanged, get new timetable data
+        // on rnChanged, get new homeworks data
         document.addEventListener('rnChanged', (e) => {
-            this.getTimetables();
+            this.getHomeworks();
         });
 
-        // on token changed, get new timetable data
+        // on token changed, get new homeworks data
         document.addEventListener('tokenUpdated', (e) => {
-            this.getTimetables();
+            this.getHomeworks();
         });
 
         // detect swiper slide change
@@ -309,7 +321,7 @@ export default defineComponent({
 
 <template>
     <ion-page ref="page">
-        <IonHeader class="AppHeader" translucent>
+        <IonHeader class="AppHeader" collapse="fade" translucent>
             <IonToolbar>
 
                 <ion-buttons slot="start">
@@ -319,7 +331,7 @@ export default defineComponent({
                 <ion-title mode="md">Travail à faire</ion-title>
 
                 <ion-buttons slot="end">
-                    <ion-button mode="md" color="dark" id="rnPickerModalButton" @click="openRnModal">
+                    <ion-button mode="md" color="dark" id="rnPickerModalButton" @click="changernPickerModalOpen(true)">
                         <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
                         <p>{{ rnButtonString }}</p>
@@ -333,12 +345,6 @@ export default defineComponent({
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
-
-            <IonHeader collapse="condense">
-                <IonToolbar>
-                    <ion-title size="large">Travail à faire</ion-title>
-                </IonToolbar>
-            </IonHeader>
 
             <div id="noTouchZone"></div>
 
@@ -379,13 +385,13 @@ export default defineComponent({
                             <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
-                            <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                         </div></div>
                     </ion-list>
                 </swiper-slide>
                 <swiper-slide>
                     <ion-list>
-                        <ion-item v-for="homework in timetable" :key="homework.id" button>
+                        <ion-item v-for="homework in homeworks" :key="homework.id" button>
                             <div slot="start">
                                 <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
                             </div>
@@ -407,19 +413,19 @@ export default defineComponent({
                             </ion-label>
                         </ion-item>
 
-                        <div v-if="timetable.loading" class="Error"><div class="NoCours" v-if="timetable.length == 0">
+                        <div v-if="homeworks.loading" class="Error"><div class="NoCours" v-if="homeworks.length == 0">
                             <IonSpinner></IonSpinner>
                             <br/>
                             <h2>Téléchargement des prochains devoirs...</h2>
                             <p>Veuillez patienter pendant qu'on récupère vos devoirs depuis nos serveurs...</p>
                         </div></div>
 
-                        <div v-if="!timetable.loading"><div class="NoCours" v-if="timetable.length == 0">
+                        <div v-if="!homeworks.loading"><div class="NoCours" v-if="homeworks.length == 0">
                             <span class="material-symbols-outlined mdls">auto_stories</span>
                             <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
-                            <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                         </div></div>
                     </ion-list>
                 </swiper-slide>
@@ -459,13 +465,13 @@ export default defineComponent({
                             <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
-                            <ion-button fill="clear" @click="openRnModal" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                         </div></div>
                     </ion-list>
                 </swiper-slide>
             </swiper>
 
-            <IonModal ref="rnPickerModal" trigger="rnPickerModalButton" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
+            <IonModal ref="rnPickerModal" :is-open="rnPickerModalOpen" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
                 <IonHeader>
                     <IonToolbar>
                         <ion-title>Sélection de la date</ion-title>

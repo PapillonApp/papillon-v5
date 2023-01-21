@@ -1,18 +1,23 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonToggle, actionSheetController } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonToggle, actionSheetController, IonAvatar, IonNavLink } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
+
+    import ThemeView from './ThemeView.vue';
 
     import { version } from '/package'
     import { Capacitor } from '@capacitor/core';
 
     import displayToast from '@/functions/utils/displayToast.js';
     import GetToken from '@/functions/login/GetToken.js';
+    import getContributors from '@/functions/fetch/GetContributors';
 
     import { trash, refresh, checkmark, alertCircle } from 'ionicons/icons';
 
     import { FilePicker } from '@capawesome/capacitor-file-picker';
+
+    import axios from 'axios';
 
     export default defineComponent({
         name: 'FolderPage',
@@ -22,45 +27,53 @@
             IonToolbar,
             IonTitle,
             IonMenuButton,
-            IonPage,
             IonButtons,
             IonList,
             IonListHeader,
             IonLabel,
             IonItem,
-            IonToggle
+            IonToggle,
+            IonAvatar,
+            IonNavLink,
         },
         setup() {
             return { 
                 appVersion: version,
                 appPlatform: Capacitor.getPlatform(),
-                localStorageSize: ''
+                localStorageSize: '',
+            }
+        },
+        data() {
+            return {
+                contributors: [],
+                userAvatar: '',
+                ThemeView: ThemeView,
             }
         },
         methods: {
             async logout() {
                 const actionSheet = await actionSheetController.create({
-                header: 'Êtes-vous sûr de vouloir vous déconnecter ?',
-                subHeader: 'Vous perdrez vos paramètres et vos données seront supprimées de votre appareil.',
-                buttons: [
-                    {
-                        text: 'Se déconnecter',
-                        role: 'destructive',
-                        data: {
-                            action: 'delete',
+                    header: 'Êtes-vous sûr de vouloir vous déconnecter ?',
+                    subHeader: 'Vous perdrez vos paramètres et vos données seront supprimées de votre appareil.',
+                    buttons: [
+                        {
+                            text: 'Se déconnecter',
+                            role: 'destructive',
+                            data: {
+                                action: 'delete',
+                            },
+                            handler: () => {
+                                this.logoutFunc();
+                            },
                         },
-                        handler: () => {
-                            this.logoutFunc();
+                        {
+                            text: 'Annuler',
+                            role: 'cancel',
+                            data: {
+                                action: 'cancel',
+                            },
                         },
-                    },
-                    {
-                        text: 'Annuler',
-                        role: 'cancel',
-                        data: {
-                            action: 'cancel',
-                        },
-                    },
-                ],
+                    ],
                 });
 
                 await actionSheet.present();
@@ -80,9 +93,13 @@
                 // empty cache
                 localStorage.removeItem('UserCache');
                 localStorage.removeItem('TimetableCache');
-                localStorage.removeItem('newsCache');
-                localStorage.removeItem('gradeCache');
+                localStorage.removeItem('NewsCache');
+                localStorage.removeItem('GradeCache');
                 localStorage.removeItem('HomeworkCache');
+                localStorage.removeItem('AbsencesCache');
+                localStorage.removeItem('PunishmentsCache');
+                localStorage.removeItem('MenuCache');
+                localStorage.removeItem('SubjectColors');
 
                 // show toast
                 setTimeout(() => {
@@ -164,6 +181,20 @@
                     checkmark
                 );
             },
+            changeTick(option) {
+                let el = this.$refs[option];
+                let elChecked = el.$el.checked;
+
+                localStorage.setItem(option, elChecked);
+
+                document.dispatchEvent(new CustomEvent('settingsUpdated'));
+                displayToast.presentToastFull(
+                    'Paramètres enregistrés',
+                    'Les paramètres ont été enregistrées avec succès.',
+                    'light',
+                    checkmark
+                );
+            },
             async tweakChangeAvatar() {
                 try {
                     const result = await FilePicker.pickImages({
@@ -210,6 +241,23 @@
                     );
                 }
             },
+            resetColors() {
+                localStorage.removeItem('SubjectColors');
+
+                // show toast
+                setTimeout(() => {
+                    displayToast.presentToastFull(
+                        'Couleurs des matières réinitialisées',
+                        'Les couleurs des matières ont été réinitialisées avec succès.',
+                        'light',
+                        checkmark
+                    );
+                    
+                    setTimeout(() => {
+                        this.localStorageSize = this.getLocalStorageSize() + ' kb';
+                    }, 1000);
+                }, 100);
+            },
             tweakDeleteAvatar() {
                 localStorage.removeItem('customAvatar');
                 document.dispatchEvent(new CustomEvent('userDataUpdated'));
@@ -220,7 +268,16 @@
                     'light',
                     trash
                 );
-            }
+            },
+            openURL(url) {
+                // open url in new tab
+                window.open(url, '_blank');
+            },
+            getContributorsList(){
+                getContributors(5).then((contributors) => {
+                    this.contributors = contributors;
+                });
+            },
         },
         mounted() {
             this.getApiVersion();
@@ -230,23 +287,44 @@
 
             if (userData) {
                 this.userName = userData.student.name;
+                this.userClass = userData.class.name;
+                this.userSchool = userData.class.school;
+                this.userAvatar = userData.student.avatar;
+
+                // check if user has custom avatar
+                if (localStorage.getItem('customAvatar')) {
+                    this.userAvatar = localStorage.getItem('customAvatar');
+                }
+                else if(localStorage.getItem('avatarCache')) {
+                    this.userAvatar = localStorage.getItem('avatarCache');
+                }
             }
 
             // Get localStorage size
             this.localStorageSize = this.getLocalStorageSize() + ' kb';
 
-            // displayToast.presentToastTest();
-
             // get tweakGrades20 ref
             let tweakGrades20 = this.$refs.tweakGrades20;
             tweakGrades20.$el.checked = localStorage.getItem('tweakGrades20') == 'true';
+            this.getContributorsList();
+
+            // get viescolaireEnabled ref
+            let viescolaireEnabled = this.$refs.viescolaireEnabled;
+            viescolaireEnabled.$el.checked = localStorage.getItem('viescolaireEnabled') == 'true';
+
+            // get homepageEnabled ref
+            let homepageEnabled = this.$refs.homepageEnabled;
+            homepageEnabled.$el.checked = localStorage.getItem('homepageEnabled') == 'true';
+
+            // get changePeriodSelection ref
+            let changePeriodSelection = this.$refs.changePeriodSelection;
+            changePeriodSelection.$el.checked = localStorage.getItem('changePeriodSelection') == 'true';
         }
     });
 </script>
 
 <template>
-    <ion-page ref="page">
-      <IonHeader class="AppHeader" translucent>
+      <IonHeader class="AppHeader" collapse="fade" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -258,77 +336,72 @@
       </IonHeader>
       
       <ion-content :fullscreen="true">
-        <IonHeader collapse="condense">
-            <IonToolbar>
-                <ion-title size="large">Paramètres</ion-title>
-            </IonToolbar>
-        </IonHeader>
 
         <IonList :inset="true" lines="inset">
-            <IonListHeader>
-                <IonLabel>
-                    <p>Mon compte</p>
-                </IonLabel>
-            </IonListHeader>
-
             <IonItem>
-                <span class="material-symbols-outlined mdls" slot="start">account_circle</span>
+                <IonAvatar slot="start">
+                    <img :src="userAvatar" />
+                </IonAvatar>
                 <IonLabel>
                     <p>Utilisateur connecté</p>
                     <h2>{{ userName }}</h2>
-                </IonLabel>
-            </IonItem>
-        </IonList>
-
-
-        <IonList :inset="true" lines="inset">
-            <IonListHeader>
-                <IonLabel>
-                    <p>Options</p>
-                </IonLabel>
-            </IonListHeader>
-
-            <IonItem button @click="logout()">
-                <span class="material-symbols-outlined mdls" slot="start">logout</span>
-                <IonLabel>
-                    <h2>Se déconnecter de Papillon</h2>
-                    <p>Supprime toutes les données de connexion de l'application</p>  
-                </IonLabel>
-            </IonItem>
-
-            <IonItem button @click="emptyCache()">
-                <span class="material-symbols-outlined mdls" slot="start">autorenew</span>
-                <IonLabel>
-                    <h2>Vider le cache des données</h2>
-                    <p>Réinitialise les données pré-téléchargées hors ligne</p>  
-                </IonLabel>
-            </IonItem>
-
-            <IonItem button @click="refreshToken()">
-                <span class="material-symbols-outlined mdls" slot="start">key</span>
-                <IonLabel>
-                    <h2>Regénerer les clés de connexion (avancé)</h2>
-                    <p>Permet de demander une nouvelle autorisation à votre établissement</p>  
+                    <p>{{ userClass }} - {{ userSchool }}</p>
                 </IonLabel>
             </IonItem>
         </IonList>
 
         <IonList :inset="true" lines="inset">
-            <IonListHeader>
-                <IonLabel>
-                    <p>Tweaks</p>
-                </IonLabel>
-            </IonListHeader>
-
             <IonItem>
                 <span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
                 <IonLabel>
                     <h2>Remettre les notes sur 20</h2>
                     <p>Uniformise le barème de toutes les notes</p>
                 </IonLabel>
-                <IonToggle slot="end" ref="tweakGrades20" @ionChange="tweakGrades20Change()"></IonToggle>
+                <IonToggle slot="end" ref="tweakGrades20" @ionChange="changeTick('tweakGrades20')"></IonToggle>
             </IonItem>
 
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">toggle_off</span>
+                <IonLabel>
+                    <h5>Onglet notes</h5>
+                    <h2>Activer la séléction de période</h2>
+                    <p>(Expérimental) Permet de changer de trimestre/semestre</p>
+                </IonLabel>
+                <IonToggle slot="end" ref="changePeriodSelection" @ionChange="changeTick('changePeriodSelection')"></IonToggle>
+            </IonItem>
+
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">gavel</span>
+                <IonLabel>
+                    <h2>Activer l'onglet vie scolaire</h2>
+                    <p>(Expérimental) Active l'onglet de vie scolaire</p>
+                </IonLabel>
+                <IonToggle slot="end" ref="viescolaireEnabled" @ionChange="changeTick('viescolaireEnabled')"></IonToggle>
+            </IonItem>
+
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">home</span>
+                <IonLabel>
+                    <h2>Activer la page d'accueil</h2>
+                    <p>(Expérimental) Active la page d'accueil</p>
+                </IonLabel>
+                <IonToggle slot="end" ref="homepageEnabled" @ionChange="changeTick('homepageEnabled')"></IonToggle>
+            </IonItem>
+        </IonList>
+
+        <IonList :inset="true" lines="inset">
+            <ion-nav-link router-direction="forward" :component="ThemeView">
+                <IonItem button>
+                    <span class="material-symbols-outlined mdls" slot="start">palette</span>
+                    <IonLabel>
+                        <h2>Personnaliser Papillon</h2>
+                        <p>Ouvrir le menu de customisation de l'app</p>
+                    </IonLabel>
+                </IonItem>
+            </ion-nav-link>
+        </IonList>
+
+        <IonList :inset="true" lines="inset">
             <IonItem button @click="tweakChangeAvatar()">
                 <span class="material-symbols-outlined mdls" slot="start">person_pin</span>
                 <IonLabel>
@@ -344,14 +417,8 @@
                 </IonLabel>
             </IonItem>
         </IonList>
-
+        
         <IonList :inset="true" lines="inset">
-            <IonListHeader>
-                <IonLabel>
-                    <p>A propos de l'app</p>
-                </IonLabel>
-            </IonListHeader>
-
             <IonItem>
                 <span class="material-symbols-outlined mdls" slot="start">security_update_good</span>
                 <IonLabel>
@@ -377,11 +444,81 @@
             </IonItem>
         </IonList>
 
+        <IonList :inset="true" lines="inset">
+            <IonItem button @click="openURL('https://discord.gg/DMx3TDyz2U')">
+                <span class="material-symbols-outlined mdls" slot="start">support</span>
+                <IonLabel>
+                    <p>Discord</p>
+                    <h2>Rejoindre le serveur Discord</h2>
+                </IonLabel>
+            </IonItem>
+            <IonItem button @click="openURL('https://github.com/PapillonApp/papillon-v5/')">
+                <span class="material-symbols-outlined mdls" slot="start">data_object</span>
+                <IonLabel>
+                    <p>GitHub</p>
+                    <h2>Contribuer au projet Papillon</h2>
+                </IonLabel>
+            </IonItem>
+        </IonList>
+
+        <IonList :inset="true" lines="inset">
+            <IonItem button @click="logout()">
+                <span class="material-symbols-outlined mdls" slot="start">logout</span>
+                <IonLabel>
+                    <h2>Se déconnecter de Papillon</h2>
+                    <p>Supprime toutes les données de connexion de l'application</p>  
+                </IonLabel>
+            </IonItem>
+
+            <IonItem button @click="emptyCache()">
+                <span class="material-symbols-outlined mdls" slot="start">autorenew</span>
+                <IonLabel>
+                    <h2>Vider le cache des données</h2>
+                    <p>Réinitialise les données pré-téléchargées hors ligne</p>  
+                </IonLabel>
+            </IonItem>
+
+            <IonItem button @click="resetColors()">
+                <span class="material-symbols-outlined mdls" slot="start">palette</span>
+                <IonLabel>
+                    <h2>Réattribuer les couleurs de matières</h2>
+                    <p>Réinitialise les couleurs des matières pour en obtenir de nouvelles</p>  
+                </IonLabel>
+            </IonItem>
+
+            <IonItem button @click="refreshToken()">
+                <span class="material-symbols-outlined mdls" slot="start">key</span>
+                <IonLabel>
+                    <h2>Regénerer les clés de connexion (avancé)</h2>
+                    <p>Permet de demander une nouvelle autorisation à votre établissement</p>  
+                </IonLabel>
+            </IonItem>
+        </IonList>
+
+        <IonList :inset="true" lines="inset">
+            <IonListHeader>
+                <IonLabel>
+                    <p>Meilleurs contributeurs</p>
+                </IonLabel>
+            </IonListHeader>
+
+            <IonItem v-for="(contributor, i) in contributors" :key="i" button @click="openURL(contributor.html_url)">
+            <img :src="contributor.avatar_url" slot="start" class="avatar" />
+            <IonLabel>
+                <h2>{{ contributor.login }}</h2>
+                <p>{{ contributor.contributions }} contributions</p>
+            </IonLabel>
+            </IonItem>
+        </IonList>
+
         <br /> <br /> 
       </ion-content>
-    </ion-page>
 </template>
   
 <style scoped>
-    
+    .avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+    }
 </style>
