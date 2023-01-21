@@ -97,9 +97,9 @@
         left: 0;
         right: 0;
         bottom: 0;
-        padding: 16px 16px;
+        padding: 12px 12px;
         border-top: 1px solid var(--ion-color-step-100);
-        padding-bottom: 24px;
+        padding-bottom: 32px;
         background: var(--ion-background-color);
     }
 
@@ -120,7 +120,7 @@
         height: 100% - 87px;
         width: 100%;
         padding: 0px 16px;
-        padding-bottom: 90px;
+        padding-bottom: 120px;
     }
 
     .message {
@@ -139,7 +139,9 @@
         background-color: var(--ion-color-step-50);
         border-radius: 10px;
         padding: 10px 15px;
-        max-width: 70%;
+        max-width: 80%;
+        width: fit-content;
+        font-family: var(--papillon-font), sans-serif;
     }
 
     .message.me {

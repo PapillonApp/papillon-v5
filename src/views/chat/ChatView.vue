@@ -10,12 +10,23 @@
 		IonItem,
 		IonChip,
 		IonLabel,
-		IonNavLink
+		IonNavLink,
+		IonFab,
+		IonButton,
+		IonModal,
+		IonButtons,
+		IonTitle,
+		IonRadio,
+		IonRadioGroup,
+		IonInput,
+		IonTextarea,
 	} from '@ionic/vue';
 
 	const displayToast = require('@/functions/utils/displayToast.js');
 
     import GetConversations from '@/functions/fetch/GetConversations.js';
+	import GetRecipients from '@/functions/fetch/GetRecipients.js';
+
 	import ConversationView from './ConversationView.vue';
 
 	export default defineComponent({
@@ -25,7 +36,16 @@
 			IonToolbar,
 			IonList,
 			IonItem,
-			IonNavLink
+			IonNavLink,
+			IonFab,
+			IonButton,
+			IonButtons,
+			IonTitle,
+			IonModal,
+			IonRadio,
+			IonRadioGroup,
+			IonInput,
+			IonTextarea,
 		},
 		setup() {
 			return {
@@ -36,7 +56,6 @@
 			handleRefresh(event) {
 				GetConversations().then((res) => {
 					this.conversations = res;
-					console.log(res);
 				})
 
 				this.$watch('conversations', () => {
@@ -44,19 +63,77 @@
                         event.target.complete();
                     }, 200);
                 });
+			},
+			setnewConvModalOpen(status) {
+				this.newConvModalOpen = status;
+			},
+			startNewChat() {
+				this.checkedRecipients = [];
+				this.newConvModalOpen = false;
+			},
+			startConversation() {
+				let subject = this.$refs.newChatSubject.$el.value;
+				let content = this.$refs.newChatMsg.$el.value;
+				let recipient = this.checkedRecipient;
+
+				// find recipient with id
+				let recipients = [JSON.parse(recipient)];
+
+				const API = this.$api;
+				const token = localStorage.getItem('token');
+
+				var myHeaders = new Headers();
+				myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+								
+				var urlencoded = new URLSearchParams();
+				urlencoded.append("token", token);
+				urlencoded.append("content", content);
+				urlencoded.append("recipients", JSON.stringify(recipients));
+				urlencoded.append("subject", subject);
+
+				var requestOptions = {
+					method: 'POST',
+					headers: myHeaders,
+					body: urlencoded,
+					redirect: 'follow'
+				};
+
+				fetch(API + "/discussion/create", requestOptions)
+					.then(response => response.json())
+					.then(result => {
+						console.log(result);
+
+						if(result == "ok") {
+							displayToast("Conversation créée", "success");
+							this.newConvModalOpen = false;
+						} else {
+							displayToast("Une erreur est survenue", "danger");
+						}
+					})
 			}
 		},
 		data() {
 			return {
 				conversations: [],
+				recipients: [],
 				ConversationView: ConversationView,
+				newConvModalOpen: true,
+				checkedRecipient: [],
 			}
 		},
 		mounted() {
             GetConversations().then((res) => {
 				this.conversations = res;
-                console.log(res);
             })
+
+			GetRecipients().then((res) => {
+				this.recipients = res;
+			})
+
+			// watch checkedRecipient
+			this.$watch('checkedRecipient', () => {
+				console.log(this.checkedRecipient);
+			});
 
 			return false;
 		}
@@ -81,11 +158,11 @@
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
 
-			<IonHeader collapse="condense">
-				<IonToolbar>
-					<ion-title size="large">Conversations</ion-title>
-				</IonToolbar>
-			</IonHeader>
+			<IonFab slot="fixed" vertical="bottom" horizontal="end" class="newCoursBtnFab">
+				<ion-button @click="startNewChat()" size="large" shape="round" class="newCoursBtn" mode="md">
+					<span class="material-symbols-outlined mdls" slot="icon-only">add</span>
+				</ion-button>
+			</IonFab>
 
 			<IonList>
 				<IonNavLink v-for="(chat, i) in conversations" :key="i" router-direction="forward" :component="ConversationView" :componentProps="{conversation: chat}">		
@@ -102,6 +179,47 @@
 
 			<br /><br /><br /><br /><br />
 
+			<IonModal class="newChatModal" :is-open="newConvModalOpen">
+				<IonHeader translucent>
+                    <IonToolbar>
+						<IonButtons slot="start">
+                            <IonButton @click="setnewConvModalOpen(false)">Annuler</IonButton>
+                        </IonButtons>
+                        <IonTitle>Nouvelle conversation</IonTitle>
+                        <IonButtons slot="end">
+                            <IonButton color="primary" @click="startConversation()">Créer</IonButton>
+                        </IonButtons>
+                    </IonToolbar>
+                </IonHeader>
+                <ion-content>
+					<IonList inset>
+						<IonItem>
+							<IonInput ref="newChatSubject" placeholder="Sujet"></IonInput>
+						</IonItem>
+						<IonItem>
+							<IonTextarea ref="newChatMsg" placeholder="Contenu du 1er message"></IonTextarea>
+						</IonItem>
+					</IonList>
+
+					<IonList>
+						<ion-radio-group v-model="checkedRecipient">
+							<IonItem v-for="(person, i) in recipients" :key="i">
+								<span class="material-symbols-outlined mdls" slot="start" v-if="person.type == 'teacher'">face</span>
+								<span class="material-symbols-outlined mdls" slot="start" v-else>person</span>
+
+								<ion-label>
+									<h2>{{ person.name }}</h2>
+									<p>{{ person.functions.join(", ") }}</p>
+								</ion-label>
+
+								<ion-radio slot="end" :value="JSON.stringify(person)"></ion-radio>
+							</IonItem>
+						</ion-radio-group>
+					</IonList>
+					<br /><br /><br /><br /><br />
+				</ion-content>
+			</IonModal>
+
 		</ion-content>
 </template>
 
@@ -109,4 +227,14 @@
 	ion-chip span {
 		margin-right: 5px;
 	}
+
+	.ios .newCoursBtnFab {
+        bottom: 32px;
+        right: 18px;
+    }
+
+	.newCoursBtn {
+        width: 56px;
+        height: 56px;
+    }
 </style>
