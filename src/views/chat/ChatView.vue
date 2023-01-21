@@ -33,7 +33,18 @@
 			}
 		},
 		methods: {
+			handleRefresh(event) {
+				GetConversations().then((res) => {
+					this.conversations = res;
+					console.log(res);
+				})
 
+				this.$watch('conversations', () => {
+                    setTimeout(() => {
+                        event.target.complete();
+                    }, 200);
+                });
+			}
 		},
 		data() {
 			return {
@@ -66,7 +77,7 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-			<ion-refresher slot="fixed">
+			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
 
