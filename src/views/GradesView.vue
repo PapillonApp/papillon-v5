@@ -462,10 +462,6 @@
 </template>
   
 <style scoped>
-    .ios .only-md {
-        display: none;
-    }
-
     .subject-name {
         display: flex;
         justify-content: space-between;

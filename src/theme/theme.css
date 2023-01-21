@@ -305,3 +305,13 @@ ion-action-sheet {
         --indicator-color: var(--ion-background-color) !important;
     }
 }
+
+/* only md */
+.ios .only-md {
+    display: none;
+}
+
+/* only ios */
+.md .only-ios {
+    display: none;
+}

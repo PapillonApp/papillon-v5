@@ -241,7 +241,7 @@
                 <ion-chip color="warning" v-if='status == "error"'>Indisponible</ion-chip>
             </ion-item>
 
-            <ion-item button href="https://pronote.plus/assets/terms_privacy_23112022_rev0.pdf">
+            <ion-item button href="https://getpapillon.xyz/privacy.pdf">
                 <ion-icon class="icon" slot="start" :ios="informationCircleOutline" :md="informationCircleSharp"></ion-icon>
                 <ion-label>
                     <h2>Mentions légales</h2>
