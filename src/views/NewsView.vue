@@ -96,6 +96,10 @@
                 this.isLoading = false;
             });
 
+            document.addEventListener('tokenUpdated', (e) => {
+                this.getNewsRefresh();
+            });
+
             return false;
         }
     });

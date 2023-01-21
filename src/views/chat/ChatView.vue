@@ -69,15 +69,19 @@
 			},
 			startNewChat() {
 				this.checkedRecipients = [];
-				this.newConvModalOpen = false;
+				this.newConvModalOpen = true;
 			},
 			startConversation() {
 				let subject = this.$refs.newChatSubject.$el.value;
 				let content = this.$refs.newChatMsg.$el.value;
-				let recipient = this.checkedRecipient;
+				let recipient = JSON.parse(this.checkedRecipient);
 
 				// find recipient with id
-				let recipients = [JSON.parse(recipient)];
+				let recipients = [{
+					"id": recipient.id,
+					"_type": recipient.type,
+					"name": recipient.name,
+				}];
 
 				const API = this.$api;
 				const token = localStorage.getItem('token');
@@ -117,7 +121,7 @@
 				conversations: [],
 				recipients: [],
 				ConversationView: ConversationView,
-				newConvModalOpen: true,
+				newConvModalOpen: false,
 				checkedRecipient: [],
 			}
 		},
@@ -135,7 +139,15 @@
 				console.log(this.checkedRecipient);
 			});
 
-			return false;
+			document.addEventListener('tokenUpdated', (e) => {
+                GetConversations().then((res) => {
+					this.conversations = res;
+				})
+
+				GetRecipients().then((res) => {
+					this.recipients = res;
+				})
+            });
 		}
 	});
 </script>
@@ -163,6 +175,12 @@
 					<span class="material-symbols-outlined mdls" slot="icon-only">add</span>
 				</ion-button>
 			</IonFab>
+
+			<div class="NoCours" v-if="this.conversations.length == 0">
+				<span class="material-symbols-outlined mdls">forum</span>
+				<h2>Aucune conversation n'a été trouvée.</h2>
+				<p>Essayez d'envoyer un message à quelqu'un dans votre établissement.</p>
+			</div>
 
 			<IonList>
 				<IonNavLink v-for="(chat, i) in conversations" :key="i" router-direction="forward" :component="ConversationView" :componentProps="{conversation: chat}">		
