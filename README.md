@@ -12,20 +12,20 @@
 ## Installation
 Installez [Ionic](https://ionicframework.com/docs/intro/cli) et [Capacitor](https://capacitorjs.com/docs/getting-started#install-capacitor),
 puis, à la racine des fichiers du dépôt, exécutez :
-```
+```bash
 npm i
 ```
 
 ### Démarrer la preview web
 Pour tester l'application dans votre navigateur :
-```
+```bash
 ionic serve
 ```
 
 ### Générer l'app
 Pour préparer la construction de l'application pour mobile :
-```
-npm run build (ou ionic build)
+```bash
+npm run build # ou ionic build
 npx cap sync
 npx cap open
 ```
