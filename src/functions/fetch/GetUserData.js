@@ -55,7 +55,7 @@ async function getPronoteUser(force) {
                 let avatar = response.data.profile_picture;
 
                 // download avatar
-                let url = `https://cors.api.pronote.plus/` + avatar;
+                let url = `https://cors.api.getpapillon.xyz/` + avatar;
                 axios.get(url, { responseType: 'blob' })
                     .then((response) => {
                         // get blob
