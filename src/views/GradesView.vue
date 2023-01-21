@@ -43,6 +43,7 @@
                 isLoading: false,
                 periods: [],
                 current_period: [],
+                base_period: [],
                 segChangeTimeout: false,
                 changePeriodSelection: localStorage.getItem('changePeriodSelection') == "true" ? true : false,
                 selectedMark: {
@@ -87,6 +88,7 @@
                 }
                 
                 this.current_period = actualPeriod;
+                this.base_period = actualPeriod;
 
                 // if first period contains "Trimestre", add all trimesters
                 if (actualPeriod.name.includes("Trimestre")) {
@@ -120,6 +122,9 @@
                     ChangePeriod(newPeriod.name).then((data) => {
                         this.getGradesRefresh(true);
                         this.current_period = newPeriod;
+                    })
+                    .catch((error) => {
+                        this.$refs.segment.$el.value = this.base_period.id;
                     });
                 }
             },

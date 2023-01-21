@@ -88,7 +88,7 @@
             },
             {
                 title: 'Vie scolaire',
-                url: '/school-life',
+                url: '/schoollife',
                 icon: "gavel",
             },
             {
