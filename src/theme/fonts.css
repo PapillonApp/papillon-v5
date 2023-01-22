@@ -105,3 +105,18 @@
     font-weight: 700;
     font-style: normal;
 }
+
+/* OpenDyslexic */
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('/public/fonts/OpenDyslexic/OpenDyslexic-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('/public/fonts/OpenDyslexic/OpenDyslexic-Bold.woff') format('');
+    font-weight: 700;
+    font-style: normal;
+}
