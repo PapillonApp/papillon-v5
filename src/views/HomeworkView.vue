@@ -91,7 +91,7 @@ export default defineComponent({
             }
 
             // get homeworks for rn
-            GetHomeworks(this.$rn, force).then((homeworks) => {
+            GetHomeworks(this.$rn, this.$rn, force).then((homeworks) => {
                 this.homeworks = homeworks;
 
                 this.loadedrnButtonString = this.createDateString(this.$rn);
@@ -106,7 +106,7 @@ export default defineComponent({
 
             // get homeworks for yesterday
             let yesterdayRN = new Date(this.$rn) - 86400000;
-            GetHomeworks(yesterdayRN, force).then((homeworks) => {
+            GetHomeworks(yesterdayRN, yesterdayRN, force).then((homeworks) => {
                 this.yesterday = homeworks;
                 this.yesterday.loading = false;
             });
@@ -114,7 +114,7 @@ export default defineComponent({
             // get homeworks for tomorrow
             let tomorrowRN = new Date(this.$rn);
             tomorrowRN.setDate(tomorrowRN.getDate() + 1);
-            GetHomeworks(tomorrowRN, force).then((homeworks) => {
+            GetHomeworks(tomorrowRN, tomorrowRN, force).then((homeworks) => {
                 this.tomorrow = homeworks;
                 this.tomorrow.loading = false;
             });
