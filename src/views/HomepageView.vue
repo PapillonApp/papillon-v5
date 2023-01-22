@@ -168,11 +168,12 @@
             },
             getHomeworks(force) {
                 // get date for this.$rn + 1 day
-                let tomorrow = new Date(this.$rn);
-                tomorrow.setDate(tomorrow.getDate() + 0);
+                let today = new Date(this.$rn);
+                let dateTo = new Date(this.$rn);
+                dateTo.setDate(dateTo.getDate() + 7);
 
                 this.homeworks.loading = true;
-                GetHomeworks(tomorrow, force).then((homeworks) => {
+                GetHomeworks(today, dateTo, force).then((homeworks) => {
                     if(homeworks.error) {
                         this.homeworks = [];
                         this.homeworks.error = homeworks.error;
