@@ -97,6 +97,11 @@
                 icon: "newspaper",
             },
             {
+                title: 'Conversations',
+                url: '/conversations',
+                icon: "forum",
+            },
+            {
                 title: 'Paramètres',
                 url: '/settings',
                 icon: "settings",
