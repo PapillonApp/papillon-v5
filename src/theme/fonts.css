@@ -120,3 +120,25 @@
     font-weight: 700;
     font-style: normal;
 }
+
+/* Merrriweather */
+@font-face {
+    font-family: 'Merriweather';
+    src: url('/public/fonts/Merriweather/Merriweather-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Merriweather';
+    src: url('/public/fonts/Merriweather/Merriweather-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Merriweather';
+    src: url('/public/fonts/Merriweather/Merriweather-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
