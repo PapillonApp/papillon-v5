@@ -15,6 +15,8 @@
         IonLabel,
         IonSelect,
         IonSelectOption,
+        IonRadioGroup,
+        IonRadio,
 	} from '@ionic/vue';
 
 	const displayToast = require('@/functions/utils/displayToast.js');
@@ -31,12 +33,19 @@
             IonItem,
             IonList,
             IonListHeader,
-            IonSelect,
-            IonSelectOption,
+            IonRadioGroup,
+            IonRadio,
 		},
-		setup() {
+		data() {
 			return {
-                availableFonts: ["Hind", "Asap", "Roboto Slab", "system-ui"]
+                availableFonts: [
+                    { name: "Hind (Par défaut)", font: "Hind" },
+                    { name: "Asap", font: "Asap" },
+                    { name: "Roboto Slab", font: "Roboto Slab" },
+                    { name: "OpenDyslexic (Expérimental)", font: "OpenDyslexic" },
+                    { name: "Système", font: "system-ui" },
+                ],
+                currentFont: getComputedStyle(document.body).getPropertyValue('--papillon-font'),
 			}
 		},
 		methods: {
@@ -72,6 +81,8 @@
             },
             fontChange() {
                 let font = this.$refs.fontSelect.$el.value;
+                this.currentFont = font;
+
                 document.body.style.setProperty('--papillon-font', '"' + font + '"');
 
                 // save it in local storage
@@ -81,11 +92,6 @@
 
                 localStorage.setItem('customizations', JSON.stringify(customizations));
             }
-		},
-		data() {
-			return {
-				
-			}
 		},
 		mounted() {
             // mainColorInput
@@ -117,9 +123,7 @@
 
             // fontSelect
             // get --papillon-font from css
-            let font = getComputedStyle(document.body).getPropertyValue('--papillon-font');
-            // apply it to the input
-            this.$refs.fontSelect.$el.value = font.replace(/"/g, '');
+            this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font');
 		}
 	});
 </script>
@@ -166,15 +170,12 @@
                     </IonLabel>
                 </IonListHeader>
 
-                <IonItem>
-                    <IonLabel class="paddingFixMd">
-                        <h2>Police principale</h2>
-                        <p>Police utilisée dans les titres et autres..</p>
-                    </IonLabel>
-                    <ion-select placeholder="Police" slot="end" @ionChange="fontChange" ref="fontSelect" okText="Sélectionner" cancelText="Annuler">
-                        <ion-select-option :key="i" v-for="(font, i) in availableFonts" :value="font">{{ font }}</ion-select-option>
-                    </ion-select>
-                </IonItem>
+                <ion-radio-group :value="currentFont" ref="fontSelect" @ionChange="fontChange">
+                    <ion-item :key="i" v-for="(font, i) in availableFonts">
+                        <ion-label :style="`font-family: '${font.font}';`">{{ font.name }}</ion-label>
+                        <ion-radio slot="end" :value="font.font"></ion-radio>
+                    </ion-item>
+                </ion-radio-group>
             </IonList>
 
 		</ion-content>
