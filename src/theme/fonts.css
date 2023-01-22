@@ -70,38 +70,75 @@
     font-style: normal;
 }
 
-/* RobotoSlab */
+/* OpenDyslexic */
 @font-face {
-    font-family: 'Roboto Slab';
-    src: url('/public/fonts/RobotoSlab/RobotoSlab-Light.woff2') format('woff2');
-    font-weight: 300;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto Slab';
-    src: url('/public/fonts/RobotoSlab/RobotoSlab-Regular.woff2') format('woff2');
+    font-family: 'OpenDyslexic';
+    src: url('/public/fonts/OpenDyslexic/OpenDyslexic-Regular.woff') format('woff');
     font-weight: 400;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Roboto Slab';
-    src: url('/public/fonts/RobotoSlab/RobotoSlab-Medium.woff2') format('woff2');
+    font-family: 'OpenDyslexic';
+    src: url('/public/fonts/OpenDyslexic/OpenDyslexic-Bold.woff') format('');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* SofiaSans */
+@font-face {
+    font-family: 'Sofia Sans';
+    src: url('/public/fonts/SofiaSans/SofiaSans-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Sofia Sans';
+    src: url('/public/fonts/SofiaSans/SofiaSans-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Sofia Sans';
+    src: url('/public/fonts/SofiaSans/SofiaSans-Medium.woff2') format('woff2');
     font-weight: 500;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Roboto Slab';
-    src: url('/public/fonts/RobotoSlab/RobotoSlab-SemiBold.woff2') format('woff2');
+    font-family: 'Sofia Sans';
+    src: url('/public/fonts/SofiaSans/SofiaSans-SemiBold.woff2') format('woff2');
     font-weight: 600;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'Roboto Slab';
-    src: url('/public/fonts/RobotoSlab/RobotoSlab-Bold.woff2') format('woff2');
+    font-family: 'Sofia Sans';
+    src: url('/public/fonts/SofiaSans/SofiaSans-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+/* Merrriweather */
+@font-face {
+    font-family: 'Merriweather';
+    src: url('/public/fonts/Merriweather/Merriweather-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Merriweather';
+    src: url('/public/fonts/Merriweather/Merriweather-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Merriweather';
+    src: url('/public/fonts/Merriweather/Merriweather-Bold.woff2') format('woff2');
     font-weight: 700;
     font-style: normal;
 }

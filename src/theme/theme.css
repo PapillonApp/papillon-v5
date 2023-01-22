@@ -229,9 +229,12 @@ ion-item .mdls[slot="start"] {
 }
 
 .ios ion-modal.modal-sheet::part(content) {
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
     overflow: hidden;
+}
+
+.ios ion-modal.modal-sheet::part(handle) {
+    width: 120px;
+    height: 4px;
 }
 
 /* toasts */
@@ -250,6 +253,16 @@ ion-item .mdls[slot="start"] {
 
     font-size: 15px;
     font-weight: 400;
+}
+
+ion-toast::part(header) {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--papillon-font) !important;
+}
+
+ion-toast::part(message) {
+    font-size: 15px;
 }
 
 ion-header ion-toolbar ion-title.md {
@@ -293,6 +306,11 @@ ion-list.list-inset ion-list-header, ion-list.list-inset ion-item {
 
 ion-list.list-inset.ios ion-list-header ion-label {
     margin-top: 0px;
+    padding-top: 5px;
+}
+
+ion-list.list-inset.md ion-list-header {
+    padding-top: 0px;
 }
 
 /* action sheet */
@@ -304,4 +322,19 @@ ion-action-sheet {
     ion-segment * {
         --indicator-color: var(--ion-background-color) !important;
     }
+}
+
+/* only md */
+.ios .only-md {
+    display: none;
+}
+
+/* only ios */
+.md .only-ios {
+    display: none;
+}
+
+/* content */
+ion-content {
+    --padding-bottom: env(safe-area-inset-bottom) !important;
 }

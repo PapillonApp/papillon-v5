@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip, IonRippleEffect } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip, IonRippleEffect, IonItemGroup, IonItemDivider } from '@ionic/vue';
 
     import { informationCircle } from 'ionicons/icons';
 
@@ -65,14 +65,14 @@
                 let list = [
                     "Temps calme",
                     "Pas de cours, on révise ?",
-                    "C'est la sieste (ou pas)",
-                    "Je suis sûr qu'il reste des devoirs",
-                    "Il n'y a jamais vraiment rien à faire",
-                    "Il est temps de commencer ce joli DM",
+                    "C'est la sieste ? (ou pas)",
+                    "Je suis sûr qu'il te reste des devoirs...",
+                    "Il n'y a jamais vraiment rien à faire !",
+                    "Il est temps de commencer ce joli DM !",
                     "Il fait beau dehors ?",
                     "Ca tombe bien, ce livre ne se finira pas tout seul !",
                     "Flûte, le cours de maths est fini",
-                    "Après l'effort le réconfort",
+                    "Après l'effort, le réconfort ;)",
                     "Alors, ça se la coule douce ?",
                     "Prenons de l'avance sur la semaine prochaine !",
                     "Il est temps de reprendre la lecture !"
@@ -168,11 +168,12 @@
             },
             getHomeworks(force) {
                 // get date for this.$rn + 1 day
-                let tomorrow = new Date(this.$rn);
-                tomorrow.setDate(tomorrow.getDate() + 0);
+                let today = new Date(this.$rn);
+                let dateTo = new Date(this.$rn);
+                dateTo.setDate(dateTo.getDate() + 7);
 
                 this.homeworks.loading = true;
-                GetHomeworks(tomorrow, force).then((homeworks) => {
+                GetHomeworks(today, dateTo, force).then((homeworks) => {
                     if(homeworks.error) {
                         this.homeworks = [];
                         this.homeworks.error = homeworks.error;
@@ -182,9 +183,44 @@
                         }
                     }
                     else {
-                        this.homeworks = homeworks;
                         this.homeworks.loading = false;
+
+                        let homeworkDays = [];
+
+                        // sort homeworks by day
+                        for (let i = 0; i < homeworks.length; i++) {
+                            let homework = homeworks[i];
+                            let date = new Date(homework.data.date);
+
+                            homeworks[i].data.timeLeft = Math.floor((date - today) / 1000 / 60 / 60 / 24);
+
+                            let day = homeworkDays.find((day) => {
+                                return day.date == date.toDateString();
+                            });
+
+                            if (!day) {
+                                day = {
+                                    date: date.toDateString(),
+                                    homeworks: []
+                                }
+                                homeworkDays.push(day);
+                            }
+
+                            day.homeworks.push(homework);
+                        }
+
+                        // sort homeworkDays by date
+                        homeworkDays.sort((a, b) => {
+                            return new Date(a.date) - new Date(b.date);
+                        });
+
+                        console.log(homeworkDays);
+
+                        this.homeworks = homeworkDays;
                     }
+                })
+                .catch((err) => {
+                    this.homeworks = [];
                 });
             },
             reorder() {
@@ -297,26 +333,36 @@
                 </ion-item>
             </ion-list>
 
-            <ion-list id="comp-hw" ref="comp-hw">
+            <ion-list id="comp-hw" ref="comp-hw" lines="none" inset="true">
                 <ion-list-header>
-                    <ion-label>Travail à faire</ion-label>
+                    <ion-label>
+                        <h2 style="font-size: 20px;">Travail à faire</h2>
+                    </ion-label>
                     <ion-button @click="goto('homework')">Voir tout</ion-button>
                 </ion-list-header>
 
-                <ion-item v-for="homework in homeworks" :key="homework.id">
-                    <ion-label :style="`--courseColor: ${homework.data.color};`">
-                        <p><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
-                        <h2>{{ homework.homework.content }}</h2>
-                    </ion-label>
-                    <ion-chip slot="end" v-if="!homework.data.done" color="danger">
-						<span class="material-symbols-outlined mdls">close</span>
-						Non fait
-					</ion-chip>
-					<ion-chip slot="end" v-else color="success">
-						<span class="material-symbols-outlined mdls">check</span>
-						Fait
-					</ion-chip>
-                </ion-item>
+                <ion-item-group class="hw_group" v-for="(day, i) in homeworks" :key="i">
+                    <div class="homepage_divider">
+                        <p>{{ new Date(day.date).toLocaleString('fr-FR', { weekday: 'long' }) }}</p>
+                        <div class="divider"></div>
+                    </div>
+                    <ion-item v-for="homework in day.homeworks" :key="homework.id">
+                        <ion-label :style="`--courseColor: ${homework.data.color};`">
+                            <p><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
+                            <h2>{{ homework.homework.content }}</h2>
+                        </ion-label>
+                        
+                        <ion-chip slot="end" v-if="homework.data.done" color="success">
+                            <span class="material-symbols-outlined mdls">check_circle</span>
+                            Fait
+                        </ion-chip>
+                        <ion-chip slot="end" v-else color="medium">
+                            <span class="material-symbols-outlined mdls">schedule</span>
+                            <p v-if="homework.data.timeLeft > 0">{{homework.data.timeLeft}} jour(s)</p>
+                            <p v-else>Demain</p>
+                        </ion-chip>
+                    </ion-item>
+                </ion-item-group>
 
                 <ion-item v-if="homeworks.error" lines="none">
                     <ion-label>
@@ -325,7 +371,7 @@
                     </ion-label>
                 </ion-item>
 
-                <ion-item v-if="homeworks == []" lines="none">
+                <ion-item v-if="homeworks.length == 0" lines="none">
                     <ion-label>
                         <h2>Aucun devoir</h2>
                         <p>Vous n'avez aucun devoir à faire aujourd'hui.</p>
@@ -361,7 +407,7 @@
     }
 
     .ios .nextCours {
-        padding: 5px 18px;
+        padding: 5px 16px;
     }
 
     .ios .nextCours::part(native) {
@@ -371,7 +417,7 @@
     }
 
     .md .nextCours {
-        padding: 5px 12px;
+        padding: 5px 16px;
     }
 
     .md .nextCours::part(native) {
@@ -386,6 +432,51 @@
         border-radius: 50%;
         background-color: var(--courseColor);
         display: inline-block;
+        margin-right: 5px;
+    }
+
+    .homepage_divider {
+        display: flex;
+        align-items: center;
+        margin: 10px 18px;
+    }
+
+    .md .homepage_divider {
+        margin: 10px 16px;
+    }
+
+    .ios .homepage_divider {
+        width: 100%;
+    }
+
+    .homepage_divider p {
+        margin: 0;
+        font-size: 1em;
+        font-weight: 500;
+        font-family: var(--papillon-font);
+        opacity: 0.5;
+    }
+
+    .homepage_divider .divider {
+        flex: 1;
+        height: 1px;
+        background-color: var(--ion-color-step-150);
+        margin-left: 10px;
+    }
+
+    .hw_group {
+        padding-bottom: 10px;
+    }
+
+    .hw_group ion-item {
+        --border-width: 0;
+    }
+
+    .hw_group ion-chip {
+        padding-left: 10px !important;
+    }
+
+    .hw_group ion-chip span {
         margin-right: 5px;
     }
 </style>

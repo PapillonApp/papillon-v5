@@ -44,16 +44,21 @@ function setNavigationBarStyle() {
 }
 
 // Constantly check for dark mode
-setTimeout(() => {
+setInterval(() => {
+  if (Capacitor.getPlatform() !== 'web') {
+    checkDarkMode();
+    setStatusBarStyle();
+    if (Capacitor.getPlatform() === 'android') {
+      setNavigationBarStyle();
+    }
+  }
+}, 1000);
+
+// Set status bar and navigation bar style
+if (Capacitor.getPlatform() !== 'web') {
   checkDarkMode();
   setStatusBarStyle();
   if (Capacitor.getPlatform() === 'android') {
     setNavigationBarStyle();
   }
-}, 1000);
-
-// Set status bar and navigation bar style
-setStatusBarStyle();
-if (Capacitor.getPlatform() === 'android') {
-  setNavigationBarStyle();
 }

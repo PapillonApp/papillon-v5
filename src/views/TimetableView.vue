@@ -528,11 +528,11 @@
                         <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div></div></div>
 
-                    <div v-if="$data[`${day}`].error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
+                    <div v-if="!$data[`${day}`].loading"><div v-if="$data[`${day}`].error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
-                    </div></div>
+                    </div></div></div>
 
                     <div v-if="$data[`${day}`].loading" class="Error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
                         <IonSpinner></IonSpinner>

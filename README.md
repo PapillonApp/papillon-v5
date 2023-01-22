@@ -10,18 +10,24 @@
 ![](https://img.shields.io/github/stars/PapillonApp/papillon-v5?style=social)
 
 ## Installation
-```
+Installez [Ionic](https://ionicframework.com/docs/intro/cli) et [Capacitor](https://capacitorjs.com/docs/getting-started#install-capacitor),
+puis, à la racine des fichiers du dépôt, exécutez :
+```bash
 npm i
 ```
-*Nécéssite **Ionic** et **Capacitor** installés*
 
 ### Démarrer la preview web
-```
+Pour tester l'application dans votre navigateur :
+```bash
 ionic serve
 ```
 
 ### Générer l'app
-```
-ionic build
+Pour préparer la construction de l'application pour mobile :
+```bash
+npm run build # ou ionic build
+npx cap sync
 npx cap open
 ```
+La dernière commande lance Android Studio ou Xcode.
+Construisez ensuite l'application à partir de celui-ci.

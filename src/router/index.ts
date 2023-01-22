@@ -4,7 +4,7 @@ import { RouteRecordRaw } from 'vue-router';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '',
-    redirect: '/timetable'
+    redirect: '/home'
   },
   {
     path: '/home',
@@ -27,9 +27,20 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import ('../views/GradesView.vue')
   },
   {
-    path: '/school-life',
-    name: 'School life',
+    path: '/schoollife',
+    name: 'Schoollife',
     component: () => import ('../views/SchoollifeView.vue')
+  },
+  {
+    path: '/conversations',
+    name: 'Conversations',
+    component: () => import ('../views/chat/ChatView.vue')
+  },
+  {
+    path: '/chat/:conversationID',
+    props: true,
+    name: 'chat',
+    component: () => import ('../views/chat/ConversationView.vue')
   },
   {
     path: '/news',
@@ -39,7 +50,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/settings',
     name: 'Settings',
-    component: () => import ('../views/settings/SettingsController.vue')
+    component: () => import ('../views/settings/SettingsView.vue')
   },
 ]
 

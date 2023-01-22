@@ -35,6 +35,7 @@
             IonToggle,
             IonAvatar,
             IonNavLink,
+            IonPage,
         },
         setup() {
             return { 
@@ -312,10 +313,6 @@
             let viescolaireEnabled = this.$refs.viescolaireEnabled;
             viescolaireEnabled.$el.checked = localStorage.getItem('viescolaireEnabled') == 'true';
 
-            // get homepageEnabled ref
-            let homepageEnabled = this.$refs.homepageEnabled;
-            homepageEnabled.$el.checked = localStorage.getItem('homepageEnabled') == 'true';
-
             // get changePeriodSelection ref
             let changePeriodSelection = this.$refs.changePeriodSelection;
             changePeriodSelection.$el.checked = localStorage.getItem('changePeriodSelection') == 'true';
@@ -324,6 +321,7 @@
 </script>
 
 <template>
+    <ion-page ref="page">
       <IonHeader class="AppHeader" collapse="fade" translucent>
         <IonToolbar>
 
@@ -377,15 +375,6 @@
                     <p>(Expérimental) Active l'onglet de vie scolaire</p>
                 </IonLabel>
                 <IonToggle slot="end" ref="viescolaireEnabled" @ionChange="changeTick('viescolaireEnabled')"></IonToggle>
-            </IonItem>
-
-            <IonItem>
-                <span class="material-symbols-outlined mdls" slot="start">home</span>
-                <IonLabel>
-                    <h2>Activer la page d'accueil</h2>
-                    <p>(Expérimental) Active la page d'accueil</p>
-                </IonLabel>
-                <IonToggle slot="end" ref="homepageEnabled" @ionChange="changeTick('homepageEnabled')"></IonToggle>
             </IonItem>
         </IonList>
 
@@ -513,6 +502,7 @@
 
         <br /> <br /> 
       </ion-content>
+    </ion-page>
 </template>
   
 <style scoped>

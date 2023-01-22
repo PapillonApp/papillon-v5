@@ -6,7 +6,7 @@
   
 <script lang="ts">
     import { IonPage, IonContent, IonNav } from '@ionic/vue';
-    import SettingsView from './SettingsView.vue';
+    import App from './App.vue';
   
     export default {
         components: {
@@ -15,7 +15,7 @@
         },
         data() {
             return {
-                component: SettingsView,
+                component: App,
             };
         },
     };

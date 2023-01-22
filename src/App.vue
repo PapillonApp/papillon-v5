@@ -88,13 +88,18 @@
             },
             {
                 title: 'Vie scolaire',
-                url: '/school-life',
+                url: '/schoollife',
                 icon: "gavel",
             },
             {
                 title: 'Actualités',
                 url: '/news',
                 icon: "newspaper",
+            },
+            {
+                title: 'Conversations',
+                url: '/conversations',
+                icon: "forum",
             },
             {
                 title: 'Paramètres',
@@ -107,11 +112,6 @@
         if(localStorage.getItem('viescolaireEnabled') !== 'true') {
             // remove school life tab
             appPages.splice(4, 1);
-        }
-
-        if(localStorage.getItem('homepageEnabled') !== 'true') {
-            // remove home tab
-            appPages.splice(0, 1);
         }
         
         const path = window.location.pathname.split('folder/')[1];
@@ -155,6 +155,17 @@
         },
         async askNotifPerms() {
             await LocalNotifications.requestPermissions();
+        },
+        async TestNotif() {
+            const toast = await toastController.create({
+                header: "Bonjour, c'est une notification de test !",
+                message: "Exemple de notification",
+                duration: 200000,
+                position: "bottom",
+                color: "success",
+            });
+
+            await toast.present();
         }
     },
     mounted() {

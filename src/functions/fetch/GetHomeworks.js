@@ -8,32 +8,34 @@ import GetToken from '@/functions/login/GetToken.js';
 import subjectColor from '@/functions/utils/subjectColor.js'
 
 // main function
-async function getHomeworks(date, forceReload) {
+async function getHomeworks(dateFrom, dateTo, forceReload) {
     // as only pronote is supported for now, we can just return the pronote homework
 
     // return pronote homework
-    return getPronoteHomework(date, forceReload);
+    return getPronoteHomework(dateFrom, dateTo, forceReload);
 }
 
 // pronote : get homework
-function getPronoteHomework(date, forceReload) {
+function getPronoteHomework(dateFrom, dateTo, forceReload) {
     // gather vars
     const API = app.config.globalProperties.$api;
-    const dayRequest = new Date(date);
+    const dayRequest = new Date(dateFrom);
+    const dayRequestTo = new Date(dateTo);
 
     // get token
     const token = localStorage.getItem('token');
 
     // get date as YYYY-MM-DD
     const dayString = dayRequest.toISOString().split('T')[0];
+    const dayStringTo = dayRequestTo.toISOString().split('T')[0];
 
     // construct url (date is a TEST date)
-    let URL = `${API}/homework?dateFrom=${dayString}&dateTo=${dayString}&token=${token}`;
+    let URL = `${API}/homework?dateFrom=${dayString}&dateTo=${dayStringTo}&token=${token}`;
 
     // check if homework is cached
     let cacheSearch = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
     cacheSearch = cacheSearch.filter((element) => {
-        return element.date == dayString && element.token == token;
+        return element.dateFrom == dayString && element.dateTo == token && element.dateTo == dayStringTo;
     });
     if (cacheSearch.length > 0 && !forceReload) {
         // return cached homework in promise
@@ -55,7 +57,8 @@ function getPronoteHomework(date, forceReload) {
                 // cache response
                 let cache = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
                 let cacheElement = {
-                    date: dayString,
+                    dateFrom: dayString,
+                    dateTo: dayStringTo,
                     token: token,
                     homework: JSON.stringify(response.data)
                 };
