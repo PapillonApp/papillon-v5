@@ -378,15 +378,6 @@
                 </IonLabel>
                 <IonToggle slot="end" ref="viescolaireEnabled" @ionChange="changeTick('viescolaireEnabled')"></IonToggle>
             </IonItem>
-
-            <IonItem>
-                <span class="material-symbols-outlined mdls" slot="start">home</span>
-                <IonLabel>
-                    <h2>Activer la page d'accueil</h2>
-                    <p>(Expérimental) Active la page d'accueil</p>
-                </IonLabel>
-                <IonToggle slot="end" ref="homepageEnabled" @ionChange="changeTick('homepageEnabled')"></IonToggle>
-            </IonItem>
         </IonList>
 
         <IonList :inset="true" lines="inset">

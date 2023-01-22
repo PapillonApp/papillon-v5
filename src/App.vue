@@ -113,11 +113,6 @@
             // remove school life tab
             appPages.splice(4, 1);
         }
-
-        if(localStorage.getItem('homepageEnabled') !== 'true') {
-            // remove home tab
-            appPages.splice(0, 1);
-        }
         
         const path = window.location.pathname.split('folder/')[1];
         if (path !== undefined) {
