@@ -29,6 +29,8 @@
 
 	import ConversationView from './ConversationView.vue';
 
+	import { checkmark, alertCircle } from 'ionicons/icons';
+
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
@@ -54,15 +56,17 @@
 		},
 		methods: {
 			handleRefresh(event) {
-				GetConversations().then((res) => {
+				GetConversations(true).then((res) => {
 					this.conversations = res;
 				})
 
-				this.$watch('conversations', () => {
-                    setTimeout(() => {
-                        event.target.complete();
-                    }, 200);
-                });
+				if(event) {
+					this.$watch('conversations', () => {
+						setTimeout(() => {
+							event.target.complete();
+						}, 200);
+					});
+				}
 			},
 			setnewConvModalOpen(status) {
 				this.newConvModalOpen = status;
@@ -77,11 +81,7 @@
 				let recipient = JSON.parse(this.checkedRecipient);
 
 				// find recipient with id
-				let recipients = [{
-					"id": recipient.id,
-					"_type": recipient.type,
-					"name": recipient.name,
-				}];
+				let recipients = [recipient.id];
 
 				const API = this.$api;
 				const token = localStorage.getItem('token');
@@ -92,7 +92,7 @@
 				var urlencoded = new URLSearchParams();
 				urlencoded.append("token", token);
 				urlencoded.append("content", content);
-				urlencoded.append("recipients", JSON.stringify(recipients));
+				urlencoded.append("recipientsId", JSON.stringify(recipients));
 				urlencoded.append("subject", subject);
 
 				var requestOptions = {
@@ -108,10 +108,21 @@
 						console.log(result);
 
 						if(result == "ok") {
-							displayToast("Conversation créée", "success");
+							displayToast.presentToastFull(
+								"Conversation créée",
+								"La conversation avec " + recipient.name + " a bien été créée.",
+								"success",
+								checkmark
+							);
 							this.newConvModalOpen = false;
+							this.handleRefresh();
 						} else {
-							displayToast("Une erreur est survenue", "danger");
+							displayToast.presentToastFull(
+								"Impossible de créer la conversation",
+								"Une erreur est survenue lors de la création de la conversation.",
+								"danger",
+								alertCircle
+							);
 						}
 					})
 			}
