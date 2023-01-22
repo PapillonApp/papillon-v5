@@ -42,6 +42,7 @@
                     { name: "Hind (Par défaut)", font: "Hind" },
                     { name: "Asap", font: "Asap" },
                     { name: "Roboto Slab", font: "Roboto Slab" },
+                    { name: "Sofia Sans", font: "Sofia Sans" },
                     { name: "OpenDyslexic (Expérimental)", font: "OpenDyslexic" },
                     { name: "Système", font: "system-ui" },
                 ],
@@ -77,7 +78,7 @@
                 this.$refs.mainColorInput.value = mainColor;
 
                 // reset the font select
-                this.$refs.fontSelect.value = this.availableFonts[0];
+                this.currentFont = this.availableFonts[0].font;
             },
             fontChange() {
                 let font = this.$refs.fontSelect.$el.value;

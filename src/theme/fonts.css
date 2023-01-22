@@ -120,3 +120,39 @@
     font-weight: 700;
     font-style: normal;
 }
+
+/* SofiaSans */
+@font-face {
+    font-family: 'Sofia Sans';
+    src: url('/public/fonts/SofiaSans/SofiaSans-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Sofia Sans';
+    src: url('/public/fonts/SofiaSans/SofiaSans-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Sofia Sans';
+    src: url('/public/fonts/SofiaSans/SofiaSans-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Sofia Sans';
+    src: url('/public/fonts/SofiaSans/SofiaSans-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Sofia Sans';
+    src: url('/public/fonts/SofiaSans/SofiaSans-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
