@@ -312,10 +312,6 @@
             let viescolaireEnabled = this.$refs.viescolaireEnabled;
             viescolaireEnabled.$el.checked = localStorage.getItem('viescolaireEnabled') == 'true';
 
-            // get homepageEnabled ref
-            let homepageEnabled = this.$refs.homepageEnabled;
-            homepageEnabled.$el.checked = localStorage.getItem('homepageEnabled') == 'true';
-
             // get changePeriodSelection ref
             let changePeriodSelection = this.$refs.changePeriodSelection;
             changePeriodSelection.$el.checked = localStorage.getItem('changePeriodSelection') == 'true';
