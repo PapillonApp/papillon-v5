@@ -143,16 +143,10 @@
       </ion-header>
       
       <ion-content :fullscreen="true">
-        <ion-header collapse="condense">
-            <ion-toolbar>
-              <ion-title size="large">Bienvenue 👋</ion-title>
-            </ion-toolbar>
-        </ion-header>
-
         <ion-list>
             <ion-list-header>
                 <ion-label>
-                    <p>Sélectionnez un service scolaire pour commencer</p>
+                    Sélectionnez un service scolaire
                 </ion-label>
             </ion-list-header>
 
@@ -357,5 +351,11 @@
         color: var(--ion-color-medium);
         margin-top: 2vh;
         opacity: 0.5;
+    }
+
+    ion-avatar {
+        --border-radius: 0;
+        height: 42px;
+        width: 42px;
     }
 </style>
