@@ -22,7 +22,7 @@
 		IonTextarea,
 	} from '@ionic/vue';
 
-	const displayToast = require('@/functions/utils/displayToast.js');
+	import displayToast from '@/functions/utils/displayToast.js';
 
     import GetConversations from '@/functions/fetch/GetConversations.js';
 	import GetRecipients from '@/functions/fetch/GetRecipients.js';
