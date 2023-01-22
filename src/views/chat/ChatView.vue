@@ -198,7 +198,7 @@
 			</div>
 
 			<IonList>
-				<IonNavLink v-for="(chat, i) in conversations" :key="i" router-direction="forward" :component="ConversationView" :componentProps="{conversationID: chat.id}">		
+				<IonNavLink v-for="(chat, i) in conversations" :key="i" router-direction="forward" :component="ConversationView" :componentProps="{conversation: chat}">		
 						<IonItem button>
 							<span class="material-symbols-outlined mdls" slot="start">forum</span>
 							<ion-label>

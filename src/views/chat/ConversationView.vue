@@ -38,8 +38,8 @@
             IonSkeletonText,
 		},
         props: {
-            conversationID: {
-                type: Number,
+            conversation: {
+                type: Object,
                 required: true,
             }
         },
@@ -47,7 +47,7 @@
 			return {
                 messages: [],
                 refreshInterval: null,
-                conversation: [],
+                conversationID: this.conversation.id,
                 ChatView: ChatView,
 			}
 		},
@@ -62,8 +62,6 @@
                     let conversation = res.filter((conv) => {
                         return conv.id === this.conversationID;
                     });
-
-                    this.conversation = conversation[0];
 
                     this.messages = conversation[0].messages;
                     this.messages.sort((a, b) => {
@@ -110,7 +108,12 @@
             },
 		},
 		mounted() {
-            this.handleRefresh();
+            this.conversationID = this.conversation.id;
+
+            this.messages = this.conversation.messages;
+            this.messages.sort((a, b) => {
+                return new Date(a.date) - new Date(b.date);
+            });
 
             document.addEventListener('tokenUpdated', (e) => {
                 this.handleRefresh();
