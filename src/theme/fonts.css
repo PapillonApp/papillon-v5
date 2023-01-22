@@ -70,42 +70,6 @@
     font-style: normal;
 }
 
-/* RobotoSlab */
-@font-face {
-    font-family: 'Roboto Slab';
-    src: url('/public/fonts/RobotoSlab/RobotoSlab-Light.woff2') format('woff2');
-    font-weight: 300;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto Slab';
-    src: url('/public/fonts/RobotoSlab/RobotoSlab-Regular.woff2') format('woff2');
-    font-weight: 400;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto Slab';
-    src: url('/public/fonts/RobotoSlab/RobotoSlab-Medium.woff2') format('woff2');
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto Slab';
-    src: url('/public/fonts/RobotoSlab/RobotoSlab-SemiBold.woff2') format('woff2');
-    font-weight: 600;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Roboto Slab';
-    src: url('/public/fonts/RobotoSlab/RobotoSlab-Bold.woff2') format('woff2');
-    font-weight: 700;
-    font-style: normal;
-}
-
 /* OpenDyslexic */
 @font-face {
     font-family: 'OpenDyslexic';

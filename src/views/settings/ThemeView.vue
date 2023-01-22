@@ -41,7 +41,6 @@
                 availableFonts: [
                     { name: "Hind (Par défaut)", font: "Hind" },
                     { name: "Asap", font: "Asap" },
-                    { name: "Roboto Slab", font: "Roboto Slab" },
                     { name: "Sofia Sans", font: "Sofia Sans" },
                     { name: "OpenDyslexic (Expérimental)", font: "OpenDyslexic" },
                     { name: "Système", font: "system-ui" },
