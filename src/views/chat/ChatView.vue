@@ -103,11 +103,11 @@
 					.then(result => {
 						console.log(result);
 
-						if(result == "ok") {
+						if(result.status == "ok") {
 							displayToast.presentToast("Conversation créée", "success");
 							this.newConvModalOpen = false;
 						} else {
-							displayToast.presentToast("Une erreur est survenue", "danger");
+							displayToast.presentError("Une erreur est survenue", "danger", result.error);
 						}
 					})
 			}
