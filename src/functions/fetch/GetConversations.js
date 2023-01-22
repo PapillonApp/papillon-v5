@@ -43,8 +43,6 @@ async function getPronoteConversations(forceReload) {
 	let Conversations = {};
 	return axios.get(URL)
 		.then((response) => {
-            console.log(response.data);
-
 			Conversations = response.data;
 
 			// save conversations to localstorage cache with today's date

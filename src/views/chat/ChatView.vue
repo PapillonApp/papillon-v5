@@ -20,6 +20,8 @@
 		IonRadioGroup,
 		IonInput,
 		IonTextarea,
+		IonRefresher,
+		IonRefresherContent,
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -48,6 +50,8 @@
 			IonRadioGroup,
 			IonInput,
 			IonTextarea,
+			IonRefresher,
+			IonRefresherContent,
 		},
 		setup() {
 			return {
@@ -194,7 +198,7 @@
 			</div>
 
 			<IonList>
-				<IonNavLink v-for="(chat, i) in conversations" :key="i" router-direction="forward" :component="ConversationView" :componentProps="{conversation: chat}">		
+				<IonNavLink v-for="(chat, i) in conversations" :key="i" router-direction="forward" :component="ConversationView" :componentProps="{conversationID: chat.id}">		
 						<IonItem button>
 							<span class="material-symbols-outlined mdls" slot="start">forum</span>
 							<ion-label>

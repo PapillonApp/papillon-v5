@@ -15,9 +15,16 @@
         IonLabel,
         IonSelect,
         IonSelectOption,
+        IonFooter,
+        IonRefresher,
+		IonRefresherContent,
+        IonSkeletonText,
 	} from '@ionic/vue';
 
-	const displayToast = require('@/functions/utils/displayToast.js');
+    import GetConversations from '@/functions/fetch/GetConversations.js';
+    const displayToast = require('@/functions/utils/displayToast.js');
+
+    import ChatView from './ChatView.vue';
 
 	export default defineComponent({
 		name: 'FolderPage',
@@ -25,54 +32,121 @@
 			IonHeader,
 			IonToolbar,
             IonBackButton,
+            IonFooter,
+            IonRefresher,
+            IonRefresherContent,
+            IonSkeletonText,
 		},
         props: {
-            conversation: {
-                type: Object,
+            conversationID: {
+                type: Number,
                 required: true,
             }
         },
-		setup() {
+		data() {
 			return {
                 messages: [],
+                refreshInterval: null,
+                conversation: [],
+                ChatView: ChatView,
 			}
 		},
 		methods: {
-            
-		},
-		data() {
-			return {
-				
-			}
+            handleRefresh(event) {
+                GetConversations(true).then((res) => {
+                    if(event) {
+                        event.detail.complete();
+                    }
+
+					// filter conversation res with this.conversationID
+                    let conversation = res.filter((conv) => {
+                        return conv.id === this.conversationID;
+                    });
+
+                    this.conversation = conversation[0];
+
+                    this.messages = conversation[0].messages;
+                    this.messages.sort((a, b) => {
+                        return new Date(b.date) - new Date(a.date);
+                    });
+				})
+            },
+            inputKeyPress(event) {
+                if (event.key === 'Enter') {
+                    this.sendMessage(event.target.value);
+                    event.target.value = '';
+                }
+            },
+            sendMessage(message) {
+                const API = this.$api;
+				const token = localStorage.getItem('token');
+
+				var myHeaders = new Headers();
+				myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+								
+				var urlencoded = new URLSearchParams();
+				urlencoded.append("token", token);
+				urlencoded.append("content", message);
+				urlencoded.append("discussionId", this.conversationID);
+
+				var requestOptions = {
+					method: 'POST',
+					headers: myHeaders,
+					body: urlencoded,
+					redirect: 'follow'
+				};
+
+				fetch(API + "/discussion/reply", requestOptions)
+					.then(response => response.json())
+					.then(result => {
+						console.log(result);
+
+                        if (result === 'ok') {
+                            this.handleRefresh();
+                        } else {
+                            return false;
+                        }
+                    })
+            },
 		},
 		mounted() {
-            this.messages = this.conversation.messages;
-            this.messages.reverse();
+            this.handleRefresh();
 
-            console.log(this.messages);
-
-            return false;
+            document.addEventListener('tokenUpdated', (e) => {
+                this.handleRefresh();
+            });
 		}
 	});
 </script>
 
 <template>
-	<IonHeader class="AppHeader" collapse="fade" translucent>
+	<IonHeader class="AppHeader" translucent>
 		<IonToolbar>
 
 			<ion-buttons slot="start">
-				<IonBackButton mode="md"></IonBackButton>
-			</ion-buttons>
+				
 
-			<ion-title mode="md">{{ conversation.subject }}</ion-title>
+                <IonNavLink :component="ChatView" router-direction="back">
+                    <IonBackButton mode="md" href="/conversations"></IonBackButton>
+                </IonNavLink>
+            </ion-buttons>
+
+            <ion-title mode="md" v-if="!conversation.subject">
+                <ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text>
+            </ion-title>
+			<ion-title v-else mode="md">{{ conversation.subject }}</ion-title>
 
 		</IonToolbar>
 	</IonHeader>
 
     <ion-content :fullscreen="true">
+        <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+			<ion-refresher-content></ion-refresher-content>
+		</ion-refresher>
+
         <div class="chatUI">
 
-            <div v-for="(mess, i) in conversation.messages" :key="i">
+            <div v-for="(mess, i) in messages" :key="i">
                 <div class="message" v-if="mess.author !== 'Moi'">
                     <p class="author">{{mess.author}}</p>
                     <div class="bubble">{{mess.content}}</div>
@@ -84,9 +158,11 @@
             </div>
 
         </div>
-        <div class="chatbox">
-            <input type="text" placeholder="Écrire quelque chose..." />
-        </div>
+        <ion-footer class="chatbox">
+            <ion-toolbar>
+                <input @keydown="inputKeyPress" type="text" class="chatbox_input" placeholder="Écrire quelque chose..." />
+            </ion-toolbar>
+        </ion-footer>
 	</ion-content>
 </template>
 
@@ -94,39 +170,52 @@
     /* chatbox */
     .chatbox {
         position: fixed;
-        left: 0;
-        right: 0;
         bottom: 0;
-        padding: 12px 12px;
-        border-top: 1px solid var(--ion-color-step-100);
-        padding-bottom: 32px;
-        background: var(--ion-background-color);
     }
 
-    .chatbox input {
-        width: 100%;
-        background-color: var(--ion-color-step-50);
+    .md .chatbox {
+        border-top: 1px solid #e0e0e0;
+    }
+
+    @media screen and (prefers-color-scheme: dark) {
+        .md .chatbox {
+            border-top: 1px solid #363636;
+        }
+    }
+
+    .chatbox_input {
+        width: calc(100% - 12px * 2);
+
+        background-color: var(--ion-background-color);
         border: 1px solid var(--ion-color-step-100);
+
         border-radius: 50px;
         padding: 12px 20px;
+
+        margin: 5px 12px;
     }
 
-    .chatbox input:focus {
+    .md .chatbox_input {
+        border: none;
+        background-color: var(--ion-color-step-50);
+    }
+
+    .chatbox_input:focus {
         outline: none;
     }
 
     /* chatUI */
     .chatUI {
-        height: 100% - 87px;
+        height: calc(100% - (72px + env(safe-area-inset-bottom)));
         width: 100%;
         padding: 0px 16px;
-        padding-bottom: 120px;
+        overflow-y: scroll;
     }
 
     .message {
         display: flex;
         flex-direction: column;
-        margin: 10px 0;
+        margin: 5px 0;
     }
 
     .message .author {
