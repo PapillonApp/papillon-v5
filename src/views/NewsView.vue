@@ -187,8 +187,6 @@
                         <p>{{attachment.name}}</p>
                     </ion-chip>
                 </div>
-                
-                <div class="spacing"></div>
             </IonContent>
         </IonModal>
       </ion-content>
@@ -202,10 +200,6 @@
 
     .newsModalContent * {
         margin: 0;
-    }
-
-    .newsModalContent .spacing {
-        height: 80px;
     }
 
     .newsModalContent hr {

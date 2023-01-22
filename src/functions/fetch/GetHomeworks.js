@@ -35,7 +35,7 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
     // check if homework is cached
     let cacheSearch = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
     cacheSearch = cacheSearch.filter((element) => {
-        return element.date == dayString && element.token == token;
+        return element.dateFrom == dayString && element.dateTo == token && element.dateTo == dayStringTo;
     });
     if (cacheSearch.length > 0 && !forceReload) {
         // return cached homework in promise
@@ -57,7 +57,8 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
                 // cache response
                 let cache = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
                 let cacheElement = {
-                    date: dayString,
+                    dateFrom: dayString,
+                    dateTo: dayStringTo,
                     token: token,
                     homework: JSON.stringify(response.data)
                 };

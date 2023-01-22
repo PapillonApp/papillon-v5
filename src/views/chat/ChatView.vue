@@ -249,7 +249,6 @@
 							</IonItem>
 						</ion-radio-group>
 					</IonList>
-					<br /><br /><br /><br /><br />
 				</ion-content>
 			</IonModal>
 

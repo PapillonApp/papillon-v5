@@ -296,6 +296,11 @@ ion-list.list-inset ion-list-header, ion-list.list-inset ion-item {
 
 ion-list.list-inset.ios ion-list-header ion-label {
     margin-top: 0px;
+    padding-top: 5px;
+}
+
+ion-list.list-inset.md ion-list-header {
+    padding-top: 0px;
 }
 
 /* action sheet */
@@ -319,4 +324,7 @@ ion-action-sheet {
     display: none;
 }
 
-/* modals */
+/* content */
+ion-content {
+    --padding-bottom: env(safe-area-inset-bottom) !important;
+}
