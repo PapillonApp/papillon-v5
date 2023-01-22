@@ -5,8 +5,6 @@ import axios from 'axios';
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
-let alwaysTrueLol = 0
-
 // main function
 function getPunishments(forceReload) {
     // as only pronote is supported for now, we can just return the pronote punishments
@@ -25,7 +23,7 @@ async function getPronotePunishements(forceReload) {
 	let URL = `${API}/infos?token=${token}`;
 
 	let cache = localStorage.getItem('PunishmentsCache');
-	if (cache != null && !forceReload && alwaysTrueLol !== 0) {
+	if (cache != null && !forceReload) {
 		let punishments = JSON.parse(cache).punishments;
 
 		return new Promise((resolve, reject) => {
@@ -36,62 +34,6 @@ async function getPronotePunishements(forceReload) {
 		return axios.get(URL)
 		.then((response) => {
 			let punishments = response.data;
-
-			// FIXME : NEED TO BE DELETED AFTER DESIGN MADE
-			punishments = [{
-				"id": "1213D7D9D00D332", 
-				"schedulable": true, 
-				"schedule": [{
-					"id": "117A9D33CB510C2", 
-					"start": "2022-09-07 13:30", 
-					"duration": 3600.0
-				}], 
-				"date": "2022-09-01 09:00", 
-				"given_by": "M. PROFESSEUR M.", 
-				"exclusion": false, 
-				"during_lesson": false, 
-				"homework": {
-					"text": "Exercices 1 à 18 p283-284", 
-					"documents": [
-
-					]
-				},
-				"reason": {
-					"text": ["Violence verbale"], 
-					"circumstances": "Insultes suite à une réprimande", 
-					"documents": [
-
-					]
-				}, 
-				"nature": "Retenue", 
-				"duration": 3600.0
-			},
-			{
-				"id": "1213D7D9D00D445", 
-				"schedulable": false, 
-				"schedule": [
-
-				], 
-				"date": "2022-12-15 10:00", 
-				"given_by": "M. PROFESSEUR M.", 
-				"exclusion": true, 
-				"during_lesson": false, 
-				"homework": {
-					"text": "", 
-					"documents": [
-
-					]
-				},
-				"reason": {
-					"text": ["Fausse alarme"], 
-					"circumstances": "Insultes suite à une réprimande", 
-					"documents": [
-
-					]
-				}, 
-				"nature": "Devoir supplémentaire", // "Exclusion" 
-				"duration": 3600.0
-			}]
 
 			punishments = constructPronotePunishments(punishments);
 			
