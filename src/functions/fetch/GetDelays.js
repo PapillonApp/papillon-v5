@@ -20,7 +20,7 @@ async function getPronoteDelays(forceReload) {
 	const token = localStorage.getItem('token');
 
 	// construct url
-	let URL = `${API}/infos?token=${token}`;
+	let URL = `${API}/delays?token=${token}`;
 
 	let delays = {};
 	let cache = localStorage.getItem('DelaysCache');
@@ -35,7 +35,6 @@ async function getPronoteDelays(forceReload) {
 		return axios.get(URL)
 		.then((response) => {
 			delays = response.data;
-
 			delays = constructPronoteDelays(delays);
 			
             let today = new Date();

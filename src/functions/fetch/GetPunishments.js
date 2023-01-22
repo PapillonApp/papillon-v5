@@ -20,7 +20,7 @@ async function getPronotePunishements(forceReload) {
 	const token = localStorage.getItem('token');
 
 	// construct url
-	let URL = `${API}/infos?token=${token}`;
+	let URL = `${API}/punishments?token=${token}`;
 
 	let cache = localStorage.getItem('PunishmentsCache');
 	if (cache != null && !forceReload) {

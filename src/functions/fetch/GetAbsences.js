@@ -20,7 +20,7 @@ async function getPronoteAbsences(forceReload) {
 	const token = localStorage.getItem('token');
 
 	// construct url
-	let URL = `${API}/infos?token=${token}`;
+	let URL = `${API}/absences?token=${token}`;
 
 	let absences = {};
 	let cache = localStorage.getItem('AbsencesCache');
