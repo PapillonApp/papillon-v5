@@ -22,7 +22,7 @@
 		IonTextarea,
 	} from '@ionic/vue';
 
-	const displayToast = require('@/functions/utils/displayToast.js');
+	import displayToast from '@/functions/utils/displayToast.js';
 
     import GetConversations from '@/functions/fetch/GetConversations.js';
 	import GetRecipients from '@/functions/fetch/GetRecipients.js';
@@ -77,11 +77,7 @@
 				let recipient = JSON.parse(this.checkedRecipient);
 
 				// find recipient with id
-				let recipients = [{
-					"id": recipient.id,
-					"_type": recipient.type,
-					"name": recipient.name,
-				}];
+				let recipients = [recipient.id];
 
 				const API = this.$api;
 				const token = localStorage.getItem('token');
@@ -92,7 +88,7 @@
 				var urlencoded = new URLSearchParams();
 				urlencoded.append("token", token);
 				urlencoded.append("content", content);
-				urlencoded.append("recipients", JSON.stringify(recipients));
+				urlencoded.append("recipientsId", JSON.stringify(recipients));
 				urlencoded.append("subject", subject);
 
 				var requestOptions = {
@@ -108,10 +104,10 @@
 						console.log(result);
 
 						if(result == "ok") {
-							displayToast("Conversation créée", "success");
+							displayToast.presentToast("Conversation créée", "success");
 							this.newConvModalOpen = false;
 						} else {
-							displayToast("Une erreur est survenue", "danger");
+							displayToast.presentToast("Une erreur est survenue", "danger");
 						}
 					})
 			}
