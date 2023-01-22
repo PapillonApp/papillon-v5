@@ -229,9 +229,12 @@ ion-item .mdls[slot="start"] {
 }
 
 .ios ion-modal.modal-sheet::part(content) {
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
     overflow: hidden;
+}
+
+.ios ion-modal.modal-sheet::part(handle) {
+    width: 120px;
+    height: 4px;
 }
 
 /* toasts */
@@ -315,3 +318,5 @@ ion-action-sheet {
 .md .only-ios {
     display: none;
 }
+
+/* modals */
