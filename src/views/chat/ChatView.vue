@@ -22,6 +22,7 @@
 		IonTextarea,
 		IonRefresher,
 		IonRefresherContent,
+		IonPage
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -52,6 +53,7 @@
 			IonTextarea,
 			IonRefresher,
 			IonRefresherContent,
+			IonPage
 		},
 		setup() {
 			return {
@@ -168,6 +170,7 @@
 </script>
 
 <template>
+	<ion-page ref="page">
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
 
@@ -253,6 +256,7 @@
 			</IonModal>
 
 		</ion-content>
+	</ion-page>
 </template>
 
 <style scoped>

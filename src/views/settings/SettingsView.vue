@@ -35,6 +35,7 @@
             IonToggle,
             IonAvatar,
             IonNavLink,
+            IonPage,
         },
         setup() {
             return { 
@@ -320,6 +321,7 @@
 </script>
 
 <template>
+    <ion-page ref="page">
       <IonHeader class="AppHeader" collapse="fade" translucent>
         <IonToolbar>
 
@@ -500,6 +502,7 @@
 
         <br /> <br /> 
       </ion-content>
+    </ion-page>
 </template>
   
 <style scoped>
