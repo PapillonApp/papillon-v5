@@ -129,7 +129,7 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<IonBackButton mode="md"></IonBackButton>
+					<IonBackButton mode="md" default-href="settings"></IonBackButton>
 				</ion-buttons>
 
 				<ion-title mode="md">Personnaliser Papillon</ion-title>
