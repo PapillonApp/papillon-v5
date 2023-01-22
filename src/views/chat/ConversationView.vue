@@ -209,7 +209,7 @@
 
     /* chatUI */
     .chatUI {
-        height: calc(100% - (72px + env(safe-area-inset-bottom)));
+        height: calc(100% - (30px + env(safe-area-inset-bottom)));
         width: 100%;
         padding: 0px 16px;
         overflow-y: scroll;
