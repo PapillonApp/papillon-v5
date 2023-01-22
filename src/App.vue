@@ -155,6 +155,17 @@
         },
         async askNotifPerms() {
             await LocalNotifications.requestPermissions();
+        },
+        async TestNotif() {
+            const toast = await toastController.create({
+                header: "Bonjour, c'est une notification de test !",
+                message: "Exemple de notification",
+                duration: 200000,
+                position: "bottom",
+                color: "success",
+            });
+
+            await toast.present();
         }
     },
     mounted() {

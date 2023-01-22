@@ -255,6 +255,16 @@ ion-item .mdls[slot="start"] {
     font-weight: 400;
 }
 
+ion-toast::part(header) {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--papillon-font) !important;
+}
+
+ion-toast::part(message) {
+    font-size: 15px;
+}
+
 ion-header ion-toolbar ion-title.md {
     font-size: 20px;
     font-weight: 600;
