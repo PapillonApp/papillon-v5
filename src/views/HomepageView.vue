@@ -218,6 +218,9 @@
 
                         this.homeworks = homeworkDays;
                     }
+                })
+                .catch((err) => {
+                    this.homeworks = [];
                 });
             },
             reorder() {
@@ -262,7 +265,6 @@
             });
 
             this.getHomeworks();
-            console.log(this.homeworks);
 
             // reorder divs in #components
             // this.reorder();
@@ -369,7 +371,7 @@
                     </ion-label>
                 </ion-item>
 
-                <ion-item v-if="homeworks == []" lines="none">
+                <ion-item v-if="homeworks.length == 0" lines="none">
                     <ion-label>
                         <h2>Aucun devoir</h2>
                         <p>Vous n'avez aucun devoir à faire aujourd'hui.</p>
