@@ -6,7 +6,7 @@
   
 <script lang="ts">
     import { IonPage, IonContent, IonNav } from '@ionic/vue';
-    import ChatView from './ChatView.vue';
+    import App from './App.vue';
   
     export default {
         components: {
@@ -15,7 +15,7 @@
         },
         data() {
             return {
-                component: ChatView,
+                component: App,
             };
         },
     };

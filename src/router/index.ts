@@ -34,7 +34,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/conversations',
     name: 'Conversations',
-    component: () => import ('../views/chat/ChatController.vue')
+    component: () => import ('../views/chat/ChatView.vue')
   },
   {
     path: '/chat/:conversationID',
@@ -50,7 +50,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/settings',
     name: 'Settings',
-    component: () => import ('../views/settings/SettingsController.vue')
+    component: () => import ('../views/settings/SettingsView.vue')
   },
 ]
 
