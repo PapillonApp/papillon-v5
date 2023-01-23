@@ -294,7 +294,7 @@
 
         <div id="components" ref="components">
             <ion-list id="comp-tt" class="nextCourse" ref="comp-tt">
-                <ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none" @click="goto('timetable')">
+                <ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none" @click="goto('timetable')" :style="`--courseColor: ${cours.course.color};`">
                     <ion-ripple-effect></ion-ripple-effect>
                     <div slot="start">
                         <IonChip>{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</IonChip>
@@ -305,6 +305,8 @@
                         <p>salle {{ cours.data.rooms.join(', ') || 'Pas de salle' }} - avec {{ cours.data.teachers.join(', ') || 'Pas de professeur' }}</p>
                         <p v-if="cours.status.status">{{ cours.status.status }}</p>
                     </ion-label>
+                    
+                    <!-- <div slot="error" class="progress"><div class="step" style="width: {{ nextCoursProgress }};"></div></div> -->
                 </ion-item>
 
                 <ion-item v-if="timetable.error" lines="none">
@@ -394,6 +396,20 @@
 </template>
   
 <style scoped>
+    .iconDisplay {
+        display: flex;
+        align-items: center;
+
+        opacity: 0.8;
+
+        width: fit-content;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-bottom: 3px;
+    }
+
     .emoji {
         font-size: 1.5em;
         margin-right: 10px;
@@ -407,13 +423,38 @@
         font-family: var(--papillon-font);
     }
 
+    /* Temporary */
+    .nextCours::part(native) {
+        border-bottom: 3px solid var(--courseColor);
+    }
+
+    /* Faire une barre de chargement en fonction du temps restant en cours */
+    /* .nextCours .progress {
+        position: relative;
+        background-color: var(--ion-inset-background);
+        height: 3px;
+        border-radius: 3px;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+        border-radius: 0 0 3px 3px;
+    }
+
+    .nextCours .progress .step {
+        background-color: var(--courseColor);
+        height: 3px;
+        width: 33%;
+        border-radius: 3px;
+        border-radius: 0 0 0 3px;
+    } */
+
     .ios .nextCours {
         padding: 5px 16px;
         margin-top: 14px;
     }
 
     .ios .nextCours::part(native) {
-        background: var(--ion-color-step-50);
+        background: var(--ion-inset-background);
         border-radius: 12px;
         padding: 5px 15px;
     }
@@ -424,9 +465,9 @@
     }
 
     .md .nextCours::part(native) {
+        background: var(--ion-inset-background);
         border-radius: 8px;
         padding: 3px 10px;
-        border: 1px solid var(--ion-color-step-150);
     }
 
     .courseColor {
