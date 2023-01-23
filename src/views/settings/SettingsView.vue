@@ -280,7 +280,7 @@
                 getContributors(5).then((contributors) => {
                     this.contributors = contributors;
                 });
-            },
+            }
         },
         mounted() {
             // Get user data
@@ -318,6 +318,8 @@
             // get changePeriodSelection ref
             let changePeriodSelection = this.$refs.changePeriodSelection;
             changePeriodSelection.$el.checked = localStorage.getItem('changePeriodSelection') == 'true';
+        
+            
         }
     });
 </script>

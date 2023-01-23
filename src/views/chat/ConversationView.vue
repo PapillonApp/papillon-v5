@@ -9,7 +9,6 @@
 		IonListHeader,
 		IonItem,
 		IonChip,
-        IonBackButton,
         IonButtons,
         IonButton,
         IonLabel,
@@ -25,17 +24,18 @@
     const displayToast = require('@/functions/utils/displayToast.js');
 
     import ChatView from './ChatView.vue';
+    import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
 			IonHeader,
 			IonToolbar,
-            IonBackButton,
             IonFooter,
             IonRefresher,
             IonRefresherContent,
             IonSkeletonText,
+            PapillonBackButton
 		},
         props: {
             conversation: {
@@ -130,7 +130,7 @@
 				
 
                 <IonNavLink :component="ChatView" router-direction="back">
-                    <IonBackButton mode="md" href="/conversations"></IonBackButton>
+                    <PapillonBackButton></PapillonBackButton>
                 </IonNavLink>
             </ion-buttons>
 

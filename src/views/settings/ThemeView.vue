@@ -9,7 +9,6 @@
 		IonListHeader,
 		IonItem,
 		IonChip,
-        IonBackButton,
         IonButtons,
         IonButton,
         IonLabel,
@@ -20,13 +19,13 @@
 	} from '@ionic/vue';
 
 	const displayToast = require('@/functions/utils/displayToast.js');
+    import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
 			IonHeader,
 			IonToolbar,
-            IonBackButton,
             IonButtons,
             IonButton,
             IonLabel,
@@ -35,6 +34,7 @@
             IonListHeader,
             IonRadioGroup,
             IonRadio,
+            PapillonBackButton
 		},
 		data() {
 			return {
@@ -124,8 +124,8 @@
 
             // fontSelect
             // get --papillon-font from css
-            this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font');
-		}
+            this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font'); 
+        }
 	});
 </script>
 
@@ -134,7 +134,7 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<IonBackButton mode="md" default-href="settings"></IonBackButton>
+					<PapillonBackButton></PapillonBackButton>
 				</ion-buttons>
 
 				<ion-title mode="md">Personnaliser Papillon</ion-title>

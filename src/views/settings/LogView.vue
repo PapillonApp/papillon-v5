@@ -9,7 +9,6 @@
 		IonList,
 		IonListHeader,
 		IonItem,
-		IonBackButton,
 		IonButtons,
 		IonButton,
 		IonLabel,
@@ -20,13 +19,15 @@
 		IonCard
 	} from '@ionic/vue';
 
+	import PapillonBackButton from '@/components/PapillonBackButton.vue';
+
 
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
 			IonHeader,
 			IonToolbar,
-			IonBackButton,
+			PapillonBackButton,
 			IonButtons,
 			IonButton,
 			IonLabel,
@@ -71,7 +72,7 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<IonBackButton mode="md" default-href="settings"></IonBackButton>
+					<PapillonBackButton></PapillonBackButton>
 				</ion-buttons>
 
 				<ion-title mode="md">Logs</ion-title>
