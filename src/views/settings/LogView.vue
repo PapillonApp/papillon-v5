@@ -205,6 +205,12 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
+			<div class="NoCours" v-if="logs.length == 0">
+				<span class="material-symbols-outlined mdls">developer_mode</span>
+				<h2>Aucun rapport n'a été trouvée.</h2>
+				<p>C'est parfait, il n'y a aucun problème sur l'application. Profitez-en !</p>
+			</div>
+
 			<ion-list>
 				<ion-item-sliding v-for="log in logs" :key="log.id">
 					<ion-item>
