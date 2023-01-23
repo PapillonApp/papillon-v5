@@ -166,17 +166,15 @@
 			refreshLogs() {
 				this.logs = JSON.parse(localStorage.getItem("logs"));
 
-				this.logs.sort((a, b) => {
-					return new Date(b.date) - new Date(a.date);
-				});
+				if(this.logs.length > 0) {
+					this.logs.sort((a, b) => {
+						return new Date(b.date) - new Date(a.date);
+					});
+				}
 			}
 		},
 		mounted() {
-			this.logs = JSON.parse(localStorage.getItem("logs"));
-
-			this.logs.sort((a, b) => {
-				return new Date(b.date) - new Date(a.date);
-			});
+			refreshLogs()
 		}
 	});
 </script>
