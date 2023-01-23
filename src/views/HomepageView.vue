@@ -425,7 +425,8 @@
 
     /* Temporary */
     .nextCours::part(native) {
-        border-bottom: 3px solid var(--courseColor);
+        /* border-bottom: 3px solid var(--courseColor); */
+        /* pas convaincu -> peut etre mis sur le progress */
     }
 
     /* Faire une barre de chargement en fonction du temps restant en cours */
