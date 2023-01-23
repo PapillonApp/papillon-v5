@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip, IonRippleEffect, IonItemGroup, IonItemDivider, IonButtons, IonRefresherContent } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip, IonRippleEffect, IonItemGroup, IonItemDivider, IonButtons, IonRefresherContent, IonProgressBar } from '@ionic/vue';
 
     import { informationCircle } from 'ionicons/icons';
 
@@ -41,11 +41,13 @@
             IonRippleEffect,
             IonItemGroup,
             IonRefresherContent,
+            /* IonProgressBar, */
         },
         data() {
             return { 
                 timetable: [],
                 nextCoursTime: "",
+                percentage: 0,
                 updateTime: null,
                 firstName: '',
                 homeworks: [],
@@ -121,6 +123,13 @@
                     if (lesson.status.isCancelled || mins < gap) {
                         return false;
                     }
+
+                    // add percentage of lesson done
+                    let lessonTime = lessonEnd - lessonStart;
+                    let lessonTimeDone = now - lessonStart;
+                    let percentage = Math.floor((lessonTimeDone / lessonTime) * 100);
+
+                    this.percentage = percentage;
 
                     lessons.push(lesson)
                     return true;
@@ -304,7 +313,11 @@
                         <h3>{{ nextCoursTime }}</h3>
                         <p>salle {{ cours.data.rooms.join(', ') || 'Pas de salle' }} - avec {{ cours.data.teachers.join(', ') || 'Pas de professeur' }}</p>
                         <p v-if="cours.status.status">{{ cours.status.status }}</p>
+                    
+                        <!-- <IonProgressBar :value="progress" :style="`--courseColor: ${cours.course.color};`"></IonProgressBar> -->
                     </ion-label>
+
+                    
                     
                     <!-- <div slot="error" class="progress"><div class="step" style="width: {{ nextCoursProgress }};"></div></div> -->
                 </ion-item>
