@@ -145,7 +145,7 @@
 							> Établissement : ${this.account.etab}
 							> URL : ${this.account.etabUrl}
 							> CAS : ${this.account.cas}\n
-						` + "```" 
+						` + "```yaml" 
 						+ `
 							${this.logs.map(log => {
 								return `[${log.type}] - ${log.date} - ${log.message}`;
@@ -175,6 +175,7 @@
 		},
 		mounted() {
 			this.refreshLogs()
+			this.getAccountInfo();
 		}
 	});
 </script>
