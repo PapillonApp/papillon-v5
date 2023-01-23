@@ -2,8 +2,6 @@
 // import { app } from '@/main.ts'
 import { Capacitor } from '@capacitor/core';
 
-// Constantes
-
 // Variables
 let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 
@@ -91,6 +89,8 @@ function saveInLocalStorage(content :string, type: string){
 const consoleLog = console.log;
 const consoleWarn = console.warn;
 const consoleError = console.error;
+const consoleInfo = console.info;
+const consoleDebug = console.debug;
 
 console.log = function(content :string){
   consoleLog(content);
@@ -105,4 +105,14 @@ console.warn = function(content :string){
 console.error = function(content :string){
   consoleError(content);
   saveInLocalStorage(content, 'error');
+}
+
+console.info = function(content :string){
+  consoleInfo(content);
+  saveInLocalStorage(content, 'info');
+}
+
+console.debug = function(content :string){
+  consoleDebug(content);
+  saveInLocalStorage(content, 'debug');
 }
