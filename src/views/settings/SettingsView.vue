@@ -469,16 +469,6 @@
                 </IonLabel>
             </IonItem>
 
-            <ion-nav-link router-direction="forward" :component="LogView">
-                <IonItem button>
-                    <span class="material-symbols-outlined mdls" slot="start">book</span>
-                    <IonLabel>
-                        <h2>Voir les logs</h2>
-                        <p>Consulter les logs de l'application</p>
-                    </IonLabel>
-                </IonItem>
-            </ion-nav-link>
-
             <IonItem button @click="resetColors()">
                 <span class="material-symbols-outlined mdls" slot="start">palette</span>
                 <IonLabel>
@@ -494,6 +484,15 @@
                     <p>Permet de demander une nouvelle autorisation à votre établissement</p>  
                 </IonLabel>
             </IonItem>
+            <ion-nav-link router-direction="forward" :component="LogView">
+                <IonItem button>
+                    <span class="material-symbols-outlined mdls" slot="start">book</span>
+                    <IonLabel>
+                        <h2>Voir les logs</h2>
+                        <p>Consulter les logs de l'application</p>
+                    </IonLabel>
+                </IonItem>
+            </ion-nav-link>
         </IonList>
 
         <IonList :inset="true" lines="inset">
