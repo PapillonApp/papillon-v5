@@ -205,6 +205,10 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
+			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+				<ion-refresher-content></ion-refresher-content>
+			</ion-refresher>
+
 			<ion-list>
 				<ion-item-sliding v-for="log in logs" :key="log.id">
 					<ion-item>
