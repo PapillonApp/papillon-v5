@@ -142,6 +142,12 @@
             <p>Veuillez patienter pendant qu'on récupère les actualités depuis nos serveurs...</p>
         </div>
 
+        <div class="NoCours" v-if="news.length == 0">
+            <span class="material-symbols-outlined mdls">feed</span>
+            <h2>Aucune actualité n'a été trouvée.</h2>
+            <p>Revenez plus tard ou essayer de rafraîchir.</p>
+        </div>
+
         <IonList>
             <IonItem button v-for="(news, i) in news" v-bind:key="i" @click="openNews(news)">
                 <span v-if="!news.isSurvey" class="material-symbols-outlined mdls" slot="start">feed</span>
