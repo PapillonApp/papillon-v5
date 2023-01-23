@@ -174,7 +174,7 @@
 			}
 		},
 		mounted() {
-			refreshLogs()
+			this.refreshLogs()
 		}
 	});
 </script>
