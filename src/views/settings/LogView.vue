@@ -13,6 +13,9 @@
 		IonList,
 		IonListHeader,
 		IonItem,
+		IonItemSliding,
+		IonItemOption,
+		IonItemOptions,
 		IonButtons,
 		IonButton,
 		IonLabel,
@@ -20,7 +23,9 @@
 		IonPage,
 		IonTitle,
 		IonCardContent,
-		IonCard
+		IonCard,
+		IonRefresher,
+		IonRefresherContent,
 	} from '@ionic/vue';
 
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
@@ -36,10 +41,15 @@
 			IonButton,
 			IonLabel,
 			IonItem,
+			IonItemSliding,
+			IonItemOption,
+			IonItemOptions,
 			IonList,
 			IonContent,
 			IonTitle,
 			IonPage,
+			IonRefresher,
+			IonRefresherContent,
 		},
 		data() {
 			return {
@@ -58,6 +68,10 @@
 			clear() {
 				localStorage.removeItem("logs");
 				this.logs = [];
+			},
+			clearLog(log, event) {
+				this.logs = this.logs.filter(l => l !== log);
+				localStorage.setItem("logs", JSON.stringify(this.logs));
 			},
 			getAccountInfo() {
 				this.account.name = JSON.parse(localStorage.getItem('userData')).student.name;
@@ -144,12 +158,21 @@
 					console.error(`[Log Share]: ${e}`);
 					displayToast.presentError("Impossible de partager les logs", "danger", e)
 				}
+			},
+			handleRefresh(event) {
+				this.refreshLogs();
+				event.target.complete();
+			},
+			refreshLogs() {
+				this.logs = JSON.parse(localStorage.getItem("logs"));
+
+				this.logs.sort((a, b) => {
+					return new Date(b.date) - new Date(a.date);
+				});
 			}
 		},
 		mounted() {
 			this.logs = JSON.parse(localStorage.getItem("logs"));
-
-			this.getAccountInfo();
 
 			this.logs.sort((a, b) => {
 				return new Date(b.date) - new Date(a.date);
@@ -171,9 +194,9 @@
 
 				<ion-buttons slot="end">
 					<IonButton @click="clear()">Effacer les logs</IonButton>
-					<IonButoon @click="share()">
-						<span class="material-symbols-outlined mdls">send</span>
-					</IonButoon>
+					<IonButton @click="share()">
+						<span class="material-symbols-outlined mdls">ios_share</span>
+					</IonButton>
 				</ion-buttons>
 
 			</IonToolbar>
@@ -182,20 +205,22 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-			
-			<div class="NoCours" v-if="logs.length == 0">
-				<span class="material-symbols-outlined mdls">book</span>
-				<h2>Aucun rapport n'a été trouvée.</h2>
-				<p>C'est parfait, il n'y a aucun problème sur l'application. Profitez-en !</p>
-			</div>
-
 			<ion-list>
-				<ion-item v-for="log in logs" :key="log.id">
-					<ion-label :color="getTypeColor(log.type)">
-						<h2>{{ log.message }}</h2>
-						<p>{{ new Date(log.date).toLocaleString("fr-fr", {dateStyle: 'long', timeStyle: 'medium'}) }}</p>
-					</ion-label>
-				</ion-item>
+				<ion-item-sliding v-for="log in logs" :key="log.id">
+					<ion-item>
+						<ion-label :color="getTypeColor(log.type)">
+							<h2>{{ log.message }}</h2>
+							<p>{{ new Date(log.date).toLocaleString("fr-fr", {dateStyle: 'long', timeStyle: 'medium'}) }}</p>
+						</ion-label>
+					</ion-item>
+
+					<ion-item-options side="end">
+						<ion-item-option color="danger" @click="clearLog(log, $event)">
+							<span class="material-symbols-outlined mdls">delete</span>
+							Supprimer
+						</ion-item-option>
+					</ion-item-options>
+				</ion-item-sliding>
 			</ion-list>
 
 		</ion-content>

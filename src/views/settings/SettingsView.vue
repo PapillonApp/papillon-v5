@@ -36,7 +36,6 @@
             IonItem,
             IonNavLink,
             IonPage,
-            PapillonLogo,
         },
         setup() {
             return { 
@@ -254,7 +253,7 @@
         <IonList :inset="true" lines="none">
             <ion-nav-link router-direction="forward" :component="OptionsView">
                 <IonItem button>
-                    <span class="material-symbols-outlined mdls" slot="start"><PapillonLogo /></span>
+                    <span class="material-symbols-outlined mdls" slot="start">tune</span>
                     <IonLabel>
                         <h2>Options de Papillon</h2>
                         <p>Modifier le comportement de Papillon</p>
@@ -282,7 +281,7 @@
             </IonItem>
 
             <IonItem button @click="emptyCache()">
-                <span class="material-symbols-outlined mdls" slot="start">autorenew</span>
+                <span class="material-symbols-outlined mdls" slot="start">auto_delete</span>
                 <IonLabel>
                     <h2>Vider le cache des données</h2>
                     <p>Réinitialise les données pré-téléchargées hors ligne</p>  
@@ -290,7 +289,7 @@
             </IonItem>
 
             <IonItem button @click="resetColors()">
-                <span class="material-symbols-outlined mdls" slot="start">palette</span>
+                <span class="material-symbols-outlined mdls" slot="start">format_color_fill</span>
                 <IonLabel>
                     <h2>Réattribuer les couleurs de matières</h2>
                     <p>Réinitialise les couleurs des matières pour en obtenir de nouvelles</p>  
@@ -306,7 +305,7 @@
             </IonItem>
             <ion-nav-link router-direction="forward" :component="LogView">
                 <IonItem button>
-                    <span class="material-symbols-outlined mdls" slot="start">book</span>
+                    <span class="material-symbols-outlined mdls" slot="start">developer_mode</span>
                     <IonLabel>
                         <h2>Voir les logs</h2>
                         <p>Consulter les logs de l'application</p>
