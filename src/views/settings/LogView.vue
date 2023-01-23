@@ -166,17 +166,15 @@
 			refreshLogs() {
 				this.logs = JSON.parse(localStorage.getItem("logs"));
 
-				this.logs.sort((a, b) => {
-					return new Date(b.date) - new Date(a.date);
-				});
+				if(this.logs.length > 0) {
+					this.logs.sort((a, b) => {
+						return new Date(b.date) - new Date(a.date);
+					});
+				}
 			}
 		},
 		mounted() {
-			this.logs = JSON.parse(localStorage.getItem("logs"));
-
-			this.logs.sort((a, b) => {
-				return new Date(b.date) - new Date(a.date);
-			});
+			this.refreshLogs()
 		}
 	});
 </script>
@@ -205,6 +203,10 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
+			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+				<ion-refresher-content></ion-refresher-content>
+			</ion-refresher>
+
 			<div class="NoCours" v-if="logs.length == 0">
 				<span class="material-symbols-outlined mdls">developer_mode</span>
 				<h2>Aucun rapport n'a été trouvée.</h2>
