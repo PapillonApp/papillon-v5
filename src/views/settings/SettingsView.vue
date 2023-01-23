@@ -153,7 +153,7 @@
                 // return size
                 return localStorageSize;
             },
-            getServerStatus() {
+            getApiVersion() {
                 const API = this.$api;
 
                 let cacheApiVersion = localStorage.getItem('apiVersion');
@@ -299,7 +299,7 @@
                 }
             }
 
-            this.getServerStatus();
+            this.getApiVersion();
 
             // Get localStorage size
             this.localStorageSize = this.getLocalStorageSize() + ' kb';
