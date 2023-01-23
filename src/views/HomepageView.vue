@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip, IonRippleEffect, IonItemGroup, IonItemDivider } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip, IonRippleEffect, IonItemGroup, IonItemDivider, IonButtons, IonRefresherContent } from '@ionic/vue';
 
     import { informationCircle } from 'ionicons/icons';
 
@@ -28,6 +28,7 @@
             IonToolbar,
             IonTitle,
             IonMenuButton,
+            IonButtons,
             IonPage,
             IonList,
             IonListHeader,
@@ -37,7 +38,9 @@
             IonSpinner,
             IonRefresher,
             IonChip,
-            IonRippleEffect
+            IonRippleEffect,
+            IonItemGroup,
+            IonRefresherContent,
         },
         data() {
             return { 
@@ -213,8 +216,6 @@
                         homeworkDays.sort((a, b) => {
                             return new Date(a.date) - new Date(b.date);
                         });
-
-                        console.log(homeworkDays);
 
                         this.homeworks = homeworkDays;
                     }
@@ -408,6 +409,7 @@
 
     .ios .nextCours {
         padding: 5px 16px;
+        margin-top: 14px;
     }
 
     .ios .nextCours::part(native) {
@@ -418,6 +420,7 @@
 
     .md .nextCours {
         padding: 5px 16px;
+        margin-top: 5px;
     }
 
     .md .nextCours::part(native) {
