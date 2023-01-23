@@ -2,23 +2,22 @@
 	import {
 		defineComponent
 	} from 'vue';
-import { IonCardContent } from '@ionic/vue';
-import { IonCard } from '@ionic/vue';
+
 	import {
 		IonHeader,
 		IonToolbar,
 		IonList,
 		IonListHeader,
 		IonItem,
-        IonBackButton,
-        IonButtons,
-        IonButton,
-        IonLabel,
-        IonContent,
-        IonPage,
-        IonTitle,
-
-        
+		IonBackButton,
+		IonButtons,
+		IonButton,
+		IonLabel,
+		IonContent,
+		IonPage,
+		IonTitle,
+		IonCardContent,
+		IonCard
 	} from '@ionic/vue';
 
 
@@ -27,51 +26,48 @@ import { IonCard } from '@ionic/vue';
 		components: {
 			IonHeader,
 			IonToolbar,
-            IonBackButton,
-            IonButtons,
-            IonButton,
-            IonLabel,
-            IonItem,
-            IonList,
-            IonContent,
-            IonTitle,
-            IonPage,
-
-
-            
+			IonBackButton,
+			IonButtons,
+			IonButton,
+			IonLabel,
+			IonItem,
+			IonList,
+			IonContent,
+			IonTitle,
+			IonPage,
 		},
 		data() {
 			return {
-                logs : [],
+				logs: [],
 			}
 		},
 		methods: {
-            clear() {
-                localStorage.removeItem("logs");
-                this.logs = [];
-            },
-            getTypeColor(type){
-                switch(type){
-                    case "error":
-                        return "danger";
-                    case "log":
-                        return "primary";
-                    case "warn":
-                        return "warning";
-            }
-        }
-         
- 
+			clear() {
+				localStorage.removeItem("logs");
+				this.logs = [];
+			},
+			getTypeColor(type) {
+				switch (type) {
+					case "error":
+						return "danger";
+					case "log":
+						return "primary";
+					case "warn":
+						return "warning";
+				}
+			}
+
+
 		},
 		mounted() {
-            this.logs = JSON.parse(localStorage.getItem("logs"));
+			this.logs = JSON.parse(localStorage.getItem("logs"));
 		}
 	});
 </script>
 
 <template>
-    <ion-page ref="page">
-        <IonHeader class="AppHeader" collapse="fade" translucent>
+	<ion-page ref="page">
+		<IonHeader class="AppHeader" collapse="fade" translucent>
 			<IonToolbar>
 
 				<ion-buttons slot="start">
@@ -80,31 +76,31 @@ import { IonCard } from '@ionic/vue';
 
 				<ion-title mode="md">Logs</ion-title>
 
-                <ion-buttons slot="end">
+				<ion-buttons slot="end">
 					<IonButton @click="clear()">Effacer les logs</IonButton>
 				</ion-buttons>
 
 			</IonToolbar>
 
-            
-		</IonHeader>
-        
-        <ion-content :fullscreen="true">
-            <ion-list>
-                <ion-item v-for="log in logs" :key="log.id" >
-                    <ion-label :color="getTypeColor(log.type)">
-                        <h2>{{ log.message }}</h2>
-                        <p>{{ log.date }}</p>
-                    </ion-label>
-                </ion-item>
-        </ion-list>
 
-    </ion-content>
-    </ion-page>
+		</IonHeader>
+
+		<ion-content :fullscreen="true">
+			<ion-list>
+				<ion-item v-for="log in logs" :key="log.id">
+					<ion-label :color="getTypeColor(log.type)">
+						<h2>{{ log.message }}</h2>
+						<p>{{ log.date }}</p>
+					</ion-label>
+				</ion-item>
+			</ion-list>
+
+		</ion-content>
+	</ion-page>
 </template>
 
 <style scoped>
 	.md .paddingFixMd {
-        padding-left: 15px;
-    }
+		padding-left: 15px;
+	}
 </style>
