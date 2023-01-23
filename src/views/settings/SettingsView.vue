@@ -299,7 +299,7 @@
             <IonItem button @click="refreshToken()">
                 <span class="material-symbols-outlined mdls" slot="start">key</span>
                 <IonLabel class="ion-text-wrap">
-                    <h2>Regénerer les clés de connexion (avancé)</h2>
+                    <h2>Régénérer les clés de connexion (avancé)</h2>
                     <p>Permet de demander une nouvelle autorisation à votre établissement</p>  
                 </IonLabel>
             </IonItem>

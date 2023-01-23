@@ -54,7 +54,14 @@
 		data() {
 			return {
 				logs: [],
-				apiVersion: this.getApiVersion()
+				apiVersion: this.getApiVersion(),
+				localStorageSize : this.getLocalStorageSize(),
+				account: {
+					name: "",
+					etab: "",
+					etabUrl: "",
+					cas: "",
+				}
 			}
 		},
 		methods: {
@@ -66,6 +73,28 @@
 				this.logs = this.logs.filter(l => l !== log);
 				localStorage.setItem("logs", JSON.stringify(this.logs));
 			},
+			getAccountInfo() {
+				this.account.name = JSON.parse(localStorage.getItem('userData')).student.name;
+				this.account.etab = JSON.parse(localStorage.getItem('userData')).class.school;
+				this.account.etabUrl = JSON.parse(localStorage.getItem("loginData")).url;
+				this.account.cas = JSON.parse(localStorage.getItem("loginData")).cas;
+			},
+			getLocalStorageSize() {
+                // get localStorage size in kb
+                let localStorageSize = 0;
+                for (let i = 0; i < localStorage.length; i++) {
+                    localStorageSize += localStorage.getItem(localStorage.key(i)).length;
+                }
+
+                // convert to kb
+                localStorageSize = localStorageSize / 1024;
+
+                // round to 2 decimals
+                localStorageSize = Math.round(localStorageSize * 100) / 100;
+
+                // return size
+                return localStorageSize;
+            },
 			getTypeColor(type) {
 				switch (type) {
 					case "error":
@@ -103,12 +132,19 @@
 							> Version : ${version}
 							> Type de plateforme : ${Capacitor.getPlatform()}
 							> Version API : ${this.apiVersion}
+							> Taille du cache : ${this.localStorageSize} kb
 							
 							Appareil :
 							> ID : ${await Device.getId().then(id => id.uuid)}
 							> Modèle : ${await Device.getInfo().then(info => info.model)}
 							> Version OS : ${await Device.getInfo().then(info => info.osVersion)}
-							> Marque : ${await Device.getInfo().then(info => info.manufacturer)}\n
+							> Marque : ${await Device.getInfo().then(info => info.manufacturer)}
+
+							Compte :
+							> Nom : ${this.account.name}
+							> Établissement : ${this.account.etab}
+							> URL : ${this.account.etabUrl}
+							> CAS : ${this.account.cas}\n
 						` + "```" 
 						+ `
 							${this.logs.map(log => {
@@ -136,7 +172,11 @@
 			}
 		},
 		mounted() {
-			this.refreshLogs()
+			this.logs = JSON.parse(localStorage.getItem("logs"));
+
+			this.logs.sort((a, b) => {
+				return new Date(b.date) - new Date(a.date);
+			});
 		}
 	});
 </script>
@@ -165,10 +205,6 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
-                <ion-refresher-content></ion-refresher-content>
-            </ion-refresher>
-
 			<ion-list>
 				<ion-item-sliding v-for="log in logs" :key="log.id">
 					<ion-item>
