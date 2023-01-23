@@ -5,6 +5,7 @@
     import { calendarOutline } from 'ionicons/icons';
 
     import ThemeView from './ThemeView.vue';
+    import LogView from './LogView.vue';
 
     import { version } from '/package'
     import { Capacitor } from '@capacitor/core';
@@ -49,6 +50,7 @@
                 contributors: [],
                 userAvatar: '',
                 ThemeView: ThemeView,
+                LogView: LogView,
             }
         },
         methods: {
@@ -466,6 +468,16 @@
                     <p>Réinitialise les données pré-téléchargées hors ligne</p>  
                 </IonLabel>
             </IonItem>
+
+            <ion-nav-link router-direction="forward" :component="LogView">
+                <IonItem button>
+                    <span class="material-symbols-outlined mdls" slot="start">book</span>
+                    <IonLabel>
+                        <h2>Voir les logs</h2>
+                        <p>Consulter les logs de l'application</p>
+                    </IonLabel>
+                </IonItem>
+            </ion-nav-link>
 
             <IonItem button @click="resetColors()">
                 <span class="material-symbols-outlined mdls" slot="start">palette</span>
