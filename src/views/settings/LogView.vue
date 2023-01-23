@@ -172,7 +172,7 @@
 			<ion-list>
 				<ion-item-sliding v-for="log in logs" :key="log.id">
 					<ion-item>
-						<ion-label :color="getTypeColor(log.type)">
+						<ion-label class="ion-text-wrap" :color="getTypeColor(log.type)">
 							<h2>{{ log.message }}</h2>
 							<p>{{ new Date(log.date).toLocaleString("fr-fr", {dateStyle: 'long', timeStyle: 'medium'}) }}</p>
 						</ion-label>
