@@ -212,15 +212,15 @@ function constructPronoteGrades(grades) {
         newMark.grade.value = parseFloat(newMark.grade.value).toFixed(2);
 
         if(isFloat(newMark.grade.average)) {
-            newMark.grade.average = parseFloat(newMark.grade.average).toFixed(1);
+            newMark.grade.average = parseFloat(newMark.grade.average).toFixed(2);
         }
         
         if(isFloat(newMark.grade.min)) {
-            newMark.grade.min = parseFloat(newMark.grade.min).toFixed(1);
+            newMark.grade.min = parseFloat(newMark.grade.min).toFixed(2);
         }
 
         if(isFloat(newMark.grade.max)) {
-            newMark.grade.max = parseFloat(newMark.grade.max).toFixed(1);
+            newMark.grade.max = parseFloat(newMark.grade.max).toFixed(2);
         }
 
         subject.marks.push(newMark);
