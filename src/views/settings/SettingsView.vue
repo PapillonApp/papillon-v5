@@ -6,6 +6,9 @@
 
     import ThemeView from './ThemeView.vue';
     import LogView from './LogView.vue';
+    import OptionsView from './OptionsView.vue';
+
+    import PapillonLogo from '@/components/icons/PapillonLogo.vue';
 
     import { version } from '/package'
     import { Capacitor } from '@capacitor/core';
@@ -15,8 +18,6 @@
     import getContributors from '@/functions/fetch/GetContributors';
 
     import { trash, refresh, checkmark, alertCircle } from 'ionicons/icons';
-
-    import { FilePicker } from '@capawesome/capacitor-file-picker';
 
     import axios from 'axios';
 
@@ -33,10 +34,9 @@
             IonListHeader,
             IonLabel,
             IonItem,
-            IonToggle,
-            IonAvatar,
             IonNavLink,
             IonPage,
+            PapillonLogo,
         },
         setup() {
             return { 
@@ -51,6 +51,7 @@
                 userAvatar: '',
                 ThemeView: ThemeView,
                 LogView: LogView,
+                OptionsView: OptionsView,
             }
         },
         methods: {
@@ -170,80 +171,6 @@
 
                 this.apiVersion = cacheApiVersion ?? 'Inconnue';
             },
-            tweakGrades20Change() {
-                let tweakGrades20 = this.$refs.tweakGrades20;
-                let tweakGrades20Checked = tweakGrades20.$el.checked;
-
-                localStorage.setItem('tweakGrades20', tweakGrades20Checked);
-
-                document.dispatchEvent(new CustomEvent('gradeSettingsUpdated'));
-                displayToast.presentToastFull(
-                    'Paramètres des notes enregistrées',
-                    'Les paramètres des notes ont été enregistrées avec succès.',
-                    'light',
-                    checkmark
-                );
-            },
-            changeTick(option) {
-                let el = this.$refs[option];
-                let elChecked = el.$el.checked;
-
-                localStorage.setItem(option, elChecked);
-
-                document.dispatchEvent(new CustomEvent('settingsUpdated'));
-                displayToast.presentToastFull(
-                    'Paramètres enregistrés',
-                    'Les paramètres ont été enregistrées avec succès.',
-                    'light',
-                    checkmark
-                );
-            },
-            async tweakChangeAvatar() {
-                try {
-                    const result = await FilePicker.pickImages({
-                        multiple: false,
-                        readData: true
-                    });
-
-                    let base64Data = result.files[0].data;
-
-                    let base64URL = 'data:image/jpeg;base64,' + base64Data;
-
-                    // resize image to 200px width using canvas
-                    let canvas = document.createElement('canvas');
-                    let ctx = canvas.getContext('2d');
-                    let img = new Image();
-                    img.src = base64URL;
-
-                    img.onload = function () {
-                        canvas.width = 128;
-                        canvas.height = 128 * img.height / img.width;
-
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                        let newImage = canvas.toDataURL('image/jpeg');
-
-                        localStorage.setItem('customAvatar', newImage);
-                        document.dispatchEvent(new CustomEvent('userDataUpdated'));
-
-                        displayToast.presentToastFull(
-                            'Photo de profil modifiée',
-                            'La photo de profil a été modifiée avec succès.',
-                            'success',
-                            checkmark
-                        );
-                    }
-                }
-                catch (error) {
-                    console.error(error);
-                    displayToast.presentToastFull(
-                        'Erreur lors du changement de photo de profil',
-                        error,
-                        'danger',
-                        alertCircle
-                    );
-                }
-            },
             resetColors() {
                 localStorage.removeItem('SubjectColors');
 
@@ -260,17 +187,6 @@
                         this.localStorageSize = this.getLocalStorageSize() + ' kb';
                     }, 1000);
                 }, 100);
-            },
-            tweakDeleteAvatar() {
-                localStorage.removeItem('customAvatar');
-                document.dispatchEvent(new CustomEvent('userDataUpdated'));
-
-                displayToast.presentToastFull(
-                    'Photo de profil supprimée',
-                    'La photo de profil a été supprimée avec succès.',
-                    'light',
-                    trash
-                );
             },
             openURL(url) {
                 // open url in new tab
@@ -302,24 +218,10 @@
             }
 
             this.getApiVersion();
+            this.getContributorsList();
 
             // Get localStorage size
             this.localStorageSize = this.getLocalStorageSize() + ' kb';
-
-            // get tweakGrades20 ref
-            let tweakGrades20 = this.$refs.tweakGrades20;
-            tweakGrades20.$el.checked = localStorage.getItem('tweakGrades20') == 'true';
-            this.getContributorsList();
-
-            // get viescolaireEnabled ref
-            let viescolaireEnabled = this.$refs.viescolaireEnabled;
-            viescolaireEnabled.$el.checked = localStorage.getItem('viescolaireEnabled') == 'true';
-
-            // get changePeriodSelection ref
-            let changePeriodSelection = this.$refs.changePeriodSelection;
-            changePeriodSelection.$el.checked = localStorage.getItem('changePeriodSelection') == 'true';
-        
-            
         }
     });
 </script>
@@ -338,12 +240,9 @@
       </IonHeader>
       
       <ion-content :fullscreen="true">
-
         <IonList :inset="true" lines="inset">
             <IonItem>
-                <IonAvatar slot="start">
-                    <img :src="userAvatar" />
-                </IonAvatar>
+                <img :src="userAvatar" slot="start" class="avatar" />
                 <IonLabel>
                     <p>Utilisateur connecté</p>
                     <h2>{{ userName }}</h2>
@@ -352,37 +251,16 @@
             </IonItem>
         </IonList>
 
-        <IonList :inset="true" lines="inset">
-            <IonItem>
-                <span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
-                <IonLabel>
-                    <h2>Remettre les notes sur 20</h2>
-                    <p>Uniformise le barème de toutes les notes</p>
-                </IonLabel>
-                <IonToggle slot="end" ref="tweakGrades20" @ionChange="changeTick('tweakGrades20')"></IonToggle>
-            </IonItem>
-
-            <IonItem>
-                <span class="material-symbols-outlined mdls" slot="start">toggle_off</span>
-                <IonLabel>
-                    <h5>Onglet notes</h5>
-                    <h2>Activer la séléction de période</h2>
-                    <p>(Expérimental) Permet de changer de trimestre/semestre</p>
-                </IonLabel>
-                <IonToggle slot="end" ref="changePeriodSelection" @ionChange="changeTick('changePeriodSelection')"></IonToggle>
-            </IonItem>
-
-            <IonItem>
-                <span class="material-symbols-outlined mdls" slot="start">gavel</span>
-                <IonLabel>
-                    <h2>Activer l'onglet vie scolaire</h2>
-                    <p>(Expérimental) Active l'onglet de vie scolaire</p>
-                </IonLabel>
-                <IonToggle slot="end" ref="viescolaireEnabled" @ionChange="changeTick('viescolaireEnabled')"></IonToggle>
-            </IonItem>
-        </IonList>
-
-        <IonList :inset="true" lines="inset">
+        <IonList :inset="true" lines="none">
+            <ion-nav-link router-direction="forward" :component="OptionsView">
+                <IonItem button>
+                    <span class="material-symbols-outlined mdls" slot="start"><PapillonLogo /></span>
+                    <IonLabel>
+                        <h2>Options de Papillon</h2>
+                        <p>Modifier le comportement de Papillon</p>
+                    </IonLabel>
+                </IonItem>
+            </ion-nav-link>
             <ion-nav-link router-direction="forward" :component="ThemeView">
                 <IonItem button>
                     <span class="material-symbols-outlined mdls" slot="start">palette</span>
@@ -394,67 +272,7 @@
             </ion-nav-link>
         </IonList>
 
-        <IonList :inset="true" lines="inset">
-            <IonItem button @click="tweakChangeAvatar()">
-                <span class="material-symbols-outlined mdls" slot="start">person_pin</span>
-                <IonLabel>
-                    <h2>Changer de photo de profil</h2>
-                    <p>Utiliser une photo différente dans l'application</p>
-                </IonLabel>
-            </IonItem>
-
-            <IonItem button @click="tweakDeleteAvatar()">
-                <span class="material-symbols-outlined mdls" slot="start">delete</span>
-                <IonLabel>
-                    <h2>Supprimer la photo de profil personnalisée</h2>
-                </IonLabel>
-            </IonItem>
-        </IonList>
-        
-        <IonList :inset="true" lines="inset">
-            <IonItem>
-                <span class="material-symbols-outlined mdls" slot="start">security_update_good</span>
-                <IonLabel>
-                    <p>Version de l'app</p>
-                    <h2>papillon {{ appVersion }}-{{ appPlatform }}</h2>
-                </IonLabel>
-            </IonItem>
-
-            <IonItem>
-                <span class="material-symbols-outlined mdls" slot="start">webhook</span>
-                <IonLabel>
-                    <p>Version de l'API</p>
-                    <h2>{{ apiVersion }}</h2>
-                </IonLabel>
-            </IonItem>
-
-            <IonItem>
-                <span class="material-symbols-outlined mdls" slot="start">storage</span>
-                <IonLabel>
-                    <p>Taille du cache</p>
-                    <h2>{{ localStorageSize }}</h2>
-                </IonLabel>
-            </IonItem>
-        </IonList>
-
-        <IonList :inset="true" lines="inset">
-            <IonItem button @click="openURL('https://discord.gg/DMx3TDyz2U')">
-                <span class="material-symbols-outlined mdls" slot="start">support</span>
-                <IonLabel>
-                    <p>Discord</p>
-                    <h2>Rejoindre le serveur Discord</h2>
-                </IonLabel>
-            </IonItem>
-            <IonItem button @click="openURL('https://github.com/PapillonApp/papillon-v5/')">
-                <span class="material-symbols-outlined mdls" slot="start">data_object</span>
-                <IonLabel>
-                    <p>GitHub</p>
-                    <h2>Contribuer au projet Papillon</h2>
-                </IonLabel>
-            </IonItem>
-        </IonList>
-
-        <IonList :inset="true" lines="inset">
+        <IonList :inset="true" lines="none">
             <IonItem button @click="logout()">
                 <span class="material-symbols-outlined mdls" slot="start">logout</span>
                 <IonLabel>
@@ -513,15 +331,64 @@
             </IonItem>
         </IonList>
 
-        <br /> <br /> 
+        <IonList :inset="true" lines="inset">
+            <IonItem button @click="openURL('https://discord.gg/DMx3TDyz2U')">
+                <span class="material-symbols-outlined mdls" slot="start">support</span>
+                <IonLabel>
+                    <p>Discord</p>
+                    <h2>Rejoindre le serveur Discord</h2>
+                </IonLabel>
+            </IonItem>
+            <IonItem button @click="openURL('https://github.com/PapillonApp/papillon-v5/')">
+                <span class="material-symbols-outlined mdls" slot="start">data_object</span>
+                <IonLabel>
+                    <p>GitHub</p>
+                    <h2>Contribuer au projet Papillon</h2>
+                </IonLabel>
+            </IonItem>
+        </IonList>
+
+        <IonList :inset="true" lines="inset">
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">security_update_good</span>
+                <IonLabel>
+                    <p>Version de l'app</p>
+                    <h2>papillon {{ appVersion }}-{{ appPlatform }}</h2>
+                </IonLabel>
+            </IonItem>
+
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">webhook</span>
+                <IonLabel>
+                    <p>Version de l'API</p>
+                    <h2>{{ apiVersion }}</h2>
+                </IonLabel>
+            </IonItem>
+
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">storage</span>
+                <IonLabel>
+                    <p>Taille du cache</p>
+                    <h2>{{ localStorageSize }}</h2>
+                </IonLabel>
+            </IonItem>
+        </IonList>
       </ion-content>
     </ion-page>
 </template>
   
 <style scoped>
     .avatar {
-        width: 45px;
-        height: 45px;
+        width: 42px;
+        height: 42px;
         border-radius: 50%;
+        object-fit: cover;
+    }
+
+    ion-label * {
+        /* add word wrap */
+        word-wrap: break-word;
+        overflow: auto;
+        white-space: pre-wrap;
     }
 </style>

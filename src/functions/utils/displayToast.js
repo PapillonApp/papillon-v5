@@ -1,5 +1,5 @@
 import { toastController, alertController } from '@ionic/vue';
-import { Dialog } from '@capacitor/dialog';
+import { Toast } from '@capacitor/toast';
 
 import hapticsController from './hapticsController';
 
@@ -12,6 +12,14 @@ async function presentToast(msg, color) {
 	});
 
 	await toast.present();
+}
+
+async function presentNativeToast(msg) {
+	Toast.show({
+		text: msg,
+		position: "bottom",
+		duration: "short"
+	});
 }
 
 async function presentToastIcon(msg, color, icon) {
@@ -102,6 +110,7 @@ async function presentToastTest() {
 
 export default {
 	presentToastFull,
+	presentNativeToast,
 	presentToast,
 	presentError,
 	presentToastIcon,

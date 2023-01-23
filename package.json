@@ -28,6 +28,7 @@
     "@capacitor/share": "^4.1.0",
     "@capacitor/splash-screen": "^4.1.2",
     "@capacitor/status-bar": "^4.1.1",
+    "@capacitor/toast": "^4.1.0",
     "@capawesome/capacitor-file-picker": "^0.5.5",
     "@hugotomazi/capacitor-navigation-bar": "^2.0.0",
     "@ionic/vue": "^6.0.0",
