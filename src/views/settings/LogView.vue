@@ -156,7 +156,7 @@
 				}
 				catch (e) {
 					console.error(`[Log Share]: ${e}`);
-					displayToast.presentError("Impossible de partager les logs", "danger", e)
+					displayToast.presentNativeToast("Impossible de partager les logs")
 				}
 			},
 			handleRefresh(event) {
