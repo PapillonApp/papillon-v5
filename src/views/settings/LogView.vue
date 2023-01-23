@@ -1,7 +1,11 @@
 <script>
 	import { defineComponent } from 'vue';
+	import { Capacitor } from '@capacitor/core';
+	import { Device } from '@capacitor/device';
 	import { Share } from '@capacitor/share';
 	import displayToast from '@/functions/utils/displayToast.js';
+
+	import { version } from '/package'
 
 	import {
 		IonHeader,
@@ -38,6 +42,7 @@
 		data() {
 			return {
 				logs: [],
+				apiVersion: this.getApiVersion()
 			}
 		},
 		methods: {
@@ -55,13 +60,47 @@
 						return "warning";
 				}
 			},
-			share() {
+			getApiVersion() {
+                const API = this.$api;
+
+                let cacheApiVersion = localStorage.getItem('apiVersion');
+
+                fetch(API + "/infos")
+                    .then(response => response.json())
+                    .then(result => {
+                        let apiVer = result.version;
+                        localStorage.setItem('apiVersion', apiVer);
+                        this.apiVersion = apiVer;
+                    });
+
+                this.apiVersion = cacheApiVersion ?? 'Inconnue';
+            }, 
+			async share() {
 				try {
-					// await Share.share({
-					// 	title: 'Exporter les logs',
-					// 	text: this.logs.map(log => `[${log.date}] - ${log.type} - ${log.message}`).join("\n"),
-					// 	dialogTitle: 'Partager les logs'
-					// });
+					await Share.share({
+						title: 'Exporter les logs',
+						text: `
+							Le ${ new Date().toLocaleString('fr-FR', {dateStyle: 'long', timeStyle: 'short'}) }
+							Contient ${this.logs.length} logs
+
+							Application :
+							> Version : ${version}
+							> Type de plateforme : ${Capacitor.getPlatform()}
+							> Version API : ${this.apiVersion}
+							
+							Appareil :
+							> ID : ${await Device.getId().then(id => id.uuid)}
+							> Modèle : ${await Device.getInfo().then(info => info.model)}
+							> Version OS : ${await Device.getInfo().then(info => info.osVersion)}
+							> Marque : ${await Device.getInfo().then(info => info.manufacturer)}\n
+						` + "```" 
+						+ `
+							${this.logs.map(log => {
+								return `[${log.type}] - ${log.date} - ${log.message}`;
+							}).join("\n")}
+						` + "```",
+						dialogTitle: 'Partager les logs sur Github ou Discord à l\'équipe de développement'
+					});
 				}
 				catch (e) {
 					console.error(e);
