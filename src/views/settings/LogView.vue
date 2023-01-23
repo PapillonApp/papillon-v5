@@ -79,8 +79,8 @@
 				try {
 					await Share.share({
 						title: 'Exporter les logs',
-						text: `
-							Le ${ new Date().toLocaleString('fr-FR', {dateStyle: 'long', timeStyle: 'short'}) }
+						text: 
+							`Le ${ new Date().toLocaleString('fr-FR', {dateStyle: 'long', timeStyle: 'short'}) }
 							Contient ${this.logs.length} logs
 
 							Application :
