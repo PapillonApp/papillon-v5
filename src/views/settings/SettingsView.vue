@@ -254,7 +254,7 @@
             <ion-nav-link router-direction="forward" :component="OptionsView">
                 <IonItem button>
                     <span class="material-symbols-outlined mdls" slot="start">tune</span>
-                    <IonLabel>
+                    <IonLabel class="ion-text-wrap">
                         <h2>Options de Papillon</h2>
                         <p>Modifier le comportement de Papillon</p>
                     </IonLabel>
@@ -263,7 +263,7 @@
             <ion-nav-link router-direction="forward" :component="ThemeView">
                 <IonItem button>
                     <span class="material-symbols-outlined mdls" slot="start">palette</span>
-                    <IonLabel>
+                    <IonLabel class="ion-text-wrap">
                         <h2>Personnaliser Papillon</h2>
                         <p>Ouvrir le menu de customisation de l'app</p>
                     </IonLabel>
@@ -274,7 +274,7 @@
         <IonList :inset="true" lines="none">
             <IonItem button @click="logout()">
                 <span class="material-symbols-outlined mdls" slot="start">logout</span>
-                <IonLabel>
+                <IonLabel class="ion-text-wrap">
                     <h2>Se déconnecter de Papillon</h2>
                     <p>Supprime toutes les données de connexion de l'application</p>  
                 </IonLabel>
@@ -282,7 +282,7 @@
 
             <IonItem button @click="emptyCache()">
                 <span class="material-symbols-outlined mdls" slot="start">auto_delete</span>
-                <IonLabel>
+                <IonLabel class="ion-text-wrap">
                     <h2>Vider le cache des données</h2>
                     <p>Réinitialise les données pré-téléchargées hors ligne</p>  
                 </IonLabel>
@@ -290,7 +290,7 @@
 
             <IonItem button @click="resetColors()">
                 <span class="material-symbols-outlined mdls" slot="start">format_color_fill</span>
-                <IonLabel>
+                <IonLabel class="ion-text-wrap">
                     <h2>Réattribuer les couleurs de matières</h2>
                     <p>Réinitialise les couleurs des matières pour en obtenir de nouvelles</p>  
                 </IonLabel>
@@ -298,7 +298,7 @@
 
             <IonItem button @click="refreshToken()">
                 <span class="material-symbols-outlined mdls" slot="start">key</span>
-                <IonLabel>
+                <IonLabel class="ion-text-wrap">
                     <h2>Regénerer les clés de connexion (avancé)</h2>
                     <p>Permet de demander une nouvelle autorisation à votre établissement</p>  
                 </IonLabel>
@@ -382,12 +382,5 @@
         height: 42px;
         border-radius: 50%;
         object-fit: cover;
-    }
-
-    ion-label * {
-        /* add word wrap */
-        word-wrap: break-word;
-        overflow: auto;
-        white-space: pre-wrap;
     }
 </style>
