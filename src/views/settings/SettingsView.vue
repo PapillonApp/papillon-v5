@@ -5,6 +5,7 @@
     import { calendarOutline } from 'ionicons/icons';
 
     import ThemeView from './ThemeView.vue';
+    import LogView from './LogView.vue';
 
     import { version } from '/package'
     import { Capacitor } from '@capacitor/core';
@@ -49,6 +50,7 @@
                 contributors: [],
                 userAvatar: '',
                 ThemeView: ThemeView,
+                LogView: LogView,
             }
         },
         methods: {
@@ -278,7 +280,7 @@
                 getContributors(5).then((contributors) => {
                     this.contributors = contributors;
                 });
-            },
+            }
         },
         mounted() {
             // Get user data
@@ -316,6 +318,8 @@
             // get changePeriodSelection ref
             let changePeriodSelection = this.$refs.changePeriodSelection;
             changePeriodSelection.$el.checked = localStorage.getItem('changePeriodSelection') == 'true';
+        
+            
         }
     });
 </script>
@@ -482,6 +486,15 @@
                     <p>Permet de demander une nouvelle autorisation à votre établissement</p>  
                 </IonLabel>
             </IonItem>
+            <ion-nav-link router-direction="forward" :component="LogView">
+                <IonItem button>
+                    <span class="material-symbols-outlined mdls" slot="start">book</span>
+                    <IonLabel>
+                        <h2>Voir les logs</h2>
+                        <p>Consulter les logs de l'application</p>
+                    </IonLabel>
+                </IonItem>
+            </ion-nav-link>
         </IonList>
 
         <IonList :inset="true" lines="inset">
