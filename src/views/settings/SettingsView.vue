@@ -524,4 +524,11 @@
         height: 45px;
         border-radius: 50%;
     }
+
+    ion-label * {
+        /* add word wrap */
+        word-wrap: break-word;
+        overflow: auto;
+        white-space: pre-wrap;
+    }
 </style>
