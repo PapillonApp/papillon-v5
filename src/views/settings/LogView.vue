@@ -103,7 +103,7 @@
 					});
 				}
 				catch (e) {
-					console.error(e);
+					console.error(`[Log Share]: ${e}`);
 					displayToast.presentError("Impossible de partager les logs", "danger", e)
 				}
 			}
