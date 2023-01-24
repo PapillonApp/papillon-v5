@@ -389,8 +389,7 @@
 
                 <ion-item v-if="homeworks.length == 0" lines="none">
                     <ion-label>
-                        <h2>Aucun devoir</h2>
-                        <p>Vous n'avez aucun devoir à faire aujourd'hui.</p>
+                        <p>Vous n'avez aucun devoir à faire durant 7 jours.</p>
                     </ion-label>
                 </ion-item>
 
