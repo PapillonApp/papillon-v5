@@ -74,10 +74,19 @@
 				localStorage.setItem("logs", JSON.stringify(this.logs));
 			},
 			getAccountInfo() {
-				this.account.name = JSON.parse(localStorage.getItem('userData')).student.name;
-				this.account.etab = JSON.parse(localStorage.getItem('userData')).class.school;
-				this.account.etabUrl = JSON.parse(localStorage.getItem("loginData")).url;
-				this.account.cas = JSON.parse(localStorage.getItem("loginData")).cas;
+				try {
+					this.account.name = JSON.parse(localStorage.getItem('userData')).student.name;
+					this.account.etab = JSON.parse(localStorage.getItem('userData')).class.school;
+					this.account.etabUrl = JSON.parse(localStorage.getItem("loginData")).url;
+					this.account.cas = JSON.parse(localStorage.getItem("loginData")).cas;
+				} catch (error) {
+					displayToast.presentNativeToast("Impossible de récupérer les informations de l'utilisateur");
+					this.account.name = "Inconnu";
+					this.account.etab = "Inconnu";
+					this.account.etabUrl = "Inconnu";
+					this.account.cas = "Inconnu";
+					console.error("[Log View]: " + error);
+				}
 			},
 			getLocalStorageSize() {
                 // get localStorage size in kb
@@ -155,7 +164,7 @@
 					});
 				}
 				catch (e) {
-					console.error(`[Log Share]: ${e}`);
+					console.error(`[Log View]: ${e}`);
 					displayToast.presentNativeToast("Impossible de partager les logs")
 				}
 			},
