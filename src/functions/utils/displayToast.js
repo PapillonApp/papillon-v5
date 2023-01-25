@@ -58,6 +58,30 @@ async function presentToastFull(header, msg, color, icon) {
 	await toast.present();
 }
 
+async function presentToastSmall(header, color, icon) {
+	// vibration
+	if(color == "danger") {
+		hapticsController.notification("error");
+	}
+	else if(color == "success") {
+		hapticsController.notification("success");
+	}
+	else if(color == "warning") {
+		hapticsController.notification("warning");
+	}
+
+	const toast = await toastController.create({
+		header: header,
+		duration: 2000,
+		position: "top",
+		color: color,
+		icon: icon,
+		cssClass: "toast-small"
+	});
+
+	await toast.present();
+}
+
 async function presentError(msg, color, error) {
 	// vibration
 	if(color == "danger") {
@@ -110,6 +134,7 @@ async function presentToastTest() {
 
 export default {
 	presentToastFull,
+	presentToastSmall,
 	presentNativeToast,
 	presentToast,
 	presentError,

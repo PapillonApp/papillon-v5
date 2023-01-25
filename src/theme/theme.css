@@ -247,7 +247,7 @@ ion-item .mdls[slot="start"] {
     font-weight: 400;
 }
 
-.ios ion-toast {
+.ios ion-toast:not(.toast-small) {
     --border-radius: 8px !important;
     --box-shadow: 0 2px 6px #00000015 !important;
 
@@ -268,6 +268,30 @@ ion-toast::part(message) {
 ion-header ion-toolbar ion-title.md {
     font-size: 20px;
     font-weight: 600;
+}
+
+.toast-small {
+    max-width: 90vw !important;
+    --width: fit-content !important;
+    --border-radius: 80px !important;
+
+    /* center */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+
+    margin: 0 !important;
+}
+
+.toast-small::part(container) {
+    width: fit-content;
+    height: 40px; 
+}
+
+.toast-small::part(header) {
+    width: fit-content;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 /* items */

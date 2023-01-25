@@ -456,6 +456,12 @@
                 }
             }, 100);
         });
+
+        displayToast.presentToastSmall(
+            'Notifications activées pour',
+            'success',
+            notifications
+        );
     }
   });
 </script>
