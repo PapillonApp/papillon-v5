@@ -437,6 +437,96 @@ export default defineComponent(
           );
         }
       },
+      updateProgressDiv() {
+        // check current timeline cours and highlight it
+        let cours = document.querySelectorAll(
+          ".swiper-slide-active .mainElemCours"
+        );
+
+        // create event listener if swiper is reset
+        let now = new Date();
+        //mettre l'heur a 14H30 le 24/01/2023 (europe) pour tester le cours en cours
+        //now = new Date(2023, 1, 24, 15, 34, 0, 0);
+
+        if (now.getDate() != this.rnCalendarString.split("-")[2]) {
+          return;
+        }
+
+        cours.forEach((cours) => {
+          let time = cours.querySelector(".CoursTime");
+          let bg = cours.querySelector(".bg");
+
+          let coursStart = new Date(
+            time.querySelector(".start").innerText + " " + this.rnCalendarString
+          );
+          let coursEnd = new Date(
+            time.querySelector(".end").innerText + " " + this.rnCalendarString
+          );
+
+          //use hour and minutes
+          if (
+            coursStart.getMinutes() * 60 + coursStart.getHours() * 3600 <
+              now.getMinutes() * 60 + now.getHours() * 3600 &&
+            coursEnd.getMinutes() * 60 + coursEnd.getHours() * 3600 >
+              now.getMinutes() * 60 + now.getHours() * 3600
+          ) {
+            let progressDiv;
+            if (cours.querySelectorAll(".progressDiv").length == 0) {
+              progressDiv = document.createElement("div");
+              progressDiv.classList.add("progressDiv");
+              bg.parentElement.insertBefore(progressDiv, bg);
+            } else {
+              progressDiv = cours.querySelector(".progressDiv");
+            }
+
+            let coursPoucent =
+              ((now.getHours() * 3600 +
+                now.getMinutes() * 60 +
+                now.getSeconds() -
+                (coursStart.getHours() * 3600 +
+                  coursStart.getMinutes() * 60 +
+                  coursStart.getSeconds())) /
+                (coursEnd.getHours() * 3600 +
+                  coursEnd.getMinutes() * 60 +
+                  coursEnd.getSeconds() -
+                  (coursStart.getHours() * 3600 +
+                    coursStart.getMinutes() * 60 +
+                    coursStart.getSeconds()))) *
+              100;
+
+            setTimeout(() => {
+              // to fix the bug where the transition is not applied
+              progressDiv.style.width = coursPoucent + "%";
+            }, 100);
+          }
+        });
+      },
+      autoUpdateProgressDiv() {
+        //wait until cours are loaded and call this.autoUpdateProgressDiv();
+        // check if cours is rendered
+        this.progressDivInterval = setInterval(() => {
+          this.updateProgressDiv();
+        }, 1000);
+
+        setTimeout(() => {
+          if (
+            document.querySelectorAll(".swiper-slide-active .mainElemCours")
+              .length == 0
+          ) {
+            this.autoUpdateProgressDiv();
+          } else {
+            this.updateProgressDiv();
+          }
+        }, 1000);
+      },
+      removeAllProgressDiv() {
+        if (this.intervalProgressDiv) clearInterval(this.progressDivInterval);
+
+        let progressDivs = document.querySelectorAll(".progressDiv");
+        progressDivs.forEach((progressDiv) => {
+          progressDiv.remove();
+        });
+      },
     },
     data() {
       return {
@@ -459,6 +549,7 @@ export default defineComponent(
         },
         newCoursModalOpen: false,
         rnPickerModalOpen: false,
+        intervalProgressDiv: null,
       };
     },
     mounted() {
@@ -526,79 +617,12 @@ export default defineComponent(
         }, 100);
       });
 
-      setInterval(() => {
-        // check current timeline cours and highlight it
-        let cours = document.querySelectorAll(".swiper-slide-active .mainElemCours");
-        let now = new Date();
-        //mettre l'heur a 14H30 le 24/01/2023 (europe) pour tester le cours en cours
-        now = new Date(2023, 1, 24, 15, 34, 0, 0);
-
-        if (now.getDate() != this.rnCalendarString.split("-")[2]) {
-          return;
-        }
-
-        cours.forEach((cours) => {
-          let time = cours.querySelector(".CoursTime");
-          let bg = cours.querySelector(".bg");
-          let coursStart = new Date(
-            time.querySelector(".start").innerText + " " + this.rnCalendarString
-          );
-          let coursEnd = new Date(
-            time.querySelector(".end").innerText + " " + this.rnCalendarString
-          );
-
-          //use hour and minutes
-          if (
-            coursStart.getMinutes() * 60 + coursStart.getHours() * 3600 <
-              now.getMinutes() * 60 + now.getHours() * 3600 &&
-            coursEnd.getMinutes() * 60 + coursEnd.getHours() * 3600 >
-              now.getMinutes() * 60 + now.getHours() * 3600
-          ) {
-            let progressDiv;
-            if (bg.querySelectorAll(".progressDiv").length == 0) {
-              progressDiv = document.createElement("div");
-            } else {
-              progressDiv = bg.querySelector(".progressDiv");
-            }
-            progressDiv.classList.add("progressDiv");
-            bg.parentElement.insertBefore(progressDiv, bg);
-            progressDiv.style.transition = "width 2s ease-out";
-            progressDiv.style.position = "absolute";
-            progressDiv.style.height = "100%";
-            progressDiv.style.position = "absolute";
-            progressDiv.style.top = "0";
-            progressDiv.style.left = "0";
-            progressDiv.style.opacity = "1";
-            progressDiv.style.zIndex = "-1";
-            progressDiv.style.borderRadius = "0 5px 5px 0";
-            progressDiv.style.backgroundColor = "var(--backgroundColor)";
-            progressDiv.style.width = "0%";
-
-            let coursPoucent =
-              ((now.getHours() * 3600 +
-                now.getMinutes() * 60 +
-                now.getSeconds() -
-                (coursStart.getHours() * 3600 +
-                  coursStart.getMinutes() * 60 +
-                  coursStart.getSeconds())) /
-                (coursEnd.getHours() * 3600 +
-                  coursEnd.getMinutes() * 60 +
-                  coursEnd.getSeconds() -
-                  (coursStart.getHours() * 3600 +
-                    coursStart.getMinutes() * 60 +
-                    coursStart.getSeconds()))) *
-              100;
-
-            setTimeout(() => {
-              progressDiv.style.width = coursPoucent + "%";
-            }, 50);
-
-            // create div progress to add before bg cours
-
-            //this.$forceUpdate();
-          }
-        });
-      }, 1000);
+      swiper.on("slideChangeTransitionStart", () => {
+        // remove all progress divs
+        this.removeAllProgressDiv();
+        this.autoUpdateProgressDiv();
+      });
+      this.autoUpdateProgressDiv();
     },
   },
   5000
@@ -1094,5 +1118,20 @@ export default defineComponent(
 }
 .currentCours {
   border: 2px solid var(--ion-color-primary);
+}
+</style>
+
+<style>
+.progressDiv {
+  transition: width 2s ease-out;
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 1;
+  z-index: -1;
+  border-radius: 0 5px 5px 0;
+  background-color: var(--backgroundColor);
+  width: 0%;
 }
 </style>
