@@ -98,6 +98,14 @@
                     'Photo de profil supprimée.'
                 );
             },
+            tweakProgressBar() {
+                let tweakProgressBar = this.$refs.tweakProgressBar;
+                let tweakProgressBarChecked = tweakProgressBar.$el.checked;
+
+                localStorage.setItem('tweakProgressBar', tweakProgressBarChecked);
+
+                document.dispatchEvent(new CustomEvent('settingsUpdated'));
+            },
 		},
 		mounted() {
             // get tweakGrades20 ref
@@ -111,6 +119,11 @@
             // get changePeriodSelection ref
             let changePeriodSelection = this.$refs.changePeriodSelection;
             changePeriodSelection.$el.checked = localStorage.getItem('changePeriodSelection') == 'true';
+
+            // get tweakProgressBar ref
+            let tweakProgressBar = this.$refs.tweakProgressBar;
+            tweakProgressBar.$el.checked = localStorage.getItem('tweakProgressBar') == 'true';
+
         }
 	});
 </script>
@@ -157,7 +170,16 @@
                     <IonToggle slot="end" ref="viescolaireEnabled" @ionChange="changeTick('viescolaireEnabled')"></IonToggle>
                 </IonItem>
             </IonList>
-
+            <IonList :inset="true" lines="inset">
+                <IonItem>
+                    <span class="material-symbols-outlined mdls" slot="start">settings</span>
+                    <IonLabel>
+                        <h2>Activer l'animation de la progression d'un cours</h2>
+                        <p>(Expérimental) Cela permet d'indiquer la progression d'un cours en cours</p>
+                    </IonLabel>
+                    <IonToggle slot="end" ref="tweakProgressBar" @ionChange="changeTick('tweakProgressBar')"></IonToggle>
+                </IonItem>
+            </IonList>
             <IonList :inset="true" lines="inset">
                 <IonItem button @click="tweakChangeAvatar()">
                     <span class="material-symbols-outlined mdls" slot="start">person_pin</span>

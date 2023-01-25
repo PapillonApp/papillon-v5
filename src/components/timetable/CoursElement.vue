@@ -116,6 +116,9 @@ export default defineComponent({
       this.$emit("open");
     },
     beforeRenderedProgressDiv() {
+    //check in localstorage if progress bar is enabled
+    if (localStorage.getItem("tweakProgressBar") != "true") return false;
+
       let now = new Date();
       //mettre l'heur a 14H30 le 24/01/2023 (europe) pour tester le cours en cours
       //  now = new Date(2023, 1, 25, 15, 30, 0, 0);
@@ -224,12 +227,11 @@ export default defineComponent({
     return false;
   },
   beforeUnmount() {
-    clearInterval(this.intervalUpdateProgressDiv);
+    if (this.intervalUpdateProgressDiv != null) clearInterval(this.intervalUpdateProgressDiv);
   },
   beforeUpdate() {
     console.log("beforeUpdate");
     this.beforeRenderedProgressDiv();
-
   },
 });
 </script>
