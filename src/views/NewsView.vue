@@ -91,7 +91,6 @@
             GetNews().then((data) => {
                 this.news = data;
                 this.fullNews = data;
-                console.log(this.news);
                 
                 this.isLoading = false;
             });
@@ -142,7 +141,7 @@
             <p>Veuillez patienter pendant qu'on récupère les actualités depuis nos serveurs...</p>
         </div>
 
-        <div class="NoCours" v-if="news.length == 0">
+        <div class="NoCours" v-if="news.length == 0 && !isLoading">
             <span class="material-symbols-outlined mdls">feed</span>
             <h2>Aucune actualité n'a été trouvée.</h2>
             <p>Revenez plus tard ou essayer de rafraîchir.</p>
