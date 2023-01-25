@@ -26,6 +26,7 @@ dependencies {
     implementation project(':capacitor-toast')
     implementation project(':capawesome-capacitor-file-picker')
     implementation project(':hugotomazi-capacitor-navigation-bar')
+    implementation project(':capacitor-android-shortcuts')
 
 }
 

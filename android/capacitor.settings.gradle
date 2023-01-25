@@ -52,3 +52,6 @@ project(':capawesome-capacitor-file-picker').projectDir = new File('../node_modu
 
 include ':hugotomazi-capacitor-navigation-bar'
 project(':hugotomazi-capacitor-navigation-bar').projectDir = new File('../node_modules/@hugotomazi/capacitor-navigation-bar/android')
+
+include ':capacitor-android-shortcuts'
+project(':capacitor-android-shortcuts').projectDir = new File('../node_modules/capacitor-android-shortcuts/android')
