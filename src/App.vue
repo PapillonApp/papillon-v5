@@ -255,21 +255,26 @@
         /** 
          * Android Shortcuts
          * Needs to be changed to a new place in order to work...
-        AndroidShortcuts.addListener('shortcut', (response: any) => {
-            switch (response.data) {
-                case "timetable":
-                    this.$router.push('/timetable');
-                    break;
-                case "homework":
-                    this.$router.push('/homework');
-                    break;
-                case "grades":
-                    this.$router.push('/grades');
-                    break;
-                default:
-                    break;
+        */
+        AndroidShortcuts.isDynamicSupported().then((result) => {
+            if (result) {
+                AndroidShortcuts.addListener('shortcut', (response: any) => {
+                    switch (response.data) {
+                        case "timetable":
+                            this.$router.push('/timetable');
+                            break;
+                        case "homework":
+                            this.$router.push('/homework');
+                            break;
+                        case "grades":
+                            this.$router.push('/grades');
+                            break;
+                        default:
+                            break;
+                    }
+                });
             }
-        }); */
+        })
     }
   });
 </script>
