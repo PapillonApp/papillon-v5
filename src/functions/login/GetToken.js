@@ -41,9 +41,8 @@ function getPronoteLogin() {
 
         waitingForToken = true;
 
-        displayToast.presentToastFull(
+        displayToast.presentToastSmall(
             "Reconnexion en cours...",
-            "Vous avez été déconnecté. Nous vous reconnectons...",
             "light",
             refresh
         )
@@ -67,9 +66,8 @@ function getPronoteLogin() {
                 waitingForToken = false;
 
                 // display toast
-                displayToast.presentToastFull(
+                displayToast.presentToastSmall(
                     "Vous êtes à nouveau connecté.",
-                    "Nous vous avons reconnecté à Pronote.",
                     "success",
                     checkmark
                 );

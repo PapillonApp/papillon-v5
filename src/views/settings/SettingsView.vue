@@ -122,24 +122,6 @@
             },
             refreshToken() {
                 GetToken();
-
-                // show toast
-                displayToast.presentToastFull(
-                    'Demande de nouvelle clé envoyée...', 
-                    'Veuillez patienter quelques secondes.',
-                    'light',
-                    refresh
-                );
-
-                // wait for event tokenUpdated once token is updated
-                document.addEventListener('tokenUpdated', () => {
-                    displayToast.presentToastFull(
-                        'Nouvelle clé de connexion reçue !',
-                        'Vos données s\'actualisent en arrière-plan...',
-                        'success',
-                        checkmark
-                    );
-                });
             },
             getLocalStorageSize() {
                 // get localStorage size in kb
