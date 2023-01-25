@@ -2,6 +2,8 @@
   import { defineComponent } from 'vue';
   import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonFabButton, IonInput } from '@ionic/vue';
 
+  import { App } from '@capacitor/app';
+
   import displayToast from '@/functions/utils/displayToast.js';
   import subjectColor from '@/functions/utils/subjectColor.js';
   import timetableEdit from '@/functions/utils/timetableEdit.js';
@@ -455,6 +457,15 @@
                     this.shouldResetSwiper = true;
                 }
             }, 100);
+        });
+
+        App.addListener('backButton', () => {
+            if(this.newCoursModalOpen) {
+                this.newCoursModalOpen = false;
+            } 
+            else if(this.rnPickerModalOpen) {
+                this.rnPickerModalOpen = false;
+            }
         });
     }
   });
