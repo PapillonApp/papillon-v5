@@ -106,6 +106,14 @@
 
                 document.dispatchEvent(new CustomEvent('settingsUpdated'));
             },
+            tweakProgressBarShowPast() {
+                let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
+                let tweakProgressBarShowPastChecked = tweakProgressBarShowPast.$el.checked;
+
+                localStorage.setItem('tweakProgressBarShowPast', tweakProgressBarShowPastChecked);
+
+                document.dispatchEvent(new CustomEvent('settingsUpdated'));
+            },
 		},
 		mounted() {
             // get tweakGrades20 ref
@@ -123,6 +131,11 @@
             // get tweakProgressBar ref
             let tweakProgressBar = this.$refs.tweakProgressBar;
             tweakProgressBar.$el.checked = localStorage.getItem('tweakProgressBar') == 'true';
+
+            // get tweakProgressBarShowPast ref
+            let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
+            tweakProgressBarShowPast.$el.checked = localStorage.getItem('tweakProgressBarShowPast') != 'false'; // default true
+
 
         }
 	});
@@ -178,6 +191,14 @@
                         <p>(Expérimental) Cela permet d'indiquer la progression d'un cours en cours</p>
                     </IonLabel>
                     <IonToggle slot="end" ref="tweakProgressBar" @ionChange="changeTick('tweakProgressBar')"></IonToggle>
+                </IonItem>
+                <IonItem>
+                    <span class="material-symbols-outlined mdls" slot="start">settings</span>
+                    <IonLabel>
+                        <h2>Montrer la progression des cours passés</h2>
+                        <p>(Expérimental) Cela permet d'indiquer la progression d'un cours en cours</p>
+                    </IonLabel>
+                    <IonToggle slot="end" ref="tweakProgressBarShowPast" @ionChange="changeTick('tweakProgressBarShowPast')"></IonToggle>
                 </IonItem>
             </IonList>
             <IonList :inset="true" lines="inset">

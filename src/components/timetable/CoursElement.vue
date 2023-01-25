@@ -106,6 +106,7 @@ export default defineComponent({
       coursPourcent: 0,
       coursPourcentVisible: false,
       intervalUpdateProgressDiv: null,
+      showPastProgress: localStorage.getItem("tweakProgressBarShowPast") != "false"
     };
   },
   setup() {
@@ -166,6 +167,22 @@ export default defineComponent({
         return false;
       }
 
+      // if cours is passed
+      if (
+        now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds() >
+        this.endTime.getHours() * 3600 +
+          this.endTime.getMinutes() * 60 +
+          this.endTime.getSeconds() && this.showPastProgress
+      ) {
+        console.log("cours passé");
+        this.coursPourcentVisible = true;
+
+        setTimeout(() => {
+          this.coursPourcent = 100;
+        }, this.startTime.getHours() * 100);
+        return false;
+      }
+
       // now is between start and end
       if (
         now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds() >=
@@ -198,7 +215,7 @@ export default defineComponent({
         setTimeout(() => {
           this.coursPourcent = coursPourcent;
           console.log("coursPourcent : " + coursPourcent);
-        }, 100);
+        }, this.showPastProgress ? (this.startTime.getHours() * 100) : 100); // if showPastProgress is true, wait other cours passed animation
       }
     },
     autoUpdateProgressDiv() {
