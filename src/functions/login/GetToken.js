@@ -15,7 +15,7 @@ function getPronoteLogin() {
     if(!waitingForToken) {
         // gather vars
         const API = app.config.globalProperties.$api;
-        let loginData = JSON.parse(localStorage.getItem('loginData'));
+        let loginData = JSON.parse(atob(localStorage.getItem('loginData')));
 
         // get username and password
         let username = loginData.username;
