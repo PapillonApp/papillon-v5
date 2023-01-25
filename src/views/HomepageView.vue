@@ -9,6 +9,7 @@
     import displayToast from '@/functions/utils/displayToast.js';
     import hapticsController from '@/functions/utils/hapticsController.js';
     import timetableEdit from '@/functions/utils/timetableEdit.js';
+    import subjectColor from '@/functions/utils/subjectColor.js';
 
     import GetToken from '@/functions/login/GetToken.js';
     import GetNews from '@/functions/fetch/GetNews.js';
@@ -85,11 +86,39 @@
                 return list[Math.floor(Math.random() * list.length)];
             },
             editTimetable(timetable) {
-                timetable = timetableEdit(timetable);
-
-                // get next lesson (cours.time.start)
                 let now = new Date();
                 let lessons = []
+
+                timetable = timetableEdit(timetable);
+
+                // add custom courses
+                let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
+                customCourses.forEach((customCourse) => {
+                    // if course is in the same day
+                    let customDay = new Date(customCourse.day);
+                    let currentDay = new Date(this.$rn);
+
+                    let st = new Date(customCourse.course.time.start);
+                    let en = new Date(customCourse.course.time.end);
+
+                    // make st and en the same day as currentDay
+                    st.setDate(currentDay.getDate());
+                    st.setMonth(currentDay.getMonth());
+                    st.setFullYear(currentDay.getFullYear());
+
+                    en.setDate(currentDay.getDate());
+                    en.setMonth(currentDay.getMonth());
+                    en.setFullYear(currentDay.getFullYear());
+
+                    if (customDay.getDate() == currentDay.getDate() && customDay.getMonth() == currentDay.getMonth() && customDay.getFullYear() == currentDay.getFullYear()) {
+                        customCourse.course.time.start = st;
+                        customCourse.course.time.end = en;
+                        customCourse.course.course.color = subjectColor.getSubjectColor(customCourse.course.data.subject, subjectColor.getRandomColor());
+                        timetable.push(customCourse.course);
+                    }
+                });
+
+                // get next lesson (cours.time.start)
                 lessons = timetable.filter((lesson) => {
                     let lessonStart = new Date(lesson.time.start);
                     let lessonEnd = new Date(lesson.time.end);
