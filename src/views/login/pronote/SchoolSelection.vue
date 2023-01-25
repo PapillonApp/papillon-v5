@@ -404,12 +404,12 @@
                             // save token
                             localStorage.token = token;
                             localStorage.loggedIn = true;
-                            localStorage.loginData = JSON.stringify({
+                            localStorage.loginData = btoa(JSON.stringify({
                                 username: username,
                                 password: password,
                                 cas: cas,
                                 url: url,
-                            });
+                            }));
                             localStorage.loginService = "pronote";
 
                             // go to home
