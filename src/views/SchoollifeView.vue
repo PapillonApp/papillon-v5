@@ -8,7 +8,8 @@
 		IonList,
 		IonListHeader,
 		IonItem,
-		IonChip
+		IonChip,
+		IonPage,
 	} from '@ionic/vue';
 
 	const displayToast = require('@/functions/utils/displayToast.js');
@@ -31,7 +32,8 @@
 			IonList,
 			IonListHeader,
 			IonItem,
-			IonChip
+			IonChip,
+			IonPage,
 		},
 		setup() {
 			return {
