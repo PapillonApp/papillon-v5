@@ -284,7 +284,7 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader">
+      <IonHeader class="AppHeader" translucent collapse="fade">
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -340,13 +340,13 @@
                     </ion-label>
                 </ion-item>
 
-                <ion-item v-if="timetable.loading" lines="none">
+                <div v-if="timetable.length !== 0"><ion-item v-if="timetable.loading" lines="none">
                     <IonSpinner slot="start"></IonSpinner>
                     <ion-label>
                         <h2>Chargement...</h2>
                         <p>Chargement des cours...</p>
                     </ion-label>
-                </ion-item>
+                </ion-item></div>
             </ion-list>
 
             <ion-list id="comp-hw" ref="comp-hw" lines="none" inset="true">
@@ -393,13 +393,13 @@
                     </ion-label>
                 </ion-item>
 
-                <ion-item v-if="homeworks.loading" lines="none">
+                <div v-if="homeworks.length !== 0"><ion-item v-if="homeworks.loading" lines="none">
                     <IonSpinner slot="start"></IonSpinner>
                     <ion-label>
                         <h2>Chargement...</h2>
                         <p>Chargement des devoirs...</p>
                     </ion-label>
-                </ion-item>
+                </ion-item></div>
             </ion-list>
         </div>
 
