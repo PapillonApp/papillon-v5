@@ -98,6 +98,8 @@ AndroidShortcuts.isDynamicSupported().then((result) => {
           data: "grades",
         },
       ],
+    }).catch((err) => {
+      console.error("[Android Shortcuts]: " + err);
     });
   }
 });
