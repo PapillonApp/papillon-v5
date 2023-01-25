@@ -375,6 +375,7 @@
                         <ion-chip slot="end" v-else color="medium">
                             <span class="material-symbols-outlined mdls">schedule</span>
                             <p v-if="homework.data.timeLeft > 0">{{homework.data.timeLeft}} jour(s)</p>
+                            <p v-else-if="homework.data.timeLeft < 0">Aujourd'hui</p>
                             <p v-else>Demain</p>
                         </ion-chip>
                     </ion-item>
