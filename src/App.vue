@@ -5,6 +5,7 @@
   import { useRoute } from 'vue-router';
 
   import { globeOutline } from 'ionicons/icons';
+  import { AndroidShortcuts } from 'capacitor-android-shortcuts';
 
   const GetUser = require('./functions/fetch/GetUserData');
   const displayToast = require('./functions/utils/displayToast.js');
@@ -229,7 +230,7 @@
                 // add school life tab
                 this.appPages.splice(3, 0, {
                     title: 'Vie scolaire',
-                    url: '/school-life',
+                    url: '/schoollife',
                     icon: "gavel",
                 });
             }
@@ -250,6 +251,25 @@
                 document.body.style.setProperty('--papillon-font', customizations.font);
             }
         }
+
+        /** 
+         * Android Shortcuts
+         * Needs to be changed to a new place in order to work...
+        AndroidShortcuts.addListener('shortcut', (response: any) => {
+            switch (response.data) {
+                case "timetable":
+                    this.$router.push('/timetable');
+                    break;
+                case "homework":
+                    this.$router.push('/homework');
+                    break;
+                case "grades":
+                    this.$router.push('/grades');
+                    break;
+                default:
+                    break;
+            }
+        }); */
     }
   });
 </script>
