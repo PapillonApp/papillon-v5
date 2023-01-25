@@ -101,7 +101,9 @@
                 localStorage.removeItem('HomeworkCache');
                 localStorage.removeItem('AbsencesCache');
                 localStorage.removeItem('PunishmentsCache');
+                localStorage.removeItem('DelaysCache');
                 localStorage.removeItem('MenuCache');
+                localStorage.removeItem('ConversationsCache');
                 localStorage.removeItem('SubjectColors');
 
                 // show toast
