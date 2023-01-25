@@ -22,7 +22,8 @@
 		IonTextarea,
 		IonRefresher,
 		IonRefresherContent,
-		IonPage
+		IonPage,
+		IonSpinner
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -53,7 +54,8 @@
 			IonTextarea,
 			IonRefresher,
 			IonRefresherContent,
-			IonPage
+			IonPage,
+			IonSpinner
 		},
 		setup() {
 			return {
