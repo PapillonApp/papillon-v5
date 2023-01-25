@@ -31,7 +31,6 @@
 		components: {
 			IonHeader,
 			IonToolbar,
-            IonFooter,
             IonRefresher,
             IonRefresherContent,
             IonSkeletonText,
@@ -142,7 +141,7 @@
 		</IonToolbar>
 	</IonHeader>
 
-    <ion-content :fullscreen="true">
+    <ion-content class="content" :fullscreen="true">
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 			<ion-refresher-content></ion-refresher-content>
 		</ion-refresher>
@@ -161,19 +160,29 @@
             </div>
 
         </div>
-        <ion-footer class="chatbox">
-            <ion-toolbar>
-                <input @keydown="inputKeyPress" type="text" class="chatbox_input" placeholder="Écrire quelque chose..." />
-            </ion-toolbar>
-        </ion-footer>
+        <div class="chatbox">
+            <input @keydown="inputKeyPress" type="text" class="chatbox_input" placeholder="Écrire quelque chose..." />
+        </div>
 	</ion-content>
 </template>
 
 <style scoped>
+    .content::part(scroll) {
+        margin-bottom: calc(0px - env(safe-area-inset-bottom));
+    }
+
     /* chatbox */
     .chatbox {
-        position: fixed;
-        bottom: 0;
+        position: sticky;
+        bottom: 0px;
+
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        background-color: var(--ion-background-color);
+        border-top: 1px solid var(--ion-color-step-100);
     }
 
     .md .chatbox {
@@ -189,13 +198,11 @@
     .chatbox_input {
         width: calc(100% - 12px * 2);
 
-        background-color: var(--ion-background-color);
-        border: 1px solid var(--ion-color-step-100);
+        border: none;
+        background-color: var(--ion-color-step-50);
 
         border-radius: 50px;
         padding: 12px 20px;
-
-        margin: 5px 12px;
     }
 
     .md .chatbox_input {
@@ -209,7 +216,7 @@
 
     /* chatUI */
     .chatUI {
-        height: calc(100% - (30px + env(safe-area-inset-bottom)));
+        height: calc(100% - (60px + env(safe-area-inset-bottom)));
         width: 100%;
         padding: 0px 16px;
         overflow-y: scroll;
