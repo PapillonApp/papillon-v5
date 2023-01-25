@@ -79,6 +79,10 @@
 					this.account.etab = JSON.parse(localStorage.getItem('userData')).class.school;
 					this.account.etabUrl = JSON.parse(localStorage.getItem("loginData")).url;
 					this.account.cas = JSON.parse(localStorage.getItem("loginData")).cas;
+
+					if (this.account.cas == "") {
+						this.account.cas = "Aucun";
+					}
 				} catch (error) {
 					displayToast.presentNativeToast("Impossible de récupérer les informations de l'utilisateur");
 					this.account.name = "Inconnu";
