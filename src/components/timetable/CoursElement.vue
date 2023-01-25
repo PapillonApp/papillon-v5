@@ -1,425 +1,573 @@
 <script>
-    import { defineComponent } from 'vue';
-    import { IonLabel, IonChip, IonItemDivider, IonRippleEffect } from '@ionic/vue';
+import { defineComponent } from "vue";
+import { IonLabel, IonChip, IonItemDivider, IonRippleEffect } from "@ionic/vue";
 
-    import subjectColor from '@/functions/utils/subjectColor.js';
+import subjectColor from "@/functions/utils/subjectColor.js";
 
-    export default defineComponent({
-        name: 'CoursElement',
-        components: {
-            IonLabel,
-            IonRippleEffect
-        },
-        props: {
-            subject: {
-                type: String,
-                required: true
-            },
-            teachers: {
-                type: String,
-                required: false,
-                default: "Pas de professeur"
-            },
-            rooms: {
-                type: String,
-                required: false,
-                default: "Pas de salle"
-            },
-            memo: {
-                type: Boolean,
-                required: false,
-                default: false
-            },
-            start: {
-                type: String,
-                required: false
-            },
-            end: {
-                type: String,
-                required: false
-            },
-            color: {
-                type: String,
-                required: false,
-                default: "var(--ion-color-primary)"
-            },
-            isCancelled: {
-                type: Boolean,
-                required: false,
-                default: false
-            },
-            isExempted: {
-                type: Boolean,
-                required: false,
-                default: false
-            },
-            isDetention: {
-                type: Boolean,
-                required: false,
-                default: false
-            },
-            isOuting: {
-                type: Boolean,
-                required: false,
-                default: false
-            },
-            isTest: {
-                type: Boolean,
-                required: false,
-                default: false
-            },
-            status: {
-                type: String,
-                required: false,
-                default: "normal"
-            },
-            sameTime: {
-                type: Boolean,
-                required: false,
-                default: false
-            },
-            distance: {
-                type: Boolean,
-                required: false,
-                default: false
-            },
-            lengthCours: {
-                type: Number,
-                required: false,
-                default: 0
-            }
-        },
-        data() {
-            return { 
-                classes: "mainElemCours ion-activatable ripple-parent rounded-rectangle ",
-                newColor: ""
-            }
-        },
-        setup() {
-            return { }
-        },
-        methods: {
-            openCours() {
-                this.$emit('open')
-            }
-        },
-        mounted() {
-            if(this.distance) {
-                this.classes += "distance "
-            }
-
-            if(this.lengthCours > 1.2) {
-                this.classes += "long "
-            }
-
-            this.newColor = subjectColor.lightenColor(this.color, -20)
-
-            return false
+export default defineComponent({
+  name: "CoursElement",
+  components: {
+    IonLabel,
+    IonRippleEffect,
+  },
+  props: {
+    subject: {
+      type: String,
+      required: true,
+    },
+    teachers: {
+      type: String,
+      required: false,
+      default: "Pas de professeur",
+    },
+    rooms: {
+      type: String,
+      required: false,
+      default: "Pas de salle",
+    },
+    memo: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    start: {
+      type: String,
+      required: false,
+    },
+    end: {
+      type: String,
+      required: false,
+    },
+    color: {
+      type: String,
+      required: false,
+      default: "var(--ion-color-primary)",
+    },
+    isCancelled: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    isExempted: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    isDetention: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    isOuting: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    isTest: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    status: {
+      type: String,
+      required: false,
+      default: "normal",
+    },
+    sameTime: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    distance: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    lengthCours: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+    startTime: {
+      type: Date,
+      required: false,
+      default: new Date(),
+    },
+    endTime: {
+      type: Date,
+      required: false,
+      default: new Date(),
+    },
+  },
+  data() {
+    return {
+      classes: "mainElemCours ion-activatable ripple-parent rounded-rectangle ",
+      newColor: "",
+      coursPourcent: 0,
+      coursPourcentVisible: false,
+      intervalUpdateProgressDiv: null,
+    };
+  },
+  setup() {
+    return {};
+  },
+  methods: {
+    openCours() {
+      this.$emit("open");
+    },
+    beforeRenderedProgressDiv() {
+      let now = new Date();
+      //mettre l'heur a 14H30 le 24/01/2023 (europe) pour tester le cours en cours
+      //  now = new Date(2023, 1, 25, 15, 30, 0, 0);
+      if (now.getUTCDate() != this.startTime.getUTCDate()) {
+        console.log(
+          "pas aujourd'hui  : " +
+            now.getUTCDate() +
+            " != " +
+            this.startTime.getUTCDate() +
+            " subject : " +
+            this.subject
+        );
+        if (this.coursPourcentVisible) {
+          this.coursPourcent = 0;
+          this.coursPourcentVisible = false;
+          clearInterval(this.intervalUpdateProgressDiv);
         }
-    });
+
+      } else {
+        if(!this.coursPourcentVisible){
+        this.coursPourcentVisible = true;
+        }
+        this.autoUpdateProgressDiv();
+        this.updateProgressDiv();
+      }
+    },
+    updateProgressDiv() {
+      let now = new Date();
+      //mettre l'heur a 14H30 le 24/01/2023 (europe) pour tester le cours en cours
+      //now = new Date(2023, 1, 25, 15, 30, 0, 0);
+
+      // if is not today clear interval and reset progress bar to 0
+      if (now.getUTCDate() != this.startTime.getUTCDate()) {
+        console.log(
+          "pas aujourd'hui  : " +
+            now.getUTCDate() +
+            " != " +
+            this.startTime.getUTCDate() +
+            " subject : " +
+            this.subject
+        );
+        this.coursPourcent = 0;
+        this.coursPourcentVisible = false;
+        clearInterval(this.intervalUpdateProgressDiv);
+        return false;
+      }
+
+      // now is between start and end
+      if (
+        now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds() >=
+          this.startTime.getHours() * 3600 +
+            this.startTime.getMinutes() * 60 +
+            this.startTime.getSeconds() &&
+        now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds() <=
+          this.endTime.getHours() * 3600 +
+            this.endTime.getMinutes() * 60 +
+            this.endTime.getSeconds()
+      ) {
+        console.log("cours en cours");
+        let coursPourcent =
+          ((now.getHours() * 3600 +
+            now.getMinutes() * 60 +
+            now.getSeconds() -
+            (this.startTime.getHours() * 3600 +
+              this.startTime.getMinutes() * 60 +
+              this.startTime.getSeconds())) /
+            (this.endTime.getHours() * 3600 +
+              this.endTime.getMinutes() * 60 +
+              this.endTime.getSeconds() -
+              (this.startTime.getHours() * 3600 +
+                this.startTime.getMinutes() * 60 +
+                this.startTime.getSeconds()))) *
+          100;
+
+        this.coursPourcentVisible = true;
+
+        setTimeout(() => {
+          this.coursPourcent = coursPourcent;
+          console.log("coursPourcent : " + coursPourcent);
+        }, 100);
+      }
+    },
+    autoUpdateProgressDiv() {
+        //clear interval if already exist
+        if(this.intervalUpdateProgressDiv != null){
+            clearInterval(this.intervalUpdateProgressDiv);
+        }
+      this.intervalUpdateProgressDiv = setInterval(
+        () => {
+            this.updateProgressDiv()        
+        },
+        5000
+      );
+    },
+  },
+  mounted() {
+    if (this.distance) {
+      this.classes += "distance ";
+    }
+
+    if (this.lengthCours > 1.2) {
+      this.classes += "long ";
+    }
+
+    this.newColor = subjectColor.lightenColor(this.color, -20);
+    return false;
+  },
+  beforeUnmount() {
+    clearInterval(this.intervalUpdateProgressDiv);
+  },
+  beforeUpdate() {
+    console.log("beforeUpdate");
+    this.beforeRenderedProgressDiv();
+
+  },
+});
 </script>
 
 <template>
-    <div class="dist" v-if="distance && !sameTime"></div>
-    <div :class="classes + isCancelled" :style="`--backgroundColor: ${color};`" v-if="!sameTime" @click="openCours()">
-        <div class="CoursTime">
-            <p class="start">{{ start }}</p>
-            <p class="end">{{ end }}</p>
-        </div>
-        <div class="cours">
-            <ion-ripple-effect></ion-ripple-effect>
-            <div class="bg"></div>
-            
-            <div class="CoursColor" slot="start"></div>
-
-            <ion-label>
-                <div class="CoursData">
-                    <h3 class="CoursName">{{subject}}</h3>
-
-                    <div class="CoursInfoContainer">
-                        <div class="CoursInfo room" v-if="(rooms !== null)">
-                            <span class="material-symbols-outlined smol" slot="start">location_on</span>
-
-                            <p>{{rooms}}</p>
-                        </div>
-                        <div class="separator" v-if="(rooms !== null)"></div>
-                        <div class="CoursInfo">
-                            <span class="material-symbols-outlined smol" slot="start">face</span>
-
-                            <p>{{teachers}}</p>
-                        </div>
-                    </div>
-
-                    <p class="CoursInfo Status" v-if="status">
-                        <span v-if="!isCancelled" class="material-symbols-outlined smol" slot="start">info</span>
-                        <span v-if="isCancelled" class="material-symbols-outlined smol" slot="start">error</span>
-
-                        {{status}}
-                    </p>
-                </div>
-            </ion-label>
-
-            <div slot="end" class="TypeIcon">
-                <span v-if="isTest">
-                    <span class="material-symbols-outlined smol">quiz</span>
-                </span>
-
-                <span v-if="isOuting">
-                    <span class="material-symbols-outlined smol">directions_walk</span>
-                </span>
-
-                <span v-if="memo">
-                    <span class="material-symbols-outlined smol">sticky_note_2</span>
-                </span>
-            </div>
-        </div>
+  <div class="dist" v-if="distance && !sameTime"></div>
+  <div
+    :class="classes + isCancelled"
+    :style="`--backgroundColor: ${color};`"
+    v-if="!sameTime"
+    @click="openCours()"
+  >
+    <div class="CoursTime">
+      <p class="start">{{ start }}</p>
+      <p class="end">{{ end }}</p>
     </div>
+    <div class="cours">
+      <ion-ripple-effect></ion-ripple-effect>
+      <div
+        v-if="coursPourcentVisible"
+        class="progressDiv"
+        :style="`width: ${coursPourcent}%;`"
+      ></div>
+      <div class="bg"></div>
+
+      <div class="CoursColor" slot="start"></div>
+
+      <ion-label>
+        <div class="CoursData">
+          <h3 class="CoursName">{{ subject }}</h3>
+
+          <div class="CoursInfoContainer">
+            <div class="CoursInfo room" v-if="rooms !== null">
+              <span class="material-symbols-outlined smol" slot="start"
+                >location_on</span
+              >
+
+              <p>{{ rooms }}</p>
+            </div>
+            <div class="separator" v-if="rooms !== null"></div>
+            <div class="CoursInfo">
+              <span class="material-symbols-outlined smol" slot="start"
+                >face</span
+              >
+
+              <p>{{ teachers }}</p>
+            </div>
+          </div>
+
+          <p class="CoursInfo Status" v-if="status">
+            <span
+              v-if="!isCancelled"
+              class="material-symbols-outlined smol"
+              slot="start"
+              >info</span
+            >
+            <span
+              v-if="isCancelled"
+              class="material-symbols-outlined smol"
+              slot="start"
+              >error</span
+            >
+
+            {{ status }}
+          </p>
+        </div>
+      </ion-label>
+
+      <div slot="end" class="TypeIcon">
+        <span v-if="isTest">
+          <span class="material-symbols-outlined smol">quiz</span>
+        </span>
+
+        <span v-if="isOuting">
+          <span class="material-symbols-outlined smol">directions_walk</span>
+        </span>
+
+        <span v-if="memo">
+          <span class="material-symbols-outlined smol">sticky_note_2</span>
+        </span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-    .TypeIcon {
-        position: absolute;
-        right: 10px;
-        top: 40%;
-    }
+.TypeIcon {
+  position: absolute;
+  right: 10px;
+  top: 40%;
+}
 
-    .mainElemCours {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+.mainElemCours {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-        gap: 20px;
+  gap: 20px;
 
-        margin: 8px 14px;
-        margin-bottom: 10px;
-    }
+  margin: 8px 14px;
+  margin-bottom: 10px;
+}
 
-    .mainElemCours.long .cours .CoursData {
-        /* padding: 15px 0px; */
-    }
+.mainElemCours.long .cours .CoursData {
+  /* padding: 15px 0px; */
+}
 
-    .dist {
-        width: 90vw;
-        height: 3px;
+.dist {
+  width: 90vw;
+  height: 3px;
 
-        margin: 15px 5vw;
+  margin: 15px 5vw;
 
-        background: var(--ion-color-step-50);
-        border-radius: 9px;
-    }
+  background: var(--ion-color-step-50);
+  border-radius: 9px;
+}
 
-    .md .dist {
-        border-radius: 0;
-        height: 2px;
-        background: var(--ion-color-step-100);
-    }
+.md .dist {
+  border-radius: 0;
+  height: 2px;
+  background: var(--ion-color-step-100);
+}
 
-    .cours {
-        width: 100%;
+.cours {
+  width: 100%;
 
-        display: flex;
-        align-items: stretch;
+  display: flex;
+  align-items: stretch;
 
-        background: var(--ion-color-step-50);
-        border-radius: 9px;
+  background: var(--ion-color-step-50);
+  border-radius: 9px;
 
-        padding: 0px 0px;
+  padding: 0px 0px;
 
-        overflow: hidden;
-        isolation: isolate;
+  overflow: hidden;
+  isolation: isolate;
 
-        position: relative;
-    }
+  position: relative;
+}
 
-    .cours .bg {
-        background: var(--backgroundColor);
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        opacity: 0.05;
-        filter: saturate(1.5);
-    }
+.cours .bg {
+  background: var(--backgroundColor);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.05;
+  filter: saturate(1.5);
+}
 
-    .ios .CoursData {
-        padding-bottom: 10px;
-    }
+.ios .CoursData {
+  padding-bottom: 10px;
+}
 
-    .CoursData {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    
-        width: calc(100% - 20px);
-        height: 100%;
+.CoursData {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
-        padding: 8px 0px;
-    }
+  width: calc(100% - 20px);
+  height: 100%;
 
-    .CoursStart {
-        font-size: 0.9em;
-        font-weight: 400;
+  padding: 8px 0px;
+}
 
-        opacity: 0.7;
+.CoursStart {
+  font-size: 0.9em;
+  font-weight: 400;
 
-        position: absolute;
-        top: 11px;
-        right: 16px;
-    }
+  opacity: 0.7;
 
-    .CoursName {
-        font-size: 1.2em;
-        font-weight: 600 !important;
-        margin-top: 1px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: calc(100vw - 145px);
-    }
+  position: absolute;
+  top: 11px;
+  right: 16px;
+}
 
-    @media screen and (prefers-color-scheme: light) {
-        .cours {
-            background: none;
-        }
+.CoursName {
+  font-size: 1.2em;
+  font-weight: 600 !important;
+  margin-top: 1px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: calc(100vw - 145px);
+}
 
-        .cours .bg {
-            background: var(--backgroundColor);
-            opacity: 0.10;
-        }
+@media screen and (prefers-color-scheme: light) {
+  .cours {
+    background: none;
+  }
 
-        .CoursName {
-            color: var(--backgroundColor);
-            filter: brightness(0.6);
-        }
-    }
+  .cours .bg {
+    background: var(--backgroundColor);
+    opacity: 0.1;
+  }
 
-    @media screen and (prefers-color-scheme: dark) {
-        .cours .bg {
-            background: var(--backgroundColor);
-            opacity: 0.1;
-        }
-    }
+  .CoursName {
+    color: var(--backgroundColor);
+    filter: brightness(0.6);
+  }
+}
 
-    .CoursColor {
-        width: 4px;
-        margin-right: 15px !important;
-        background: var(--backgroundColor);
-    }
+@media screen and (prefers-color-scheme: dark) {
+  .cours .bg {
+    background: var(--backgroundColor);
+    opacity: 0.1;
+  }
+}
 
-    .CoursInfoContainer {
-        margin-top: 2px;
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
+.CoursColor {
+  width: 4px;
+  margin-right: 15px !important;
+  background: var(--backgroundColor);
+}
 
-        width: calc(100vw - 145px);
-    }
+.CoursInfoContainer {
+  margin-top: 2px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
 
-    .CoursInfoContainer .separator {
-        width: 1px;
-        height: 100%;
-        background: var(--ion-color-step-200);
-    }
+  width: calc(100vw - 145px);
+}
 
-    .cours .material-symbols-outlined {
-        font-variation-settings:
-        'FILL' 1,
-        'wght' 400,
-        'GRAD' 1,
-        'opsz' 14 !important;
-    }
+.CoursInfoContainer .separator {
+  width: 1px;
+  height: 100%;
+  background: var(--ion-color-step-200);
+}
 
-    .CoursInfo {
-        display: flex;
-        align-items: center;
+.cours .material-symbols-outlined {
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 1, "opsz" 14 !important;
+}
 
-        font-size: 0.9em;
-        font-weight: 400;
+.CoursInfo {
+  display: flex;
+  align-items: center;
 
-        opacity: 0.7;
+  font-size: 0.9em;
+  font-weight: 400;
 
-        width: fit-content;
-        max-width: 55%;
+  opacity: 0.7;
 
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        margin-bottom: 3px;
-    }
+  width: fit-content;
+  max-width: 55%;
 
-    .CoursInfo span {
-        margin-right: 5px;
-    }
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 3px;
+}
 
-    .CoursInfo.room {
-        opacity: 100%;
-        font-weight: 600;
-    }
+.CoursInfo span {
+  margin-right: 5px;
+}
 
-    .Status {
-        opacity: 1;
-        color: #fff;
-        padding: 5px 10px;
-        background: #ffffff10;
-        border-radius: 300px;
-        margin-top: 5px;
-        max-width: fit-content;
-    }
+.CoursInfo.room {
+  opacity: 100%;
+  font-weight: 600;
+}
 
-    @media screen and (prefers-color-scheme: light) {
-        .Status {
-            color: var(--ion-color-warning);
-            background: rgba(var(--ion-color-warning-rgb), 0.1);
-        }
-    }
+.Status {
+  opacity: 1;
+  color: #fff;
+  padding: 5px 10px;
+  background: #ffffff10;
+  border-radius: 300px;
+  margin-top: 5px;
+  max-width: fit-content;
+}
 
-    .true .cours {
-        background: var(--ion-color-danger-dark) !important;
-        --backgroundColor: var(--ion-color-danger) !important;
-    }
+@media screen and (prefers-color-scheme: light) {
+  .Status {
+    color: var(--ion-color-warning);
+    background: rgba(var(--ion-color-warning-rgb), 0.1);
+  }
+}
 
-    .true .cours .CoursColor {
-        background: var(--ion-color-danger) !important;
-    }
+.true .cours {
+  background: var(--ion-color-danger-dark) !important;
+  --backgroundColor: var(--ion-color-danger) !important;
+}
 
-    .true .cours .Status {
-            color: var(--ion-color-danger);
-            background: rgba(var(--ion-color-danger-rgb), 0.1);
-    }
+.true .cours .CoursColor {
+  background: var(--ion-color-danger) !important;
+}
 
-    .CoursTime {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+.true .cours .Status {
+  color: var(--ion-color-danger);
+  background: rgba(var(--ion-color-danger-rgb), 0.1);
+}
 
-        height: 100%;
+.CoursTime {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-        padding: 0px 0px;
-        padding-left: 3px;
+  height: 100%;
 
-        width: 60px;
-    }
+  padding: 0px 0px;
+  padding-left: 3px;
 
-    .CoursTime * {
-        margin: 0;
-        padding: 0;
-    }
+  width: 60px;
+}
 
-    .CoursTime .start {
-        margin-bottom: 3px;
+.CoursTime * {
+  margin: 0;
+  padding: 0;
+}
 
-        font-size: 1.2em;
-        font-weight: 600;
+.CoursTime .start {
+  margin-bottom: 3px;
 
-        font-family: var(--papillon-font);
-    }
+  font-size: 1.2em;
+  font-weight: 600;
 
-    .CoursTime .end {
-        opacity: 0.7;
-        font-size: 0.9em;
-        font-weight: 400;
-    }
+  font-family: var(--papillon-font);
+}
+
+.CoursTime .end {
+  opacity: 0.7;
+  font-size: 0.9em;
+  font-weight: 400;
+}
+
+.progressDiv {
+  transition: width 2s ease-out;
+  position: absolute;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 1;
+  z-index: -1;
+  border-radius: 0 5px 5px 0;
+  background-color: var(--backgroundColor);
+  width: 0%;
+}
 </style>
