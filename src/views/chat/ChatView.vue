@@ -140,11 +140,16 @@
 				ConversationView: ConversationView,
 				newConvModalOpen: false,
 				checkedRecipient: [],
+				isLoading: false
 			}
 		},
 		mounted() {
+			this.isLoading = true;
+
             GetConversations().then((res) => {
 				this.conversations = res;
+
+                this.isLoading = true;
             })
 
 			GetRecipients().then((res) => {
@@ -194,10 +199,17 @@
 				</ion-button>
 			</IonFab>
 
-			<div class="NoCours" v-if="this.conversations.length == 0">
+			<div class="NoCours" v-if="this.conversations.length == 0 && !isLoading">
 				<span class="material-symbols-outlined mdls">forum</span>
 				<h2>Aucune conversation n'a été trouvée.</h2>
 				<p>Essayez d'envoyer un message à quelqu'un dans votre établissement.</p>
+			</div>
+
+			<div class="NoCours" v-if="isLoading">
+				<IonSpinner></IonSpinner>
+				<br/>
+				<h2>Téléchargement des conversations...</h2>
+				<p>Veuillez patienter pendant qu'on récupère les conversations depuis nos serveurs...</p>
 			</div>
 
 			<IonList>
