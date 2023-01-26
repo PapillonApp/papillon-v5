@@ -43,8 +43,6 @@ async function getPronoteRecipients(forceReload) {
 	let Recipients = {};
 	return axios.get(URL)
 		.then((response) => {
-            console.log(response.data);
-
 			Recipients = response.data;
 
 			// save Recipients to localstorage cache with today's date

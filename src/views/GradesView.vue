@@ -217,9 +217,6 @@
                 this.isLoading = false;
 
                 this.classAverages = data.averages.class;
-
-                
-                console.log(this.grades)
             });
 
             this.getPeriods();

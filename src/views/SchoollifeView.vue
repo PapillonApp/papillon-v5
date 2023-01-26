@@ -46,31 +46,30 @@
 					GetAbsences(force).then((res) => {
 						this.absences = res;
 						this.absError = false;
-
-						console.log(res);
 					})
 					.catch((err) => {
+						console.error(err);
 						this.absError = true;
 					});
 
 					GetPunishments(force).then((res) => {
 						this.punishments = res;
-						console.log(res);
 					})
 					.catch((err) => {
+						console.error(err);
 						this.punishmentsError = true;
 					});
 
 					GetDelays(force).then((res) => {
 						this.delays = res;
-						console.log(res);
 					})
 					.catch((err) => {
+						console.error(err);
 						this.delaysError = true;
 					});
 				}
 				catch (err) {
-					console.log(err);
+					console.error(err);
 					this.punishmentsError = true;
 					this.absError = true;
 					this.delaysError = true;

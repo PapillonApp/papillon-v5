@@ -118,7 +118,7 @@ AndroidShortcuts.isDynamicSupported().then((result) => {
 });
 
 // save logs to localstorage
-// console.log, console.warn, console.error
+// console.log, console.warn, console.error, console.info, console.debug
 
 
 // don't affect console.log, console.warn, console.error
