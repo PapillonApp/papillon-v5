@@ -106,7 +106,8 @@ export default defineComponent({
       coursPourcent: 0,
       coursPourcentVisible: false,
       intervalUpdateProgressDiv: null,
-      showPastProgress: localStorage.getItem("tweakProgressBarShowPast") != "false"
+      showPastProgress:
+        localStorage.getItem("tweakProgressBarShowPast") != "false",
     };
   },
   setup() {
@@ -117,8 +118,8 @@ export default defineComponent({
       this.$emit("open");
     },
     beforeRenderedProgressDiv() {
-    //check in localstorage if progress bar is enabled
-    if (localStorage.getItem("tweakProgressBar") != "true") return false;
+      //check in localstorage if progress bar is enabled
+      if (localStorage.getItem("tweakProgressBar") != "true") return false;
 
       let now = new Date();
       //mettre l'heur a 14H30 le 24/01/2023 (europe) pour tester le cours en cours
@@ -137,10 +138,9 @@ export default defineComponent({
           this.coursPourcentVisible = false;
           clearInterval(this.intervalUpdateProgressDiv);
         }
-
       } else {
-        if(!this.coursPourcentVisible){
-        this.coursPourcentVisible = true;
+        if (!this.coursPourcentVisible) {
+          this.coursPourcentVisible = true;
         }
         this.autoUpdateProgressDiv();
         this.updateProgressDiv();
@@ -170,16 +170,16 @@ export default defineComponent({
       // if cours is passed
       if (
         now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds() >
-        this.endTime.getHours() * 3600 +
-          this.endTime.getMinutes() * 60 +
-          this.endTime.getSeconds() && this.showPastProgress
+          this.endTime.getHours() * 3600 +
+            this.endTime.getMinutes() * 60 +
+            this.endTime.getSeconds() &&
+        this.showPastProgress
       ) {
         console.log("cours passé");
         this.coursPourcentVisible = true;
 
-        setTimeout(() => {
-          this.coursPourcent = 100;
-        }, this.startTime.getHours() * 100);
+        this.coursPourcent = 100;
+
         return false;
       }
 
@@ -215,20 +215,17 @@ export default defineComponent({
         setTimeout(() => {
           this.coursPourcent = coursPourcent;
           console.log("coursPourcent : " + coursPourcent);
-        }, this.showPastProgress ? (this.startTime.getHours() * 100) : 100); // if showPastProgress is true, wait other cours passed animation
+        }, 100);
       }
     },
     autoUpdateProgressDiv() {
-        //clear interval if already exist
-        if(this.intervalUpdateProgressDiv != null){
-            clearInterval(this.intervalUpdateProgressDiv);
-        }
-      this.intervalUpdateProgressDiv = setInterval(
-        () => {
-            this.updateProgressDiv()        
-        },
-        5000
-      );
+      //clear interval if already exist
+      if (this.intervalUpdateProgressDiv != null) {
+        clearInterval(this.intervalUpdateProgressDiv);
+      }
+      this.intervalUpdateProgressDiv = setInterval(() => {
+        this.updateProgressDiv();
+      }, 5000);
     },
   },
   mounted() {
@@ -244,7 +241,8 @@ export default defineComponent({
     return false;
   },
   beforeUnmount() {
-    if (this.intervalUpdateProgressDiv != null) clearInterval(this.intervalUpdateProgressDiv);
+    if (this.intervalUpdateProgressDiv != null)
+      clearInterval(this.intervalUpdateProgressDiv);
   },
   beforeUpdate() {
     console.log("beforeUpdate");
