@@ -352,13 +352,12 @@
                 </ion-item>
 
                 <ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0" style="margin-top: 12px;" class="nextCours" lines="none">
-                    <ion-ripple-effect></ion-ripple-effect>
                     <div slot="start" style="margin-left: 5px; margin-right: 20px;">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                     </div>
                     <ion-label>
                         <h2>Aucune connexion internet</h2>
-                        <p>Veuillez réessayer plus tard...</p>
+                        <p>Les cours ne peuvent pas être chargés, réessayer plus tard...</p>
                     </ion-label>
                 </ion-item>
 
@@ -416,10 +415,13 @@
                     </ion-item>
                 </ion-item-group>
 
-                <ion-item v-if="homeworks.error" lines="none">
+                <ion-item v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0" lines="none">
+                    <div slot="start" style="margin-left: 5px; margin-right: 20px;">
+                        <span class="material-symbols-outlined mdls">wifi_off</span>
+                    </div>
                     <ion-label>
-                        <h2>Erreur</h2>
-                        <p>{{ homeworks.error }}</p>
+                        <h2>Aucune connexion internet</h2>
+                        <p>Les devoirs ne peuvent pas être chargés, réessayer plus tard...</p>
                     </ion-label>
                 </ion-item>
 
@@ -428,14 +430,16 @@
                         <p>Vous n'avez aucun devoir à faire durant 7 jours.</p>
                     </ion-label>
                 </ion-item>
-
-                <div v-if="homeworks.length !== 0"><ion-item v-if="homeworks.loading" lines="none">
-                    <IonSpinner slot="start"></IonSpinner>
+                
+                <ion-item v-if="homeworks.loading && homeworks.length == 0" lines="none">
+                    <div slot="start" style="margin-left: 5px; margin-right: 20px;">
+                        <IonSpinner></IonSpinner>
+                    </div>
                     <ion-label>
-                        <h2>Chargement...</h2>
+                        <h2>Veuillez patienter</h2>
                         <p>Chargement des devoirs...</p>
                     </ion-label>
-                </ion-item></div>
+                </ion-item>
             </ion-list>
         </div>
 
