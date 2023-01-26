@@ -75,10 +75,13 @@
 			},
 			getAccountInfo() {
 				try {
-					this.account.name = JSON.parse(localStorage.getItem('userData')).student.name;
-					this.account.etab = JSON.parse(localStorage.getItem('userData')).class.school;
-					this.account.etabUrl = JSON.parse(localStorage.getItem("loginData")).url;
-					this.account.cas = JSON.parse(localStorage.getItem("loginData")).cas;
+					let loginData = JSON.parse(atob(localStorage.getItem('loginData')));
+					let userData = JSON.parse(localStorage.getItem('userData'));
+
+					this.account.name = userData.student.name;
+					this.account.etab = userData.class.school;
+					this.account.etabUrl = loginData.url;
+					this.account.cas = loginData.cas;
 
 					if (this.account.cas == "") {
 						this.account.cas = "Aucun";
@@ -93,21 +96,21 @@
 				}
 			},
 			getLocalStorageSize() {
-                // get localStorage size in kb
-                let localStorageSize = 0;
-                for (let i = 0; i < localStorage.length; i++) {
-                    localStorageSize += localStorage.getItem(localStorage.key(i)).length;
-                }
+				// get localStorage size in kb
+				let localStorageSize = 0;
+				for (let i = 0; i < localStorage.length; i++) {
+					localStorageSize += localStorage.getItem(localStorage.key(i)).length;
+				}
 
-                // convert to kb
-                localStorageSize = localStorageSize / 1024;
+				// convert to kb
+				localStorageSize = localStorageSize / 1024;
 
-                // round to 2 decimals
-                localStorageSize = Math.round(localStorageSize * 100) / 100;
+				// round to 2 decimals
+				localStorageSize = Math.round(localStorageSize * 100) / 100;
 
-                // return size
-                return localStorageSize;
-            },
+				// return size
+				return localStorageSize;
+			},
 			getTypeColor(type) {
 				switch (type) {
 					case "error":
@@ -119,20 +122,20 @@
 				}
 			},
 			getApiVersion() {
-                const API = this.$api;
+				const API = this.$api;
 
-                let cacheApiVersion = localStorage.getItem('apiVersion');
+				let cacheApiVersion = localStorage.getItem('apiVersion');
 
-                fetch(API + "/infos")
-                    .then(response => response.json())
-                    .then(result => {
-                        let apiVer = result.version;
-                        localStorage.setItem('apiVersion', apiVer);
-                        this.apiVersion = apiVer;
-                    });
+				fetch(API + "/infos")
+					.then(response => response.json())
+					.then(result => {
+						let apiVer = result.version;
+						localStorage.setItem('apiVersion', apiVer);
+						this.apiVersion = apiVer;
+					});
 
-                this.apiVersion = cacheApiVersion ?? 'Inconnue';
-            }, 
+				this.apiVersion = cacheApiVersion ?? 'Inconnue';
+			}, 
 			async share() {
 				try {
 					await Share.share({
