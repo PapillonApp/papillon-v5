@@ -7,9 +7,9 @@ import GetToken from '@/functions/login/GetToken.js';
 
 // main function
 function getAbsences(forceReload) {
-    // as only pronote is supported for now, we can just return the pronote absences
+	// as only pronote is supported for now, we can just return the pronote absences
 
-    return getPronoteAbsences(forceReload);
+	return getPronoteAbsences(forceReload);
 }
 
 async function getPronoteAbsences(forceReload) {
@@ -39,7 +39,7 @@ async function getPronoteAbsences(forceReload) {
 
 			absences = constructPronoteAbsences(absences);
 			
-            let today = new Date();
+			let today = new Date();
 			let cacheElement = {
 				date: today,
 				absences: response.data

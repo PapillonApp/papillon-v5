@@ -7,9 +7,9 @@ import GetToken from '@/functions/login/GetToken.js';
 
 // main function
 function getPunishments(forceReload) {
-    // as only pronote is supported for now, we can just return the pronote punishments
+	// as only pronote is supported for now, we can just return the pronote punishments
 
-    return getPronotePunishements(forceReload);
+	return getPronotePunishements(forceReload);
 }
 
 async function getPronotePunishements(forceReload) {
@@ -80,18 +80,18 @@ function constructPronotePunishments(punishments) {
 				id: punishment.id,
 				reasons: punishment.reason,
 				nature: punishment.nature,
-				givenBy: punishment.giver
+				givenBy: punishment.given_by
 			},
 			date: {
 				givenDate: new Date(punishment.date),
 				schedules: punishment.schedule,
 				duration: punishment.duration
 			},
-			homeworks: punishment.homework,
+			homework: punishment.homework,
 			status: {
 				isSchedulable: punishment.schedulable,
 				isExclusion: punishment.exclusion,
-				isDuringLesson: punishment.durring_lesson,
+				isDuringLesson: punishment.during_lesson,
 			}
 		}
 		

@@ -10,6 +10,7 @@
 		IonItem,
 		IonChip,
 		IonPage,
+		IonModal,
 	} from '@ionic/vue';
 
 	const displayToast = require('@/functions/utils/displayToast.js');
@@ -34,6 +35,7 @@
 			IonItem,
 			IonChip,
 			IonPage,
+			IonModal,
 		},
 		setup() {
 			return {
@@ -82,6 +84,76 @@
 				setTimeout(() => {
 					event.detail.complete();
 				}, 2000);
+			},
+			openMissedModal(absence) {
+				this.selectedEvent = {
+					type: 1,
+					title: "Absence",
+					data: {
+						date: {
+							from: absence.date.from,
+							to: absence.date.to,
+							hours: absence.data.hours,
+						},
+						justified: absence.data.isJustified,
+						reasons: [...absence.data.reasons]
+					}
+				};
+				
+				console.debug(this.selectedEvent)
+				this.$refs.eventModal.$el.present(absence);
+			},
+			openPunishmentModal(punishment) {
+				let schedules = [];
+				if (punishment.status.isSchedulable) {
+					punishment.date.schedules.forEach(schedule => {
+						schedules.push({
+							duration: schedule.duration,
+							date: schedule.start,
+						})
+					});
+				}
+
+				this.selectedEvent = {
+					type: 2,
+					title: "Sanction",
+					data: {
+						reasons: {
+							text: punishment.data.reasons.text.join(', '),
+							circumstances: punishment.data.reasons.circumstances
+						},
+						giver: punishment.data.givenBy,
+						nature: punishment.data.nature,
+						homework: punishment.homework.text,
+						date: {
+							givenDate: punishment.date.givenDate,
+							duration: punishment.date.duration,
+							schedules: schedules
+						},
+						status: {...punishment.status},
+						documents: {
+							reasons: [...punishment.data.reasons.documents],
+							homework: [...punishment.homework.documents]
+						}
+					}
+				};
+
+				this.$refs.eventModal.$el.present(punishment);
+			},
+			openDelayModal(delay) {
+				this.selectedEvent = {
+					type: 3,
+					title: "Retard",
+					data: {
+						date: delay.date.date,
+						duration: delay.date.duration,
+						justified: delay.data.isJustified,
+						justification: delay.data.justification,
+						reasons: [...delay.data.reasons]
+					}
+				};
+
+				this.$refs.eventModal.$el.present(delay);
 			}
 		},
 		data() {
@@ -91,7 +163,12 @@
 				punishments: [],
 				punishmentsError: false,
 				delays: [],
-				delaysError: false
+				delaysError: false,
+				selectedEvent: {
+					type: 0, // 1 = absence, 2 = punishment, 3 = delay
+					title: "",
+					data: {}
+				}
 			}
 		},
 		mounted() {
@@ -142,7 +219,7 @@
 					</ion-label>
 				</ion-item>
 
-				<ion-item v-for="(miss, i) in absences" :key="i">
+				<ion-item v-for="(miss, i) in absences" :key="i" @click="openMissedModal(miss)">
 					<span class="material-symbols-outlined mdls" slot="start">door_open</span>
 
 					<ion-label>
@@ -172,7 +249,7 @@
 
 				<ion-item v-if="punishmentsError">
 					<ion-label>
-						<p>Impossible de récupérer les absences pour le moment.</p>
+						<p>Impossible de récupérer les sanctions pour le moment.</p>
 					</ion-label>
 				</ion-item>
 
@@ -182,11 +259,11 @@
 					</ion-label>
 				</ion-item>
 
-				<ion-item v-for="(punish, i) in punishments" :key="i">
+				<ion-item v-for="(punish, i) in punishments" :key="i" @click="openPunishmentModal(punish)">
 					<span class="material-symbols-outlined mdls" slot="start">gavel</span>
 
 					<ion-label>
-						<h2>{{ punish.homeworks.text }}</h2>
+						<h2>{{ punish.homework.text }}</h2>
 
 						<p>{{ punish.data.reasons.text[0] }} - {{ punish.data.reasons.circumstances }}</p>
 
@@ -212,7 +289,7 @@
 					</ion-label>
 				</ion-item>
 
-				<ion-item v-for="(delay, i) in delays" :key="i">
+				<ion-item v-for="(delay, i) in delays" :key="i" @click="openDelayModal(delay)">
 					<span class="material-symbols-outlined mdls" slot="start">schedule</span>
 
 					<ion-label>
@@ -235,7 +312,18 @@
 				</ion-item>
 			</ion-list>
 
-			<br /><br /><br /><br /><br />
+			<br /><br />
+
+			<IonModal ref="eventModal" :keep-contents-mounted="true" :initial-breakpoint="0.5" :breakpoints="[0, 0.5, 0.9]" :handle="true" :canDismiss="true">
+				<IonHeader>
+					<IonToolbar>
+						<ion-title>{{ selectedEvent.title }}</ion-title>
+					</IonToolbar>
+				</IonHeader>
+				<ion-content>
+					
+				</ion-content>
+			</IonModal>
 
 		</ion-content>
 

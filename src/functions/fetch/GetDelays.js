@@ -7,9 +7,9 @@ import GetToken from '@/functions/login/GetToken.js';
 
 // main function
 function getDelays(forceReload) {
-    // as only pronote is supported for now, we can just return the pronote delays
+	// as only pronote is supported for now, we can just return the pronote delays
 
-    return getPronoteDelays(forceReload);
+	return getPronoteDelays(forceReload);
 }
 
 async function getPronoteDelays(forceReload) {
@@ -37,7 +37,7 @@ async function getPronoteDelays(forceReload) {
 			delays = response.data;
 			delays = constructPronoteDelays(delays);
 			
-            let today = new Date();
+			let today = new Date();
 			let cacheElement = {
 				date: today,
 				delays: response.data
