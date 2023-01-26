@@ -125,14 +125,6 @@ export default defineComponent({
       //mettre l'heur a 14H30 le 24/01/2023 (europe) pour tester le cours en cours
       //  now = new Date(2023, 1, 25, 15, 30, 0, 0);
       if (now.getUTCDate() != this.startTime.getUTCDate()) {
-        console.log(
-          "pas aujourd'hui  : " +
-            now.getUTCDate() +
-            " != " +
-            this.startTime.getUTCDate() +
-            " subject : " +
-            this.subject
-        );
         if (this.coursPourcentVisible) {
           this.coursPourcent = 0;
           this.coursPourcentVisible = false;
@@ -153,14 +145,6 @@ export default defineComponent({
 
       // if is not today clear interval and reset progress bar to 0
       if (now.getUTCDate() != this.startTime.getUTCDate()) {
-        console.log(
-          "pas aujourd'hui  : " +
-            now.getUTCDate() +
-            " != " +
-            this.startTime.getUTCDate() +
-            " subject : " +
-            this.subject
-        );
         this.coursPourcent = 0;
         this.coursPourcentVisible = false;
         clearInterval(this.intervalUpdateProgressDiv);
@@ -175,11 +159,8 @@ export default defineComponent({
             this.endTime.getSeconds() &&
         this.showPastProgress
       ) {
-        console.log("cours passé");
         this.coursPourcentVisible = true;
-
         this.coursPourcent = 100;
-
         return false;
       }
 
@@ -194,7 +175,6 @@ export default defineComponent({
             this.endTime.getMinutes() * 60 +
             this.endTime.getSeconds()
       ) {
-        console.log("cours en cours");
         let coursPourcent =
           ((now.getHours() * 3600 +
             now.getMinutes() * 60 +
@@ -214,7 +194,6 @@ export default defineComponent({
 
         setTimeout(() => {
           this.coursPourcent = coursPourcent;
-          console.log("coursPourcent : " + coursPourcent);
         }, 100);
       }
     },
@@ -245,7 +224,6 @@ export default defineComponent({
       clearInterval(this.intervalUpdateProgressDiv);
   },
   beforeUpdate() {
-    console.log("beforeUpdate");
     this.beforeRenderedProgressDiv();
   },
 });
