@@ -547,7 +547,7 @@
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
                     </div>
 
-                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].loading && $data[`${day}`].error == 'STILL_LOADING'">
+                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].loading">
                         <IonSpinner></IonSpinner>
                         <br/>
                         <h2>Téléchargement des prochains cours...</h2>
