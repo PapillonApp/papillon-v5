@@ -15,7 +15,14 @@ function getPronoteLogin() {
     if(!waitingForToken) {
         // gather vars
         const API = app.config.globalProperties.$api;
-        let loginData = JSON.parse(atob(localStorage.getItem('loginData')));
+        let loginData = null;
+        try { 
+            loginData = JSON.parse(atob(localStorage.getItem('loginData')));
+        } catch(e) {
+            displayToast.presentError("Merci de vous reconnecter.", "danger", `Une erreur s'est produite lors de la récupération des données de connexion. Merci de vous reconnecter. (${e})`)
+            console.error(`[Connect to Pronote API] Error while parsing loginData: ${e}`);
+            return;
+        }
 
         // get username and password
         let username = loginData.username;
