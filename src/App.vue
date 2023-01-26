@@ -1,20 +1,20 @@
 <script lang="ts">
-  import { IonApp, IonContent, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController } from '@ionic/vue';
+    import { IonApp, IonContent, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController } from '@ionic/vue';
 
-  import { defineComponent, ref } from 'vue';
-  import { useRoute } from 'vue-router';
+    import { defineComponent, ref } from 'vue';
+    import { useRoute } from 'vue-router';
 
-  import { globeOutline } from 'ionicons/icons';
-  import { AndroidShortcuts } from 'capacitor-android-shortcuts';
+    import { globeOutline } from 'ionicons/icons';
+    import { AndroidShortcuts } from 'capacitor-android-shortcuts';
 
-  const GetUser = require('./functions/fetch/GetUserData');
-  const displayToast = require('./functions/utils/displayToast.js');
+    const GetUser = require('./functions/fetch/GetUserData');
 
-  import { LocalNotifications } from '@capacitor/local-notifications';
+    import { LocalNotifications } from '@capacitor/local-notifications';
 
-  import { SplashScreen } from '@capacitor/splash-screen';
+    import { SplashScreen } from '@capacitor/splash-screen';
 
-  interface UserData {
+    // defines the user data return interface
+    interface UserData {
                 student: {
                     name: string,
                     avatar: string,
@@ -29,7 +29,7 @@
                 }
             }
 
-  export default defineComponent({
+    export default defineComponent({
     name: 'App',
     components: {
         IonApp, 
@@ -66,6 +66,7 @@
     },
     setup() {
         const selectedIndex = ref(0);
+        // defines the tabs shown in the menu
         const appPages = [
             {
                 title: 'Accueil',
@@ -109,12 +110,13 @@
             },
         ];
         
-        // disable some tabs
+        // hides some tabs when they are not anabled
         if(localStorage.getItem('viescolaireEnabled') !== 'true') {
             // remove school life tab
             appPages.splice(4, 1);
         }
         
+        // weird ionic stuff
         const path = window.location.pathname.split('folder/')[1];
         if (path !== undefined) {
             selectedIndex.value = appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());

@@ -1,5 +1,6 @@
 <template>
     <ion-page>
+        <!-- main navigation (contains router and menu) -->
         <ion-nav ref="nav" :root="component"></ion-nav>
     </ion-page>
 </template>
@@ -20,7 +21,7 @@
             };
         },
         mounted() {
-            // make nav globally available
+            // make nav globally available to other components
             (window as any).nav = this.$refs.nav;
         },
     });
