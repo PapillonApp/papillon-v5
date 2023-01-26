@@ -1,4 +1,6 @@
+// Necessary imports for Vue
 import { createApp } from 'vue'
+// Define MainApp.vue as the main component
 import MainApp from './MainApp.vue'
 import router from './router';
 
