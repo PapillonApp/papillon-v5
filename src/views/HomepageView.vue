@@ -351,14 +351,18 @@
                     <!-- <div slot="error" class="progress"><div class="step" style="width: {{ nextCoursProgress }};"></div></div> -->
                 </ion-item>
 
-                <ion-item v-if="timetable.error" lines="none">
+                <ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0" style="margin-top: 12px;" class="nextCours" lines="none">
+                    <ion-ripple-effect></ion-ripple-effect>
+                    <div slot="start" style="margin-left: 5px; margin-right: 20px;">
+                        <span class="material-symbols-outlined mdls">wifi_off</span>
+                    </div>
                     <ion-label>
-                        <h2>Erreur</h2>
-                        <p>{{ timetable.error }}</p>
+                        <h2>Aucune connexion internet</h2>
+                        <p>Veuillez réessayer plus tard...</p>
                     </ion-label>
                 </ion-item>
 
-                <ion-item v-if="noCourses" style="margin-top: 12px;" class="nextCours" lines="none" @click="goto('timetable')">
+                <ion-item v-if="noCourses" style="margin-top: 12px;"  @click="goto('timetable')">
                     <ion-ripple-effect></ion-ripple-effect>
                     <div slot="start" class="emoji">
                         {{ noCoursesEmoji }}
@@ -369,13 +373,15 @@
                     </ion-label>
                 </ion-item>
 
-                <div v-if="timetable.length !== 0"><ion-item v-if="timetable.loading" lines="none">
-                    <IonSpinner slot="start"></IonSpinner>
+                <ion-item v-if="timetable.loading && timetable.length == 0" class="nextCours" lines="none">
+                    <div slot="start" style="margin-left: 5px; margin-right: 20px;">
+                        <IonSpinner></IonSpinner>
+                    </div>
                     <ion-label>
-                        <h2>Chargement...</h2>
+                        <h2>Veuillez patienter</h2>
                         <p>Chargement des cours...</p>
                     </ion-label>
-                </ion-item></div>
+                </ion-item>
             </ion-list>
 
             <ion-list id="comp-hw" ref="comp-hw" lines="none" inset="true">
