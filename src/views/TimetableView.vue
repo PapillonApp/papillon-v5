@@ -101,7 +101,7 @@
                 if (customDay.getDate() == currentDay.getDate() && customDay.getMonth() == currentDay.getMonth() && customDay.getFullYear() == currentDay.getFullYear()) {
                     customCourse.course.time.start = st;
                     customCourse.course.time.end = en;
-                    customCourse.course.course.color = subjectColor.getSubjectColor(customCourse.course.data.subject, subjectColor.getRandomColor());
+                    customCourse.course.course.color = subjectColor.getSubjectColor(customCourse.course.data.subject, subjectColor.getRandomColor(true), true);
                     timetable.push(customCourse.course);
                 }
             });
@@ -533,26 +533,26 @@
                         @open="openCoursModal(cours)"
                     />
 
-                    <div v-if="!$data[`${day}`].loading"><div v-if="!$data[`${day}`].error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
+                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && !$data[`${day}`].error && !$data[`${day}`].loading">
                         <span class="material-symbols-outlined mdls">upcoming</span>
                         <h2>Pas de cours enregistrés pour cette journée</h2>
                         <p>Réessayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
                         <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                    </div></div></div>
+                    </div>
 
-                    <div v-if="!$data[`${day}`].loading"><div v-if="$data[`${day}`].error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
+                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].error == 'ERR_NETWORK' && !$data[`${day}`].loading">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
-                    </div></div></div>
+                    </div>
 
-                    <div v-if="$data[`${day}`].loading" class="Error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
+                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].loading && $data[`${day}`].error == 'STILL_LOADING'">
                         <IonSpinner></IonSpinner>
                         <br/>
                         <h2>Téléchargement des prochains cours...</h2>
                         <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
-                    </div></div>
+                    </div>
                 </IonList>
             </swiper-slide>
         </swiper>
