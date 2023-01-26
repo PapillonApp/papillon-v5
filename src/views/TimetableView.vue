@@ -254,7 +254,6 @@
             let en = new Date();
 
             let stValue = this.$refs.newCoursStartRef.$el.value;
-            console.log(stValue);
 
             // this.$refs.newCoursStart.value returns HH:mm
             st.setHours(stValue.split(':')[0]);

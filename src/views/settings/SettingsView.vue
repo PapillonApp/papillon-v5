@@ -83,8 +83,6 @@
 
                 const res = await actionSheet.onDidDismiss();
                 let result = JSON.stringify(res, null, 2);
-
-                console.log(result);
             },
             logoutFunc() {
                 // empty all local storage

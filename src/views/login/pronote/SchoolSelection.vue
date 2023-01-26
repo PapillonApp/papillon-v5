@@ -130,8 +130,6 @@
                 let postal = e.detail.value
                 postal = postal.normalize("NFD").replace(/\p{Diacritic}/gu, "");
 
-                console.log(postal)
-
                 if(postal.trim() == "") {
                     this.etabs = [];
                     this.etabsEmpty = true;
@@ -289,7 +287,6 @@
                     let resp = response.data.url;
                     let cas_host = resp.split('/')[2];
                     cas_host = cas_host.split('/')[0] || cas_host;
-                    console.log(cas_host);
                     if(cas_host.includes("index-education.net")) {
                         cas_host = "index-education.net";
                     }
@@ -297,8 +294,6 @@
                     if(cas_host.includes("pronote.toutatice.fr")) {
                         cas_host = "www.toutatice.fr";
                     }
-                    console.log(cas_host);
-                    
                     
                     let all_cas_same_host = this.ents.filter(cas => cas.url == cas_host);
 
@@ -320,8 +315,6 @@
                         this.createEntPicker(listToChoose);
                         return;
                     }
-
-                    console.log(url);
 
                     // TODO: Vérifier si ca fonctionne pour toutatice
                     if(isToutatice) {
@@ -383,8 +376,6 @@
                 fetch(API + "/generatetoken", requestOptions)
                     .then(response => response.json())
                     .then(result => {
-                        console.log(result);
-
                         if(!result.token) {
                             if(result.error.includes("probably wrong login information")) {
                                 displayToast.presentError("Identifiants incorrects.", "danger", result.error)

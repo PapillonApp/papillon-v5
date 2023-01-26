@@ -96,8 +96,6 @@
 				fetch(API + "/discussion/reply", requestOptions)
 					.then(response => response.json())
 					.then(result => {
-						console.log(result);
-
                         if (result === 'ok') {
                             this.handleRefresh();
                         } else {

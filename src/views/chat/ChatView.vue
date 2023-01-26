@@ -113,8 +113,6 @@
 				fetch(API + "/discussion/create", requestOptions)
 					.then(response => response.json())
 					.then(result => {
-						console.log(result);
-
 						if(result == "ok") {
 							displayToast.presentToastFull(
 								"Conversation créée",

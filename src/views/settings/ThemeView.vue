@@ -119,7 +119,6 @@
 			this.$refs.mainColorInput.addEventListener('change', (e) => {
 				// get the new value
 				let newColor = e.target.value;
-				console.log(newColor);
 				// apply it to the css variable
 				document.body.style.setProperty('--ion-color-primary', newColor);
 				document.body.style.setProperty('--ion-color-primary-rgb', this.hexToRgb(newColor));
