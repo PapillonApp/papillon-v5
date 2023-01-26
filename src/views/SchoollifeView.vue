@@ -100,7 +100,6 @@
 					}
 				};
 				
-				console.debug(this.selectedEvent)
 				this.$refs.eventModal.$el.present(absence);
 			},
 			openPunishmentModal(punishment) {
