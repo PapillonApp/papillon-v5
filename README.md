@@ -1,33 +1,141 @@
-![image](https://user-images.githubusercontent.com/32978709/211217228-adb2b6b4-af7d-4062-ba11-c10c47c77023.png)
+<br/>
+<p align="center">
+  <a href="https://github.com/PapillonApp/papillon-v5">
+    <img src="https://i.ibb.co/BL8qgJQ/image.png" alt="Logo" width="80" height="80">
+  </a>
 
-![](https://github.com/PapillonApp/papillon-v5/actions/workflows/build.yml/badge.svg)
-![](https://img.shields.io/github/license/PapillonApp/papillon-v5)
-![](https://img.shields.io/github/issues/PapillonApp/papillon-v5)
-![](https://img.shields.io/github/issues-pr/PapillonApp/papillon-v5)
-![](https://img.shields.io/github/languages/top/PapillonApp/papillon-v5)
-![](https://img.shields.io/github/repo-size/PapillonApp/papillon-v5)
-![](https://img.shields.io/github/forks/PapillonApp/papillon-v5?style=social)
-![](https://img.shields.io/github/stars/PapillonApp/papillon-v5?style=social)
+  <h3 align="center">Papillon — Votre vie scolaire</h3>
 
-## Installation
-Installez [Ionic](https://ionicframework.com/docs/intro/cli) et [Capacitor](https://capacitorjs.com/docs/getting-started#install-capacitor),
-puis, à la racine des fichiers du dépôt, exécutez :
-```bash
+  <p align="center">
+    Your timetable, homeworks, grades, news and more in a fresh new UI for any French school service.
+    <br/>
+    <br/>
+    <a href="https://github.com/PapillonApp/papillon-v5"><strong>Explore the docs »</strong></a>
+    <br/>
+    <br/>
+    <a href="https://github.com/PapillonApp/papillon-v5/issues">Report Bug</a>
+    |
+    <a href="https://github.com/PapillonApp/papillon-v5/issues">Request Feature</a>
+  </p>
+</p>
+
+![Downloads](https://img.shields.io/github/downloads/PapillonApp/papillon-v5/total) ![Contributors](https://img.shields.io/github/contributors/PapillonApp/papillon-v5?color=dark-green) ![Issues](https://img.shields.io/github/issues/PapillonApp/papillon-v5) ![License](https://img.shields.io/github/license/PapillonApp/papillon-v5) 
+
+## Table Of Contents
+
+* [About the Project](#about-the-project)
+* [Built With](#built-with)
+* [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
+* [Usage](#usage)
+* [Roadmap](#roadmap)
+* [Contributing](#contributing)
+* [License](#license)
+* [Authors](#authors)
+* [Acknowledgements](#acknowledgements)
+
+## About The Project
+
+![Screenshot](https://user-images.githubusercontent.com/32978709/215285204-18fdc07b-4f30-4722-bf26-31be149d634f.png)
+
+* **Fonctionnalités de Pronote**
+    - 📆 Emploi du temps
+        + Organisation intuitive du temps
+        + Ajout au calendrier
+        + Cours personnalisés
+        + Notifications
+    - 📑 Travail à faire
+        + Gestion intuitive de son planning de travail
+    - 🎓 Notes et compétences
+        + Moyenne générale et moyennes de classe
+        + Remise automatique des notes sur 20
+        + Affichage intuitif en grille
+    - 📂 Contenu des cours et fichiers
+    - 📰 Actualités
+    - 🚪 *Absences, retards et sanctions (bientôt)*
+* **Une interface incroyable**
+    - 🎨 Designée avec soin et précision
+    - ✋ Prête pour un usage à une main
+        + Usage de gestes intuitifs
+    - ✨ S'améliore continuellement grace aux mises à jour régulières
+    - 📱 Look natif pour iOS et Android
+* **Extensions et personnalisation**
+    - 🕺 Police et couleur d'interface personnalisables
+    - 🤯 Étend les fonctionnalités de l'app
+
+## Built With
+
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
+![Ionic](https://img.shields.io/badge/Ionic-%233880FF.svg?style=for-the-badge&logo=Ionic&logoColor=white)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+
+## Getting Started
+
+To get a local copy up and running follow these simple steps.
+
+### Prerequisites
+
+First, grab a copy of this repo and install the needed dependencies to run Papillon locally.
+
+```sh
+npm install -g @ionic/cli
 npm i
 ```
 
-### Démarrer la preview web
-Pour tester l'application dans votre navigateur :
-```bash
+### Installation
+
+To run papillon, simply run
+```sh
 ionic serve
 ```
 
-### Générer l'app
-Pour préparer la construction de l'application pour mobile :
-```bash
-npm run build # ou ionic build
+To build papillon, you need **Android Studio** or *Xcode** installed.
+Android SDK or Xcode command line tools needs to be configured. All the prerequisites for building are available on https://capacitorjs.com/docs/getting-started/environment-setup
+```sh
+ionic build
 npx cap sync
-npx cap open
+# then build using Android Studio or Xcode
 ```
-La dernière commande lance Android Studio ou Xcode.
-Construisez ensuite l'application à partir de celui-ci.
+
+## Usage
+
+Papillon is useful to any student using Pronote or EcoleDirecte. If their official app is not enough for you, we're here to improve your digital school experience !
+
+## Roadmap
+
+See the [open issues](https://github.com/PapillonApp/papillon-v5/issues) for a list of proposed features (and known issues).
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+* If you have suggestions for adding or removing projects, feel free to [open an issue](https://github.com/PapillonApp/papillon-v5/issues/new) to discuss it, or directly create a pull request after you edit the *README.md* file with necessary changes.
+* Please make sure you check your spelling and grammar.
+* Create individual PR for each suggestion.
+* Please also read through the [Code Of Conduct](https://github.com/PapillonApp/papillon-v5/blob/main/CODE_OF_CONDUCT.md) before posting your first idea as well.
+
+### Creating A Pull Request
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+Distributed under the MIT License. See [LICENSE](https://github.com/PapillonApp/papillon-v5/blob/main/LICENSE.md) for more information.
+
+## Authors
+
+* **Vince Linise** - *French student in high school* - [Vince Linise](https://github.com/ecnivtwelve/) - *Creator of Papillon*
+* **Lucas** - *French student in high school* - [Lucas](https://github.com/lucas-luchack) - *Active developer*
+* **Lucas** - *French student in middle school* - [Lucas](https://github.com/tryon-dev) - *Server management*
+* **Nicolas** - *French student in BTS SIO* - [Nicolas](https://github.com/andronedev) - *Active developer*
+
+## Acknowledgements
+
+* [bain3/pronotepy](https://github.com/bain3/pronotepy/)
+* [Capacitor Community](https://github.com/capacitor-community)
