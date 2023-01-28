@@ -241,7 +241,7 @@ ${this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} -
 				<p>C'est parfait, il n'y a aucun problème sur l'application (ou alors vous les avez effacé). Détendez-vous, profitez-en !</p>
 			</div>
 
-			<ion-list>
+			<ion-list v-else>
 				<ion-item-sliding v-for="log in logs" :key="log.id">
 					<ion-item>
 						<ion-label class="ion-text-wrap" :color="getTypeColor(log.type)">
@@ -257,6 +257,10 @@ ${this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} -
 						</ion-item-option>
 					</ion-item-options>
 				</ion-item-sliding>
+
+				<div class="NoCours">
+					<p>Vous avez atteins la fin de la liste.<br/>Mais il y a tout de même {{ this.logs.length }} journaux !</p>
+				</div>
 			</ion-list>
 
 		</ion-content>
