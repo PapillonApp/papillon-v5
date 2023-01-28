@@ -1,6 +1,8 @@
 <script lang="ts">
     import { IonApp, IonContent, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController } from '@ionic/vue';
 
+    import { Network } from '@capacitor/network';
+
     import { defineComponent, ref } from 'vue';
     import { useRoute } from 'vue-router';
 
@@ -132,11 +134,11 @@
         }
     },
     methods: {
-        async presentToast(header: string, msg: string, color: string, icon: any) {
+        async presentToast(header: string, color: string, icon: any) {
             const toast = await toastController.create({
                 header: header,
                 duration: 2000,
-                position: "bottom",
+                position: "top",
                 color: color,
                 icon: icon,
                 cssClass: "toast-small",
@@ -169,6 +171,13 @@
             });
 
             await toast.present();
+        },
+        async checkInternet() {
+            await Network.getStatus().then(status => {
+                if(!status.connected) {
+                    this.presentToast('Vous n\'êtes pas connecté à Internet.', 'danger', globeOutline)
+                }
+            });
         }
     },
     mounted() {
@@ -205,19 +214,22 @@
             }
         });
 
-        // check internet connection
-        window.addEventListener('online', () => {
-            this.presentToast('Vous êtes de nouveau connecté à Internet.','Certaines informations nécéssiteront peut-être un rafraîchissement.', 'success', globeOutline)
-        });
+        Network.addListener('networkStatusChange', status => {
+            let noInternetTimeout: any;
 
-        window.addEventListener('offline', () => {
-            this.presentToast('Vous n\'êtes plus connecté à Internet.', 'Vous n\'aurez accès qu\'aux informations déjà téléchargées.', 'danger', globeOutline)
+            clearTimeout(noInternetTimeout);
+            noInternetTimeout = setTimeout(() => {
+                if(status.connected) {
+                    this.presentToast('Vous êtes de nouveau connecté.', 'success', globeOutline)
+                }
+                else {
+                    this.presentToast('Vous n\'êtes plus connecté à Internet.', 'danger', globeOutline)
+                }
+            }, 1000);
         });
 
         // check if online
-        if(!navigator.onLine) {
-            this.presentToast('Vous n\'êtes pas connecté à Internet.', 'Vous n\'aurez accès qu\'aux informations déjà téléchargées.', 'danger', globeOutline)
-        }
+        this.checkInternet()
 
         this.askNotifPerms();
 
