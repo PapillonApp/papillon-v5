@@ -331,7 +331,7 @@
         </ion-refresher>
 
         <div id="components" ref="components">
-            <ion-list id="comp-tt" class="nextCourse" ref="comp-tt">
+            <ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
                 <ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none" @click="goto('timetable')" :style="`--courseColor: ${cours.course.color};`">
                     <ion-ripple-effect></ion-ripple-effect>
                     <div slot="start">
@@ -361,7 +361,7 @@
                     </ion-label>
                 </ion-item>
 
-                <ion-item v-if="noCourses" style="margin-top: 12px;"  @click="goto('timetable')">
+                <ion-item class="nextCours" v-if="noCourses" style="margin-top: 12px;"  @click="goto('timetable')">
                     <ion-ripple-effect></ion-ripple-effect>
                     <div slot="start" class="emoji">
                         {{ noCoursesEmoji }}
@@ -464,7 +464,7 @@
 
     .emoji {
         font-size: 1.5em;
-        margin-right: 10px;
+        margin-right: 20px;
     }
 
     .nextCourse ion-chip {

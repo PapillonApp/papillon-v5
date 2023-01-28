@@ -116,17 +116,14 @@
 
             return timetable;
         },
+        resetSwiper() {
+            this.$refs.swiper.$el.swiper.slideTo(1, 0);
+
+            this.timetable.error = "STILL_LOADING";
+            this.yesterday.error = "STILL_LOADING";
+            this.tomorrow.error = "STILL_LOADING";
+        },
         getTimetables(force) {
-            // reset swiper and show loading spinner
-            if(this.shouldResetSwiper) {
-                this.$refs.swiper.$el.swiper.slideTo(1, 0);
-                this.shouldResetSwiper = false;
-
-                this.timetable.error = "STILL_LOADING";
-                this.yesterday.error = "STILL_LOADING";
-                this.tomorrow.error = "STILL_LOADING";
-            }
-
             // get timetable for rn
             GetTimetable(this.$rn, force).then((timetable) => {
                 if(timetable.error) {
@@ -433,11 +430,11 @@
                     this.$rn = newRn;
                     this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
+                    // reset swiper
+                    this.resetSwiper()
+
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
-
-                    // reset swiper
-                    this.shouldResetSwiper = true;
                 }
 
                 // check if swiper is on tomorrow
@@ -449,13 +446,13 @@
                     this.$rn = newRn;
                     this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
+                    // reset swiper
+                    this.resetSwiper()
+
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
-
-                    // reset swiper
-                    this.shouldResetSwiper = true;
                 }
-            }, 100);
+            }, 0);
         });
 
         App.addListener('backButton', () => {
@@ -600,7 +597,7 @@
         </IonModal>
 
 
-        <IonModal :is-open="rnPickerModalOpen" ref="rnPickerModal" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
+        <IonModal :is-open="rnPickerModalOpen" ref="rnPickerModal" class="datetimeModal" @didDismiss="changernPickerModalOpen(false)" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
           <IonHeader>
             <IonToolbar>
               <ion-title>Sélection de la date</ion-title>

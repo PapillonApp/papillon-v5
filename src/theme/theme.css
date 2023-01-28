@@ -232,11 +232,6 @@ ion-item .mdls[slot="start"] {
     overflow: hidden;
 }
 
-.ios ion-modal.modal-sheet::part(handle) {
-    width: 120px;
-    height: 4px;
-}
-
 /* toasts */
 
 .md ion-toast {
