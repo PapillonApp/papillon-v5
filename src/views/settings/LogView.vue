@@ -5,7 +5,7 @@
 	import { Share } from '@capacitor/share';
 	import displayToast from '@/functions/utils/displayToast.js';
 
-	import { version } from '/package'
+	import { version, canal } from '/package'
 
 	import {
 		IonHeader,
@@ -54,6 +54,7 @@
 		data() {
 			return {
 				logs: [],
+				channel: canal,
 				apiVersion: this.getApiVersion(),
 				localStorageSize : this.getLocalStorageSize(),
 				account: {
@@ -141,32 +142,30 @@
 					await Share.share({
 						title: 'Exporter les logs',
 						text: 
-							`Le ${ new Date().toLocaleString('fr-FR', {dateStyle: 'long', timeStyle: 'short'}) }
-							Contient ${this.logs.length} logs
+`Le **${ new Date().toLocaleString('fr-FR', {dateStyle: 'long', timeStyle: 'short'}) }**
+Contient **${this.logs.length}** logs
 
-							Application :
-							> Version : ${version}
-							> Type de plateforme : ${Capacitor.getPlatform()}
-							> Version API : ${this.apiVersion}
-							> Taille du cache : ${this.localStorageSize} kb
-							
-							Appareil :
-							> ID : ${await Device.getId().then(id => id.uuid)}
-							> Modèle : ${await Device.getInfo().then(info => info.model)}
-							> Version OS : ${await Device.getInfo().then(info => info.osVersion)}
-							> Marque : ${await Device.getInfo().then(info => info.manufacturer)}
+*Application* :
+> **Version** : ${version}
+> **Canal** : ${this.channel}
+> **Type de plateforme** : ${Capacitor.getPlatform()}
+> **Version API** : ${this.apiVersion}
+> **Taille du cache** : ${this.localStorageSize} kb
 
-							Compte :
-							> Nom : ${this.account.name}
-							> Établissement : ${this.account.etab}
-							> URL : ${this.account.etabUrl}
-							> CAS : ${this.account.cas}\n
-						` + "```yaml" 
-						+ `
-							${this.logs.map(log => {
-								return `[${log.type}] - ${log.date} - ${log.message}`;
-							}).join("\n")}
-						` + "```",
+*Appareil* :
+> **ID** : ${await Device.getId().then(id => id.uuid)}
+> **Modèle** : ${await Device.getInfo().then(info => info.model)}
+> **Version OS** : ${await Device.getInfo().then(info => info.osVersion)}
+> **Marque** : ${await Device.getInfo().then(info => info.manufacturer)}
+
+*Compte* :
+> **Nom** : ${this.account.name}
+> **Établissement** : ${this.account.etab}
+> **URL** : ${this.account.etabUrl}
+> **CAS** : ${this.account.cas}\n
+` + "```yaml" + `
+${this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} - ${log.message}`; }).join("\n")}
+` + "```",
 						dialogTitle: 'Partager les logs sur Github ou Discord à l\'équipe de développement'
 					});
 				}
@@ -178,6 +177,17 @@
 			handleRefresh(event) {
 				this.refreshLogs();
 				event.target.complete();
+			},
+			getCanal() {
+				if (canal == 'dev') {
+					this.channel = "Développement";
+				} else if (canal == 'beta') {
+					this.channel = "Bêta";
+				} else if (canal == 'prod') {
+					this.channel = "Stable";
+				} else {
+					this.channel = "Inconnu";
+				}
 			},
 			refreshLogs() {
 				this.logs = JSON.parse(localStorage.getItem("logs"));
@@ -192,6 +202,7 @@
 		mounted() {
 			this.refreshLogs()
 			this.getAccountInfo();
+			this.getCanal();
 		}
 	});
 </script>
@@ -230,7 +241,7 @@
 				<p>C'est parfait, il n'y a aucun problème sur l'application (ou alors vous les avez effacé). Détendez-vous, profitez-en !</p>
 			</div>
 
-			<ion-list>
+			<ion-list v-else>
 				<ion-item-sliding v-for="log in logs" :key="log.id">
 					<ion-item>
 						<ion-label class="ion-text-wrap" :color="getTypeColor(log.type)">
@@ -246,6 +257,10 @@
 						</ion-item-option>
 					</ion-item-options>
 				</ion-item-sliding>
+
+				<div class="NoCours">
+					<p>Vous avez atteins la fin de la liste.<br/>Mais il y a tout de même {{ this.logs.length }} journaux !</p>
+				</div>
 			</ion-list>
 
 		</ion-content>
