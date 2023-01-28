@@ -141,28 +141,28 @@
 					await Share.share({
 						title: 'Exporter les logs',
 						text: 
-`Le ${ new Date().toLocaleString('fr-FR', {dateStyle: 'long', timeStyle: 'short'}) }
-Contient ${this.logs.length} logs
+`Le **${ new Date().toLocaleString('fr-FR', {dateStyle: 'long', timeStyle: 'short'}) }**
+Contient **${this.logs.length}** logs
 
-Application :
-> Version : ${version}
-> Type de plateforme : ${Capacitor.getPlatform()}
-> Version API : ${this.apiVersion}
-> Taille du cache : ${this.localStorageSize} kb
+*Application* :
+> **Version** : ${version}
+> **Type de plateforme** : ${Capacitor.getPlatform()}
+> **Version API** : ${this.apiVersion}
+> **Taille du cache** : ${this.localStorageSize} kb
 
-Appareil :
-> ID : ${await Device.getId().then(id => id.uuid)}
-> Modèle : ${await Device.getInfo().then(info => info.model)}
-> Version OS : ${await Device.getInfo().then(info => info.osVersion)}
-> Marque : ${await Device.getInfo().then(info => info.manufacturer)}
+*Appareil* :
+> **ID** : ${await Device.getId().then(id => id.uuid)}
+> **Modèle** : ${await Device.getInfo().then(info => info.model)}
+> **Version OS** : ${await Device.getInfo().then(info => info.osVersion)}
+> **Marque** : ${await Device.getInfo().then(info => info.manufacturer)}
 
-Compte :
-> Nom : ${this.account.name}
-> Établissement : ${this.account.etab}
-> URL : ${this.account.etabUrl}
-> CAS : ${this.account.cas}\n
+*Compte* :
+> **Nom** : ${this.account.name}
+> **Établissement** : ${this.account.etab}
+> **URL** : ${this.account.etabUrl}
+> **CAS** : ${this.account.cas}\n
 ` + "```yaml" + `
-${this.logs.map(log => { return `[${log.type}] - ${log.date} - ${log.message}`; }).join("\n")}
+${this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} - ${log.message}`; }).join("\n")}
 ` + "```",
 						dialogTitle: 'Partager les logs sur Github ou Discord à l\'équipe de développement'
 					});
