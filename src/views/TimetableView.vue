@@ -190,7 +190,7 @@
                 }
             });
         },
-        openCoursModal(cours) {
+        async openCoursModal(cours) {
             // calculate length
             let len = cours.time.end - cours.time.start;
             len = (len / 60000) + " min";
@@ -221,6 +221,25 @@
                 status = "Le cours se déroule normalement";
             }
 
+            let notifEnabled = false;
+
+            // check if notification is enabled
+            await LocalNotifications.getPending().then((res) => {
+                let notifs = res.notifications;
+
+                let time = new Date(cours.time.start);
+                time.setMinutes(time.getMinutes() - 5);
+
+                // check if time = schedule.at
+                notifs.forEach((notif) => {
+                    let notifTime = new Date(notif.schedule.at);
+
+                    if(notifTime.getTime() == time.getTime()) {
+                        notifEnabled = true;
+                    }
+                });
+            });
+
             // set selectedCourse
             this.selectedCourse = {
                 name: cours.data.subject,
@@ -237,7 +256,8 @@
                 isCancelled: cours.status.isCancelled,
                 custom: cours.status.isCustom,
                 id: cours.course.id,
-                originalCourse: cours
+                originalCourse: cours,
+                notificationEnabled: notifEnabled
             }
 
             // open cours modal
@@ -341,34 +361,77 @@
                 let time = new Date(course.time.start);
                 time.setMinutes(time.getMinutes() - 5);
 
-                await LocalNotifications.schedule({
-                    notifications: [
-                        {
-                            title: `${subject} - Ça commence bientôt !`,
-                            body: `Vous êtes en ${room} avec ${teacher}. Le cours commence dans 5 minutes.`,
-                            id: 1,
-                            schedule: { at: time },
-                            sound: "tone.ogg",
-                            attachments: null,
-                            actionTypeId: "",
-                            extra: null
-                        }
-                    ]
-                });
+                // check if time is in the future
+                if(time.getTime() < new Date().getTime()) {
+                    displayToast.presentToastFull(
+                        'Impossible de vous notifier pour ' + subject,
+                        'Le cours a déjà commencé ou est terminé.',
+                        'danger',
+                        notifications
+                    );
+                }
+                else {
+                    await LocalNotifications.schedule({
+                        notifications: [
+                            {
+                                title: `${subject} - Ça commence bientôt !`,
+                                body: `Vous êtes en ${room} avec ${teacher}. Le cours commence dans 5 minutes.`,
+                                id: 1,
+                                schedule: { at: time },
+                                sound: "tone.ogg",
+                                attachments: null,
+                                actionTypeId: "",
+                                extra: null
+                            }
+                        ]
+                    });
+                    
+                    // notify user
+                    this.selectedCourse.notificationEnabled = true;
 
-                // close cours modal
-                this.$refs.coursModal.$el.dismiss();
-
-                // notify user
-                displayToast.presentToastFull(
-                    'Notifications activées pour ' + subject,
-                    'Vous receverez une notification 5 minutes avant le début du cours',
-                    'light',
-                    notifications
-                );
+                    displayToast.presentToastFull(
+                        'Notifications activées pour ' + subject,
+                        'Vous receverez une notification 5 minutes avant le début du cours',
+                        'light',
+                        notifications
+                    );
+                }
             } catch (error) {
                 displayToast.presentError("Une erreur est survenue lors de l'activation des notifications", "danger", error);
             }
+        },
+        async unsetNotif(course) {
+            // find notification
+            await LocalNotifications.getPending().then((res) => {
+                let notifs = res.notifications;
+                console.log(notifs);
+
+                let time = new Date(course.time.start);
+                time.setMinutes(time.getMinutes() - 5);
+
+                // check if time = schedule.at
+                notifs.forEach(async (notif) => {
+                    let notifTime = new Date(notif.schedule.at);
+
+                    console.log(notifTime.getTime() + ' == ' + time.getTime());
+
+                    if(notifTime.getTime() == time.getTime()) {
+                        await LocalNotifications.cancel({ notifications: [notif] });
+
+                        console.log('notif cancelled');
+
+                        // notify user
+                        this.selectedCourse.notificationEnabled = false;
+
+                        displayToast.presentToastFull(
+                            'Notifications désactivées pour ' + course.data.subject,
+                            'Vous ne receverez plus de notifications pour ce cours',
+                            'light',
+                            notifications
+                        );
+                    }
+                });
+            });
         }
     },
     data() {
@@ -389,6 +452,7 @@
                 end: '',
                 length: '',
                 status: '',
+                notificationEnabled: false,
             },
             newCoursModalOpen: false,
             rnPickerModalOpen: false,
@@ -670,10 +734,16 @@
                         <ion-label>
                             <p>Horaires</p>
                             <h2>De {{selectedCourse.start}} à {{selectedCourse.end}}</h2>
+                            <p>{{ selectedCourse.notificationEnabled }}</p>
                         </ion-label>
-                        <ion-button class="itemBtn" fill="clear" slot="end" @click="setNotif(selectedCourse.originalCourse)">
+
+                        <ion-button v-if="!selectedCourse.notificationEnabled" class="itemBtn" fill="clear" slot="end" @click="setNotif(selectedCourse.originalCourse)">
                             <span class="material-symbols-outlined mdls" slot="start">notifications</span>
                             Me notifier
+                        </ion-button>
+                        <ion-button v-else class="itemBtn" color="danger" fill="clear" slot="end" @click="unsetNotif(selectedCourse.originalCourse)">
+                            <span class="material-symbols-outlined mdls" slot="start">notifications_off</span>
+                            Ne pas me notifier
                         </ion-button>
                     </ion-item>
 
