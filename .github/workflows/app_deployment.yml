@@ -116,6 +116,14 @@ jobs:
           npm i -g @ionic/cli
           npm i --prefer-offline --no-audit
 
+      - name: Update release Canal
+        uses: maxgfr/github-change-json@v0.0.21*
+        with:
+          file: "package.json"
+          key: "canal"
+          value: ${{ needs.initialize.outputs.DEPLOY_TYPE }}
+          commit: false
+
       - name: Ionic Capacitor Sync
         run: |
           npm version ${{ needs.initialize.outputs.VERSION_NUMBER }} --no-git-tag-version
@@ -193,6 +201,14 @@ jobs:
         run: |
           npm i -g @ionic/cli
           npm i --prefer-offline --no-audit
+
+      - name: Update release Canal
+        uses: maxgfr/github-change-json@v0.0.21*
+        with:
+          file: "package.json"
+          key: "canal"
+          value: ${{ needs.initialize.outputs.DEPLOY_TYPE }}
+          commit: false
 
       - name: Ionic Capacitor Sync
         run: |
