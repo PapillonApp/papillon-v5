@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonToggle, actionSheetController, IonAvatar, IonNavLink } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonToggle, actionSheetController, IonAvatar, IonNavLink, IonChip } from '@ionic/vue';
     
     import { calendarOutline } from 'ionicons/icons';
 
@@ -10,7 +10,7 @@
 
     import PapillonLogo from '@/components/icons/PapillonLogo.vue';
 
-    import { version } from '/package'
+    import { version, canal } from '/package'
     import { Capacitor } from '@capacitor/core';
 
     import displayToast from '@/functions/utils/displayToast.js';
@@ -36,10 +36,12 @@
             IonItem,
             IonNavLink,
             IonPage,
+            IonChip
         },
         setup() {
             return { 
                 appVersion: version,
+                appCanal: canal,
                 appPlatform: Capacitor.getPlatform(),
                 localStorageSize: '',
             }
@@ -336,6 +338,13 @@
                     <p>Version de l'app</p>
                     <h2>papillon {{ appVersion }}-{{ appPlatform }}</h2>
                 </IonLabel>
+
+                <IonChip v-if="appCanal == 'dev'" slot="end" color="danger">
+                    Développement
+                </IonChip>
+                <IonChip v-if="appCanal == 'beta'" slot="end" color="warning">
+                    Accès anticipé
+                </IonChip>
             </IonItem>
 
             <IonItem>

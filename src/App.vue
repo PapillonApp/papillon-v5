@@ -156,6 +156,13 @@
                 localStorage.userData = JSON.stringify(data);
             });
         },
+        changePage() {
+            // close menu
+            const menu = document.querySelector('ion-menu');
+            setTimeout(() => {
+                menu?.close();
+            }, 110);
+        },
         async askNotifPerms() {
             await LocalNotifications.requestPermissions();
         },
@@ -300,7 +307,7 @@
         </ion-header>
         <ion-content mode="md">
           <ion-list id="inbox-list"> 
-            <router-link class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
+            <router-link @click="changePage()" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
                 <ion-item button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
                     <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
                     <ion-label>{{ p.title }}</ion-label>
