@@ -321,6 +321,18 @@
 				</IonHeader>
 				<ion-content>
 					
+					<div class="AbsenceModalContent" v-if="selectedEvent.type === 1">
+						
+					</div>
+
+					<div class="PunishmentModalContent" v-if="selectedEvent.type === 2">
+
+					</div>
+
+					<div class="DelayModalContent" v-if="selectedEvent.type === 3">
+
+					</div>
+
 				</ion-content>
 			</IonModal>
 
