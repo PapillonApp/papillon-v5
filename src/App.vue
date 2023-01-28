@@ -136,7 +136,7 @@
             const toast = await toastController.create({
                 header: header,
                 duration: 2000,
-                position: "bottom",
+                position: "top",
                 color: color,
                 icon: icon,
                 cssClass: "toast-small",
@@ -164,7 +164,7 @@
                 header: "Bonjour, c'est une notification de test !",
                 message: "Exemple de notification",
                 duration: 200000,
-                position: "bottom",
+                position: "top",
                 color: "success",
             });
 
@@ -207,7 +207,7 @@
 
         // check internet connection
         window.addEventListener('online', () => {
-            this.presentToast('Vous êtes de nouveau connecté à Internet.','Certaines informations nécéssiteront peut-être un rafraîchissement.', 'success', globeOutline)
+            this.presentToast('Vous êtes de nouveau connecté.','Certaines informations nécéssiteront peut-être un rafraîchissement.', 'success', globeOutline)
         });
 
         window.addEventListener('offline', () => {
