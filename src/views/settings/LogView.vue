@@ -5,7 +5,7 @@
 	import { Share } from '@capacitor/share';
 	import displayToast from '@/functions/utils/displayToast.js';
 
-	import { version } from '/package'
+	import { version, canal } from '/package'
 
 	import {
 		IonHeader,
@@ -54,6 +54,7 @@
 		data() {
 			return {
 				logs: [],
+				channel: canal,
 				apiVersion: this.getApiVersion(),
 				localStorageSize : this.getLocalStorageSize(),
 				account: {
@@ -146,6 +147,7 @@ Contient **${this.logs.length}** logs
 
 *Application* :
 > **Version** : ${version}
+> **Canal** : ${this.channel}
 > **Type de plateforme** : ${Capacitor.getPlatform()}
 > **Version API** : ${this.apiVersion}
 > **Taille du cache** : ${this.localStorageSize} kb
@@ -176,6 +178,17 @@ ${this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} -
 				this.refreshLogs();
 				event.target.complete();
 			},
+			getCanal() {
+				if (canal == 'dev') {
+					this.channel = "Développement";
+				} else if (canal == 'beta') {
+					this.channel = "Bêta";
+				} else if (canal == 'prod') {
+					this.channel = "Stable";
+				} else {
+					this.channel = "Inconnu";
+				}
+			},
 			refreshLogs() {
 				this.logs = JSON.parse(localStorage.getItem("logs"));
 
@@ -189,6 +202,7 @@ ${this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} -
 		mounted() {
 			this.refreshLogs()
 			this.getAccountInfo();
+			this.getCanal();
 		}
 	});
 </script>
