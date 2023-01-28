@@ -55,8 +55,7 @@
                 blockChangeDone: false,
                 editMode: false,
                 noCoursesEmoji: this.randomEmoji(),
-                noCoursesMsg: this.randomMsg(),
-                noCourses: false
+                noCoursesMsg: this.randomMsg()
             }
         },
         methods: {
@@ -177,10 +176,6 @@
                         lessons.push(lesson);
                         break;
                     }
-                }
-
-                if (lessons.length == 0 && timetable.length == 0) {
-                    this.noCourses = true;
                 }
                 
                 return lessons;
@@ -345,10 +340,6 @@
                     
                         <!-- <IonProgressBar :value="progress" :style="`--courseColor: ${cours.course.color};`"></IonProgressBar> -->
                     </ion-label>
-
-                    
-                    
-                    <!-- <div slot="error" class="progress"><div class="step" style="width: {{ nextCoursProgress }};"></div></div> -->
                 </ion-item>
 
                 <ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0" style="margin-top: 12px;" class="nextCours" lines="none">
@@ -361,7 +352,7 @@
                     </ion-label>
                 </ion-item>
 
-                <ion-item class="nextCours" v-if="noCourses" style="margin-top: 12px;"  @click="goto('timetable')">
+                <ion-item class="nextCours" v-if="timetable.length == 0" style="margin-top: 12px;"  @click="goto('timetable')">
                     <ion-ripple-effect></ion-ripple-effect>
                     <div slot="start" class="emoji">
                         {{ noCoursesEmoji }}
