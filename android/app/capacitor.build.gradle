@@ -12,6 +12,7 @@ dependencies {
     implementation project(':capacitor-community-app-icon')
     implementation project(':capacitor-action-sheet')
     implementation project(':capacitor-app')
+    implementation project(':capacitor-browser')
     implementation project(':capacitor-device')
     implementation project(':capacitor-dialog')
     implementation project(':capacitor-filesystem')
