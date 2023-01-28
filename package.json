@@ -25,6 +25,7 @@
     "@capacitor/ios": "^4.6.1",
     "@capacitor/keyboard": "^4.1.1",
     "@capacitor/local-notifications": "^4.1.4",
+    "@capacitor/network": "^4.1.0",
     "@capacitor/preferences": "^4.0.2",
     "@capacitor/share": "^4.1.0",
     "@capacitor/splash-screen": "^4.1.2",

@@ -266,7 +266,7 @@ ion-header ion-toolbar ion-title.md {
 }
 
 .toast-small {
-    max-width: 90vw !important;
+    max-width: 95vw !important;
     --width: fit-content !important;
     --border-radius: 80px !important;
 
