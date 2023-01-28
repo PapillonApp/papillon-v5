@@ -13,6 +13,8 @@ import 'swiper/css';
 import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
 import GetToken from "@/functions/login/GetToken.js";
 
+import { Browser } from '@capacitor/browser';
+
 import axios from 'axios';
 
 export default defineComponent({
@@ -137,8 +139,10 @@ export default defineComponent({
         closeHomework() {
             this.$refs.hwModal.$el.dismiss();
         },
-        openLink(url) {
-                window.open(url, "_blank");
+        async openLink(url, name) {
+            await Browser.open({
+                url: url
+            });
         },
         changernPickerModalOpen(state) {
             this.rnPickerModalOpen = state;
