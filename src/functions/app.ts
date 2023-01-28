@@ -136,7 +136,7 @@ function saveInLocalStorage(content :string, type: string){
   }
 
   logs.push({date: new Date, type: type, message: content});
-  if (logs.length > 1000) {
+  if (logs.length > 250) {
     logs.shift();
   }
   localStorage.setItem('logs', JSON.stringify(logs));
