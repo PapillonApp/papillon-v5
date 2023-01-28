@@ -117,7 +117,7 @@ jobs:
           npm i --prefer-offline --no-audit
 
       - name: Update release Canal
-        uses: maxgfr/github-change-json@v0.0.21*
+        uses: maxgfr/github-change-json@main
         with:
           file: "package.json"
           key: "canal"
@@ -203,7 +203,7 @@ jobs:
           npm i --prefer-offline --no-audit
 
       - name: Update release Canal
-        uses: maxgfr/github-change-json@v0.0.21*
+        uses: maxgfr/github-change-json@main
         with:
           file: "package.json"
           key: "canal"
