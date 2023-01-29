@@ -151,7 +151,7 @@
             GetConversations().then((res) => {
 				this.conversations = res;
 
-                this.isLoading = true;
+				this.isLoading = false;
             })
 
 			GetRecipients().then((res) => {
@@ -207,7 +207,7 @@
 				<p>Essayez d'envoyer un message à quelqu'un dans votre établissement.</p>
 			</div>
 
-			<div class="NoCours" v-if="this.conversations.length == 0 &&isLoading">
+			<div class="NoCours" v-if="this.conversations.length == 0 && isLoading">
 				<IonSpinner></IonSpinner>
 				<br/>
 				<h2>Téléchargement des conversations...</h2>
