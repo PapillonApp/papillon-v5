@@ -39,7 +39,7 @@
 
 ## About The Project
 
-![Screenshot](https://user-images.githubusercontent.com/32978709/215285204-18fdc07b-4f30-4722-bf26-31be149d634f.png)
+![image](https://user-images.githubusercontent.com/32978709/215358098-cb43aeb4-b37e-41d6-a28e-0c2d729681d0.png)
 
 * **Features of Pronote**
     - 📆 Timetable
