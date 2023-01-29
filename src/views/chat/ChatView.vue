@@ -160,7 +160,7 @@
 
 			// watch checkedRecipient
 			this.$watch('checkedRecipient', () => {
-				console.log(this.checkedRecipient);
+				console.info(this.checkedRecipient)
 			});
 
 			document.addEventListener('tokenUpdated', (e) => {

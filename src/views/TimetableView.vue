@@ -404,7 +404,6 @@
             // find notification
             await LocalNotifications.getPending().then((res) => {
                 let notifs = res.notifications;
-                console.log(notifs);
 
                 let time = new Date(course.time.start);
                 time.setMinutes(time.getMinutes() - 5);
@@ -412,8 +411,6 @@
                 // check if time = schedule.at
                 notifs.forEach(async (notif) => {
                     let notifTime = new Date(notif.schedule.at);
-
-                    console.log(notifTime.getTime() + ' == ' + time.getTime());
 
                     if(notifTime.getTime() == time.getTime()) {
                         await LocalNotifications.cancel({ notifications: [notif] });
