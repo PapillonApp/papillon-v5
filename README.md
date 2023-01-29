@@ -39,30 +39,30 @@
 
 ![Screenshot](https://user-images.githubusercontent.com/32978709/215285204-18fdc07b-4f30-4722-bf26-31be149d634f.png)
 
-* **Fonctionnalités de Pronote**
-    - 📆 Emploi du temps
-        + Organisation intuitive du temps
-        + Ajout au calendrier
-        + Cours personnalisés
+* **Features of Pronote**
+    - 📆 Timetable
+        + Intuitive time management
+        + Addition to the calendar
+        + Customised courses
         + Notifications
-    - 📑 Travail à faire
-        + Gestion intuitive de son planning de travail
-    - 🎓 Notes et compétences
-        + Moyenne générale et moyennes de classe
-        + Remise automatique des notes sur 20
-        + Affichage intuitif en grille
-    - 📂 Contenu des cours et fichiers
-    - 📰 Actualités
-    - 🚪 *Absences, retards et sanctions (bientôt)*
-* **Une interface incroyable**
-    - 🎨 Designée avec soin et précision
-    - ✋ Prête pour un usage à une main
-        + Usage de gestes intuitifs
-    - ✨ S'améliore continuellement grace aux mises à jour régulières
-    - 📱 Look natif pour iOS et Android
-* **Extensions et personnalisation**
-    - 🕺 Police et couleur d'interface personnalisables
-    - 🤯 Étend les fonctionnalités de l'app
+    - 📑 Homeworks
+        + Intuitive management of your work schedule
+    - 🎓 Grades and skills
+        + Overall and class averages
+        + Automatic resetting of scores out of 20
+        + Intuitive grid display
+    - 📂 Course content and files
+    - 📰 News
+    - 🚪 Absences, lateness and sanctions
+* **An incredible interface**
+    - 🎨 Designed with care and precision
+    - ✋ Ready for one-handed use
+        + Use of intuitive gestures
+    - ✨ Continuously improves with regular updates
+    - 📱 Native look for iOS and Android
+* **Extensions and customisation**
+    - 🕺 Customisable font and interface colour
+    - 🤯 Extends the functionality of the app
 
 ## Built With
 
@@ -134,6 +134,7 @@ Distributed under the MIT License. See [LICENSE](https://github.com/PapillonApp/
 * **Lucas** - *French student in high school* - [Lucas](https://github.com/lucas-luchack) - *Active developer*
 * **Lucas** - *French student in middle school* - [Lucas](https://github.com/tryon-dev) - *Server management*
 * **Nicolas** - *French student in BTS SIO* - [Nicolas](https://github.com/andronedev) - *Active developer*
+* **Astrow** - *French student in high school* - [Astrow](https://github.com/Astrow25) - *Developer and tester*
 
 ## Acknowledgements
 
