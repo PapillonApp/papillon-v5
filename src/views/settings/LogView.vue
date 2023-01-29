@@ -259,7 +259,8 @@ ${this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} -
 				</ion-item-sliding>
 
 				<div class="NoCours">
-					<p>Vous avez atteins la fin de la liste.<br/>Mais il y a tout de même {{ this.logs.length }} journaux !</p>
+					<p v-if="this.logs.length <= 1">Vous avez atteint la fin de la liste.</p>
+					<p v-else>Vous avez atteint la fin de la liste.<br/>Mais il y a tout de même {{ this.logs.length }} journaul !</p>
 				</div>
 			</ion-list>
 
