@@ -140,10 +140,12 @@
 				ConversationView: ConversationView,
 				newConvModalOpen: false,
 				checkedRecipient: [],
-				isLoading: false
+				isLoading: false,
+				presentingElement: null,
 			}
 		},
 		mounted() {
+			this.presentingElement = this.$refs.page.$el;
 			this.isLoading = true;
 
             GetConversations().then((res) => {
@@ -227,7 +229,7 @@
 
 			<br /><br /><br /><br /><br />
 
-			<IonModal class="newChatModal" :is-open="newConvModalOpen">
+			<IonModal :presenting-element="presentingElement" class="newChatModal" :is-open="newConvModalOpen">
 				<IonHeader translucent>
                     <IonToolbar>
 						<IonButtons slot="start">
@@ -249,7 +251,7 @@
 						</IonItem>
 					</IonList>
 
-					<IonList>
+					<IonList style="padding-bottom: 100px;">
 						<ion-radio-group v-model="checkedRecipient">
 							<IonItem v-for="(person, i) in recipients" :key="i">
 								<span class="material-symbols-outlined mdls" slot="start" v-if="person.type == 'teacher'">face</span>
