@@ -6,6 +6,8 @@
 
     import { Capacitor } from '@capacitor/core';
 
+    import { NotificationBadge } from 'capacitor-notification-badge';
+
     import displayToast from '@/functions/utils/displayToast.js';
     import hapticsController from '@/functions/utils/hapticsController.js';
     import timetableEdit from '@/functions/utils/timetableEdit.js';
@@ -250,6 +252,8 @@
                             return new Date(a.date) - new Date(b.date);
                         });
 
+                        this.checkUndone();
+
                         this.homeworks = homeworkDays;
                     }
                 })
@@ -268,6 +272,32 @@
                             components.appendChild(comp);
                         }
                     }
+                }
+            },
+            checkUndone() {
+                // get number of undone homeworks (for badge)
+                let homeworkDays = this.homeworks;
+
+                let tomorrowDate = new Date(this.$rn);
+                tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+
+                let tomorrow = homeworkDays.find((day) => {
+                    return day.date == tomorrowDate.toDateString();
+                });
+                        
+                // for each homework, check if it's done
+                let undone = 0;
+                if (tomorrow) {
+                    tomorrow.homeworks.forEach((homework) => {
+                        if (!homework.data.done) {
+                            undone++;
+
+                            NotificationBadge.setBadgeCount({
+                                count: undone,
+                            })
+
+                        }
+                    });
                 }
             },
             handleRefresh(event) {
