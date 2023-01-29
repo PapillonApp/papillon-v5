@@ -35,6 +35,7 @@
             IonToggle,
             IonTitle,
             IonContent,
+            IonListHeader,
 		},
 		data() {
 			return {
@@ -49,54 +50,6 @@
                 localStorage.setItem(option, elChecked);
 
                 document.dispatchEvent(new CustomEvent('settingsUpdated'));
-            },
-            async tweakChangeAvatar() {
-                try {
-                    const result = await FilePicker.pickImages({
-                        multiple: false,
-                        readData: true
-                    });
-
-                    let base64Data = result.files[0].data;
-
-                    let base64URL = 'data:image/jpeg;base64,' + base64Data;
-
-                    // resize image to 200px width using canvas
-                    let canvas = document.createElement('canvas');
-                    let ctx = canvas.getContext('2d');
-                    let img = new Image();
-                    img.src = base64URL;
-
-                    img.onload = function () {
-                        canvas.width = 128;
-                        canvas.height = 128 * img.height / img.width;
-
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                        let newImage = canvas.toDataURL('image/jpeg');
-
-                        localStorage.setItem('customAvatar', newImage);
-                        document.dispatchEvent(new CustomEvent('userDataUpdated'));
-
-                        displayToast.presentNativeToast(
-                            'Photo de profil modifiée.'
-                        );
-                    }
-                }
-                catch (error) {
-                    console.error(error);
-                    displayToast.presentNativeToast(
-                        'Erreur lors du changement de photo de profil.'
-                    );
-                }
-            },
-            tweakDeleteAvatar() {
-                localStorage.removeItem('customAvatar');
-                document.dispatchEvent(new CustomEvent('userDataUpdated'));
-
-                displayToast.presentNativeToast(
-                    'Photo de profil supprimée.'
-                );
             },
             tweakProgressBar() {
                 let tweakProgressBar = this.$refs.tweakProgressBar;
@@ -155,6 +108,13 @@
 
 		<ion-content :fullscreen="true">
             <IonList :inset="true" lines="inset">
+                <ion-list-header>
+                    <ion-label>
+                        Tweaks
+                        <p>Ces options permettent de modifier le comportement de certaines fonctionnalités.</p>
+                    </ion-label>
+                </ion-list-header>
+
                 <IonItem>
                     <span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
                     <IonLabel>
@@ -163,13 +123,22 @@
                     </IonLabel>
                     <IonToggle slot="end" ref="tweakGrades20" @ionChange="changeTick('tweakGrades20')"></IonToggle>
                 </IonItem>
+            </IonList>
+
+            <IonList :inset="true" lines="inset">
+                <ion-list-header>
+                    <ion-label>
+                        Expérimental
+                        <p>Ces options risquent de ne pas fonctionner correctement.</p>
+                    </ion-label>
+                </ion-list-header>
 
                 <IonItem>
                     <span class="material-symbols-outlined mdls" slot="start">toggle_off</span>
                     <IonLabel>
                         <h5>Onglet notes</h5>
                         <h2>Activer la séléction de période</h2>
-                        <p>(Expérimental) Permet de changer de trimestre/semestre</p>
+                        <p>Permet de changer de trimestre/semestre</p>
                     </IonLabel>
                     <IonToggle slot="end" ref="changePeriodSelection" @ionChange="changeTick('changePeriodSelection')"></IonToggle>
                 </IonItem>
@@ -178,29 +147,12 @@
                     <span class="material-symbols-outlined mdls" slot="start">gavel</span>
                     <IonLabel>
                         <h2>Activer l'onglet vie scolaire</h2>
-                        <p>(Expérimental) Active l'onglet de vie scolaire</p>
+                        <p>Active l'onglet de vie scolaire</p>
                     </IonLabel>
                     <IonToggle slot="end" ref="viescolaireEnabled" @ionChange="changeTick('viescolaireEnabled')"></IonToggle>
                 </IonItem>
             </IonList>
-            <IonList :inset="true" lines="inset">
-                <IonItem>
-                    <span class="material-symbols-outlined mdls" slot="start">settings</span>
-                    <IonLabel>
-                        <h2>Activer l'animation de la progression d'un cours</h2>
-                        <p>(Expérimental) Cela permet d'indiquer la progression d'un cours en cours</p>
-                    </IonLabel>
-                    <IonToggle slot="end" ref="tweakProgressBar" @ionChange="changeTick('tweakProgressBar')"></IonToggle>
-                </IonItem>
-                <IonItem>
-                    <span class="material-symbols-outlined mdls" slot="start">settings</span>
-                    <IonLabel>
-                        <h2>Montrer la progression des cours passés</h2>
-                        <p>(Expérimental) Cela permet d'indiquer la progression d'un cours en cours</p>
-                    </IonLabel>
-                    <IonToggle slot="end" ref="tweakProgressBarShowPast" @ionChange="changeTick('tweakProgressBarShowPast')"></IonToggle>
-                </IonItem>
-            </IonList>
+
             <IonList :inset="true" lines="inset">
                 <IonItem button @click="tweakChangeAvatar()">
                     <span class="material-symbols-outlined mdls" slot="start">person_pin</span>
