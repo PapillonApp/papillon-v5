@@ -98,6 +98,14 @@
                     );
                 });
             },
+            clearLogs() {
+				localStorage.removeItem("logs");
+				this.logs = [];
+
+                displayToast.presentNativeToast(
+                    'Logs effacés'
+                );
+			},
 		},
 		mounted() {
             return false;
@@ -140,6 +148,14 @@
                     <IonLabel class="ion-text-wrap">
                         <h2>Régénérer les clés de connexion (avancé)</h2>
                         <p>Permet de demander une nouvelle autorisation à votre établissement</p>  
+                    </IonLabel>
+                </IonItem>
+
+                <IonItem button @click="clearLogs()">
+                    <span class="material-symbols-outlined mdls" slot="start">delete_sweep</span>
+                    <IonLabel class="ion-text-wrap">
+                        <h2>Effacer les logs</h2>
+                        <p>Supprime les logs de l'application</p>  
                     </IonLabel>
                 </IonItem>
 
