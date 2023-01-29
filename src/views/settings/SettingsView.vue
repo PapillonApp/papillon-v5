@@ -4,9 +4,12 @@
     
     import { calendarOutline } from 'ionicons/icons';
 
+    import { Browser } from '@capacitor/browser';
+
     import ThemeView from './ThemeView.vue';
-    import LogView from './LogView.vue';
     import OptionsView from './OptionsView.vue';
+    import UserView from './UserView.vue';
+    import AdvancedView from './AdvancedView.vue';
 
     import PapillonLogo from '@/components/icons/PapillonLogo.vue';
 
@@ -51,8 +54,9 @@
                 contributors: [],
                 userAvatar: '',
                 ThemeView: ThemeView,
-                LogView: LogView,
                 OptionsView: OptionsView,
+                UserView: UserView,
+                AdvancedView: AdvancedView,
             }
         },
         methods: {
@@ -92,37 +96,6 @@
                 // go to login page
                 location.href = '/login';
             },
-            emptyCache() {
-                // empty cache
-                localStorage.removeItem('UserCache');
-                localStorage.removeItem('TimetableCache');
-                localStorage.removeItem('NewsCache');
-                localStorage.removeItem('GradeCache');
-                localStorage.removeItem('HomeworkCache');
-                localStorage.removeItem('AbsencesCache');
-                localStorage.removeItem('PunishmentsCache');
-                localStorage.removeItem('DelaysCache');
-                localStorage.removeItem('MenuCache');
-                localStorage.removeItem('ConversationsCache');
-                localStorage.removeItem('SubjectColors');
-
-                // show toast
-                setTimeout(() => {
-                    displayToast.presentToastFull(
-                        'Cache des données vidé',
-                        'Les informations pré-téléchargées ont été supprimées',
-                        'light',
-                        trash
-                    );
-                    
-                    setTimeout(() => {
-                        this.localStorageSize = this.getLocalStorageSize() + ' kb';
-                    }, 1000);
-                }, 100);
-            },
-            refreshToken() {
-                GetToken();
-            },
             getLocalStorageSize() {
                 // get localStorage size in kb
                 let localStorageSize = 0;
@@ -154,26 +127,10 @@
 
                 this.apiVersion = cacheApiVersion ?? 'Inconnue';
             },
-            resetColors() {
-                localStorage.removeItem('SubjectColors');
-
-                // show toast
-                setTimeout(() => {
-                    displayToast.presentToastFull(
-                        'Couleurs des matières réinitialisées',
-                        'Les couleurs des matières ont été réinitialisées avec succès.',
-                        'light',
-                        checkmark
-                    );
-                    
-                    setTimeout(() => {
-                        this.localStorageSize = this.getLocalStorageSize() + ' kb';
-                    }, 1000);
-                }, 100);
-            },
-            openURL(url) {
-                // open url in new tab
-                window.open(url, '_blank');
+            async openURL(url, name) {
+                await Browser.open({
+                    url: url
+                });
             },
             getContributorsList(){
                 getContributors(5).then((contributors) => {
@@ -224,14 +181,16 @@
       
       <ion-content :fullscreen="true">
         <IonList :inset="true" lines="inset">
-            <IonItem>
-                <img :src="userAvatar" slot="start" class="avatar" />
-                <IonLabel>
-                    <p>Utilisateur connecté</p>
-                    <h2>{{ userName }}</h2>
-                    <p>{{ userClass }} - {{ userSchool }}</p>
-                </IonLabel>
-            </IonItem>
+            <ion-nav-link router-direction="forward" :component="UserView">
+                <IonItem button>
+                    <img :src="userAvatar" slot="start" class="avatar" />
+                    <IonLabel>
+                        <p>Utilisateur connecté</p>
+                        <h2>{{ userName }}</h2>
+                        <p>{{ userClass }} - {{ userSchool }}</p>
+                    </IonLabel>
+                </IonItem>
+            </ion-nav-link>
         </IonList>
 
         <IonList :inset="true" lines="none">
@@ -263,36 +222,12 @@
                     <p>Supprime toutes les données de connexion de l'application</p>  
                 </IonLabel>
             </IonItem>
-
-            <IonItem button @click="emptyCache()">
-                <span class="material-symbols-outlined mdls" slot="start">auto_delete</span>
-                <IonLabel class="ion-text-wrap">
-                    <h2>Vider le cache des données</h2>
-                    <p>Réinitialise les données pré-téléchargées hors ligne</p>  
-                </IonLabel>
-            </IonItem>
-
-            <IonItem button @click="resetColors()">
-                <span class="material-symbols-outlined mdls" slot="start">format_color_fill</span>
-                <IonLabel class="ion-text-wrap">
-                    <h2>Réattribuer les couleurs de matières</h2>
-                    <p>Réinitialise les couleurs des matières pour en obtenir de nouvelles</p>  
-                </IonLabel>
-            </IonItem>
-
-            <IonItem button @click="refreshToken()">
-                <span class="material-symbols-outlined mdls" slot="start">key</span>
-                <IonLabel class="ion-text-wrap">
-                    <h2>Régénérer les clés de connexion (avancé)</h2>
-                    <p>Permet de demander une nouvelle autorisation à votre établissement</p>  
-                </IonLabel>
-            </IonItem>
-            <ion-nav-link router-direction="forward" :component="LogView">
+            <ion-nav-link router-direction="forward" :component="AdvancedView">
                 <IonItem button>
-                    <span class="material-symbols-outlined mdls" slot="start">developer_mode</span>
+                    <span class="material-symbols-outlined mdls" slot="start">monitor_heart</span>
                     <IonLabel>
-                        <h2>Voir les logs</h2>
-                        <p>Consulter les logs de l'application</p>
+                        <h2>Options avancées</h2>
+                        <p>Permettent de manipuler Papillon en détail</p>
                     </IonLabel>
                 </IonItem>
             </ion-nav-link>
@@ -301,7 +236,7 @@
         <IonList :inset="true" lines="inset">
             <IonListHeader>
                 <IonLabel>
-                    <p>Meilleurs contributeurs</p>
+                    <p>Contributeurs les plus actifs</p>
                 </IonLabel>
             </IonListHeader>
 
@@ -309,7 +244,7 @@
             <img :src="contributor.avatar_url" slot="start" class="avatar" />
             <IonLabel>
                 <h2>{{ contributor.login }}</h2>
-                <p>{{ contributor.contributions }} contributions</p>
+                <p>{{ contributor.contributions }} contributions à Papillon</p>
             </IonLabel>
             </IonItem>
         </IonList>

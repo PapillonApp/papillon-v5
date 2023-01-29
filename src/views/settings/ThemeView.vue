@@ -32,7 +32,6 @@
 			IonLabel,
 			IonItem,
 			IonList,
-			IonListHeader,
 			IonRadioGroup,
 			IonRadio,
 			PapillonBackButton,
@@ -166,12 +165,6 @@
 		<ion-content :fullscreen="true">
 
 			<IonList :inset="true" lines="inset">
-				<IonListHeader>
-					<IonLabel>
-						<p>Couleurs</p>
-					</IonLabel>
-				</IonListHeader>
-
 				<IonItem>
 					<IonLabel>
 						<h2>Couleur principale</h2>
@@ -191,12 +184,6 @@
 			</IonList>
 
 			<IonList :inset="true" lines="inset">
-				<IonListHeader>
-					<IonLabel>
-						<p>Polices</p>
-					</IonLabel>
-				</IonListHeader>
-
 				<ion-radio-group :value="currentFont" ref="fontSelect" @ionChange="fontChange">
 					<ion-item :key="i" v-for="(font, i) in availableFonts">
 						<ion-label :style="`font-family: '${font.font}';`">{{ font.name }}</ion-label>
