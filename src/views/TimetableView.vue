@@ -734,7 +734,6 @@
                         <ion-label>
                             <p>Horaires</p>
                             <h2>De {{selectedCourse.start}} à {{selectedCourse.end}}</h2>
-                            <p>{{ selectedCourse.notificationEnabled }}</p>
                         </ion-label>
 
                         <ion-button v-if="!selectedCourse.notificationEnabled" class="itemBtn" fill="clear" slot="end" @click="setNotif(selectedCourse.originalCourse)">
