@@ -175,9 +175,9 @@
 
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">invert_colors</span>
-					<IonLabel>
+					<IonLabel class="ion-text-wrap">
 						<h2>Utiliser les couleurs de votre service scolaire</h2>
-						<p>Permet d'utiliser les couleurs de votre service scolaire (Pronote, Ecoledirecte, ...) pour identifier les matières.</p>
+						<p>Permet d'utiliser les couleurs de votre service scolaire pour identifier les matières.</p>
 					</IonLabel>
 					<IonToggle slot="end" ref="useScolColors" @ionChange="changeTick('useScolColors')"></IonToggle>
 				</IonItem>
