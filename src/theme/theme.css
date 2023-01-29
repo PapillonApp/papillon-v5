@@ -229,8 +229,6 @@ ion-item .mdls[slot="start"] {
 }
 
 .ios ion-modal.modal-sheet::part(content) {
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
     overflow: hidden;
 }
 
@@ -244,7 +242,7 @@ ion-item .mdls[slot="start"] {
     font-weight: 400;
 }
 
-.ios ion-toast {
+.ios ion-toast:not(.toast-small) {
     --border-radius: 8px !important;
     --box-shadow: 0 2px 6px #00000015 !important;
 
@@ -252,9 +250,43 @@ ion-item .mdls[slot="start"] {
     font-weight: 400;
 }
 
+ion-toast::part(header) {
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--papillon-font) !important;
+}
+
+ion-toast::part(message) {
+    font-size: 15px;
+}
+
 ion-header ion-toolbar ion-title.md {
     font-size: 20px;
     font-weight: 600;
+}
+
+.toast-small {
+    max-width: 95vw !important;
+    --width: fit-content !important;
+    --border-radius: 80px !important;
+
+    /* center */
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+
+    margin: 0 !important;
+}
+
+.toast-small::part(container) {
+    width: fit-content;
+    height: 40px; 
+}
+
+.toast-small::part(header) {
+    width: fit-content;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 /* items */
@@ -293,6 +325,12 @@ ion-list.list-inset ion-list-header, ion-list.list-inset ion-item {
 
 ion-list.list-inset.ios ion-list-header ion-label {
     margin-top: 0px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+ion-list.list-inset.md ion-list-header {
+    padding-top: 8px;
 }
 
 /* action sheet */
@@ -304,4 +342,19 @@ ion-action-sheet {
     ion-segment * {
         --indicator-color: var(--ion-background-color) !important;
     }
+}
+
+/* only md */
+.ios .only-md {
+    display: none;
+}
+
+/* only ios */
+.md .only-ios {
+    display: none;
+}
+
+/* content */
+ion-content {
+    --padding-bottom: env(safe-area-inset-bottom) !important;
 }

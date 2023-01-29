@@ -1,19 +1,20 @@
 <script lang="ts">
-  import { IonApp, IonContent, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController } from '@ionic/vue';
+    import { IonApp, IonContent, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController } from '@ionic/vue';
 
-  import { defineComponent, ref } from 'vue';
-  import { useRoute } from 'vue-router';
+    import { defineComponent, ref } from 'vue';
+    import { useRoute } from 'vue-router';
 
-  import { globeOutline } from 'ionicons/icons';
+    import { globeOutline } from 'ionicons/icons';
+    import { AndroidShortcuts } from 'capacitor-android-shortcuts';
 
-  const GetUser = require('./functions/fetch/GetUserData');
-  const displayToast = require('./functions/utils/displayToast.js');
+    const GetUser = require('./functions/fetch/GetUserData');
 
-  import { LocalNotifications } from '@capacitor/local-notifications';
+    import { LocalNotifications } from '@capacitor/local-notifications';
 
-  import { SplashScreen } from '@capacitor/splash-screen';
+    import { SplashScreen } from '@capacitor/splash-screen';
 
-  interface UserData {
+    // defines the user data return interface
+    interface UserData {
                 student: {
                     name: string,
                     avatar: string,
@@ -28,7 +29,7 @@
                 }
             }
 
-  export default defineComponent({
+    export default defineComponent({
     name: 'App',
     components: {
         IonApp, 
@@ -65,6 +66,7 @@
     },
     setup() {
         const selectedIndex = ref(0);
+        // defines the tabs shown in the menu
         const appPages = [
             {
                 title: 'Accueil',
@@ -88,7 +90,7 @@
             },
             {
                 title: 'Vie scolaire',
-                url: '/school-life',
+                url: '/schoollife',
                 icon: "gavel",
             },
             {
@@ -97,23 +99,24 @@
                 icon: "newspaper",
             },
             {
+                title: 'Conversations',
+                url: '/conversations',
+                icon: "forum",
+            },
+            {
                 title: 'Paramètres',
                 url: '/settings',
                 icon: "settings",
             },
         ];
         
-        // disable some tabs
+        // hides some tabs when they are not anabled
         if(localStorage.getItem('viescolaireEnabled') !== 'true') {
             // remove school life tab
             appPages.splice(4, 1);
         }
-
-        if(localStorage.getItem('homepageEnabled') !== 'true') {
-            // remove home tab
-            appPages.splice(0, 1);
-        }
         
+        // weird ionic stuff
         const path = window.location.pathname.split('folder/')[1];
         if (path !== undefined) {
             selectedIndex.value = appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
@@ -132,11 +135,11 @@
         async presentToast(header: string, msg: string, color: string, icon: any) {
             const toast = await toastController.create({
                 header: header,
-                message: msg,
                 duration: 2000,
-                position: "bottom",
+                position: "top",
                 color: color,
-                icon: icon
+                icon: icon,
+                cssClass: "toast-small",
             });
 
             await toast.present();
@@ -153,8 +156,26 @@
                 localStorage.userData = JSON.stringify(data);
             });
         },
+        changePage() {
+            // close menu
+            const menu = document.querySelector('ion-menu');
+            setTimeout(() => {
+                menu?.close();
+            }, 110);
+        },
         async askNotifPerms() {
             await LocalNotifications.requestPermissions();
+        },
+        async TestNotif() {
+            const toast = await toastController.create({
+                header: "Bonjour, c'est une notification de test !",
+                message: "Exemple de notification",
+                duration: 200000,
+                position: "top",
+                color: "success",
+            });
+
+            await toast.present();
         }
     },
     mounted() {
@@ -193,7 +214,7 @@
 
         // check internet connection
         window.addEventListener('online', () => {
-            this.presentToast('Vous êtes de nouveau connecté à Internet.', 'Certaines informations nécéssiteront peut-être un rafraîchissement.', 'success', globeOutline)
+            this.presentToast('Vous êtes de nouveau connecté.','Certaines informations nécéssiteront peut-être un rafraîchissement.', 'success', globeOutline)
         });
 
         window.addEventListener('offline', () => {
@@ -218,7 +239,7 @@
                 // add school life tab
                 this.appPages.splice(3, 0, {
                     title: 'Vie scolaire',
-                    url: '/school-life',
+                    url: '/schoollife',
                     icon: "gavel",
                 });
             }
@@ -239,6 +260,30 @@
                 document.body.style.setProperty('--papillon-font', customizations.font);
             }
         }
+
+        /** 
+         * Android Shortcuts
+         * Needs to be changed to a new place in order to work...
+        */
+        AndroidShortcuts.isDynamicSupported().then((result) => {
+            if (result) {
+                AndroidShortcuts.addListener('shortcut', (response: any) => {
+                    switch (response.data) {
+                        case "timetable":
+                            this.$router.push('/timetable');
+                            break;
+                        case "homework":
+                            this.$router.push('/homework');
+                            break;
+                        case "grades":
+                            this.$router.push('/grades');
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+        })
     }
   });
 </script>
@@ -262,7 +307,7 @@
         </ion-header>
         <ion-content mode="md">
           <ion-list id="inbox-list"> 
-            <router-link class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
+            <router-link @click="changePage()" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
                 <ion-item button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
                     <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
                     <ion-label>{{ p.title }}</ion-label>

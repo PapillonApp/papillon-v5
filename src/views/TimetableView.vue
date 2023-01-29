@@ -2,6 +2,8 @@
   import { defineComponent } from 'vue';
   import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonFabButton, IonInput } from '@ionic/vue';
 
+  import { App } from '@capacitor/app';
+
   import displayToast from '@/functions/utils/displayToast.js';
   import subjectColor from '@/functions/utils/subjectColor.js';
   import timetableEdit from '@/functions/utils/timetableEdit.js';
@@ -99,7 +101,7 @@
                 if (customDay.getDate() == currentDay.getDate() && customDay.getMonth() == currentDay.getMonth() && customDay.getFullYear() == currentDay.getFullYear()) {
                     customCourse.course.time.start = st;
                     customCourse.course.time.end = en;
-                    customCourse.course.course.color = subjectColor.getSubjectColor(customCourse.course.data.subject, subjectColor.getRandomColor());
+                    customCourse.course.course.color = subjectColor.getSubjectColor(customCourse.course.data.subject, subjectColor.getRandomColor(true), true);
                     timetable.push(customCourse.course);
                 }
             });
@@ -114,17 +116,14 @@
 
             return timetable;
         },
+        resetSwiper() {
+            this.$refs.swiper.$el.swiper.slideTo(1, 0);
+
+            this.timetable.error = "STILL_LOADING";
+            this.yesterday.error = "STILL_LOADING";
+            this.tomorrow.error = "STILL_LOADING";
+        },
         getTimetables(force) {
-            // reset swiper and show loading spinner
-            if(this.shouldResetSwiper) {
-                this.$refs.swiper.$el.swiper.slideTo(1, 0);
-                this.shouldResetSwiper = false;
-
-                this.timetable.error = "STILL_LOADING";
-                this.yesterday.error = "STILL_LOADING";
-                this.tomorrow.error = "STILL_LOADING";
-            }
-
             // get timetable for rn
             GetTimetable(this.$rn, force).then((timetable) => {
                 if(timetable.error) {
@@ -191,7 +190,7 @@
                 }
             });
         },
-        openCoursModal(cours) {
+        async openCoursModal(cours) {
             // calculate length
             let len = cours.time.end - cours.time.start;
             len = (len / 60000) + " min";
@@ -222,6 +221,25 @@
                 status = "Le cours se déroule normalement";
             }
 
+            let notifEnabled = false;
+
+            // check if notification is enabled
+            await LocalNotifications.getPending().then((res) => {
+                let notifs = res.notifications;
+
+                let time = new Date(cours.time.start);
+                time.setMinutes(time.getMinutes() - 5);
+
+                // check if time = schedule.at
+                notifs.forEach((notif) => {
+                    let notifTime = new Date(notif.schedule.at);
+
+                    if(notifTime.getTime() == time.getTime()) {
+                        notifEnabled = true;
+                    }
+                });
+            });
+
             // set selectedCourse
             this.selectedCourse = {
                 name: cours.data.subject,
@@ -238,7 +256,8 @@
                 isCancelled: cours.status.isCancelled,
                 custom: cours.status.isCustom,
                 id: cours.course.id,
-                originalCourse: cours
+                originalCourse: cours,
+                notificationEnabled: notifEnabled
             }
 
             // open cours modal
@@ -252,7 +271,6 @@
             let en = new Date();
 
             let stValue = this.$refs.newCoursStartRef.$el.value;
-            console.log(stValue);
 
             // this.$refs.newCoursStart.value returns HH:mm
             st.setHours(stValue.split(':')[0]);
@@ -343,34 +361,77 @@
                 let time = new Date(course.time.start);
                 time.setMinutes(time.getMinutes() - 5);
 
-                await LocalNotifications.schedule({
-                    notifications: [
-                        {
-                            title: `${subject} - Ça commence bientôt !`,
-                            body: `Vous êtes en ${room} avec ${teacher}. Le cours commence dans 5 minutes.`,
-                            id: 1,
-                            schedule: { at: time },
-                            sound: "tone.ogg",
-                            attachments: null,
-                            actionTypeId: "",
-                            extra: null
-                        }
-                    ]
-                });
+                // check if time is in the future
+                if(time.getTime() < new Date().getTime()) {
+                    displayToast.presentToastFull(
+                        'Impossible de vous notifier pour ' + subject,
+                        'Le cours a déjà commencé ou est terminé.',
+                        'danger',
+                        notifications
+                    );
+                }
+                else {
+                    await LocalNotifications.schedule({
+                        notifications: [
+                            {
+                                title: `${subject} - Ça commence bientôt !`,
+                                body: `Vous êtes en ${room} avec ${teacher}. Le cours commence dans 5 minutes.`,
+                                id: 1,
+                                schedule: { at: time },
+                                sound: "tone.ogg",
+                                attachments: null,
+                                actionTypeId: "",
+                                extra: null
+                            }
+                        ]
+                    });
+                    
+                    // notify user
+                    this.selectedCourse.notificationEnabled = true;
 
-                // close cours modal
-                this.$refs.coursModal.$el.dismiss();
-
-                // notify user
-                displayToast.presentToastFull(
-                    'Notifications activées pour ' + subject,
-                    'Vous receverez une notification 5 minutes avant le début du cours',
-                    'light',
-                    notifications
-                );
+                    displayToast.presentToastFull(
+                        'Notifications activées pour ' + subject,
+                        'Vous receverez une notification 5 minutes avant le début du cours',
+                        'light',
+                        notifications
+                    );
+                }
             } catch (error) {
                 displayToast.presentError("Une erreur est survenue lors de l'activation des notifications", "danger", error);
             }
+        },
+        async unsetNotif(course) {
+            // find notification
+            await LocalNotifications.getPending().then((res) => {
+                let notifs = res.notifications;
+                console.log(notifs);
+
+                let time = new Date(course.time.start);
+                time.setMinutes(time.getMinutes() - 5);
+
+                // check if time = schedule.at
+                notifs.forEach(async (notif) => {
+                    let notifTime = new Date(notif.schedule.at);
+
+                    console.log(notifTime.getTime() + ' == ' + time.getTime());
+
+                    if(notifTime.getTime() == time.getTime()) {
+                        await LocalNotifications.cancel({ notifications: [notif] });
+
+                        console.log('notif cancelled');
+
+                        // notify user
+                        this.selectedCourse.notificationEnabled = false;
+
+                        displayToast.presentToastFull(
+                            'Notifications désactivées pour ' + course.data.subject,
+                            'Vous ne receverez plus de notifications pour ce cours',
+                            'light',
+                            notifications
+                        );
+                    }
+                });
+            });
         }
     },
     data() {
@@ -391,6 +452,7 @@
                 end: '',
                 length: '',
                 status: '',
+                notificationEnabled: false,
             },
             newCoursModalOpen: false,
             rnPickerModalOpen: false,
@@ -432,11 +494,11 @@
                     this.$rn = newRn;
                     this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
+                    // reset swiper
+                    this.resetSwiper()
+
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
-
-                    // reset swiper
-                    this.shouldResetSwiper = true;
                 }
 
                 // check if swiper is on tomorrow
@@ -448,13 +510,22 @@
                     this.$rn = newRn;
                     this.rnCalendarString = this.$rn.toISOString().split('T')[0];
 
+                    // reset swiper
+                    this.resetSwiper()
+
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
-
-                    // reset swiper
-                    this.shouldResetSwiper = true;
                 }
-            }, 100);
+            }, 0);
+        });
+
+        App.addListener('backButton', () => {
+            if(this.newCoursModalOpen) {
+                this.newCoursModalOpen = false;
+            } 
+            else if(this.rnPickerModalOpen) {
+                this.rnPickerModalOpen = false;
+            }
         });
     }
   });
@@ -520,26 +591,26 @@
                         @open="openCoursModal(cours)"
                     />
 
-                    <div v-if="!$data[`${day}`].loading"><div v-if="!$data[`${day}`].error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
+                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && !$data[`${day}`].error && !$data[`${day}`].loading">
                         <span class="material-symbols-outlined mdls">upcoming</span>
                         <h2>Pas de cours enregistrés pour cette journée</h2>
                         <p>Réessayez un autre jour dans le calendrier ou balayez l'écran.</p>
 
                         <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                    </div></div></div>
+                    </div>
 
-                    <div v-if="$data[`${day}`].error == 'ERR_NETWORK'" class="Error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
+                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].error == 'ERR_NETWORK' && !$data[`${day}`].loading">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
-                    </div></div>
+                    </div>
 
-                    <div v-if="$data[`${day}`].loading" class="Error"><div class="NoCours" v-if="$data[`${day}`].length == 0">
+                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].loading">
                         <IonSpinner></IonSpinner>
                         <br/>
                         <h2>Téléchargement des prochains cours...</h2>
                         <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
-                    </div></div>
+                    </div>
                 </IonList>
             </swiper-slide>
         </swiper>
@@ -590,7 +661,7 @@
         </IonModal>
 
 
-        <IonModal :is-open="rnPickerModalOpen" ref="rnPickerModal" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
+        <IonModal :is-open="rnPickerModalOpen" ref="rnPickerModal" class="datetimeModal" @didDismiss="changernPickerModalOpen(false)" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
           <IonHeader>
             <IonToolbar>
               <ion-title>Sélection de la date</ion-title>
@@ -661,10 +732,16 @@
                         <ion-label>
                             <p>Horaires</p>
                             <h2>De {{selectedCourse.start}} à {{selectedCourse.end}}</h2>
+                            <p>{{ selectedCourse.notificationEnabled }}</p>
                         </ion-label>
-                        <ion-button class="itemBtn" fill="clear" slot="end" @click="setNotif(selectedCourse.originalCourse)">
+
+                        <ion-button v-if="!selectedCourse.notificationEnabled" class="itemBtn" fill="clear" slot="end" @click="setNotif(selectedCourse.originalCourse)">
                             <span class="material-symbols-outlined mdls" slot="start">notifications</span>
                             Me notifier
+                        </ion-button>
+                        <ion-button v-else class="itemBtn" color="danger" fill="clear" slot="end" @click="unsetNotif(selectedCourse.originalCourse)">
+                            <span class="material-symbols-outlined mdls" slot="start">notifications_off</span>
+                            Ne pas me notifier
                         </ion-button>
                     </ion-item>
 

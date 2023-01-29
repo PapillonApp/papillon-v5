@@ -13,6 +13,8 @@ import 'swiper/css';
 import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
 import GetToken from "@/functions/login/GetToken.js";
 
+import { Browser } from '@capacitor/browser';
+
 import axios from 'axios';
 
 export default defineComponent({
@@ -91,7 +93,7 @@ export default defineComponent({
             }
 
             // get homeworks for rn
-            GetHomeworks(this.$rn, force).then((homeworks) => {
+            GetHomeworks(this.$rn, this.$rn, force).then((homeworks) => {
                 this.homeworks = homeworks;
 
                 this.loadedrnButtonString = this.createDateString(this.$rn);
@@ -106,7 +108,7 @@ export default defineComponent({
 
             // get homeworks for yesterday
             let yesterdayRN = new Date(this.$rn) - 86400000;
-            GetHomeworks(yesterdayRN, force).then((homeworks) => {
+            GetHomeworks(yesterdayRN, yesterdayRN, force).then((homeworks) => {
                 this.yesterday = homeworks;
                 this.yesterday.loading = false;
             });
@@ -114,7 +116,7 @@ export default defineComponent({
             // get homeworks for tomorrow
             let tomorrowRN = new Date(this.$rn);
             tomorrowRN.setDate(tomorrowRN.getDate() + 1);
-            GetHomeworks(tomorrowRN, force).then((homeworks) => {
+            GetHomeworks(tomorrowRN, tomorrowRN, force).then((homeworks) => {
                 this.tomorrow = homeworks;
                 this.tomorrow.loading = false;
             });
@@ -137,8 +139,10 @@ export default defineComponent({
         closeHomework() {
             this.$refs.hwModal.$el.dismiss();
         },
-        openLink(url) {
-                window.open(url, "_blank");
+        async openLink(url, name) {
+            await Browser.open({
+                url: url
+            });
         },
         changernPickerModalOpen(state) {
             this.rnPickerModalOpen = state;
@@ -471,7 +475,7 @@ export default defineComponent({
                 </swiper-slide>
             </swiper>
 
-            <IonModal ref="rnPickerModal" :is-open="rnPickerModalOpen" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
+            <IonModal ref="rnPickerModal" @didDismiss="changernPickerModalOpen(false)" :is-open="rnPickerModalOpen" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
                 <IonHeader>
                     <IonToolbar>
                         <ion-title>Sélection de la date</ion-title>

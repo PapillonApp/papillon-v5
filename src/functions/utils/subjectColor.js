@@ -1,11 +1,13 @@
 /* give 50 random colors of all hues but with enough contrast with white text */
 let colors = ['#1E90FF ', '#228B22 ', '#8B008B ', '#F7A139 ', '#4B0082 ', '#43C59E', '#5C80BC', '#F15152', '#1244B8', '#17BEBB', '#6B8E23', '#72408A', '#B8860B', '#9B4BBD', '#F0E68C', '#FF69B4', '#008080', '#D46C17', '#209488', '#008704', '#4C7B8B'];
 
-function getRandomColor() {
+function getRandomColor(returnAll=false) {
 	let attributedColors = JSON.parse(localStorage.getItem('SubjectColors')) || {};
 	
 	// remove all colors that are already attributed
-	colors = colors.filter(color => !Object.values(attributedColors).includes(color));
+	if (!returnAll) {
+		colors = colors.filter(color => !Object.values(attributedColors).includes(color));
+	}
 
 	if (colors.length == 0) {
 		return '#6AB764';
@@ -16,30 +18,30 @@ function getRandomColor() {
 }
 
 function LightenDarkenColor(col,amt) {
-    var usePound = false;
-    if ( col[0] == "#" ) {
-        col = col.slice(1);
-        usePound = true;
-    }
+	var usePound = false;
+	if ( col[0] == "#" ) {
+		col = col.slice(1);
+		usePound = true;
+	}
 
-    var num = parseInt(col,16);
+	var num = parseInt(col,16);
 
-    var r = (num >> 16) + amt;
+	var r = (num >> 16) + amt;
 
-    if ( r > 255 ) r = 255;
-    else if  (r < 0) r = 0;
+	if ( r > 255 ) r = 255;
+	else if  (r < 0) r = 0;
 
-    var b = ((num >> 8) & 0x00FF) + amt;
+	var b = ((num >> 8) & 0x00FF) + amt;
 
-    if ( b > 255 ) b = 255;
-    else if  (b < 0) b = 0;
-    
-    var g = (num & 0x0000FF) + amt;
+	if ( b > 255 ) b = 255;
+	else if  (b < 0) b = 0;
+	
+	var g = (num & 0x0000FF) + amt;
 
-    if ( g > 255 ) g = 255;
-    else if  ( g < 0 ) g = 0;
+	if ( g > 255 ) g = 255;
+	else if  ( g < 0 ) g = 0;
 
-    return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
+	return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
 }
 
 function lightenColor(color, percent) {
@@ -62,7 +64,7 @@ function setSubjectColor(subjectName, color, force=false) {
 		color = '#' + color;
 	}
 
-	if (subjectColors[subjectName] && !force) {
+	if (subjectColors[subjectName] != undefined && !force) {
 		return subjectColors[subjectName];
 	}
 
@@ -77,7 +79,7 @@ function setSubjectColor(subjectName, color, force=false) {
 	return color;
 }
 
-function getSubjectColor(subjectName, color) {
+function getSubjectColor(subjectName, color, custom=false) {
 	let subjectColors = JSON.parse(localStorage.getItem('SubjectColors')) || {};
 
 	if (subjectName.includes('>')) {
@@ -92,7 +94,11 @@ function getSubjectColor(subjectName, color) {
 		return subjectColors[subjectName];
 	}
 	
-	return setSubjectColor(subjectName, getRandomColor());
+	if (localStorage.getItem('useScolColors') != 'true' && !custom) {
+		color = getRandomColor()
+	}
+
+	return setSubjectColor(subjectName, color);
 }
 
 export default { setSubjectColor, getSubjectColor, getRandomColor, lightenColor, darkenHexColor };

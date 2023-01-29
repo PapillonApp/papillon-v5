@@ -4,13 +4,13 @@
   
 <script lang="ts">
     import { IonNav } from '@ionic/vue';
-    import LoginView from './LoginView.vue';
+    import LoginWelcome from './LoginWelcome.vue';
   
     export default {
       components: { IonNav },
       data() {
         return {
-          component: LoginView,
+          component: LoginWelcome,
         };
       }
     };

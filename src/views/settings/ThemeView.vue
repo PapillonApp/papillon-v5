@@ -9,117 +9,138 @@
 		IonListHeader,
 		IonItem,
 		IonChip,
-        IonBackButton,
-        IonButtons,
-        IonButton,
-        IonLabel,
-        IonSelect,
-        IonSelectOption,
+		IonButtons,
+		IonButton,
+		IonLabel,
+		IonSelect,
+		IonSelectOption,
+		IonRadioGroup,
+		IonRadio,
+		IonToggle
 	} from '@ionic/vue';
 
 	const displayToast = require('@/functions/utils/displayToast.js');
+	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
 			IonHeader,
 			IonToolbar,
-            IonBackButton,
-            IonButtons,
-            IonButton,
-            IonLabel,
-            IonItem,
-            IonList,
-            IonListHeader,
-            IonSelect,
-            IonSelectOption,
-		},
-		setup() {
-			return {
-                availableFonts: ["Hind", "Asap", "Roboto Slab", "system-ui"]
-			}
-		},
-		methods: {
-            hexToRgb(hex) {
-                let r = 0, g = 0, b = 0;
-                // 3 digits
-                if (hex.length == 4) {
-                    r = "0x" + hex[1] + hex[1];
-                    g = "0x" + hex[2] + hex[2];
-                    b = "0x" + hex[3] + hex[3];
-                // 6 digits
-                } else if (hex.length == 7) {
-                    r = "0x" + hex[1] + hex[2];
-                    g = "0x" + hex[3] + hex[4];
-                    b = "0x" + hex[5] + hex[6];
-                }
-                return +r + "," + +g + "," + +b;
-            },
-            reset() {
-                // remove the customizations from local storage
-                localStorage.removeItem('customizations');
-
-                // reset the css variables
-                document.body.style = '';
-
-                // get --ion-color-primary from css
-                let mainColor = getComputedStyle(document.body).getPropertyValue('--ion-color-primary');
-                // apply it to the input
-                this.$refs.mainColorInput.value = mainColor;
-
-                // reset the font select
-                this.$refs.fontSelect.value = this.availableFonts[0];
-            },
-            fontChange() {
-                let font = this.$refs.fontSelect.$el.value;
-                document.body.style.setProperty('--papillon-font', '"' + font + '"');
-
-                // save it in local storage
-                let customizations = JSON.parse(localStorage.getItem('customizations')) || {};
-
-                customizations.font = font;
-
-                localStorage.setItem('customizations', JSON.stringify(customizations));
-            }
+			IonButtons,
+			IonButton,
+			IonLabel,
+			IonItem,
+			IonList,
+			IonRadioGroup,
+			IonRadio,
+			PapillonBackButton,
+			IonToggle
 		},
 		data() {
 			return {
-				
+				availableFonts: [
+					{ name: "Hind (Par défaut)", font: "Hind" },
+					{ name: "Asap", font: "Asap" },
+					{ name: "Merriweather", font: "Merriweather" },
+					{ name: "Sofia Sans", font: "Sofia Sans" },
+					{ name: "OpenDyslexic (Expérimental)", font: "OpenDyslexic" },
+					{ name: "Système", font: "system-ui" },
+				],
+				currentFont: getComputedStyle(document.body).getPropertyValue('--papillon-font'),
+			}
+		},
+		methods: {
+			changeTick(option) {
+				let el = this.$refs[option];
+				let elChecked = el.$el.checked;
+
+				localStorage.setItem(option, elChecked);
+
+				document.dispatchEvent(new CustomEvent('settingsUpdated'));
+
+				if (option == "useScolColors") {
+					localStorage.removeItem('SubjectColors');
+				}
+			},
+			hexToRgb(hex) {
+				let r = 0, g = 0, b = 0;
+				// 3 digits
+				if (hex.length == 4) {
+					r = "0x" + hex[1] + hex[1];
+					g = "0x" + hex[2] + hex[2];
+					b = "0x" + hex[3] + hex[3];
+				// 6 digits
+				} else if (hex.length == 7) {
+					r = "0x" + hex[1] + hex[2];
+					g = "0x" + hex[3] + hex[4];
+					b = "0x" + hex[5] + hex[6];
+				}
+				return +r + "," + +g + "," + +b;
+			},
+			reset() {
+				// remove the customizations from local storage
+				localStorage.removeItem('customizations');
+
+				// reset the css variables
+				document.body.style = '';
+
+				// get --ion-color-primary from css
+				let mainColor = getComputedStyle(document.body).getPropertyValue('--ion-color-primary');
+				// apply it to the input
+				this.$refs.mainColorInput.value = mainColor;
+
+				// reset the font select
+				this.currentFont = this.availableFonts[0].font;
+			},
+			fontChange() {
+				let font = this.$refs.fontSelect.$el.value;
+				this.currentFont = font;
+
+				document.body.style.setProperty('--papillon-font', '"' + font + '"');
+
+				// save it in local storage
+				let customizations = JSON.parse(localStorage.getItem('customizations')) || {};
+
+				customizations.font = font;
+
+				localStorage.setItem('customizations', JSON.stringify(customizations));
 			}
 		},
 		mounted() {
-            // mainColorInput
-            // get --ion-color-primary from css
-            let mainColor = getComputedStyle(document.body).getPropertyValue('--ion-color-primary');
-            // apply it to the input
-            this.$refs.mainColorInput.value = mainColor;
+			// mainColorInput
+			// get --ion-color-primary from css
+			let mainColor = getComputedStyle(document.body).getPropertyValue('--ion-color-primary');
+			// apply it to the input
+			this.$refs.mainColorInput.value = mainColor;
 
-            // when the input value change
-            this.$refs.mainColorInput.addEventListener('change', (e) => {
-                // get the new value
-                let newColor = e.target.value;
-                console.log(newColor);
-                // apply it to the css variable
-                document.body.style.setProperty('--ion-color-primary', newColor);
-                document.body.style.setProperty('--ion-color-primary-rgb', this.hexToRgb(newColor));
-                document.body.style.setProperty('--ion-color-primary-shade', newColor);
-                document.body.style.setProperty('--ion-color-primary-tint', newColor);
-                // save it in local storage
-                let customizations = JSON.parse(localStorage.getItem('customizations')) || {};
+			// when the input value change
+			this.$refs.mainColorInput.addEventListener('change', (e) => {
+				// get the new value
+				let newColor = e.target.value;
+				// apply it to the css variable
+				document.body.style.setProperty('--ion-color-primary', newColor);
+				document.body.style.setProperty('--ion-color-primary-rgb', this.hexToRgb(newColor));
+				document.body.style.setProperty('--ion-color-primary-shade', newColor);
+				document.body.style.setProperty('--ion-color-primary-tint', newColor);
+				// save it in local storage
+				let customizations = JSON.parse(localStorage.getItem('customizations')) || {};
 
-                customizations.mainColor = {
-                    hex: newColor,
-                    rgb: this.hexToRgb(newColor)
-                }
+				customizations.mainColor = {
+					hex: newColor,
+					rgb: this.hexToRgb(newColor)
+				}
 
-                localStorage.setItem('customizations', JSON.stringify(customizations));
-            });
+				localStorage.setItem('customizations', JSON.stringify(customizations));
+			});
+			
+			// get useScolColors ref
+			let useScolColors = this.$refs.useScolColors;
+			useScolColors.$el.checked = localStorage.getItem('useScolColors') == 'true';
 
-            // fontSelect
-            // get --papillon-font from css
-            let font = getComputedStyle(document.body).getPropertyValue('--papillon-font');
-            // apply it to the input
-            this.$refs.fontSelect.$el.value = font.replace(/"/g, '');
+			// fontSelect
+			// get --papillon-font from css
+			this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font'); 
 		}
 	});
 </script>
@@ -129,12 +150,12 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<IonBackButton mode="md"></IonBackButton>
+					<PapillonBackButton></PapillonBackButton>
 				</ion-buttons>
 
 				<ion-title mode="md">Personnaliser Papillon</ion-title>
 
-                <ion-buttons slot="end">
+				<ion-buttons slot="end">
 					<IonButton @click="reset()">Réinitialiser</IonButton>
 				</ion-buttons>
 
@@ -144,44 +165,38 @@
 		<ion-content :fullscreen="true">
 
 			<IonList :inset="true" lines="inset">
-                <IonListHeader>
-                    <IonLabel>
-                        <p>Couleurs</p>
-                    </IonLabel>
-                </IonListHeader>
+				<IonItem>
+					<IonLabel>
+						<h2>Couleur principale</h2>
+						<p>Couleur dominante de l'application</p>
+					</IonLabel>
+					<input type="color" ref="mainColorInput" class="colorInput" slot="end"/>
+				</IonItem>
 
-                <IonItem>
-                    <IonLabel>
-                        <h2>Couleur principale</h2>
-                        <p>Couleur dominante de l'application</p>
-                    </IonLabel>
-                    <input type="color" ref="mainColorInput" class="colorInput" slot="end"/>
-                </IonItem>
-            </IonList>
+				<IonItem>
+					<span class="material-symbols-outlined mdls" slot="start">invert_colors</span>
+					<IonLabel>
+						<h2>Utiliser les couleurs de votre service scolaire</h2>
+						<p>Permet d'utiliser les couleurs de votre service scolaire (Pronote, Ecoledirecte, ...) pour identifier les matières.</p>
+					</IonLabel>
+					<IonToggle slot="end" ref="useScolColors" @ionChange="changeTick('useScolColors')"></IonToggle>
+				</IonItem>
+			</IonList>
 
-            <IonList :inset="true" lines="inset">
-                <IonListHeader>
-                    <IonLabel>
-                        <p>Polices</p>
-                    </IonLabel>
-                </IonListHeader>
-
-                <IonItem>
-                    <IonLabel class="paddingFixMd">
-                        <h2>Police principale</h2>
-                        <p>Police utilisée dans les titres et autres..</p>
-                    </IonLabel>
-                    <ion-select placeholder="Police" slot="end" @ionChange="fontChange" ref="fontSelect" okText="Sélectionner" cancelText="Annuler">
-                        <ion-select-option :key="i" v-for="(font, i) in availableFonts" :value="font">{{ font }}</ion-select-option>
-                    </ion-select>
-                </IonItem>
-            </IonList>
+			<IonList :inset="true" lines="inset">
+				<ion-radio-group :value="currentFont" ref="fontSelect" @ionChange="fontChange">
+					<ion-item :key="i" v-for="(font, i) in availableFonts">
+						<ion-label :style="`font-family: '${font.font}';`">{{ font.name }}</ion-label>
+						<ion-radio slot="end" :value="font.font"></ion-radio>
+					</ion-item>
+				</ion-radio-group>
+			</IonList>
 
 		</ion-content>
 </template>
 
 <style scoped>
 	.md .paddingFixMd {
-        padding-left: 15px;
-    }
+		padding-left: 15px;
+	}
 </style>

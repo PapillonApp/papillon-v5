@@ -1,5 +1,7 @@
+// Necessary imports for Vue
 import { createApp } from 'vue'
-import App from './App.vue'
+// Define MainApp.vue as the main component
+import MainApp from './MainApp.vue'
 import router from './router';
 
 import { IonicVue } from '@ionic/vue';
@@ -29,7 +31,7 @@ import './theme/theme.css';
 // TypeScript custom components
 require('@/functions/app.ts');
 
-export const app = createApp(App)
+export const app = createApp(MainApp)
   .use(IonicVue)
   .use(router);
   

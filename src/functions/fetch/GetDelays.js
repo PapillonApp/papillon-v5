@@ -20,13 +20,11 @@ async function getPronoteDelays(forceReload) {
 	const token = localStorage.getItem('token');
 
 	// construct url
-	let URL = `${API}/infos?token=${token}`;
-
-	let alwaysTrueLol = 0
+	let URL = `${API}/delays?token=${token}`;
 
 	let delays = {};
 	let cache = localStorage.getItem('DelaysCache');
-	if (cache != null && !forceReload && alwaysTrueLol !== 0) {
+	if (cache != null && !forceReload) {
 		delays = JSON.parse(cache).delays;
 
 		return new Promise((resolve, reject) => {
@@ -37,41 +35,6 @@ async function getPronoteDelays(forceReload) {
 		return axios.get(URL)
 		.then((response) => {
 			delays = response.data;
-
-			// FIXME : NEED TO BE DELETED AFTER DESIGN MADE
-			delays = [
-				{
-					"id": "1DB8FEAD2862E",
-					"date": "2022-11-22 10:00",
-					"justified": true,
-					"duration": 5,
-					"justification": "RDV MEDICAL EXTERIEUR",
-					"reasons": [
-						"RDV MEDICAL EXTERIEUR"
-					]
-				},
-				{
-					"id": "10E95E4D2866F",
-					"date": "2023-04-03 10:00",
-					"justified": false,
-					"duration": 15,
-					"justification": "RDV MEDICAL EXTERIEUR",
-					"reasons": [
-						"RDV MEDICAL EXTERIEUR"
-					]
-				},
-				{
-					"id": "165B7E4D2863B",
-					"date": "2023-05-05 09:00",
-					"justified": true,
-					"duration": 1,
-					"justification": "RDV MEDICAL EXTERIEUR",
-					"reasons": [
-						"RDV MEDICAL EXTERIEUR"
-					]
-				}
-			]
-
 			delays = constructPronoteDelays(delays);
 			
             let today = new Date();

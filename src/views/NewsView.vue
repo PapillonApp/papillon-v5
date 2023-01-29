@@ -2,6 +2,8 @@
     import { defineComponent } from 'vue';
     import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonModal, IonCard, IonSpinner, IonChip, IonSearchbar } from '@ionic/vue';
     
+    import { Browser } from '@capacitor/browser';
+
     import { calendarOutline } from 'ionicons/icons';
 
     import {version} from '/package'
@@ -34,7 +36,8 @@
                 fullNews: [],
                 openedNews: [],
                 presentingElement: null,
-                isLoading: false
+                isLoading: false,
+                newsOpen: false,
             }
         },
         methods: {
@@ -42,13 +45,15 @@
                 this.openedNews = news;
                 
                 // open modal with ref
-                this.$refs.modal.$el.present();
+                this.newsOpen = true;
             },
             closeNews() {
-                this.$refs.modal.$el.dismiss();
+                this.newsOpen = false;
             },
-            openLink(url) {
-                window.open(url, "_blank");
+            async openLink(url, name) {
+                await Browser.open({
+                    url: url
+                });
             },
             getNewsRefresh() {
                 GetNews(true).then((data) => {
@@ -91,9 +96,12 @@
             GetNews().then((data) => {
                 this.news = data;
                 this.fullNews = data;
-                console.log(this.news);
                 
                 this.isLoading = false;
+            });
+
+            document.addEventListener('tokenUpdated', (e) => {
+                this.getNewsRefresh();
             });
 
             return false;
@@ -131,11 +139,17 @@
             </IonToolbar>
         </IonHeader>
 
-        <div class="NoCours" v-if="isLoading">
+        <div class="NoCours" v-if="news.length == 0 && isLoading">
             <IonSpinner></IonSpinner>
             <br/>
             <h2>Téléchargement des actualités...</h2>
             <p>Veuillez patienter pendant qu'on récupère les actualités depuis nos serveurs...</p>
+        </div>
+
+        <div class="NoCours" v-if="news.length == 0 && !isLoading">
+            <span class="material-symbols-outlined mdls">feed</span>
+            <h2>Aucune actualité n'a été trouvée.</h2>
+            <p>Revenez plus tard ou essayer de rafraîchir.</p>
         </div>
 
         <IonList>
@@ -150,7 +164,7 @@
             </IonItem>
         </IonList>
 
-        <IonModal :presenting-element="presentingElement" :canDismiss="true" ref="modal">
+        <IonModal :is-open="newsOpen" :presenting-element="presentingElement" :canDismiss="true" ref="modal">
             <IonHeader translucent>
                 <IonToolbar>
                     <IonTitle>{{ openedNews.title }}</IonTitle>
@@ -175,7 +189,7 @@
                 <div class="newsModalContentContent" v-html="openedNews.htmlContent"></div>
 
                 <div class="chips" v-if="openedNews.attachments.length !== 0">
-                    <ion-chip v-for="(attachment, i) in openedNews.attachments" :key="i" @click="openLink(attachment.url)" color="dark" :outline="true">
+                    <ion-chip v-for="(attachment, i) in openedNews.attachments" :key="i" @click="openLink(attachment.url, attachment.name)" color="dark" :outline="true">
                         <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
 
                         <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
@@ -183,8 +197,6 @@
                         <p>{{attachment.name}}</p>
                     </ion-chip>
                 </div>
-                
-                <div class="spacing"></div>
             </IonContent>
         </IonModal>
       </ion-content>
@@ -198,10 +210,6 @@
 
     .newsModalContent * {
         margin: 0;
-    }
-
-    .newsModalContent .spacing {
-        height: 80px;
     }
 
     .newsModalContent hr {
