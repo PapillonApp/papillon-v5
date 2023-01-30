@@ -32,13 +32,17 @@ import './theme/theme.css';
 require('@/functions/app.ts');
 
 export const app = createApp(MainApp)
-  .use(IonicVue)
-  .use(router);
-  
+	.use(IonicVue)
+	.use(router);
+	
 router.isReady().then(() => {
-  app.mount('#app');
+	app.mount('#app');
 });
 
 // Global vars in Vue
 app.config.globalProperties.$rn = new Date;
-app.config.globalProperties.$api = "https://api.getpapillon.xyz";
+if (localStorage.getItem('customApiUrl') == null) {
+	app.config.globalProperties.$api = "https://api.getpapillon.xyz";
+} else {
+	app.config.globalProperties.$api = localStorage.getItem('customApiUrl');
+}
