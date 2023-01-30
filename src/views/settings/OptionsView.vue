@@ -51,14 +51,14 @@
 
                 document.dispatchEvent(new CustomEvent('settingsUpdated'));
             },
-            changeJoinSubjects() {
-                this.changeTick('joinSubjects');
-                if (localStorage.getItem('joinSubjects') == 'true') {
+            changeGroupSubjects() {
+                this.changeTick('groupSubjects');
+                if (localStorage.getItem('groupSubjects') == 'true') {
                     displayToast.presentNativeToast(
                         'Les matières sont désormais regroupées'
                     );
                 } else {
-                    localStorage.removeItem('excludedJoinSubjects');
+                    localStorage.removeItem('excludedGroupSubjects');
                     displayToast.presentNativeToast(
                         'Les matières sont désormais séparées'
                     );
@@ -78,9 +78,9 @@
             let changePeriodSelection = this.$refs.changePeriodSelection;
             changePeriodSelection.$el.checked = localStorage.getItem('changePeriodSelection') == 'true';
 
-            // get joinSubjects ref
-            let joinSubjects = this.$refs.joinSubjects;
-            joinSubjects.$el.checked = localStorage.getItem('joinSubjects') == 'true';
+            // get groupSubjects ref
+            let groupSubjects = this.$refs.groupSubjects;
+            groupSubjects.$el.checked = localStorage.getItem('groupSubjects') == 'true';
         }
 	});
 </script>
@@ -121,7 +121,7 @@
                         <h2>Joindre les matières identiques</h2>
                         <p>Permet de joindre les matières identiques entre-elle</p>
                     </IonLabel>
-                    <IonToggle slot="end" ref="joinSubjects" @ionChange="changeJoinSubjects('joinSubjects')"></IonToggle>
+                    <IonToggle slot="end" ref="groupSubjects" @ionChange="changeGroupSubjects('groupSubjects')"></IonToggle>
                 </IonItem>
             </IonList>
 
