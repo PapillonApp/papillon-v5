@@ -159,7 +159,7 @@
 
         </div>
         <div class="chatbox">
-            <input @keydown="inputKeyPress" type="text" class="chatbox_input" placeholder="Écrire quelque chose..." />
+            <input @keydown="inputKeyPress" type="text" class="chatbox_input" placeholder="Non disponible pour le moment" disabled />
         </div>
 	</ion-content>
 </template>
