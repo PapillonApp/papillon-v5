@@ -90,6 +90,10 @@
             tweakProgressBarShowPast.$el.checked = localStorage.getItem('tweakProgressBarShowPast') != 'false'; // default true
 
 
+
+            // get joinSubjects ref
+            let joinSubjects = this.$refs.joinSubjects;
+            joinSubjects.$el.checked = localStorage.getItem('joinSubjects') == 'true';
         }
 	});
 </script>
@@ -117,11 +121,20 @@
 
                 <IonItem>
                     <span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
-                    <IonLabel>
+                    <IonLabel class="ion-text-wrap">
                         <h2>Remettre les notes sur 20</h2>
                         <p>Uniformise le barème de toutes les notes</p>
                     </IonLabel>
                     <IonToggle slot="end" ref="tweakGrades20" @ionChange="changeTick('tweakGrades20')"></IonToggle>
+                </IonItem>
+
+                <IonItem>
+                    <span class="material-symbols-outlined mdls" slot="start">join_inner</span>
+                    <IonLabel class="ion-text-wrap">
+                        <h2>Joindre les matières identiques</h2>
+                        <p>Permet de joindre les matières identiques entre-elle</p>
+                    </IonLabel>
+                    <IonToggle slot="end" ref="joinSubjects" @ionChange="changeTick('joinSubjects')"></IonToggle>
                 </IonItem>
             </IonList>
 
@@ -135,7 +148,7 @@
 
                 <IonItem>
                     <span class="material-symbols-outlined mdls" slot="start">toggle_off</span>
-                    <IonLabel>
+                    <IonLabel class="ion-text-wrap">
                         <h5>Onglet notes</h5>
                         <h2>Activer la séléction de période</h2>
                         <p>Permet de changer de trimestre/semestre</p>
@@ -145,7 +158,7 @@
 
                 <IonItem>
                     <span class="material-symbols-outlined mdls" slot="start">gavel</span>
-                    <IonLabel>
+                    <IonLabel class="ion-text-wrap">
                         <h2>Activer l'onglet vie scolaire</h2>
                         <p>Active l'onglet de vie scolaire</p>
                     </IonLabel>

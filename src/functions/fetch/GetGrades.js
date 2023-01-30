@@ -6,6 +6,7 @@ import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
 import subjectColor from '@/functions/utils/subjectColor.js'
+import { Cpu } from 'lucide-vue-next';
 
 // funcs
 function isFloat(n){
@@ -149,6 +150,57 @@ function determineSignificant(significant, service) {
     return result;
 }
 
+function generateRandomId() {
+	return Math.random().toString(36).substr(2, 9).toUpperCase();
+}
+
+function joinSubjects(subjectData, markArray) {
+	let subject = []
+	let subjectName = '';
+	let subjectId = '';
+	let joined = false;
+	let excluded = false;
+
+	if (localStorage.getItem('joinSubjects') != 'true') {
+		subject = markArray.find(subject => subject.id == subjectData.id);
+		subjectName = subjectData.name;
+		subjectId = subjectData.id;
+	} else {
+		if (localStorage.getItem('excludedJoinSubjects') != null) {
+			let excludedJoinSubjects = JSON.parse(localStorage.getItem('excludedJoinSubjects'));
+			excludedJoinSubjects.forEach(excludedSubject => {
+				if (subjectData.name.split(' > ')[0] == excludedSubject) {
+					excluded = true;
+				} else {
+					excluded = false;
+				}
+			});
+		}
+
+		if (excluded) {
+			subject = markArray.find(subject => subject.id == subjectData.id);
+			subjectName = subjectData.name;
+			subjectId = subjectData.id;
+		} else {
+			subject = markArray.find(subject => subject.name == subjectData.name.split(' > ')[0]);
+			subjectName = subjectData.name.split(' > ')[0];
+			subjectId = subjectData.id;
+
+			if (subjectData.name.split(' > ').length > 1) {
+				joined = true;
+				subjectId = generateRandomId();
+			}
+		}
+	}
+
+	return {
+		subject: subject, 
+		subjectName: subjectName, 
+		subjectId: subjectId, 
+		joined: joined
+	}
+}
+
 // pronote : construct grades
 function constructPronoteGrades(grades) {    
     let averages = grades.averages;
@@ -159,14 +211,14 @@ function constructPronoteGrades(grades) {
     // for each mark, add it to the corresponding subject in the array
     marks.forEach(mark => {
         // check if subject exists
-        let subject = markArray.find(subject => subject.id == mark.subject.id);
+		let { subject, subjectName, subjectId, joined } = joinSubjects(mark.subject, markArray);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
-                color: subjectColor.getSubjectColor(mark.subject.name, subjectColor.getRandomColor()),
-                name: mark.subject.name,
-                id: mark.subject.id,
+                name: subjectName,
+                id: subjectId,
+                joined: joined,
                 marks: []
             }
 
@@ -176,7 +228,7 @@ function constructPronoteGrades(grades) {
         // add mark to subject
         let newMark = {
             info: {
-                subject: mark.subject.name,
+                subject: subjectName,
                 date: mark.date,
                 description: mark.description || "Pas d'intitulé",
             },
@@ -236,22 +288,20 @@ function constructPronoteGrades(grades) {
     // add averages
     averages.forEach(average => {
         // check if subject exists
-        let subject = markArray.find(subject => subject.id == average.subject.id);
+		
+		let { subject, subjectName, subjectId, joined } = joinSubjects(average.subject, markArray);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
-                name: average.subject,
-                id: average.subject.id,
+                name: subjectName,
+                id: subjectId,
+				joined: joined,
                 marks: []
             }
 
             markArray.push(subject);
         }
-
-        // add average to subject
-        subject.average = average.average;
-        subject.id = average.subject.id;
 
         // determine if average is significant
         let significant = determineSignificant(average.significant, 'pronote');
@@ -269,11 +319,35 @@ function constructPronoteGrades(grades) {
             subject.significantAverage = true;
         }
 
+		
+		subject.color = subjectColor.getSubjectColor(subjectName, subjectColor.getRandomColor()),
         subject.class = {};
 
-        subject.class.average = average.class_average;
-        subject.class.min = average.min;
-        subject.class.max = average.max;
+		if (!subject.joined) {
+			subject.class.average = average.class_average;
+			subject.class.min = average.min;
+			subject.class.max = average.max;
+			subject.average = average.average;
+		} else {
+			let studentAverage = 0;
+			let classAverage = 0;
+			let classMin = 0;
+			let classMax = 0;
+
+			subject.marks.forEach(mark => {
+				let coef = mark.grade.coefficient;
+
+				studentAverage += mark.grade.value * coef;
+				classAverage += mark.grade.average * coef;
+				classMin += mark.grade.min * coef;
+				classMax += mark.grade.max * coef;
+			});
+
+			subject.average = parseFloat((studentAverage / subject.marks.reduce((a, b) => a + (b.grade.coefficient * b.grade.out_of), 0) * 20).toFixed(2));
+			subject.class.average = parseFloat((classAverage / subject.marks.reduce((a, b) => a + (b.grade.coefficient * b.grade.out_of), 0) * 20).toFixed(2));
+			subject.class.min = parseFloat((classMin / subject.marks.reduce((a, b) => a + (b.grade.coefficient * b.grade.out_of), 0) * 20).toFixed(2));
+			subject.class.max = parseFloat((classMax / subject.marks.reduce((a, b) => a + (b.grade.coefficient * b.grade.out_of), 0) * 20).toFixed(2));
+		}
     });
 
     // calculate averages for each subject in markArray
@@ -317,6 +391,8 @@ function constructPronoteGrades(grades) {
             return new Date(b.info.date) - new Date(a.info.date);
         });
     });
+
+    console.log(markArray)
 
     markArray.sort((a, b) => {
         return a.name.localeCompare(b.name);
