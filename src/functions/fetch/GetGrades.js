@@ -168,13 +168,14 @@ function joinSubjects(subjectData, markArray) {
 	} else {
 		if (localStorage.getItem('excludedJoinSubjects') != null) {
 			let excludedJoinSubjects = JSON.parse(localStorage.getItem('excludedJoinSubjects'));
-			excludedJoinSubjects.forEach(excludedSubject => {
-				if (subjectData.name.split(' > ')[0] == excludedSubject) {
+			for (let i = 0; i < excludedJoinSubjects.length; i++) {
+				if (subjectData.name.split(' > ')[0] == excludedJoinSubjects[i]) {
 					excluded = true;
+					break;
 				} else {
 					excluded = false;
 				}
-			});
+			}
 		}
 
 		if (excluded) {
@@ -391,8 +392,6 @@ function constructPronoteGrades(grades) {
             return new Date(b.info.date) - new Date(a.info.date);
         });
     });
-
-    console.log(markArray)
 
     markArray.sort((a, b) => {
         return a.name.localeCompare(b.name);
