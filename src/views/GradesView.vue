@@ -1,11 +1,13 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, toastController, IonCard, IonSkeletonText, IonSegment, IonSegmentButton, IonModal, IonSearchbar, IonSpinner } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonCard, IonSkeletonText, IonSegment, IonSegmentButton, IonModal, IonSearchbar, IonSpinner } from '@ionic/vue';
     
-    import { calendarOutline } from 'ionicons/icons';
+    import { calendarOutline, checkmark } from 'ionicons/icons';
 
     import {version} from '/package'
     import { Capacitor } from '@capacitor/core';
+
+    import displayToast from '@/functions/utils/displayToast.js';
 
     import GetToken from '@/functions/login/GetToken.js';
     import GetGrades from '@/functions/fetch/GetGrades.js';
@@ -129,7 +131,6 @@
                 }
             },
             openAverageModal(subject) {
-
                 this.selectedMark = {
                     subject: subject.name,
                     average: subject.average,
@@ -137,6 +138,7 @@
                     max_average: subject.class.max,
                     min_average: subject.class.min,
                     out_of: 20,
+                    joined: subject.joined,
                 }
 
                 this.$refs.averageModal.$el.present(subject);
@@ -157,6 +159,18 @@
                 });
 
                 return grades;
+            },
+            setExcludedJoinSubject(subjectName) {
+                let excludedJoinSubjects = localStorage.getItem('excludedJoinSubjects');
+
+                excludedJoinSubjects = JSON.parse(excludedJoinSubjects) || [];
+                excludedJoinSubjects.push(subjectName);
+
+                localStorage.setItem('excludedJoinSubjects', JSON.stringify(excludedJoinSubjects));
+                this.getGradesRefresh();
+                this.$refs.averageModal.$el.dismiss();
+
+                displayToast.presentToast("Cette matière ne sera désormais plus regroupé.", "warning");
             },
             getGradesRefresh(fromSegChange) {
                 if(fromSegChange) {
@@ -316,7 +330,10 @@
         
         <ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index" :style="`--backgroundTheme: ${ subject.color };`">
             <div class="subject-name" @click="openAverageModal(subject)">
-                <h3>{{subject.name}}</h3>
+                <h3>
+                    {{subject.name}} 
+                    <span class="material-symbols-outlined mdls" v-if="subject.joined">join_inner</span>
+                </h3>
                 <p class="avg" v-if="subject.significant">{{subject.average}}<small>/20</small></p>
                 <p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
             </div>
@@ -450,6 +467,19 @@
                             <h2>{{ selectedMark.max_average }}<small>/20</small></h2>
                         </ion-label>
                     </ion-item>
+
+                    <ion-item v-if="selectedMark.joined">
+                        <span class="material-symbols-outlined mdls" slot="start">join</span>
+                        <ion-label class="ion-text-wrap">
+                            <p>Combinaison</p>
+                            <h3>Cette matière est un regroupement de plusieurs matière.</h3>
+                        </ion-label>
+
+                        <ion-button class="itemBtn" fill="clear" slot="end" @click="setExcludedJoinSubject(selectedMark.subject)">
+                            <span class="material-symbols-outlined mdls" slot="start">visibility_off</span>
+                            Ne pas regrouper
+                        </ion-button>
+                    </ion-item>
                 </ion-list>
             </ion-content>
         </IonModal>
@@ -476,6 +506,14 @@
     .subject-name h3 {
         font-size: 1rem;
         font-weight: 500;
+    }
+
+    .subject-name h3 span {
+        margin-left: 5px;
+        font-size: 0.8rem;
+        font-weight: 400;
+        vertical-align: middle;
+        opacity: 60%;
     }
 
     .subject-name p {

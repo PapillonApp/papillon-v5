@@ -51,6 +51,19 @@
 
                 document.dispatchEvent(new CustomEvent('settingsUpdated'));
             },
+            changeJoinSubjects() {
+                this.changeTick('joinSubjects');
+                if (localStorage.getItem('joinSubjects') == 'true') {
+                    displayToast.presentNativeToast(
+                        'Les matières sont désormais regroupées'
+                    );
+                } else {
+                    localStorage.removeItem('excludedJoinSubjects');
+                    displayToast.presentNativeToast(
+                        'Les matières sont désormais séparées'
+                    );
+                }
+            },
 		},
 		mounted() {
             // get tweakGrades20 ref
@@ -108,7 +121,7 @@
                         <h2>Joindre les matières identiques</h2>
                         <p>Permet de joindre les matières identiques entre-elle</p>
                     </IonLabel>
-                    <IonToggle slot="end" ref="joinSubjects" @ionChange="changeTick('joinSubjects')"></IonToggle>
+                    <IonToggle slot="end" ref="joinSubjects" @ionChange="changeJoinSubjects('joinSubjects')"></IonToggle>
                 </IonItem>
             </IonList>
 
