@@ -45,12 +45,6 @@ async function getPronoteUser(force) {
                 // get user
                 let user = response.data;
 
-                // save in cache
-                let cache = JSON.parse(localStorage.getItem('UserCache')) || [];
-                cache = {
-                    user: JSON.stringify(response.data)
-                };    
-
                 // cache avatar
                 let avatar = response.data.profile_picture;
 
@@ -78,7 +72,7 @@ async function getPronoteUser(force) {
                         }
                     });
 
-                localStorage.setItem('UserCache', JSON.stringify(cache));
+                localStorage.setItem('UserCache', JSON.stringify(response.data));
 
                 // return user
                 return constructPronoteUser(user);
@@ -106,9 +100,10 @@ function constructPronoteUser(user) {
         student: {
             name: user.name,
             avatar: user.profile_picture,
+            ine: user.ine,
             contact: {
                 phone: user.phone,
-                email: ""
+                email: user.email
             }
         },
         class: {
