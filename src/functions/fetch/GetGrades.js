@@ -154,22 +154,22 @@ function generateRandomId() {
 	return Math.random().toString(36).substr(2, 9).toUpperCase();
 }
 
-function joinSubjects(subjectData, markArray) {
+function groupSubjects(subjectData, markArray) {
 	let subject = []
 	let subjectName = '';
 	let subjectId = '';
-	let joined = false;
+	let grouped = false;
 	let excluded = false;
 
-	if (localStorage.getItem('joinSubjects') != 'true') {
+	if (localStorage.getItem('groupSubjects') != 'true') {
 		subject = markArray.find(subject => subject.id == subjectData.id);
 		subjectName = subjectData.name;
 		subjectId = subjectData.id;
 	} else {
-		if (localStorage.getItem('excludedJoinSubjects') != null) {
-			let excludedJoinSubjects = JSON.parse(localStorage.getItem('excludedJoinSubjects'));
-			for (let i = 0; i < excludedJoinSubjects.length; i++) {
-				if (subjectData.name.split(' > ')[0] == excludedJoinSubjects[i]) {
+		if (localStorage.getItem('excludedGroupSubjects') != null) {
+			let excludedGroupSubjects = JSON.parse(localStorage.getItem('excludedGroupSubjects'));
+			for (let i = 0; i < excludedGroupSubjects.length; i++) {
+				if (subjectData.name.split(' > ')[0] == excludedGroupSubjects[i]) {
 					excluded = true;
 					break;
 				} else {
@@ -188,7 +188,7 @@ function joinSubjects(subjectData, markArray) {
 			subjectId = subjectData.id;
 
 			if (subjectData.name.split(' > ').length > 1) {
-				joined = true;
+				grouped = true;
 				subjectId = generateRandomId();
 			}
 		}
@@ -198,7 +198,7 @@ function joinSubjects(subjectData, markArray) {
 		subject: subject, 
 		subjectName: subjectName, 
 		subjectId: subjectId, 
-		joined: joined
+		grouped: grouped
 	}
 }
 
@@ -212,14 +212,14 @@ function constructPronoteGrades(grades) {
     // for each mark, add it to the corresponding subject in the array
     marks.forEach(mark => {
         // check if subject exists
-		let { subject, subjectName, subjectId, joined } = joinSubjects(mark.subject, markArray);
+		let { subject, subjectName, subjectId, grouped } = groupSubjects(mark.subject, markArray);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
                 name: subjectName,
                 id: subjectId,
-                joined: joined,
+                grouped: grouped,
                 marks: []
             }
 
@@ -290,14 +290,14 @@ function constructPronoteGrades(grades) {
     averages.forEach(average => {
         // check if subject exists
 		
-		let { subject, subjectName, subjectId, joined } = joinSubjects(average.subject, markArray);
+		let { subject, subjectName, subjectId, grouped } = groupSubjects(average.subject, markArray);
 
         if(subject == undefined) {
             // subject doesn't exist, create it
             subject = {
                 name: subjectName,
                 id: subjectId,
-				joined: joined,
+				grouped: grouped,
                 marks: []
             }
 
@@ -324,7 +324,7 @@ function constructPronoteGrades(grades) {
 		subject.color = subjectColor.getSubjectColor(subjectName, subjectColor.getRandomColor()),
         subject.class = {};
 
-		if (!subject.joined) {
+		if (!subject.grouped) {
 			subject.class.average = average.class_average;
 			subject.class.min = average.min;
 			subject.class.max = average.max;

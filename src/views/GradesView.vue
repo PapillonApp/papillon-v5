@@ -138,7 +138,7 @@
                     max_average: subject.class.max,
                     min_average: subject.class.min,
                     out_of: 20,
-                    joined: subject.joined,
+                    grouped: subject.grouped,
                 }
 
                 this.$refs.averageModal.$el.present(subject);
@@ -161,12 +161,12 @@
                 return grades;
             },
             setExcludedJoinSubject(subjectName) {
-                let excludedJoinSubjects = localStorage.getItem('excludedJoinSubjects');
+                let excludedGroupSubjects = localStorage.getItem('excludedGroupSubjects');
 
-                excludedJoinSubjects = JSON.parse(excludedJoinSubjects) || [];
-                excludedJoinSubjects.push(subjectName);
+                excludedGroupSubjects = JSON.parse(excludedGroupSubjects) || [];
+                excludedGroupSubjects.push(subjectName);
 
-                localStorage.setItem('excludedJoinSubjects', JSON.stringify(excludedJoinSubjects));
+                localStorage.setItem('excludedGroupSubjects', JSON.stringify(excludedGroupSubjects));
                 this.getGradesRefresh();
                 this.$refs.averageModal.$el.dismiss();
 
@@ -332,7 +332,7 @@
             <div class="subject-name" @click="openAverageModal(subject)">
                 <h3>
                     {{subject.name}} 
-                    <span class="material-symbols-outlined mdls" v-if="subject.joined">join_inner</span>
+                    <span class="material-symbols-outlined mdls" v-if="subject.grouped">join_inner</span>
                 </h3>
                 <p class="avg" v-if="subject.significant">{{subject.average}}<small>/20</small></p>
                 <p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
@@ -468,7 +468,7 @@
                         </ion-label>
                     </ion-item>
 
-                    <ion-item v-if="selectedMark.joined">
+                    <ion-item v-if="selectedMark.grouped">
                         <span class="material-symbols-outlined mdls" slot="start">join</span>
                         <ion-label class="ion-text-wrap">
                             <p>Combinaison</p>
