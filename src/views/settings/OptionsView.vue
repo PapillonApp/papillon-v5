@@ -137,7 +137,7 @@
 					<span class="material-symbols-outlined mdls" slot="start">toggle_off</span>
 					<IonLabel class="ion-text-wrap">
 						<h5>Onglet notes</h5>
-						<h2>Activer la séléction de période</h2>
+						<h2>Activer la sélection de période</h2>
 						<p>Permet de changer de trimestre/semestre</p>
 					</IonLabel>
 					<IonToggle slot="end" ref="changePeriodSelection" @ionChange="changeTick('changePeriodSelection')"></IonToggle>
