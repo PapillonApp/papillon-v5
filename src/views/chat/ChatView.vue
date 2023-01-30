@@ -127,7 +127,9 @@
 								"Impossible de créer la conversation",
 								"Une erreur est survenue lors de la création de la conversation.",
 								"danger",
-								alertCircle
+								alertCircle,
+								true,
+								result
 							);
 						}
 					})
