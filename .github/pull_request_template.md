@@ -28,5 +28,3 @@ Before merging this PR, you will need the approval of at least one of the follow
 So be patient ;)
 
 ### Informations supplémentaires
-
-<!-- If you have anything else to add, describe it below -->
