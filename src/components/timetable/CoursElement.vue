@@ -117,6 +117,8 @@
 				//check in localstorage if progress bar is enabled
 				if (localStorage.getItem("tweakProgressBar") != "true") return false;
 
+				this.classes += " progressDivEnabled ";
+
 				let now = new Date();
 				//mettre l'heur a 14H30 le 24/01/2023 (europe) pour tester le cours en cours
 				//  now = new Date(2023, 1, 25, 15, 30, 0, 0);
@@ -536,5 +538,9 @@
 		border-radius: 0 5px 5px 0;
 		background-color: var(--backgroundColor);
 		width: 0%;
+	}
+
+	.progressDivEnabled.true .Status {
+		background-color: #fff !important;
 	}
 </style>
