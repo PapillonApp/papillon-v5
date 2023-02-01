@@ -4,6 +4,7 @@ import axios from 'axios';
 // vars
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
+import groupSubjects from '@/functions/utils/groupSubjects.js';
 
 import subjectColor from '@/functions/utils/subjectColor.js'
 import { Cpu } from 'lucide-vue-next';
@@ -148,58 +149,6 @@ function determineSignificant(significant, service) {
 	}
 
 	return result;
-}
-
-function generateRandomId() {
-	return Math.random().toString(36).substr(2, 9).toUpperCase();
-}
-
-function groupSubjects(subjectData, markArray) {
-	let subject = []
-	let subjectName = '';
-	let subjectId = '';
-	let grouped = false;
-	let excluded = false;
-
-	if (localStorage.getItem('groupSubjects') != 'true') {
-		subject = markArray.find(subject => subject.id == subjectData.id);
-		subjectName = subjectData.name;
-		subjectId = subjectData.id;
-	} else {
-		if (localStorage.getItem('excludedGroupSubjects') != null) {
-			let excludedGroupSubjects = JSON.parse(localStorage.getItem('excludedGroupSubjects'));
-			for (let i = 0; i < excludedGroupSubjects.length; i++) {
-				if (subjectData.name.split(' > ')[0] == excludedGroupSubjects[i]) {
-					excluded = true;
-					break;
-				} else {
-					excluded = false;
-				}
-			}
-		}
-
-		if (excluded) {
-			subject = markArray.find(subject => subject.id == subjectData.id);
-			subjectName = subjectData.name;
-			subjectId = subjectData.id;
-		} else {
-			subject = markArray.find(subject => subject.name == subjectData.name.split(' > ')[0]);
-			subjectName = subjectData.name.split(' > ')[0];
-			subjectId = subjectData.id;
-
-			if (subjectData.name.split(' > ').length > 1) {
-				grouped = true;
-				subjectId = generateRandomId();
-			}
-		}
-	}
-
-	return {
-		subject: subject, 
-		subjectName: subjectName, 
-		subjectId: subjectId, 
-		grouped: grouped
-	}
 }
 
 // pronote : construct grades
