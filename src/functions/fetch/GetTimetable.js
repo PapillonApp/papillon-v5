@@ -120,8 +120,8 @@ function constructPronoteTimetable(timetable, date) {
                 linkVirtual: course.virtual,
             },
             time: {
-                start: new Date(course.start),
-                end: new Date(course.end)
+                start: new Date(course.start.replace(/-/g, "/")),
+                end: new Date(course.end.replace(/-/g, "/"))
             },
             status: {
                 isCancelled: course.is_cancelled,

@@ -118,7 +118,7 @@ function constructPronoteHomework(hw) {
         let newHomework = {
             data: {
                 id: homework.id,
-                date: homework.date,
+                date: homework.date.replace(/-/g, "/"),
                 color: subjectColor.getSubjectColor(homework.subject.name, homework.background_color),
                 done: homework.done,
             },
