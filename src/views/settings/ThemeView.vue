@@ -196,7 +196,18 @@
 					</IonLabel>
 					<input type="color" ref="mainColorInput" class="colorInput" slot="end"/>
 				</IonItem>
+			</IonList>
 
+			<IonList :inset="true" lines="inset">
+				<ion-radio-group :value="currentFont" ref="fontSelect" @ionChange="fontChange">
+					<ion-item :key="i" v-for="(font, i) in availableFonts">
+						<ion-label :style="`font-family: '${font.font}';`">{{ font.name }}</ion-label>
+						<ion-radio slot="end" :value="font.font"></ion-radio>
+					</ion-item>
+				</ion-radio-group>
+			</IonList>
+
+			<IonList :inset="true" lines="inset">
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">invert_colors</span>
 					<IonLabel class="ion-text-wrap">
@@ -223,15 +234,6 @@
                     </IonLabel>
                     <IonToggle slot="end" ref="tweakProgressBarShowPast" @ionChange="changeTick('tweakProgressBarShowPast')"></IonToggle>
                 </IonItem>
-			</IonList>
-
-			<IonList :inset="true" lines="inset">
-				<ion-radio-group :value="currentFont" ref="fontSelect" @ionChange="fontChange">
-					<ion-item :key="i" v-for="(font, i) in availableFonts">
-						<ion-label :style="`font-family: '${font.font}';`">{{ font.name }}</ion-label>
-						<ion-radio slot="end" :value="font.font"></ion-radio>
-					</ion-item>
-				</ion-radio-group>
 			</IonList>
 
 		</ion-content>
