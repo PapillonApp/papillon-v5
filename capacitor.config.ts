@@ -10,6 +10,10 @@ const config: CapacitorConfig = {
   plugins: {
     "SplashScreen": {
       "launchAutoHide": false,
+      "androidScaleType" : "CENTER_CROP",
+      "splashFullScreen": true,
+      "splashImmersive": false,
+      "backgroundColor": "#27A057"
     },
     LocalNotifications: {
       smallIcon: "ic_stat_notify",
