@@ -183,8 +183,7 @@
 								this.end.getSeconds() -
 								(this.start.getHours() * 3600 +
 									this.start.getMinutes() * 60 +
-									this.start.getSeconds()))) *
-						100;
+									this.start.getSeconds()))) * 100;
 
 					this.coursPourcentVisible = true;
 
