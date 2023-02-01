@@ -86,9 +86,6 @@
             let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
             tweakProgressBarShowPast.$el.checked = localStorage.getItem('tweakProgressBarShowPast') != 'false'; // default true
 
-            // get joinSubjects ref
-            let joinSubjects = this.$refs.joinSubjects;
-            joinSubjects.$el.checked = localStorage.getItem('joinSubjects') == 'true';
             // get groupSubjects ref
             let groupSubjects = this.$refs.groupSubjects;
             groupSubjects.$el.checked = localStorage.getItem('groupSubjects') == 'true';
