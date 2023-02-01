@@ -51,22 +51,6 @@
 
                 document.dispatchEvent(new CustomEvent('settingsUpdated'));
             },
-            tweakProgressBar() {
-                let tweakProgressBar = this.$refs.tweakProgressBar;
-                let tweakProgressBarChecked = tweakProgressBar.$el.checked;
-
-                localStorage.setItem('tweakProgressBar', tweakProgressBarChecked);
-
-                document.dispatchEvent(new CustomEvent('settingsUpdated'));
-            },
-            tweakProgressBarShowPast() {
-                let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
-                let tweakProgressBarShowPastChecked = tweakProgressBarShowPast.$el.checked;
-
-                localStorage.setItem('tweakProgressBarShowPast', tweakProgressBarShowPastChecked);
-
-                document.dispatchEvent(new CustomEvent('settingsUpdated'));
-            },
             changeGroupSubjects() {
                 this.changeTick('groupSubjects');
                 if (localStorage.getItem('groupSubjects') == 'true') {
@@ -101,8 +85,6 @@
             // get tweakProgressBarShowPast ref
             let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
             tweakProgressBarShowPast.$el.checked = localStorage.getItem('tweakProgressBarShowPast') != 'false'; // default true
-
-
 
             // get joinSubjects ref
             let joinSubjects = this.$refs.joinSubjects;
@@ -180,6 +162,26 @@
                     </IonLabel>
                     <IonToggle slot="end" ref="viescolaireEnabled" @ionChange="changeTick('viescolaireEnabled')"></IonToggle>
                 </IonItem>
+
+				<IonItem>
+					<span class="material-symbols-outlined mdls" slot="start">sync</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Activer la barre de progression</h2>
+						<p>Permet d'afficher la barre de progression</p>
+					</IonLabel>
+					<IonToggle slot="end" ref="tweakProgressBar" @ionChange="changeTick('tweakProgressBar')"></IonToggle>
+				</IonItem>
+
+				<IonItem>
+					<span class="material-symbols-outlined mdls" slot="start">toggle_off</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Activer la surlignage des cours passés</h2>
+						<p>Permet de surligner les cours passés</p>
+					</IonLabel>
+					<IonToggle slot="end" ref="tweakProgressBarShowPast" @ionChange="changeTick('tweakProgressBarShowPast')"></IonToggle>
+				</IonItem>
+
+
             </IonList>
 
             <IonList :inset="true" lines="inset">

@@ -108,6 +108,8 @@ export default defineComponent({
       intervalUpdateProgressDiv: null,
       showPastProgress:
         localStorage.getItem("tweakProgressBarShowPast") != "false",
+      showProgress:
+        localStorage.getItem("tweakProgressBar") == "true"
     };
   },
   setup() {
@@ -119,7 +121,9 @@ export default defineComponent({
     },
     beforeRenderedProgressDiv() {
       //check in localstorage if progress bar is enabled
-      if (localStorage.getItem("tweakProgressBar") != "true") return false;
+      if (!this.showProgress) {
+        return false;
+      }
 
       let now = new Date();
       //mettre l'heur a 14H30 le 24/01/2023 (europe) pour tester le cours en cours
@@ -217,6 +221,14 @@ export default defineComponent({
     }
 
     this.newColor = subjectColor.lightenColor(this.color, -20);
+
+    document.addEventListener('settingsUpdated', (ev) => {
+      this.showPastProgress = localStorage.getItem("tweakProgressBarShowPast") != "false";
+      this.showProgress = localStorage.getItem("tweakProgressBar") == "true";
+      this.beforeRenderedProgressDiv();
+    });
+
+
     return false;
   },
   beforeUnmount() {
