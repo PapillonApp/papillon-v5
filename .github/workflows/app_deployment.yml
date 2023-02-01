@@ -46,19 +46,19 @@ jobs:
           fi
           
       - name: Update version number (package.json)
-        run:  |
-          ver="${{ steps.version-number.outputs.VERSION }}"
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          if [ '$(expr length "$ver")' == '5' ]; then
-            npm version "$ver" --no-git-tag-version
-            echo "GH_RELEASE=true" >> $GITHUB_ENV
-          else
-            npm version "$ver" --no-git-tag-version
-            echo "GH_RELEASE=false" >> $GITHUB_ENV
-          fi
-          git commit -am "Automatic update"
-          git push
+        run: "echo 'Disabled because not needed'" # |
+          # ver="${{ steps.version-number.outputs.VERSION }}"
+          # git config --global user.name 'github-actions[bot]'
+          # git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          # if [ '$(expr length "$ver")' == '5' ]; then
+          #   npm version "$ver" --no-git-tag-version
+          #   echo "GH_RELEASE=true" >> $GITHUB_ENV
+          # else
+          #   npm version "$ver" --no-git-tag-version
+          #   echo "GH_RELEASE=false" >> $GITHUB_ENV
+          # fi
+          # git commit -am "Automatic update"
+          # git push
     outputs:
       VERSION_CODE: ${{ steps.commit-count.outputs.COUNT }}
       VERSION_NUMBER: ${{ steps.version-number.outputs.VERSION }}
