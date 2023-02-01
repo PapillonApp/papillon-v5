@@ -191,7 +191,10 @@
 					for (let i = timetable.length - 1; i >= 0; i--) {
 						let lesson = timetable[i];
 
-						if (lesson.status.isCancelled) {
+						let end = new Date(lesson.time.end);
+						let mins = Math.floor((end - now) / 1000 / 60);
+
+						if (lesson.status.isCancelled || mins < -120) {
 							continue;
 						}
 
