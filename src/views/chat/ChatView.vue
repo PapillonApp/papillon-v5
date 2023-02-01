@@ -113,7 +113,7 @@
 				fetch(API + "/discussion/create", requestOptions)
 					.then(response => response.json())
 					.then(result => {
-						if(result == "ok") {
+						if(result.status == "ok") {
 							displayToast.presentToastFull(
 								"Conversation créée",
 								"La conversation avec " + recipient.name + " a bien été créée.",
@@ -127,7 +127,9 @@
 								"Impossible de créer la conversation",
 								"Une erreur est survenue lors de la création de la conversation.",
 								"danger",
-								alertCircle
+								alertCircle,
+								true,
+								result.error
 							);
 						}
 					})

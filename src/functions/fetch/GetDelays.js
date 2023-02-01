@@ -92,7 +92,7 @@ function constructPronoteDelays(delays) {
 	})
 
 	dly.sort((a, b) => {
-		return a.date.from - b.date.from;
+		return b.date.from - a.date.from;
 	})
 
 	return dly

@@ -18,6 +18,7 @@
                 student: {
                     name: string,
                     avatar: string,
+                    ine: string,
                     contact: {
                         email: string,
                         phone: string
@@ -51,6 +52,7 @@
                 student: {
                     name: '',
                     avatar: '',
+                    ine: '',
                     contact: {
                         email: '',
                         phone: ''

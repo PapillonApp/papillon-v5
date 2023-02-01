@@ -105,7 +105,23 @@
 				customizations.font = font;
 
 				localStorage.setItem('customizations', JSON.stringify(customizations));
-			}
+			},
+			tweakProgressBar() {
+				let tweakProgressBar = this.$refs.tweakProgressBar;
+				let tweakProgressBarChecked = tweakProgressBar.$el.checked;
+
+				localStorage.setItem('tweakProgressBar', tweakProgressBarChecked);
+
+				document.dispatchEvent(new CustomEvent('settingsUpdated'));
+			},
+			tweakProgressBarShowPast() {
+				let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
+				let tweakProgressBarShowPastChecked = tweakProgressBarShowPast.$el.checked;
+
+				localStorage.setItem('tweakProgressBarShowPast', tweakProgressBarShowPastChecked);
+
+				document.dispatchEvent(new CustomEvent('settingsUpdated'));
+			},
 		},
 		mounted() {
 			// mainColorInput
@@ -141,6 +157,14 @@
 			// fontSelect
 			// get --papillon-font from css
 			this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font'); 
+
+			// get tweakProgressBar ref
+			let tweakProgressBar = this.$refs.tweakProgressBar;
+			tweakProgressBar.$el.checked = localStorage.getItem('tweakProgressBar') == 'true';
+
+			// get tweakProgressBarShowPast ref
+			let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
+			tweakProgressBarShowPast.$el.checked = localStorage.getItem('tweakProgressBarShowPast') != 'false'; // default true
 		}
 	});
 </script>
@@ -181,6 +205,24 @@
 					</IonLabel>
 					<IonToggle slot="end" ref="useScolColors" @ionChange="changeTick('useScolColors')"></IonToggle>
 				</IonItem>
+
+				<IonItem>
+                    <span class="material-symbols-outlined mdls" slot="start">settings</span>
+                    <IonLabel class="ion-text-wrap">
+                        <h2>Activer l'animation de la progression d'un cours</h2>
+                        <p>(Expérimental) Indiquer la progression d'un cours en cours avec une animation</p>
+                    </IonLabel>
+                    <IonToggle slot="end" ref="tweakProgressBar" @ionChange="changeTick('tweakProgressBar')"></IonToggle>
+                </IonItem>
+
+                <IonItem>
+                    <span class="material-symbols-outlined mdls" slot="start">settings</span>
+                    <IonLabel class="ion-text-wrap">
+                        <h2>Montrer la progression des cours passés</h2>
+                        <p>(Expérimental) Indiquer les cours passés avec un style différent</p>
+                    </IonLabel>
+                    <IonToggle slot="end" ref="tweakProgressBarShowPast" @ionChange="changeTick('tweakProgressBarShowPast')"></IonToggle>
+                </IonItem>
 			</IonList>
 
 			<IonList :inset="true" lines="inset">

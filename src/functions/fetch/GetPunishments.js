@@ -99,7 +99,7 @@ function constructPronotePunishments(punishments) {
 	})
 
 	punish.sort((a, b) => {
-		return a.date.givenDate - b.date.givenDate;
+		return b.date.givenDate - a.date.givenDate;
 	})
 
 	return punish

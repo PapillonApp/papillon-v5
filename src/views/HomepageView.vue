@@ -1,600 +1,609 @@
 <script>
-    import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonList, IonItem, IonLabel, IonListHeader, IonButton, IonSpinner, IonRefresher, IonChip, IonRippleEffect, IonItemGroup, IonItemDivider, IonButtons, IonRefresherContent, IonProgressBar } from '@ionic/vue';
+	import { defineComponent } from 'vue';
+	import {
+		IonHeader,
+		IonContent,
+		IonToolbar,
+		IonTitle,
+		IonMenuButton,
+		IonPage,
+		IonList,
+		IonItem,
+		IonLabel,
+		IonListHeader,
+		IonButton,
+		IonSpinner,
+		IonRefresher,
+		IonChip,
+		IonRippleEffect,
+		IonItemGroup,
+		IonItemDivider,
+		IonButtons,
+		IonRefresherContent
+	} from '@ionic/vue';
 
-    import { informationCircle } from 'ionicons/icons';
+	import { informationCircle } from 'ionicons/icons';
 
-    import { Capacitor } from '@capacitor/core';
+	import { Capacitor } from '@capacitor/core';
 
-    import { NotificationBadge } from 'capacitor-notification-badge';
+	import { NotificationBadge } from 'capacitor-notification-badge';
 
-    import displayToast from '@/functions/utils/displayToast.js';
-    import hapticsController from '@/functions/utils/hapticsController.js';
-    import timetableEdit from '@/functions/utils/timetableEdit.js';
-    import subjectColor from '@/functions/utils/subjectColor.js';
+	import displayToast from '@/functions/utils/displayToast.js';
+	import hapticsController from '@/functions/utils/hapticsController.js';
+	import timetableEdit from '@/functions/utils/timetableEdit.js';
+	import subjectColor from '@/functions/utils/subjectColor.js';
 
-    import GetToken from '@/functions/login/GetToken.js';
-    import GetNews from '@/functions/fetch/GetNews.js';
+	import GetToken from '@/functions/login/GetToken.js';
+	import GetNews from '@/functions/fetch/GetNews.js';
 
-    // timetable
-    import CoursElement from '@/components/timetable/CoursElement.vue';
-    import GetTimetable from '@/functions/fetch/GetTimetable.js';
+	// timetable
+	import CoursElement from '@/components/timetable/CoursElement.vue';
+	import GetTimetable from '@/functions/fetch/GetTimetable.js';
 
-    // homeworks
-    import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
+	// homeworks
+	import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
 
-    export default defineComponent({
-        name: 'FolderPage',
-        components: {
-            IonHeader,
-            IonContent,
-            IonToolbar,
-            IonTitle,
-            IonMenuButton,
-            IonButtons,
-            IonPage,
-            IonList,
-            IonListHeader,
-            IonButton,
-            IonItem,
-            IonLabel,
-            IonSpinner,
-            IonRefresher,
-            IonChip,
-            IonRippleEffect,
-            IonItemGroup,
-            IonRefresherContent,
-            /* IonProgressBar, */
-        },
-        data() {
-            return { 
-                timetable: [],
-                nextCoursTime: "",
-                percentage: 0,
-                updateTime: null,
-                firstName: '',
-                homeworks: [],
-                blockChangeDone: false,
-                editMode: false,
-                noCoursesEmoji: this.randomEmoji(),
-                noCoursesMsg: this.randomMsg()
-            }
-        },
-        methods: {
-            goto(url) {
-                this.$router.push(url);
-            },
-            randomEmoji() {
-                let list = ["😊", "😎", "😴", "👌", "🌞", "📚", "💪", "💤", "😉", "🥱"]
-                return list[Math.floor(Math.random() * list.length)];
-            },
-            randomMsg() {
-                let list = [
-                    "Temps calme",
-                    "Pas de cours, on révise ?",
-                    "C'est la sieste ? (ou pas)",
-                    "Je suis sûr qu'il te reste des devoirs...",
-                    "Il n'y a jamais vraiment rien à faire !",
-                    "Il est temps de commencer ce joli DM !",
-                    "Il fait beau dehors ?",
-                    "Ca tombe bien, ce livre ne se finira pas tout seul !",
-                    "Flûte, le cours de maths est fini",
-                    "Après l'effort, le réconfort ;)",
-                    "Alors, ça se la coule douce ?",
-                    "Prenons de l'avance sur la semaine prochaine !",
-                    "Il est temps de reprendre la lecture !"
-                ]
-                return list[Math.floor(Math.random() * list.length)];
-            },
-            editTimetable(timetable) {
-                let now = new Date();
-                let lessons = []
+	export default defineComponent({
+		name: 'FolderPage',
+		components: {
+			IonHeader,
+			IonContent,
+			IonToolbar,
+			IonTitle,
+			IonMenuButton,
+			IonButtons,
+			IonPage,
+			IonList,
+			IonListHeader,
+			IonButton,
+			IonItem,
+			IonLabel,
+			IonSpinner,
+			IonRefresher,
+			IonChip,
+			IonRippleEffect,
+			IonItemGroup,
+			IonRefresherContent,
+		},
+		data() {
+			return {
+				timetable: [],
+				nextCoursTime: "",
+				percentage: 0,
+				updateTime: null,
+				firstName: '',
+				homeworks: [],
+				blockChangeDone: false,
+				editMode: false,
+				noCoursesEmoji: this.randomEmoji(),
+				noCoursesMsg: this.randomMsg()
+			}
+		},
+		methods: {
+			goto(url) {
+				this.$router.push(url);
+			},
+			randomEmoji() {
+				let list = ["😊", "😎", "😴", "👌", "🌞", "📚", "💪", "💤", "😉", "🥱"]
+				return list[Math.floor(Math.random() * list.length)];
+			},
+			randomMsg() {
+				let list = [
+					"Temps calme",
+					"Pas de cours, on révise ?",
+					"C'est la sieste ? (ou pas)",
+					"Je suis sûr qu'il te reste des devoirs...",
+					"Il n'y a jamais vraiment rien à faire !",
+					"Il est temps de commencer ce joli DM !",
+					"Il fait beau dehors ?",
+					"Ca tombe bien, ce livre ne se finira pas tout seul !",
+					"Flûte, le cours de maths est fini",
+					"Après l'effort, le réconfort ;)",
+					"Alors, ça se la coule douce ?",
+					"Prenons de l'avance sur la semaine prochaine !",
+					"Il est temps de reprendre la lecture !"
+				]
+				return list[Math.floor(Math.random() * list.length)];
+			},
+			editTimetable(timetable) {
+				let now = new Date();
+				let lessons = []
 
-                timetable = timetableEdit(timetable);
+				timetable = timetableEdit(timetable);
 
-                // add custom courses
-                let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
-                customCourses.forEach((customCourse) => {
-                    // if course is in the same day
-                    let customDay = new Date(customCourse.day);
-                    let currentDay = new Date(this.$rn);
+				// add custom courses
+				let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
+				customCourses.forEach((customCourse) => {
+					// if course is in the same day
+					let customDay = new Date(customCourse.day);
+					let currentDay = new Date(this.$rn);
 
-                    let st = new Date(customCourse.course.time.start);
-                    let en = new Date(customCourse.course.time.end);
+					let st = new Date(customCourse.course.time.start);
+					let en = new Date(customCourse.course.time.end);
 
-                    // make st and en the same day as currentDay
-                    st.setDate(currentDay.getDate());
-                    st.setMonth(currentDay.getMonth());
-                    st.setFullYear(currentDay.getFullYear());
+					// make st and en the same day as currentDay
+					st.setDate(currentDay.getDate());
+					st.setMonth(currentDay.getMonth());
+					st.setFullYear(currentDay.getFullYear());
 
-                    en.setDate(currentDay.getDate());
-                    en.setMonth(currentDay.getMonth());
-                    en.setFullYear(currentDay.getFullYear());
+					en.setDate(currentDay.getDate());
+					en.setMonth(currentDay.getMonth());
+					en.setFullYear(currentDay.getFullYear());
 
-                    if (customDay.getDate() == currentDay.getDate() && customDay.getMonth() == currentDay.getMonth() && customDay.getFullYear() == currentDay.getFullYear()) {
-                        customCourse.course.time.start = st;
-                        customCourse.course.time.end = en;
-                        customCourse.course.course.color = subjectColor.getSubjectColor(customCourse.course.data.subject, subjectColor.getRandomColor());
-                        timetable.push(customCourse.course);
-                    }
-                });
+					if (customDay.getDate() == currentDay.getDate() && customDay.getMonth() == currentDay
+						.getMonth() && customDay.getFullYear() == currentDay.getFullYear()) {
+						customCourse.course.time.start = st;
+						customCourse.course.time.end = en;
+						customCourse.course.course.color = subjectColor.getSubjectColor(customCourse.course
+							.data.subject, subjectColor.getRandomColor());
+						timetable.push(customCourse.course);
+					}
+				});
 
-                // get next lesson (cours.time.start)
-                lessons = timetable.filter((lesson) => {
-                    let lessonStart = new Date(lesson.time.start);
-                    let lessonEnd = new Date(lesson.time.end);
+				// get next lesson (cours.time.start)
+				lessons = timetable.filter((lesson) => {
+					let lessonStart = new Date(lesson.time.start);
+					let lessonEnd = new Date(lesson.time.end);
 
-                    // get minutes before next lesson
-                    let mins = Math.floor((lessonStart - now) / 1000 / 60);
-                    let gap = -((Math.floor((lessonEnd - lessonStart) / 1000 / 60))/2);
+					// get minutes before next lesson
+					let mins = Math.floor((lessonStart - now) / 1000 / 60);
+					let gap = -((Math.floor((lessonEnd - lessonStart) / 1000 / 60)) / 2);
 
-                    if (lessons.length != 0) {
-                        return false;
-                    }
+					if (lessons.length != 0) {
+						return false;
+					}
 
-                    // if less than 60 mins
-                    if (mins < 60 && mins > 0) {
-                        this.nextCoursTime = `dans ${mins} minutes`;
-                    }
-                    else if (mins <= 0) {
-                        this.nextCoursTime = "Cours commencé";
+					// if less than 60 mins
+					if (mins < 60 && mins > 0) {
+						this.nextCoursTime = `dans ${mins} minutes`;
+					} else if (mins <= 0) {
+						this.nextCoursTime = "Cours commencé";
 
-                        if (lessonEnd <= now) {
-                            return false;
-                        }
-                    } 
-                    else {
-                        let hours = Math.floor(mins / 60);
-                        mins = mins % 60;
+						if (lessonEnd <= now) {
+							return false;
+						}
+					} else {
+						let hours = Math.floor(mins / 60);
+						mins = mins % 60;
 
-                        this.nextCoursTime = `dans ${hours} heures et ${mins} minutes`;
-                    }
+						this.nextCoursTime = `dans ${hours} heures et ${mins} minutes`;
+					}
 
-                    if (lesson.status.isCancelled || mins < gap) {
-                        return false;
-                    }
+					if (mins < gap) {
+						return false;
+					}
 
-                    // add percentage of lesson done
-                    let lessonTime = lessonEnd - lessonStart;
-                    let lessonTimeDone = now - lessonStart;
-                    let percentage = Math.floor((lessonTimeDone / lessonTime) * 100);
+					lesson.hasStatus = lesson.status.status != undefined;
 
-                    this.percentage = percentage;
+					// add percentage of lesson done
+					let lessonTime = lessonEnd - lessonStart;
+					let lessonTimeDone = now - lessonStart;
+					let percentage = Math.floor((lessonTimeDone / lessonTime) * 100);
 
-                    lessons.push(lesson)
-                    return true;
-                });
+					this.percentage = percentage;
 
-                // if lessons is empty but not timetable, get last lesson
-                if (lessons.length == 0 && timetable.length > 0) {
-                    for (let i = timetable.length - 1; i >= 0; i--) {
-                        let lesson = timetable[i];
+					lessons.push(lesson)
+					return true;
+				});
 
-                        if (lesson.status.isCancelled) {
-                            continue;
-                        }
+				// if lessons is empty but not timetable, get last lesson
+				if (lessons.length == 0 && timetable.length > 0) {
+					for (let i = timetable.length - 1; i >= 0; i--) {
+						let lesson = timetable[i];
 
-                        this.nextCoursTime = "Cours terminé";
-                        lessons.push(lesson);
-                        break;
-                    }
-                }
-                
-                return lessons;
-            },
-            getTimetable(force) {
-                this.timetable.loading = true;
-                GetTimetable(this.$rn, force).then((timetable) => {
-                    if(timetable.error) {
-                        this.timetable = [];
-                        this.timetable.error = timetable.error;
+						let end = new Date(lesson.time.end);
+						let mins = Math.floor((end - now) / 1000 / 60);
 
-                        if(timetable.error == "ERR_BAD_REQUEST") {
-                            this.timetable.error = null;
-                        }
-                    }
-                    else {
-                        this.timetable = this.editTimetable(timetable);
-                        
-                        this.updateTime = setInterval(() => {
-                            this.timetable = this.editTimetable(timetable);
-                        }, 1000);
+						if (lesson.status.isCancelled || mins < -120) {
+							continue;
+						}
 
-                        this.timetable.loading = false;
-                    }
-                });
-            },
-            getHomeworks(force) {
-                // get date for this.$rn + 1 day
-                let today = new Date(this.$rn);
-                let dateTo = new Date(this.$rn);
-                dateTo.setDate(dateTo.getDate() + 7);
+						this.nextCoursTime = "Cours terminé";
+						lessons.push(lesson);
+						break;
+					}
+				}
 
-                this.homeworks.loading = true;
-                GetHomeworks(today, dateTo, force).then((homeworks) => {
-                    if(homeworks.error) {
-                        this.homeworks = [];
-                        this.homeworks.error = homeworks.error;
+				return lessons;
+			},
+			getTimetable(force) {
+				this.timetable.loading = true;
+				GetTimetable(this.$rn, force).then((timetable) => {
+					if (timetable.error) {
+						this.timetable = [];
+						this.timetable.error = timetable.error;
 
-                        if(homeworks.error == "ERR_BAD_REQUEST") {
-                            this.homeworks.error = null;
-                        }
-                    }
-                    else {
-                        this.homeworks.loading = false;
+						if (timetable.error == "ERR_BAD_REQUEST") {
+							this.timetable.error = null;
+						}
+					} else {
+						this.timetable = this.editTimetable(timetable);
 
-                        let homeworkDays = [];
+						this.updateTime = setInterval(() => {
+							this.timetable = this.editTimetable(timetable);
+						}, 1000);
 
-                        // sort homeworks by day
-                        for (let i = 0; i < homeworks.length; i++) {
-                            let homework = homeworks[i];
-                            let date = new Date(homework.data.date);
+						this.timetable.loading = false;
+					}
+				});
+			},
+			getHomeworks(force) {
+				// get date for this.$rn + 1 day
+				let today = new Date(this.$rn);
+				let dateTo = new Date(this.$rn);
+				dateTo.setDate(dateTo.getDate() + 7);
 
-                            homeworks[i].data.timeLeft = Math.floor((date - today) / 1000 / 60 / 60 / 24);
+				this.homeworks.loading = true;
+				GetHomeworks(today, dateTo, force).then((homeworks) => {
+						if (homeworks.error) {
+							this.homeworks = [];
+							this.homeworks.error = homeworks.error;
 
-                            let day = homeworkDays.find((day) => {
-                                return day.date == date.toDateString();
-                            });
+							if (homeworks.error == "ERR_BAD_REQUEST") {
+								this.homeworks.error = null;
+							}
+						} else {
+							this.homeworks.loading = false;
 
-                            if (!day) {
-                                day = {
-                                    date: date.toDateString(),
-                                    homeworks: []
-                                }
-                                homeworkDays.push(day);
-                            }
+							let homeworkDays = [];
 
-                            day.homeworks.push(homework);
-                        }
+							// sort homeworks by day
+							for (let i = 0; i < homeworks.length; i++) {
+								let homework = homeworks[i];
+								let date = new Date(homework.data.date);
 
-                        // sort homeworkDays by date
-                        homeworkDays.sort((a, b) => {
-                            return new Date(a.date) - new Date(b.date);
-                        });
+								homeworks[i].data.timeLeft = Math.floor((date - today) / 1000 / 60 / 60 / 24);
 
-                        this.checkUndone();
+								let day = homeworkDays.find((day) => {
+									return day.date == date.toDateString();
+								});
 
-                        this.homeworks = homeworkDays;
-                    }
-                })
-                .catch((err) => {
-                    this.homeworks = [];
-                });
-            },
-            reorder() {
-                let order = ["comp-hw", "comp-tt"]
+								if (!day) {
+									day = {
+										date: date.toDateString(),
+										homeworks: []
+									}
+									homeworkDays.push(day);
+								}
 
-                let components = document.getElementById("components");
-                if (components) {
-                    for (let i = 0; i < order.length; i++) {
-                        let comp = document.getElementById(order[i]);
-                        if (comp) {
-                            components.appendChild(comp);
-                        }
-                    }
-                }
-            },
-            checkUndone() {
-                // get number of undone homeworks (for badge)
-                let homeworkDays = this.homeworks;
+								day.homeworks.push(homework);
+							}
 
-                let tomorrowDate = new Date(this.$rn);
-                tomorrowDate.setDate(tomorrowDate.getDate() + 1);
+							// sort homeworkDays by date
+							homeworkDays.sort((a, b) => {
+								return new Date(a.date) - new Date(b.date);
+							});
 
-                let tomorrow = homeworkDays.find((day) => {
-                    return day.date == tomorrowDate.toDateString();
-                });
-                        
-                // for each homework, check if it's done
-                let undone = 0;
-                if (tomorrow) {
-                    tomorrow.homeworks.forEach((homework) => {
-                        if (!homework.data.done) {
-                            undone++;
+							this.checkUndone();
 
-                            NotificationBadge.setBadgeCount({
-                                count: undone,
-                            })
+							this.homeworks = homeworkDays;
+						}
+					})
+					.catch((err) => {
+						this.homeworks = [];
+					});
+			},
+			reorder() {
+				let order = ["comp-hw", "comp-tt"]
 
-                        }
-                    });
-                }
-            },
-            handleRefresh(event) {
-                this.getTimetable(true);
-                this.getHomeworks(true);
+				let components = document.getElementById("components");
+				if (components) {
+					for (let i = 0; i < order.length; i++) {
+						let comp = document.getElementById(order[i]);
+						if (comp) {
+							components.appendChild(comp);
+						}
+					}
+				}
+			},
+			checkUndone() {
+				// get number of undone homeworks (for badge)
+				let homeworkDays = this.homeworks;
 
-                this.noCoursesMsg = this.randomMsg();
-                this.noCoursesEmoji = this.randomEmoji();
+				let tomorrowDate = new Date(this.$rn);
+				tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 
-                setTimeout(() => {
-                    event.detail.complete();
-                }, 1000);
-            }
-        },
-        mounted() {
-            if(localStorage.getItem('userData')) {
-                // get first name
-                let name = JSON.parse(localStorage.getItem('userData')).student.name;
-                // get last word of name
-                this.firstName = name.split(' ').pop();
-            }
+				let tomorrow = homeworkDays.find((day) => {
+					return day.date == tomorrowDate.toDateString();
+				});
 
-            // get data
-            this.getTimetable();
+				// for each homework, check if it's done
+				let undone = 0;
+				if (tomorrow) {
+					tomorrow.homeworks.forEach((homework) => {
+						if (!homework.data.done) {
+							undone++;
 
-            document.addEventListener('tokenUpdated', (e) => {
-                this.getTimetable();
-                this.getHomeworks();
-            });
+							NotificationBadge.setBadgeCount({
+								count: undone,
+							})
 
-            this.getHomeworks();
+						}
+					});
+				}
+			},
+			handleRefresh(event) {
+				this.getTimetable(true);
+				this.getHomeworks(true);
 
-            // reorder divs in #components
-            // this.reorder();
-        }
-    });
+				this.noCoursesMsg = this.randomMsg();
+				this.noCoursesEmoji = this.randomEmoji();
+
+				setTimeout(() => {
+					event.detail.complete();
+				}, 1000);
+			}
+		},
+		mounted() {
+			if (localStorage.getItem('userData')) {
+				// get first name
+				let name = JSON.parse(localStorage.getItem('userData')).student.name;
+				// get last word of name
+				this.firstName = name.split(' ').pop();
+			}
+
+			// get data
+			this.getTimetable();
+
+			document.addEventListener('tokenUpdated', (e) => {
+				this.getTimetable();
+				this.getHomeworks();
+			});
+
+			this.getHomeworks();
+
+			// reorder divs in #components
+			// this.reorder();
+		}
+	});
 </script>
 
 <template>
-    <ion-page ref="page">
-      <IonHeader class="AppHeader" translucent collapse="fade">
-        <IonToolbar>
+	<ion-page ref="page">
+		<IonHeader class="AppHeader" translucent collapse="fade">
+			<IonToolbar>
 
-          <ion-buttons slot="start">
-            <ion-menu-button color="dark" mode="md"></ion-menu-button>
-          </ion-buttons>
+				<ion-buttons slot="start">
+					<ion-menu-button color="dark" mode="md"></ion-menu-button>
+				</ion-buttons>
 
-          <ion-title mode="md">Vue d'ensemble</ion-title>
-        </IonToolbar>
-      </IonHeader>
-      
-      <ion-content :fullscreen="true">
+				<ion-title mode="md">Vue d'ensemble</ion-title>
+			</IonToolbar>
+		</IonHeader>
 
-        <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
-            <ion-refresher-content></ion-refresher-content>
-        </ion-refresher>
+		<ion-content :fullscreen="true">
 
-        <div id="components" ref="components">
-            <ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
-                <ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none" @click="goto('timetable')" :style="`--courseColor: ${cours.course.color};`">
-                    <ion-ripple-effect></ion-ripple-effect>
-                    <div slot="start">
-                        <IonChip>{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</IonChip>
-                    </div>
-                    <ion-label :style="`--courseColor: ${cours.course.color};`">
-                        <h2><span class="courseColor"></span> {{ cours.data.subject }}</h2>
-                        <h3>{{ nextCoursTime }}</h3>
-                        <p>salle {{ cours.data.rooms.join(', ') || 'Pas de salle' }} - avec {{ cours.data.teachers.join(', ') || 'Pas de professeur' }}</p>
-                        <p v-if="cours.status.status">{{ cours.status.status }}</p>
-                    
-                        <!-- <IonProgressBar :value="progress" :style="`--courseColor: ${cours.course.color};`"></IonProgressBar> -->
-                    </ion-label>
-                </ion-item>
+			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+				<ion-refresher-content></ion-refresher-content>
+			</ion-refresher>
 
-                <ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0" style="margin-top: 12px;" class="nextCours" lines="none">
-                    <div slot="start" style="margin-left: 5px; margin-right: 20px;">
-                        <span class="material-symbols-outlined mdls">wifi_off</span>
-                    </div>
-                    <ion-label>
-                        <h2>Aucune connexion internet</h2>
-                        <p>Les cours ne peuvent pas être chargés, réessayer plus tard...</p>
-                    </ion-label>
-                </ion-item>
+			<div id="components" ref="components">
+				<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
+					<ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none"
+						@click="goto('timetable')" :style="`--courseColor: ${cours.course.color};`"
+						:class="{ 'HasStatus' : cours.hasStatus }">
+						<ion-ripple-effect></ion-ripple-effect>
+						<div slot="start">
+							<IonChip>
+								{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}
+							</IonChip>
+						</div>
+						<ion-label :style="`--courseColor: ${cours.course.color};`">
+							<h2><span class="courseColor"></span> {{ cours.data.subject }}</h2>
+							<h3>{{ nextCoursTime }}</h3>
+							<p>salle {{ cours.data.rooms.join(', ') || 'Pas de salle' }} - avec
+								{{ cours.data.teachers.join(', ') || 'Pas de professeur' }}</p>
+							<p v-if="cours.status.status">{{ cours.status.status }}</p>
+						</ion-label>
+					</ion-item>
 
-                <ion-item class="nextCours" v-if="timetable.length == 0" style="margin-top: 12px;"  @click="goto('timetable')">
-                    <ion-ripple-effect></ion-ripple-effect>
-                    <div slot="start" class="emoji">
-                        {{ noCoursesEmoji }}
-                    </div>
-                    <ion-label>
-                        <h2>Aucun cours</h2>
-                        <p>{{ noCoursesMsg }}</p>
-                    </ion-label>
-                </ion-item>
+					<ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0" style="margin-top: 12px;"
+						class="nextCours" lines="none">
+						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
+							<span class="material-symbols-outlined mdls">wifi_off</span>
+						</div>
+						<ion-label>
+							<h2>Aucune connexion internet</h2>
+							<p>Les cours ne peuvent pas être chargés, réessayer plus tard...</p>
+						</ion-label>
+					</ion-item>
 
-                <ion-item v-if="timetable.loading && timetable.length == 0" class="nextCours" lines="none">
-                    <div slot="start" style="margin-left: 5px; margin-right: 20px;">
-                        <IonSpinner></IonSpinner>
-                    </div>
-                    <ion-label>
-                        <h2>Veuillez patienter</h2>
-                        <p>Chargement des cours...</p>
-                    </ion-label>
-                </ion-item>
-            </ion-list>
+					<ion-item class="nextCours" v-if="timetable.length == 0" style="margin-top: 12px;"
+						@click="goto('timetable')">
+						<ion-ripple-effect></ion-ripple-effect>
+						<div slot="start" class="emoji">
+							{{ noCoursesEmoji }}
+						</div>
+						<ion-label>
+							<h2>Aucun cours</h2>
+							<p>{{ noCoursesMsg }}</p>
+						</ion-label>
+					</ion-item>
 
-            <ion-list id="comp-hw" ref="comp-hw" lines="none" inset="true">
-                <ion-list-header>
-                    <ion-label>
-                        <h2 style="font-size: 20px;">Travail à faire</h2>
-                    </ion-label>
-                    <ion-button @click="goto('homework')">Voir tout</ion-button>
-                </ion-list-header>
+					<ion-item v-if="timetable.loading && timetable.length == 0" class="nextCours" lines="none">
+						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
+							<IonSpinner></IonSpinner>
+						</div>
+						<ion-label>
+							<h2>Veuillez patienter</h2>
+							<p>Chargement des cours...</p>
+						</ion-label>
+					</ion-item>
+				</ion-list>
 
-                <ion-item-group class="hw_group" v-for="(day, i) in homeworks" :key="i">
-                    <div class="homepage_divider">
-                        <p>{{ new Date(day.date).toLocaleString('fr-FR', { weekday: 'long' }) }}</p>
-                        <div class="divider"></div>
-                    </div>
-                    <ion-item v-for="homework in day.homeworks" :key="homework.id">
-                        <ion-label :style="`--courseColor: ${homework.data.color};`">
-                            <p><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
-                            <h2>{{ homework.homework.content }}</h2>
-                        </ion-label>
-                        
-                        <ion-chip slot="end" v-if="homework.data.done" color="success">
-                            <span class="material-symbols-outlined mdls">check_circle</span>
-                            Fait
-                        </ion-chip>
-                        <ion-chip slot="end" v-else color="medium">
-                            <span class="material-symbols-outlined mdls">schedule</span>
-                            <p v-if="homework.data.timeLeft > 0">{{homework.data.timeLeft}} jour(s)</p>
-                            <p v-else-if="homework.data.timeLeft < 0">Aujourd'hui</p>
-                            <p v-else>Demain</p>
-                        </ion-chip>
-                    </ion-item>
-                </ion-item-group>
+				<ion-list id="comp-hw" ref="comp-hw" lines="none" inset="true">
+					<ion-list-header>
+						<ion-label>
+							<h2 style="font-size: 20px;">Travail à faire</h2>
+						</ion-label>
+						<ion-button @click="goto('homework')">Voir tout</ion-button>
+					</ion-list-header>
 
-                <ion-item v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0" lines="none">
-                    <div slot="start" style="margin-left: 5px; margin-right: 20px;">
-                        <span class="material-symbols-outlined mdls">wifi_off</span>
-                    </div>
-                    <ion-label>
-                        <h2>Aucune connexion internet</h2>
-                        <p>Les devoirs ne peuvent pas être chargés, réessayer plus tard...</p>
-                    </ion-label>
-                </ion-item>
+					<ion-item-group class="hw_group" v-for="(day, i) in homeworks" :key="i">
+						<div class="homepage_divider">
+							<p>{{ new Date(day.date).toLocaleString('fr-FR', { weekday: 'long' }) }}</p>
+							<div class="divider"></div>
+						</div>
+						<ion-item v-for="homework in day.homeworks" :key="homework.id">
+							<ion-label :style="`--courseColor: ${homework.data.color};`">
+								<p><span class="courseColor"></span> {{ homework.homework.subject }}</p>
+								<h2>{{ homework.homework.content }}</h2>
+							</ion-label>
 
-                <ion-item v-if="homeworks.length == 0" lines="none">
-                    <ion-label>
-                        <p>Vous n'avez aucun devoir à faire durant 7 jours.</p>
-                    </ion-label>
-                </ion-item>
-                
-                <ion-item v-if="homeworks.loading && homeworks.length == 0" lines="none">
-                    <div slot="start" style="margin-left: 5px; margin-right: 20px;">
-                        <IonSpinner></IonSpinner>
-                    </div>
-                    <ion-label>
-                        <h2>Veuillez patienter</h2>
-                        <p>Chargement des devoirs...</p>
-                    </ion-label>
-                </ion-item>
-            </ion-list>
-        </div>
+							<ion-chip slot="end" v-if="homework.data.done" color="success">
+								<span class="material-symbols-outlined mdls">check_circle</span>
+								Fait
+							</ion-chip>
+							<ion-chip slot="end" v-else color="medium">
+								<span class="material-symbols-outlined mdls">schedule</span>
+								<p v-if="homework.data.timeLeft > 0">{{homework.data.timeLeft}} jour(s)</p>
+								<p v-else-if="homework.data.timeLeft < 0">Aujourd'hui</p>
+								<p v-else>Demain</p>
+							</ion-chip>
+						</ion-item>
+					</ion-item-group>
 
-      </ion-content>
-    </ion-page>
+					<ion-item v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0" lines="none">
+						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
+							<span class="material-symbols-outlined mdls">wifi_off</span>
+						</div>
+						<ion-label>
+							<h2>Aucune connexion internet</h2>
+							<p>Les devoirs ne peuvent pas être chargés, réessayer plus tard...</p>
+						</ion-label>
+					</ion-item>
+
+					<ion-item v-if="homeworks.length == 0" lines="none">
+						<ion-label>
+							<p>Vous n'avez aucun devoir à faire durant 7 jours.</p>
+						</ion-label>
+					</ion-item>
+
+					<ion-item v-if="homeworks.loading && homeworks.length == 0" lines="none">
+						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
+							<IonSpinner></IonSpinner>
+						</div>
+						<ion-label>
+							<h2>Veuillez patienter</h2>
+							<p>Chargement des devoirs...</p>
+						</ion-label>
+					</ion-item>
+				</ion-list>
+			</div>
+
+		</ion-content>
+	</ion-page>
 </template>
-  
+
 <style scoped>
-    .iconDisplay {
-        display: flex;
-        align-items: center;
+	.iconDisplay {
+		display: flex;
+		align-items: center;
 
-        opacity: 0.8;
+		opacity: 0.8;
 
-        width: fit-content;
+		width: fit-content;
 
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        margin-bottom: 3px;
-    }
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		margin-bottom: 3px;
+	}
 
-    .emoji {
-        font-size: 1.5em;
-        margin-right: 20px;
-    }
+	.emoji {
+		font-size: 1.5em;
+		margin-right: 20px;
+	}
 
-    .nextCourse ion-chip {
-        padding: 6px 9px !important;
-        height: fit-content;
-        font-weight: 600;
-        font-size: 16px;
-        font-family: var(--papillon-font);
-    }
+	.nextCourse ion-chip {
+		padding: 6px 9px !important;
+		height: fit-content;
+		font-weight: 600;
+		font-size: 16px;
+		font-family: var(--papillon-font);
+	}
 
-    /* Temporary */
-    .nextCours::part(native) {
-        /* border-bottom: 3px solid var(--courseColor); */
-        /* pas convaincu -> peut etre mis sur le progress */
-    }
+	.ios .nextCours.HasStatus::part(native) {
+		border-radius: 12px 12px 0 0 !important;
+	}
 
-    /* Faire une barre de chargement en fonction du temps restant en cours */
-    /* .nextCours .progress {
-        position: relative;
-        background-color: var(--ion-inset-background);
-        height: 3px;
-        border-radius: 3px;
-        width: 100%;
-        bottom: 0;
-        left: 0;
-        border-radius: 0 0 3px 3px;
-    }
+	.md .nextCours.HasStatus::part(native) {
+		border-radius: 12px 12px 0 0 !important;
+	}
 
-    .nextCours .progress .step {
-        background-color: var(--courseColor);
-        height: 3px;
-        width: 33%;
-        border-radius: 3px;
-        border-radius: 0 0 0 3px;
-    } */
+	.ios .nextCours {
+		padding: 5px 16px;
+		margin-top: 14px;
+	}
 
-    .ios .nextCours {
-        padding: 5px 16px;
-        margin-top: 14px;
-    }
+	.ios .nextCours::part(native) {
+		background: var(--ion-inset-background);
+		border-radius: 12px;
+		padding: 5px 15px;
+	}
 
-    .ios .nextCours::part(native) {
-        background: var(--ion-inset-background);
-        border-radius: 12px;
-        padding: 5px 15px;
-    }
+	.md .nextCours {
+		padding: 5px 16px;
+		margin-top: 5px;
+	}
 
-    .md .nextCours {
-        padding: 5px 16px;
-        margin-top: 5px;
-    }
+	.md .nextCours::part(native) {
+		background: var(--ion-inset-background);
+		border-radius: 8px;
+		padding: 3px 10px;
+	}
 
-    .md .nextCours::part(native) {
-        background: var(--ion-inset-background);
-        border-radius: 8px;
-        padding: 3px 10px;
-    }
+	.courseColor {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background-color: var(--courseColor);
+		display: inline-block;
+		margin-right: 5px;
+	}
 
-    .courseColor {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background-color: var(--courseColor);
-        display: inline-block;
-        margin-right: 5px;
-    }
+	.homepage_divider {
+		display: flex;
+		align-items: center;
+		margin: 10px 18px;
+	}
 
-    .homepage_divider {
-        display: flex;
-        align-items: center;
-        margin: 10px 18px;
-    }
+	.md .homepage_divider {
+		margin: 10px 16px;
+	}
 
-    .md .homepage_divider {
-        margin: 10px 16px;
-    }
+	.ios .homepage_divider {
+		width: 100%;
+	}
 
-    .ios .homepage_divider {
-        width: 100%;
-    }
+	.homepage_divider p {
+		margin: 0;
+		font-size: 1em;
+		font-weight: 500;
+		font-family: var(--papillon-font);
+		opacity: 0.5;
+	}
 
-    .homepage_divider p {
-        margin: 0;
-        font-size: 1em;
-        font-weight: 500;
-        font-family: var(--papillon-font);
-        opacity: 0.5;
-    }
+	.homepage_divider .divider {
+		flex: 1;
+		height: 1px;
+		background-color: var(--ion-color-step-150);
+		margin-left: 10px;
+	}
 
-    .homepage_divider .divider {
-        flex: 1;
-        height: 1px;
-        background-color: var(--ion-color-step-150);
-        margin-left: 10px;
-    }
+	.hw_group {
+		padding-bottom: 10px;
+	}
 
-    .hw_group {
-        padding-bottom: 10px;
-    }
+	.hw_group ion-item {
+		--border-width: 0;
+	}
 
-    .hw_group ion-item {
-        --border-width: 0;
-    }
+	.hw_group ion-chip {
+		padding-left: 10px !important;
+	}
 
-    .hw_group ion-chip {
-        padding-left: 10px !important;
-    }
-
-    .hw_group ion-chip span {
-        margin-right: 5px;
-    }
+	.hw_group ion-chip span {
+		margin-right: 5px;
+	}
 </style>
