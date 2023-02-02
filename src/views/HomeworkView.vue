@@ -197,10 +197,7 @@ export default defineComponent({
                     this.getHomeworks();
                 })
                 .catch((error) => {
-                    let response = error.response;
-
-                    // microintéractions
-                    hapticsController.notification('error');
+                    let response = error.response.data;
 
                     // untick checkbox
                     let checkboxID = `checkbox_${hw.data.id}`;
@@ -215,30 +212,44 @@ export default defineComponent({
                         }, 100);
                     }, 200);
 
-                    if(response.data == "expired" || response.data == "notfound") {
-                        GetToken();
-
+                    if(response == "expired" || response == "notfound") {
                         displayToast.presentToastFull(
                             "Impossible de marquer ce devoir comme fait",
-                            "Le token à expiré (" + error + ")",
+                            "Le token à expiré",
                             "danger",
-                            alertCircle
+                            alertCircle,
+                        )
+
+                        GetToken();
+                    }
+                    else if(response.status == "not found") {
+                        displayToast.presentToastFull(
+                            "Impossible de marquer ce devoir comme fait",
+                            "Nous n'avons pas pu trouver ce devoir sur nos serveurs.",
+                            "danger",
+                            alertCircle,
+                            true,
+                            response.error
                         )
                     }
-                    else if(response.data == "not found") {
+                    else if(response.status == "error") {
                         displayToast.presentToastFull(
                             "Impossible de marquer ce devoir comme fait",
-                            "Nous n'avons pas pu trouver ce devoir sur nos serveurs. (" + error + ")",
+                            "Une erreur est survenue lors de la requête.",
                             "danger",
-                            alertCircle
+                            alertCircle,
+                            true,
+                            response.error
                         )
                     }
                     else {
                         displayToast.presentToastFull(
                             "Impossible de marquer ce devoir comme fait",
-                            "Erreur inconnue (" + error + ")",
+                            "Erreur inconnue",
                             "danger",
-                            alertCircle
+                            alertCircle,
+                            true,
+                            error
                         )
                     }
                 });
