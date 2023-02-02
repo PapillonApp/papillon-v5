@@ -133,14 +133,35 @@
 							this.newConvModalOpen = false;
 							this.handleRefresh();
 						} else {
-							displayToast.presentToastFull(
-								"Impossible de créer la conversation",
-								"Une erreur est survenue lors de la création de la conversation.",
-								"danger",
-								alertCircle,
-								true,
-								result.error
-							);
+							if (result.error != undefined) {
+								displayToast.presentToastFull(
+									"Impossible de créer la conversation",
+									"Une erreur est survenue lors de la création de la conversation.",
+									"danger",
+									alertCircle,
+									true,
+									result.error
+								);
+								return;
+							} else if (result.errors != undefined) {
+								displayToast.presentToastFull(
+									"Impossible de créer la conversation",
+									"Veuillez remplir tous les champs pour créer la conversation.",
+									"danger",
+									alertCircle
+								);
+								return;
+							} else {
+								displayToast.presentToastFull(
+									"Impossible de créer la conversation",
+									"Une erreur est survenue lors de la création de la conversation.",
+									"danger",
+									alertCircle,
+									true,
+									result
+								);
+								return;
+							}
 						}
 					})
 			}
