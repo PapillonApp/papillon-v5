@@ -67,7 +67,7 @@ import axios from 'axios';
 async function getToBase64(filepath: string) {
 	const response = await axios.get(filepath, { responseType: 'blob' });
 	const filereader = new FileReader();
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		filereader.onloadend = () => {
 			const result = filereader.result;
 			resolve(result);

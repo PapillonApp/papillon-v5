@@ -12,17 +12,9 @@
 		IonPage,
 	} from '@ionic/vue';
 
-	const displayToast = require('@/functions/utils/displayToast.js');
-
 	import GetAbsences from '@/functions/fetch/GetAbsences.js';
 	import GetPunishments from '@/functions/fetch/GetPunishments.js';
 	import GetDelays from '@/functions/fetch/GetDelays.js';
-
-	import {
-		Swiper,
-		SwiperSlide
-	} from 'swiper/vue';
-	import 'swiper/css';
 
 	export default defineComponent({
 		name: 'FolderPage',

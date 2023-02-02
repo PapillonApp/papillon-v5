@@ -6,20 +6,15 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
-		IonChip,
 		IonButtons,
 		IonButton,
 		IonLabel,
-		IonSelect,
-		IonSelectOption,
 		IonRadioGroup,
 		IonRadio,
 		IonToggle
 	} from '@ionic/vue';
 
-	const displayToast = require('@/functions/utils/displayToast.js');
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	export default defineComponent({

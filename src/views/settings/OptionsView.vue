@@ -18,10 +18,6 @@
 	import displayToast from '@/functions/utils/displayToast.js';
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
-	import { trash, refresh, checkmark, alertCircle } from 'ionicons/icons';
-
-	import { FilePicker } from '@capawesome/capacitor-file-picker';
-
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {

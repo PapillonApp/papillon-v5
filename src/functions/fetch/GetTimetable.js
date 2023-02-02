@@ -39,9 +39,9 @@ function getPronoteTimetable(date, forceReload) {
     });
     if (cacheSearch.length > 0 && !forceReload) {
         // return cached timetable in promise
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             let timetable = JSON.parse(cacheSearch[0].timetable);
-            resolve(constructPronoteTimetable(timetable, dayRequest));
+            resolve(constructPronoteTimetable(timetable));
         });
     }
     else {
@@ -52,7 +52,7 @@ function getPronoteTimetable(date, forceReload) {
             let timetable = response.data;
 
             // construct timetable
-            timetable = constructPronoteTimetable(timetable, dayRequest);
+            timetable = constructPronoteTimetable(timetable);
 
             // cache response
             let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
@@ -82,8 +82,8 @@ function getPronoteTimetable(date, forceReload) {
 
             if(error.code) {
                 // return empty timetable in promise
-                return new Promise((resolve, reject) => {
-                    resolve({
+                return new Promise((reject) => {
+                    reject({
                         error: error.code
                     });
                 });
@@ -93,7 +93,7 @@ function getPronoteTimetable(date, forceReload) {
 }
 
 // pronote : construct timetable
-function constructPronoteTimetable(timetable, date) {
+function constructPronoteTimetable(timetable) {
     // declaring vars
     let courses = [];
 
@@ -167,4 +167,4 @@ function constructPronoteTimetable(timetable, date) {
 }
 
 // export
-export default getPronoteTimetable;
+export default getTimetable;

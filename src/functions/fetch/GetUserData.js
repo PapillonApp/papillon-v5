@@ -29,7 +29,7 @@ async function getPronoteUser(force) {
         let user = JSON.parse(cache.user);
 
         // return user in promise
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             resolve(constructPronoteUser(user));
         });
     }

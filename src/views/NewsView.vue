@@ -1,15 +1,9 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonModal, IonCard, IonSpinner, IonChip, IonSearchbar } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonLabel, IonItem, IonModal, IonSpinner, IonSearchbar } from '@ionic/vue';
     
     import { Browser } from '@capacitor/browser';
 
-    import { calendarOutline } from 'ionicons/icons';
-
-    import {version} from '/package'
-    import { Capacitor } from '@capacitor/core';
-
-    import GetToken from '@/functions/login/GetToken.js';
     import GetNews from '@/functions/fetch/GetNews.js';
 
     export default defineComponent({
@@ -50,7 +44,7 @@
             closeNews() {
                 this.newsOpen = false;
             },
-            async openLink(url, name) {
+            async openLink(url) {
                 await Browser.open({
                     url: url
                 });
@@ -100,7 +94,7 @@
                 this.isLoading = false;
             });
 
-            document.addEventListener('tokenUpdated', (e) => {
+            document.addEventListener('tokenUpdated', () => {
                 this.getNewsRefresh();
             });
 

@@ -1,5 +1,4 @@
 import { app } from '@/main.ts'
-import displayToast from '@/functions/utils/displayToast.js';
 
 // get token
 function changePeriod(name) {

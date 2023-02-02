@@ -17,27 +17,16 @@
 		IonChip,
 		IonRippleEffect,
 		IonItemGroup,
-		IonItemDivider,
 		IonButtons,
 		IonRefresherContent
 	} from '@ionic/vue';
 
-	import { informationCircle } from 'ionicons/icons';
-
-	import { Capacitor } from '@capacitor/core';
-
 	import { NotificationBadge } from 'capacitor-notification-badge';
-
-	import displayToast from '@/functions/utils/displayToast.js';
-	import hapticsController from '@/functions/utils/hapticsController.js';
+	
 	import timetableEdit from '@/functions/utils/timetableEdit.js';
 	import subjectColor from '@/functions/utils/subjectColor.js';
 
-	import GetToken from '@/functions/login/GetToken.js';
-	import GetNews from '@/functions/fetch/GetNews.js';
-
 	// timetable
-	import CoursElement from '@/components/timetable/CoursElement.vue';
 	import GetTimetable from '@/functions/fetch/GetTimetable.js';
 
 	// homeworks
@@ -279,7 +268,7 @@
 							this.homeworks = homeworkDays;
 						}
 					})
-					.catch((err) => {
+					.catch(() => {
 						this.homeworks = [];
 					});
 			},
@@ -345,7 +334,7 @@
 			// get data
 			this.getTimetable();
 
-			document.addEventListener('tokenUpdated', (e) => {
+			document.addEventListener('tokenUpdated', () => {
 				this.getTimetable();
 				this.getHomeworks();
 			});

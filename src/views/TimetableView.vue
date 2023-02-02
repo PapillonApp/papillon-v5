@@ -1,6 +1,6 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonFabButton, IonInput } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput } from '@ionic/vue';
 
   import { App } from '@capacitor/app';
 
@@ -8,7 +8,7 @@
   import subjectColor from '@/functions/utils/subjectColor.js';
   import timetableEdit from '@/functions/utils/timetableEdit.js';
   
-  import { calendarOutline, calendarSharp, todayOutline, todaySharp, add, checkmark, notifications } from 'ionicons/icons';
+  import { calendarOutline, calendarSharp, todayOutline, todaySharp, notifications } from 'ionicons/icons';
 
   import { LocalNotifications } from '@capacitor/local-notifications';
 
@@ -468,12 +468,12 @@
         this.getTimetables();
 
         // on rnChanged, get new timetable data
-        document.addEventListener('rnChanged', (e) => {
+        document.addEventListener('rnChanged', () => {
             this.getTimetables();
         });
 
         // on token changed, get new timetable data
-        document.addEventListener('tokenUpdated', (e) => {
+        document.addEventListener('tokenUpdated', () => {
             this.getTimetables();
         });
 

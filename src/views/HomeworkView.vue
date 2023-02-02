@@ -1,6 +1,6 @@
 <script>
 import { defineComponent } from 'vue';
-import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonChip, IonCheckbox } from '@ionic/vue';
+import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonModal, IonDatetime, IonRefresher, IonRefresherContent, IonSpinner, IonChip, IonCheckbox } from '@ionic/vue';
 
 import { calendarOutline, calendarSharp, todayOutline, todaySharp, alertCircle, checkmark } from 'ionicons/icons';
 
@@ -139,7 +139,7 @@ export default defineComponent({
         closeHomework() {
             this.$refs.hwModal.$el.dismiss();
         },
-        async openLink(url, name) {
+        async openLink(url) {
             await Browser.open({
                 url: url
             });
@@ -169,7 +169,7 @@ export default defineComponent({
                     homeworkId: homeworkID,
                     dateFrom: dayString,
                     dateTo: dayString
-                }).then((response) => {
+                }).then(() => {
                     let checkboxID = `checkbox_${hw.data.id}`;
                     let checkbox = document.getElementById(checkboxID);
 
@@ -283,12 +283,12 @@ export default defineComponent({
         this.getHomeworks();
 
         // on rnChanged, get new homeworks data
-        document.addEventListener('rnChanged', (e) => {
+        document.addEventListener('rnChanged', () => {
             this.getHomeworks();
         });
 
         // on token changed, get new homeworks data
-        document.addEventListener('tokenUpdated', (e) => {
+        document.addEventListener('tokenUpdated', () => {
             this.getHomeworks();
         });
 

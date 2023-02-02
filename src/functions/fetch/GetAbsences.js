@@ -27,7 +27,7 @@ async function getPronoteAbsences(forceReload) {
 	if (cache != null && !forceReload) {
 		absences = JSON.parse(cache).absences;
 
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			resolve(constructPronoteAbsences(absences));
 		});
 	}
@@ -62,7 +62,7 @@ async function getPronoteAbsences(forceReload) {
 			}
 
 			if(error.code) {
-				return new Promise((resolve, reject) => {
+				return new Promise((reject) => {
 					reject({
 						error: error.code
 					});
@@ -100,4 +100,4 @@ function constructPronoteAbsences(absences) {
 	return abs
 }
 
-export default getPronoteAbsences;
+export default getAbsences;

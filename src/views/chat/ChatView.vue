@@ -6,10 +6,7 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
-		IonChip,
-		IonLabel,
 		IonNavLink,
 		IonFab,
 		IonButton,
@@ -191,7 +188,7 @@
 				this.recipients = res;
 			})
 
-			document.addEventListener('tokenUpdated', (e) => {
+			document.addEventListener('tokenUpdated', () => {
 				GetConversations().then((res) => {
 					this.conversations = res;
 				})
