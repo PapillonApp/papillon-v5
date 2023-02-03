@@ -151,6 +151,16 @@
                     <p>Utilisez vos identifiants APSchool pour vous connecter</p>
                 </ion-label>
             </ion-item>
+
+            <ion-item button detail="true" disabled>
+                <ion-avatar slot="start">
+                    <img alt="Logo" src="/assets/welcome/lvs_logo.png" />
+                </ion-avatar>
+                <ion-label>
+                    <h2>La-Vie-Scolaire</h2>
+                    <p>Utilisez vos identifiants La-Vie-Scolaire.fr pour vous connecter</p>
+                </ion-label>
+            </ion-item>
         </ion-list>
       </ion-content>
 </template>
