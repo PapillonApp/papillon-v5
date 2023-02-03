@@ -23,6 +23,8 @@
 	} from '@ionic/vue';
 
 	import { NotificationBadge } from 'capacitor-notification-badge';
+
+	import { Network } from '@capacitor/network';
 	
 	import timetableEdit from '@/functions/utils/timetableEdit.js';
 	import subjectColor from '@/functions/utils/subjectColor.js';
@@ -58,6 +60,7 @@
 		},
 		data() {
 			return {
+				connected: false,
 				timetable: [],
 				nextCoursTime: "",
 				percentage: 0,
@@ -313,25 +316,31 @@
 					});
 				}
 			},
-			handleRefresh(event) {
+			async handleRefresh(event) {
 				this.getTimetable(true);
 				this.getHomeworks(true);
 
 				this.noCoursesMsg = this.randomMsg();
 				this.noCoursesEmoji = this.randomEmoji();
 
+				this.connected = await Network.getStatus()
+				this.connected = this.connected.connected;
+
 				setTimeout(() => {
 					event.detail.complete();
 				}, 1000);
 			}
 		},
-		mounted() {
+		async mounted() {
 			if (localStorage.getItem('userData')) {
 				// get first name
 				let name = JSON.parse(localStorage.getItem('userData')).student.name;
 				// get last word of name
 				this.firstName = name.split(' ').pop();
 			}
+
+			this.connected = await Network.getStatus()
+			this.connected = this.connected.connected;
 
 			// get data
 			this.getTimetable();
@@ -342,9 +351,6 @@
 			});
 
 			this.getHomeworks();
-
-			// reorder divs in #components
-			// this.reorder();
 		}
 	});
 </script>
@@ -388,14 +394,25 @@
 						</ion-label>
 					</ion-item>
 
-					<ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0" style="margin-top: 12px;"
+					<ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0 && !connected" style="margin-top: 12px;"
 						class="nextCours" lines="none">
 						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
 							<span class="material-symbols-outlined mdls">wifi_off</span>
 						</div>
-						<ion-label>
+						<ion-label class="ion-text-wrap">
 							<h2>Aucune connexion internet</h2>
-							<p>Les cours ne peuvent pas être chargés, réessayer plus tard...</p>
+							<p>Les cours ne peuvent pas être chargés sans connection internet, réessayer plus tard...</p>
+						</ion-label>
+					</ion-item>
+
+					<ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0 && connected" style="margin-top: 12px;"
+						class="nextCours" lines="none">
+						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
+							<span class="material-symbols-outlined mdls">crisis_alert</span>
+						</div>
+						<ion-label class="ion-text-wrap">
+							<h2>Serveurs indisponibles</h2>
+							<p>Les cours ne peuvent pas être chargés, nos serveurs seront bientôt de nouveaux disponibles...</p>
 						</ion-label>
 					</ion-item>
 
@@ -455,13 +472,23 @@
 						</ion-item>
 					</ion-item-group>
 
-					<ion-item v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0" lines="none">
+					<ion-item v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0 && !connected" lines="none">
 						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
 							<span class="material-symbols-outlined mdls">wifi_off</span>
 						</div>
-						<ion-label>
+						<ion-label class="ion-text-wrap">
 							<h2>Aucune connexion internet</h2>
 							<p>Les devoirs ne peuvent pas être chargés, réessayer plus tard...</p>
+						</ion-label>
+					</ion-item>
+
+					<ion-item v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0 && connected" lines="none">
+						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
+							<span class="material-symbols-outlined mdls">crisis_alert</span>
+						</div>
+						<ion-label class="ion-text-wrap">
+							<h2>Serveurs indisponibles</h2>
+							<p>Les devoirs ne peuvent pas être chargés, nos serveurs seront bientôt de nouveaux disponibles...</p>
 						</ion-label>
 					</ion-item>
 

@@ -14,6 +14,7 @@ import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
 import GetToken from "@/functions/login/GetToken.js";
 
 import { Browser } from '@capacitor/browser';
+import { Network } from '@capacitor/network';
 
 import axios from 'axios';
 
@@ -74,7 +75,7 @@ export default defineComponent({
             // set homeworks to edit
             return homeworks;
         },
-        getHomeworks(force) {
+        async getHomeworks(force) {
             if(this.shouldResetSwiper) {
                 this.$refs.swiper.$el.swiper.slideTo(1, 0);
                 this.shouldResetSwiper = false;
@@ -94,16 +95,22 @@ export default defineComponent({
 
             // get homeworks for rn
             GetHomeworks(this.$rn, this.$rn, force).then((homeworks) => {
-                this.homeworks = homeworks;
+                if (homeworks.error) {
+                    this.homeworks = [];
+                    this.homeworks.error = homeworks.error;
+                } else {
 
-                this.loadedrnButtonString = this.createDateString(this.$rn);
-                this.homeworks.loading = false;
+                    this.homeworks = homeworks;
 
-                this.dontRetryCheck = true;
+                    this.loadedrnButtonString = this.createDateString(this.$rn);
+                    this.homeworks.loading = false;
 
-                setTimeout(() => {
-                    this.dontRetryCheck = false;
-                }, 200);
+                    this.dontRetryCheck = true;
+
+                    setTimeout(() => {
+                        this.dontRetryCheck = false;
+                    }, 200);
+                }
             });
 
             // get homeworks for yesterday
@@ -120,6 +127,10 @@ export default defineComponent({
                 this.tomorrow = homeworks;
                 this.tomorrow.loading = false;
             });
+
+            
+            this.connected = await Network.getStatus()
+            this.connected = this.connected.connected;
         },
         handleRefresh(event) {
             // get new homeworks data
@@ -258,6 +269,7 @@ export default defineComponent({
     },
     data() {
         return {
+            connected: false,
             rnButtonString: this.createDateString(this.$rn),
             loadedrnButtonString: this.createDateString(this.$rn),
             rnCalendarString: this.$rn.toISOString().split('T')[0],
@@ -428,20 +440,33 @@ export default defineComponent({
                             </ion-label>
                         </ion-item>
 
-                        <div v-if="homeworks.loading" class="Error"><div class="NoCours" v-if="homeworks.length == 0">
-                            <IonSpinner></IonSpinner>
-                            <br/>
-                            <h2>Téléchargement des prochains devoirs...</h2>
-                            <p>Veuillez patienter pendant qu'on récupère vos devoirs depuis nos serveurs...</p>
-                        </div></div>
+                        <div v-if="homeworks.loading && !homeworks.error" class="Error">
+                            <div class="NoCours" v-if="homeworks.length == 0">
+                                <IonSpinner></IonSpinner>
+                                <br/>
+                                <h2>Téléchargement des prochains devoirs...</h2>
+                                <p>Veuillez patienter pendant qu'on récupère vos devoirs depuis nos serveurs...</p>
+                            </div>
+                        </div>
 
-                        <div v-if="!homeworks.loading"><div class="NoCours" v-if="homeworks.length == 0">
+                        <div class="NoCours" v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0 && !connected">
+                            <span class="material-symbols-outlined mdls">wifi_off</span>
+							<h2>Aucune connexion internet</h2>
+							<p>Les devoirs ne peuvent pas être chargés sans connection internet, réessayer plus tard...</p>
+                        </div>
+
+                        <div class="NoCours" v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0 && connected">
+                            <span class="material-symbols-outlined mdls">crisis_alert</span>
+							<h2>Serveurs indisponibles</h2>
+							<p>Les devoirs ne peuvent pas être chargés, nos serveurs seront bientôt de nouveaux disponibles...</p>
+                        </div>
+
+                        <div class="NoCours" v-if="!homeworks.loading && !homeworks.error && homeworks.length == 0">
                             <span class="material-symbols-outlined mdls">auto_stories</span>
                             <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-
                             <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                        </div></div>
+                        </div>
                     </ion-list>
                 </swiper-slide>
                 <swiper-slide>
