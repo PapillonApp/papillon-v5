@@ -70,7 +70,7 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach(async (to, from) => {
+router.beforeEach(async (to) => {
   if (localStorage.loggedIn !== "true" && to.name !== 'Login') {
     return { name: 'Login' }
   }

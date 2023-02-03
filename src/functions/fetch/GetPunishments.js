@@ -9,10 +9,10 @@ import GetToken from '@/functions/login/GetToken.js';
 function getPunishments(forceReload) {
     // as only pronote is supported for now, we can just return the pronote punishments
 
-    return getPronotePunishements(forceReload);
+    return getPronotePunishments(forceReload);
 }
 
-async function getPronotePunishements(forceReload) {
+async function getPronotePunishments(forceReload) {
 	// gather vars
 	const API = app.config.globalProperties.$api;
 
@@ -26,7 +26,7 @@ async function getPronotePunishements(forceReload) {
 	if (cache != null && !forceReload) {
 		let punishments = JSON.parse(cache).punishments;
 
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			resolve(constructPronotePunishments(punishments));
 		});
 	}
@@ -60,7 +60,7 @@ async function getPronotePunishements(forceReload) {
 			}
 
 			if(error.code) {
-				return new Promise((resolve, reject) => {
+				return new Promise((reject) => {
 					reject({
 						error: error.code
 					});
@@ -105,4 +105,4 @@ function constructPronotePunishments(punishments) {
 	return punish
 }
 
-export default getPronotePunishements;
+export default getPunishments;

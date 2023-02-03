@@ -5,23 +5,12 @@
 	import {
 		IonHeader,
 		IonToolbar,
-		IonList,
-		IonListHeader,
-		IonItem,
-		IonChip,
-        IonButtons,
-        IonButton,
-        IonLabel,
-        IonSelect,
-        IonSelectOption,
-        IonFooter,
         IonRefresher,
 		IonRefresherContent,
         IonSkeletonText,
 	} from '@ionic/vue';
 
     import GetConversations from '@/functions/fetch/GetConversations.js';
-    const displayToast = require('@/functions/utils/displayToast.js');
 
     import ChatView from './ChatView.vue';
     import PapillonBackButton from '@/components/PapillonBackButton.vue';
@@ -112,7 +101,7 @@
                 return new Date(a.date) - new Date(b.date);
             });
 
-            document.addEventListener('tokenUpdated', (e) => {
+            document.addEventListener('tokenUpdated', () => {
                 this.handleRefresh();
             });
 		}

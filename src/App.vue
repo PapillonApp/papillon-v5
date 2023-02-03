@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { IonApp, IonContent, IonItem, IonLabel, IonList, IonListHeader, IonMenu, IonMenuToggle, IonNote, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController } from '@ionic/vue';
+    import { IonApp, IonContent, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController } from '@ionic/vue';
 
     import { defineComponent, ref } from 'vue';
     import { useRoute } from 'vue-router';

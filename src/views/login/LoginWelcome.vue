@@ -4,11 +4,8 @@
         IonButton
     } from '@ionic/vue';
 
-    import {version} from '/package'
+    import { version } from '/package'
     import { Capacitor } from '@capacitor/core';
-
-    import { Swiper, SwiperSlide } from 'swiper/vue';
-    import 'swiper/css';
 
     import LoginSelect from './LoginSelect.vue';
 
@@ -23,18 +20,7 @@
             }
         },
         methods: {
-            getServerStatus() {
-                const API = this.$api;
-
-                fetch(API + "/infos")
-                    .then(response => response.json())
-                    .then(result => {
-                        this.status = result.status;
-                    })
-                    .catch(error => {
-                        this.status = "error";
-                    });
-            },
+            
         },
         data() {
             return {
@@ -45,7 +31,7 @@
             }
         },
         mounted() {
-            this.getServerStatus(); 
+            return;
         }
     });
 </script>

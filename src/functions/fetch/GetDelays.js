@@ -27,7 +27,7 @@ async function getPronoteDelays(forceReload) {
 	if (cache != null && !forceReload) {
 		delays = JSON.parse(cache).delays;
 
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			resolve(constructPronoteDelays(delays));
 		});
 	}
@@ -60,8 +60,8 @@ async function getPronoteDelays(forceReload) {
 			}
 
 			if(error.code) {
-				return new Promise((resolve, reject) => {
-					resolve({
+				return new Promise((reject) => {
+					reject({
 						error: error.code
 					});
 				});
@@ -98,4 +98,4 @@ function constructPronoteDelays(delays) {
 	return dly
 }
 
-export default getPronoteDelays;
+export default getDelays;

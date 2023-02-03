@@ -34,7 +34,7 @@ async function getPronoteConversations(forceReload) {
 
         if(today.toDateString() == cacheDate.toDateString()) {
             // grade is up to date, return it
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 resolve(constructPronoteConversations(convCache.conversations));
             });
         }
@@ -72,7 +72,7 @@ async function getPronoteConversations(forceReload) {
 			}
 
 			if(error.code) {
-				return new Promise((resolve, reject) => {
+				return new Promise((reject) => {
 					reject({
 						error: error.code
 					});
@@ -86,4 +86,4 @@ function constructPronoteConversations(Conversations) {
 	return Conversations
 }
 
-export default getPronoteConversations;
+export default getConversations;

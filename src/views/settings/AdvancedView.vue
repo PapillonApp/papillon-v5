@@ -4,10 +4,8 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
 		IonLabel,
-		IonToggle,
 		IonButtons,
 		IonTitle,
 		IonContent,
@@ -20,9 +18,6 @@
 	import GetToken from '@/functions/login/GetToken.js';
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
-	import { trash, refresh, checkmark, alertCircle } from 'ionicons/icons';
-
-	import { FilePicker } from '@capawesome/capacitor-file-picker';
 	import { Dialog } from '@capacitor/dialog';
 
 	export default defineComponent({

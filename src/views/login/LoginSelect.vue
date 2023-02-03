@@ -1,14 +1,11 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonNavLink, IonListHeader, IonModal, IonButton, IonChip, IonBackButton } from '@ionic/vue';
+    import { IonItem, IonLabel, IonList, IonAvatar, IonNavLink, IonListHeader, IonBackButton } from '@ionic/vue';
     
     import { logoDiscord, logoGithub, bugOutline, bugSharp, informationCircleOutline, informationCircleSharp, globeOutline, globeSharp } from 'ionicons/icons';
 
-    import {version} from '/package'
+    import { version } from '/package'
     import { Capacitor } from '@capacitor/core';
-
-    import { Swiper, SwiperSlide } from 'swiper/vue';
-    import 'swiper/css';
 
     import SchoolSelection from './pronote/SchoolSelection.vue';
 
@@ -90,18 +87,6 @@
                     this.$refs.swiper.$el.swiper.slideNext();
                 }, 200);
             },
-            getServerStatus() {
-                const API = this.$api;
-
-                fetch(API + "/infos")
-                    .then(response => response.json())
-                    .then(result => {
-                        this.status = result.status;
-                    })
-                    .catch(error => {
-                        this.status = "error";
-                    });
-            },
         },
         data() {
             return {
@@ -111,7 +96,7 @@
             }
         },
         mounted() {
-            this.getServerStatus(); 
+            return;
         }
     });
 </script>

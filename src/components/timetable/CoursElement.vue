@@ -2,8 +2,6 @@
 	import { defineComponent } from "vue";
 	import {
 		IonLabel,
-		IonChip,
-		IonItemDivider,
 		IonRippleEffect
 	} from "@ionic/vue";
 

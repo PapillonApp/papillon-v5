@@ -8,7 +8,6 @@
 		IonMenuButton,
 		IonPage,
 		IonButtons,
-		IonButton,
 		IonList,
 		IonListHeader,
 		IonLabel,
@@ -22,16 +21,9 @@
 		IonSpinner
 	} from '@ionic/vue';
 
-	import { calendarOutline, checkmark } from 'ionicons/icons';
-
-	import { version } from '/package'
-	import { Capacitor } from '@capacitor/core';
-
 	import displayToast from '@/functions/utils/displayToast.js';
 
-	import GetToken from '@/functions/login/GetToken.js';
 	import GetGrades from '@/functions/fetch/GetGrades.js';
-	import GetUserData from '@/functions/fetch/GetUserData.js';
 	import ChangePeriod from '@/functions/login/ChangePeriod.js';
 
 	export default defineComponent({
@@ -142,11 +134,11 @@
 					localStorage.setItem('currentPeriod', JSON.stringify(newPeriod));
 
 					// change current period
-					ChangePeriod(newPeriod.name).then((data) => {
+					ChangePeriod(newPeriod.name).then(() => {
 							this.getGradesRefresh(true);
 							this.current_period = newPeriod;
 						})
-						.catch((error) => {
+						.catch(() => {
 							this.$refs.segment.$el.value = this.base_period.id;
 						});
 				}
@@ -257,7 +249,7 @@
 
 			this.getPeriods();
 
-			document.addEventListener('tokenUpdated', (ev) => {
+			document.addEventListener('tokenUpdated', () => {
 				GetGrades().then((data) => {
 					this.grades = this.editMarks(data.marks);
 					this.fullGrades = this.editMarks(data.marks);
@@ -268,7 +260,7 @@
 				});
 			});
 
-			document.addEventListener('settingsUpdated', (ev) => {
+			document.addEventListener('settingsUpdated', () => {
 				GetGrades().then((data) => {
 					this.out_of_20 = localStorage.getItem('tweakGrades20') == "true" ? true :
 					false;

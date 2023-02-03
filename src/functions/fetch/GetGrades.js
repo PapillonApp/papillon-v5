@@ -6,7 +6,6 @@ import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
 import subjectColor from '@/functions/utils/subjectColor.js'
-import { Cpu } from 'lucide-vue-next';
 
 // funcs
 function isFloat(n){
@@ -44,7 +43,7 @@ function getPronoteGrades(forceReload) {
 
 		if(today.toDateString() == cacheDate.toDateString()) {
 			// grade is up to date, return it
-			return new Promise((resolve, reject) => {
+			return new Promise((resolve) => {
 				resolve(constructPronoteGrades(gradeCache.grades));
 			});
 		}
@@ -68,7 +67,7 @@ function getPronoteGrades(forceReload) {
 			localStorage.setItem('GradeCache', JSON.stringify(gradeCache));
 
 			// construct grades and return it as a promise
-			return new Promise((resolve, reject) => {
+			return new Promise((resolve) => {
 				resolve(constructPronoteGrades(response.data));
 			});
 		})
@@ -79,7 +78,7 @@ function getPronoteGrades(forceReload) {
 			}
 
 			// error, return error
-			return new Promise((resolve, reject) => {
+			return new Promise((reject) => {
 				reject(error);
 			});
 		});
@@ -407,4 +406,4 @@ function constructPronoteGrades(grades) {
 }
 
 // export
-export default getPronoteGrades;
+export default getGrades;

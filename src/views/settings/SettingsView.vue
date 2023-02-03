@@ -1,8 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonListHeader, IonLabel, IonItem, IonToggle, actionSheetController, IonAvatar, IonNavLink, IonChip } from '@ionic/vue';
-    
-    import { calendarOutline } from 'ionicons/icons';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonListHeader, IonLabel, IonItem, actionSheetController, IonNavLink, IonChip } from '@ionic/vue';
 
     import { Browser } from '@capacitor/browser';
 
@@ -11,18 +9,10 @@
     import UserView from './UserView.vue';
     import AdvancedView from './AdvancedView.vue';
 
-    import PapillonLogo from '@/components/icons/PapillonLogo.vue';
-
     import { version, canal } from '/package'
     import { Capacitor } from '@capacitor/core';
 
-    import displayToast from '@/functions/utils/displayToast.js';
-    import GetToken from '@/functions/login/GetToken.js';
     import getContributors from '@/functions/fetch/GetContributors';
-
-    import { trash, refresh, checkmark, alertCircle } from 'ionicons/icons';
-
-    import axios from 'axios';
 
     export default defineComponent({
         name: 'FolderPage',
@@ -86,9 +76,6 @@
                 });
 
                 await actionSheet.present();
-
-                const res = await actionSheet.onDidDismiss();
-                let result = JSON.stringify(res, null, 2);
             },
             logoutFunc() {
                 // empty all local storage
@@ -127,7 +114,7 @@
 
                 this.apiVersion = cacheApiVersion ?? 'Inconnue';
             },
-            async openURL(url, name) {
+            async openURL(url) {
                 await Browser.open({
                     url: url
                 });

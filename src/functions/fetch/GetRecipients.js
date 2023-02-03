@@ -34,7 +34,7 @@ async function getPronoteRecipients(forceReload) {
 
         if(today.toDateString() == cacheDate.toDateString()) {
             // grade is up to date, return it
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 resolve(constructPronoteRecipients(recipientsCache.Recipients));
             });
         }
@@ -72,7 +72,7 @@ async function getPronoteRecipients(forceReload) {
 			}
 
 			if(error.code) {
-				return new Promise((resolve, reject) => {
+				return new Promise((reject) => {
 					reject({
 						error: error.code
 					});
@@ -86,4 +86,4 @@ function constructPronoteRecipients(Recipients) {
 	return Recipients
 }
 
-export default getPronoteRecipients;
+export default getRecipients;

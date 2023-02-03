@@ -36,7 +36,7 @@ function getPronoteNews(forceReload) {
 
         if(today.toDateString() == cacheDate.toDateString()) {
             // timetable is up to date, return it
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 resolve(constructPronoteNews(newsCache.news));
             });
         }
@@ -60,7 +60,7 @@ function getPronoteNews(forceReload) {
             localStorage.setItem('NewsCache', JSON.stringify(newsCache));
 
             // construct timetable and return it as a promise
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 resolve(constructPronoteNews(response.data));
             });
         })
@@ -71,7 +71,7 @@ function getPronoteNews(forceReload) {
             }
 
             // error, return error
-            return new Promise((resolve, reject) => {
+            return new Promise((reject) => {
                 reject(error);
             });
         });
@@ -117,4 +117,4 @@ function constructPronoteNews(news) {
 }
 
 // export
-export default getPronoteNews
+export default getNews
