@@ -185,7 +185,7 @@
         this.$nextTick(function () {
             setTimeout(() => {
                 SplashScreen.hide();
-            }, 300);
+            }, 50);
         })
 
         // user data if logged in

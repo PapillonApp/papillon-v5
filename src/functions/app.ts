@@ -4,12 +4,14 @@ import { Capacitor } from '@capacitor/core';
 
 // Variables
 let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+let colorForced = localStorage.getItem('colorForced') === 'true';
 
 // Status bar
 import { StatusBar, Style } from '@capacitor/status-bar';
 
 function checkDarkMode() {
 	isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+	colorForced = localStorage.getItem('colorForced') === 'true';
 }
 
 function setStatusBarStyle() {
@@ -41,8 +43,7 @@ function setNavigationBarStyle() {
 	}
 }
 
-// Constantly check for dark mode
-setInterval(() => {
+function updateStatus() {
 	if (Capacitor.getPlatform() !== 'web') {
 		checkDarkMode();
 		setStatusBarStyle();
@@ -50,16 +51,11 @@ setInterval(() => {
 			setNavigationBarStyle();
 		}
 	}
-}, 1000);
-
-// Set status bar and navigation bar style
-if (Capacitor.getPlatform() !== 'web') {
-	checkDarkMode();
-	setStatusBarStyle();
-	if (Capacitor.getPlatform() === 'android') {
-		setNavigationBarStyle();
-	}
 }
+
+// Constantly check for dark mode
+updateStatus();
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateStatus);
 
 import { AndroidShortcuts } from 'capacitor-android-shortcuts';
 import axios from 'axios';
