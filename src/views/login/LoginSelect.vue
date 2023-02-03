@@ -9,6 +9,8 @@
 
     import SchoolSelection from './pronote/SchoolSelection.vue';
 
+    import { StatusBar, Style } from '@capacitor/status-bar';
+
     export default defineComponent({
         name: 'FolderPage',
         components: {
@@ -87,6 +89,12 @@
                     this.$refs.swiper.$el.swiper.slideNext();
                 }, 200);
             },
+            goOldStatusBar() {
+                if (Capacitor.getPlatform() === 'android') {
+                    StatusBar.setStyle({ style: Style.Dark });
+                    StatusBar.setBackgroundColor({color: "#12D4A6"});
+                }
+            }
         },
         data() {
             return {
@@ -96,6 +104,8 @@
             }
         },
         mounted() {
+            
+
             return;
         }
     });

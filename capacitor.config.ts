@@ -10,10 +10,6 @@ const config: CapacitorConfig = {
   plugins: {
     "SplashScreen": {
       "launchAutoHide": false,
-      "androidScaleType" : "CENTER_CROP",
-      "splashFullScreen": true,
-      "splashImmersive": false,
-      "backgroundColor": "#27A057"
     },
     LocalNotifications: {
       smallIcon: "ic_stat_notify",
@@ -24,10 +20,10 @@ const config: CapacitorConfig = {
       resize: KeyboardResize.None,
     },
   },
-  /* server: {
+  server: {
     url: "http://192.168.1.22:8100",
     cleartext: true
-  }, */
+  },
 };
 
 export default config;
