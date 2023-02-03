@@ -18,7 +18,8 @@
 		IonRippleEffect,
 		IonItemGroup,
 		IonButtons,
-		IonRefresherContent
+		IonRefresherContent,
+		IonSkeletonText
 	} from '@ionic/vue';
 
 	import { NotificationBadge } from 'capacitor-notification-badge';
@@ -53,6 +54,7 @@
 			IonRippleEffect,
 			IonItemGroup,
 			IonRefresherContent,
+			IonSkeletonText
 		},
 		data() {
 			return {
@@ -403,7 +405,7 @@
 						<div slot="start" class="emoji">
 							{{ noCoursesEmoji }}
 						</div>
-						<ion-label>
+						<ion-label class="ion-text-wrap">
 							<h2>Aucun cours</h2>
 							<p>{{ noCoursesMsg }}</p>
 						</ion-label>
@@ -414,8 +416,9 @@
 							<IonSpinner></IonSpinner>
 						</div>
 						<ion-label>
-							<h2>Veuillez patienter</h2>
-							<p>Chargement des cours...</p>
+							<h2 style="display: flex;"><ion-skeleton-text class="courseColor" :animated="true" style="width: 10px;"></ion-skeleton-text> <ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text></h2>
+							<h3><ion-skeleton-text :animated="true" style="width: 35%;"></ion-skeleton-text></h3>
+							<p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
 						</ion-label>
 					</ion-item>
 				</ion-list>
