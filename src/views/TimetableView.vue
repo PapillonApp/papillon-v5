@@ -3,6 +3,7 @@
   import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput } from '@ionic/vue';
 
   import { App } from '@capacitor/app';
+  import { Network } from '@capacitor/network';
 
   import displayToast from '@/functions/utils/displayToast.js';
   import subjectColor from '@/functions/utils/subjectColor.js';
@@ -123,7 +124,7 @@
             this.yesterday.error = "STILL_LOADING";
             this.tomorrow.error = "STILL_LOADING";
         },
-        getTimetables(force) {
+        async getTimetables(force) {
             // get timetable for rn
             GetTimetable(this.$rn, force).then((timetable) => {
                 if(timetable.error) {
@@ -176,6 +177,10 @@
                     }
                 }
             });
+
+            // set connection status
+            this.connected = await Network.getStatus()
+            this.connected = this.connected.connected;
         },
         handleRefresh(event) {
             // get new timetable data
@@ -439,6 +444,7 @@
             timetable: [],
             yesterday: [],
             tomorrow: [],
+            connected: false,
             shouldResetSwiper: false,
             days: ['yesterday', 'timetable', 'tomorrow'],
             selectedCourse: {
@@ -596,10 +602,16 @@
                         <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div>
 
-                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].error == 'ERR_NETWORK' && !$data[`${day}`].loading">
+                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].error == 'ERR_NETWORK' && !$data[`${day}`].loading && !connected">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div>
+
+                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].error == 'ERR_NETWORK' && !$data[`${day}`].loading && connected">
+                        <span class="material-symbols-outlined mdls">crisis_alert</span>
+                        <h2>Serveurs indisponibles</h2>
+                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance. Nos serveurs seront bientôt de nouveaux disponibles.</p>
                     </div>
 
                     <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].loading">
