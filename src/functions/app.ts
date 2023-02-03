@@ -54,7 +54,7 @@ function updateStatus() {
 }
 
 // Constantly check for dark mode
-setNavigationBarStyle();
+updateStatus();
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateStatus);
 
 import { AndroidShortcuts } from 'capacitor-android-shortcuts';
