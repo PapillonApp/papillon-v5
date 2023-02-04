@@ -138,9 +138,11 @@ export default defineComponent({
 
             // stop refresh when this.homeworks is updated
             this.$watch('homeworks', () => {
-                setTimeout(() => {
-                    event.target.complete();
-                }, 200);
+                if(this.homeworks.error != "STILL_LOADING" && this.homeworks.error != "ERR_BAD_REQUEST") {
+                    setTimeout(() => {
+                        event.target.complete();
+                    }, 200);
+                }
             });
         },
         openHomework(hw) {
@@ -280,6 +282,7 @@ export default defineComponent({
             openedHw: [],
             dontRetryCheck: false,
             rnPickerModalOpen: false,
+            days: ['yesterday', 'homeworks', 'tomorrow'],
         }
     },
     mounted() {
@@ -375,10 +378,10 @@ export default defineComponent({
 
             <div id="noTouchZone"></div>
 
-            <swiper :initialSlide="1" ref="swiper">
-                <swiper-slide class="swiper-slide">
-                    <ion-list>
-                        <ion-item v-for="homework in yesterday" :key="homework.id" button>
+            <swiper :initialSlide="1" ref="swiper" :speed="300" :spaceBetween="10" :preventClicks="true" :effect="'fade'">
+                <swiper-slide v-for="(day, i) in days" :key="i">
+                    <IonList>
+                        <ion-item v-for="homework in $data[`${day}`]" :key="homework.id" button>
                             <div slot="start">
                                 <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
                             </div>
@@ -400,118 +403,36 @@ export default defineComponent({
                             </ion-label>
                         </ion-item>
 
-                        <div v-if="yesterday.loading" class="Error"><div class="NoCours" v-if="yesterday.length == 0">
-                            <IonSpinner></IonSpinner>
-                            <br/>
-                            <h2>Téléchargement des prochains devoirs...</h2>
-                            <p>Veuillez patienter pendant qu'on récupère vos devoirs depuis nos serveurs...</p>
-                        </div></div>
-
-                        <div v-if="!yesterday.loading"><div class="NoCours" v-if="yesterday.length == 0">
-                            <span class="material-symbols-outlined mdls">auto_stories</span>
-                            <h2>Pas de devoirs à faire pour cette journée</h2>
-                            <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-
-                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                        </div></div>
-                    </ion-list>
-                </swiper-slide>
-                <swiper-slide>
-                    <ion-list>
-                        <ion-item v-for="homework in homeworks" :key="homework.id" button>
-                            <div slot="start">
-                                <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
-                            </div>
-                            <ion-label :style="`--courseColor: ${homework.data.color};`">
-                                <div @click="openHomework(homework)">
-                                    <p><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
-                                    <h2>{{ homework.homework.content }}</h2>
-                                </div>
-
-                                <div class="innerChips" v-if="homework.files.length !== 0">
-                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true" @click="openLink(attachment.url)">
-                                        <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
-
-                                        <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
-
-                                        <p>{{attachment.name}}</p>
-                                    </ion-chip>
-                                </div>
-                            </ion-label>
-                        </ion-item>
-
-                        <div v-if="homeworks.loading && !homeworks.error" class="Error">
-                            <div class="NoCours" v-if="homeworks.length == 0">
-                                <IonSpinner></IonSpinner>
-                                <br/>
-                                <h2>Téléchargement des prochains devoirs...</h2>
-                                <p>Veuillez patienter pendant qu'on récupère vos devoirs depuis nos serveurs...</p>
-                            </div>
-                        </div>
-
-                        <div class="NoCours" v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0 && !connected">
+                        <div class="NoCours" v-if="$data[`${day}`].error == 'ERR_NETWORK' && $data[`${day}`].length == 0 && !connected">
                             <span class="material-symbols-outlined mdls">wifi_off</span>
 							<h2>Aucune connexion internet</h2>
 							<p>Les devoirs ne peuvent pas être chargés sans connection internet, réessayer plus tard...</p>
                         </div>
 
-                        <div class="NoCours" v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0 && connected">
+                        <div class="NoCours" v-if="$data[`${day}`].error == 'ERR_NETWORK' && $data[`${day}`].length == 0 && connected">
                             <span class="material-symbols-outlined mdls">crisis_alert</span>
 							<h2>Serveurs indisponibles</h2>
 							<p>Les devoirs ne peuvent pas être chargés, nos serveurs seront bientôt de nouveaux disponibles...</p>
                         </div>
 
-                        <div class="NoCours" v-if="!homeworks.loading && !homeworks.error && homeworks.length == 0">
+                        <div class="NoCours" v-if="!$data[`${day}`].loading && !$data[`${day}`].error && $data[`${day}`].length == 0">
                             <span class="material-symbols-outlined mdls">auto_stories</span>
                             <h2>Pas de devoirs à faire pour cette journée</h2>
                             <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
                             <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                         </div>
-                    </ion-list>
-                </swiper-slide>
-                <swiper-slide>
-                    <ion-list>
-                        <ion-item v-for="homework in tomorrow" :key="homework.id" button>
-                            <div slot="start">
-                                <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
-                            </div>
-                            <ion-label :style="`--courseColor: ${homework.data.color};`">
-                                <div @click="openHomework(homework)">
-                                    <p><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
-                                    <h2>{{ homework.homework.content }}</h2>
-                                </div>
 
-                                <div class="innerChips" v-if="homework.files.length !== 0">
-                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true" @click="openLink(attachment.url)">
-                                        <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
-
-                                        <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
-
-                                        <p>{{attachment.name}}</p>
-                                    </ion-chip>
-                                </div>
-                            </ion-label>
-                        </ion-item>
-
-                        <div v-if="tomorrow.loading" class="Error"><div class="NoCours" v-if="tomorrow.length == 0">
+                        <div v-if="$data[`${day}`].loading && !$data[`${day}`].error && $data[`${day}`].length == 0" class="NoCours">
                             <IonSpinner></IonSpinner>
                             <br/>
                             <h2>Téléchargement des prochains devoirs...</h2>
                             <p>Veuillez patienter pendant qu'on récupère vos devoirs depuis nos serveurs...</p>
-                        </div></div>
-
-                        <div v-if="!tomorrow.loading"><div class="NoCours" v-if="tomorrow.length == 0">
-                            <span class="material-symbols-outlined mdls">auto_stories</span>
-                            <h2>Pas de devoirs à faire pour cette journée</h2>
-                            <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-
-                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                        </div></div>
-                    </ion-list>
+                        </div>
+                    </IonList>
                 </swiper-slide>
             </swiper>
 
-            <IonModal ref="rnPickerModal" @didDismiss="changernPickerModalOpen(false)" :is-open="rnPickerModalOpen" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
+            <IonModal ref="rnPickerModal" @didDismiss="changernPickerModalOpen(false)" :is-open="rnPickerModalOpen" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.5" :breakpoints="[0, 0.5]">
                 <IonHeader>
                     <IonToolbar>
                         <ion-title>Sélection de la date</ion-title>
