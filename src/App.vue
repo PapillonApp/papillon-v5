@@ -138,6 +138,27 @@
         }
     },
     methods: {
+        checkAndroidShortcuts() {
+            AndroidShortcuts.isDynamicSupported().then((result) => {
+                if (result) {
+                    AndroidShortcuts.addListener('shortcut', (response: any) => {
+                        switch (response.data) {
+                            case "timetable":
+                                this.$router.push('/timetable');
+                                break;
+                            case "homework":
+                                this.$router.push('/homework');
+                                break;
+                            case "grades":
+                                this.$router.push('/grades');
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+                }
+            })
+        },
         async presentToast(header: string, msg: string, color: string, icon: any) {
             const toast = await toastController.create({
                 header: header,
@@ -211,6 +232,9 @@
                 SplashScreen.hide();
             }, 50);
         })
+
+        // shortcuts
+        this.checkAndroidShortcuts();
 
         // user data if logged in
         if(localStorage.loggedIn) {
@@ -286,30 +310,6 @@
                 document.body.style.setProperty('--papillon-font', customizations.font);
             }
         }
-
-        /** 
-         * Android Shortcuts
-         * Needs to be changed to a new place in order to work...
-        */
-        AndroidShortcuts.isDynamicSupported().then((result) => {
-            if (result) {
-                AndroidShortcuts.addListener('shortcut', (response: any) => {
-                    switch (response.data) {
-                        case "timetable":
-                            this.$router.push('/timetable');
-                            break;
-                        case "homework":
-                            this.$router.push('/homework');
-                            break;
-                        case "grades":
-                            this.$router.push('/grades');
-                            break;
-                        default:
-                            break;
-                    }
-                });
-            }
-        })
     }
   });
 </script>
