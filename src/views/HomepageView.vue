@@ -375,6 +375,8 @@
 
 		<ion-content :fullscreen="true">
 
+			<PapillonIonIcon name="heart"></PapillonIonIcon>
+
 			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>

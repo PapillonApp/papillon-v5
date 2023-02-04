@@ -131,6 +131,7 @@ ion-header.ios:not(.header-collapse-condense-inactive) #rnPickerModalButton {
 @font-face {
     font-family: 'Material Symbols Outlined';
     font-style: normal;
+    font-display: block;
     src: url('/public/fonts/MaterialSymbolsOutlined.woff2') format('woff2');
 }
 
@@ -146,7 +147,6 @@ ion-header.ios:not(.header-collapse-condense-inactive) #rnPickerModalButton {
     word-wrap: normal;
     white-space: nowrap;
     direction: ltr;
-    font-display: block;
 }
 
 .mdls {
@@ -157,7 +157,10 @@ ion-header.ios:not(.header-collapse-condense-inactive) #rnPickerModalButton {
     'opsz' 24;
 
     font-size: 24px;
-    font-display: block;
+
+    width: 24px;
+    overflow: hidden;
+    isolation: isolate;
 }
 
 .mdls[slot="start"] {

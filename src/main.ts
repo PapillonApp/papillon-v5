@@ -4,6 +4,8 @@ import { createApp } from 'vue'
 import MainApp from './MainApp.vue'
 import router from './router';
 
+import VueLazyload from "vue-lazyload";
+
 import { IonicVue } from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
@@ -33,6 +35,7 @@ require('@/functions/app.ts');
 
 export const app = createApp(MainApp)
 	.use(IonicVue)
+	.use(VueLazyload)
 	.use(router);
 	
 router.isReady().then(() => {
