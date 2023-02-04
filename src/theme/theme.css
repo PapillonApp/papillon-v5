@@ -68,10 +68,8 @@ input.sc-ion-searchbar-md {
     margin-top: -5px;
 }
 
-@media screen and (prefers-color-scheme: dark) {
-    input.sc-ion-searchbar-md {
-        background: #292929 !important;
-    }
+body.dark input.sc-ion-searchbar-md {
+    background: #292929 !important;
 }
 
 /* (MD) Toolbar */
@@ -79,10 +77,8 @@ input.sc-ion-searchbar-md {
     border-bottom: 1px solid #e0e0e0;
 }
 
-@media screen and (prefers-color-scheme: dark) {
-    .header-md {
-        border-bottom: 1px solid #363636;
-    }
+body.dark .header-md {
+    border-bottom: 1px solid #363636;
 }
 
 .header-md::after {
@@ -106,10 +102,8 @@ input.sc-ion-searchbar-md {
     transition: background 0.2s;
 }
 
-@media screen and (prefers-color-scheme: dark) {
-    #rnPickerModalButton {
-        background-color: #ffffff11;
-    }
+body.dark #rnPickerModalButton {
+    background-color: #ffffff11;
 }
 
 #rnPickerModalButton span {
