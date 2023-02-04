@@ -1,11 +1,13 @@
 <script lang="ts">
-    import { IonApp, IonContent, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController } from '@ionic/vue';
+    import { IonApp, IonContent, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText } from '@ionic/vue';
 
     import { defineComponent, ref } from 'vue';
     import { useRoute } from 'vue-router';
 
     import { globeOutline } from 'ionicons/icons';
     import { AndroidShortcuts } from 'capacitor-android-shortcuts';
+
+    import { createAnimation } from '@ionic/vue';
 
     const GetUser = require('./functions/fetch/GetUserData');
 
@@ -44,10 +46,12 @@
         IonSplitPane,
         IonHeader,
         IonToolbar,
+        IonSkeletonText,
     },
     data() {
         return {
             loggedIn: localStorage.loggedIn,
+            dataLoading: true,
             userData: {
                 student: {
                     name: '',
@@ -148,8 +152,10 @@
         },
         getUserData() {
             // get user data
+            this.dataLoading = true;
             GetUser.default().then((data: UserData) => {
                 this.userData = data;
+                this.dataLoading = false;
                 if(!localStorage.getItem('avatarCache')) {
                     this.avatar = data.student.avatar;
                 }
@@ -158,12 +164,13 @@
                 localStorage.userData = JSON.stringify(data);
             });
         },
-        changePage() {
+        changePage(url : string) {
             // close menu
             const menu = document.querySelector('ion-menu');
-            setTimeout(() => {
-                menu?.close();
-            }, 110);
+            menu?.close();
+
+            // change page
+            this.$router.push(url);
         },
         async askNotifPerms() {
             await LocalNotifications.requestPermissions();
@@ -178,6 +185,23 @@
             });
 
             await toast.present();
+        },
+        transition (baseEl: any, opts: any) {
+            const enteringAnimation = createAnimation()
+                .addElement(opts.enteringEl)
+                .fromTo('opacity', 0, 1)
+                .duration(100);
+            
+            const leavingAnimation = createAnimation()
+                .addElement(opts.leavingEl)
+                .fromTo('opacity', 1, 0)
+                .duration(100);
+            
+            const animation = createAnimation()
+                .addAnimation(enteringAnimation)
+                .addAnimation(leavingAnimation);
+
+            return animation;
         }
     },
     mounted() {
@@ -293,15 +317,23 @@
 <template>
   <ion-app>
     <ion-split-pane content-id="main-content">
-      <ion-menu content-id="main-content" type="overlay" class="menu" v-if="loggedIn">
-        <ion-header>
+      <ion-menu type="push" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
+        <ion-header collapse="fade">
           <ion-toolbar>
             <div class="userItem" :style="`background-image: url('${avatar}');`">
                 <div class="userItem_content">
-                    <img class="avatar" :src="avatar" ref="avatar"/>
-                    <div class="userData">
+                    <div class="avatar" v-if="dataLoading">
+                        <ion-skeleton-text :animated="true" style="width: 100%;height: 100%;border-radius: 50%;"></ion-skeleton-text>
+                    </div>
+                    <img v-else class="avatar" :src="avatar" ref="avatar"/>
+
+                    <div class="userData" v-if="dataLoading">
+                        <h3><ion-skeleton-text :animated="true" style="width: 40%;margin-bottom: 5px;height: 18px;"></ion-skeleton-text></h3>
+                        <p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
+                    </div>
+                    <div class="userData" v-else>
                         <h3>{{userData.student.name}}</h3>
-                        <p v-if="userData.class.school.trim() != ''">{{userData.class.name}} • {{userData.class.school}}</p>
+                        <p v-if="userData.class.school.trim() != ''">{{userData.class.name}} — {{userData.class.school}}</p>
                     </div>
                 </div>
             </div>
@@ -309,7 +341,7 @@
         </ion-header>
         <ion-content mode="md">
           <ion-list id="inbox-list"> 
-            <router-link @click="changePage()" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
+            <router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
                 <ion-item button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
                     <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
                     <ion-label>{{ p.title }}</ion-label>
@@ -318,7 +350,7 @@
           </ion-list>
         </ion-content>
       </ion-menu>
-      <ion-router-outlet id="main-content" v-slot="{ Component }" animated="false">
+      <ion-router-outlet ref="outlet" :animated="true" :animation="transition" id="main-content" v-slot="{ Component }">
         <keep-alive>
             <component :is="Component" />
         </keep-alive>
@@ -535,5 +567,18 @@
     a:not(.router-link-active) ion-menu-toggle ion-item:hover {
         opacity: 0.75;
         cursor: pointer;
+    }
+
+    .fade-enter-active, .fade-leave-active {
+        transition-property: opacity;
+        transition-duration: .25s;
+    }
+
+    .fade-enter-active {
+        transition-delay: .25s;
+    }
+
+    .fade-enter, .fade-leave-active {
+        opacity: 0
     }
 </style>

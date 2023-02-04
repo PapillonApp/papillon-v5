@@ -4,18 +4,18 @@ import { Capacitor } from '@capacitor/core';
 
 // Variables
 let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-let colorForced = localStorage.getItem('colorForced') === 'true';
+let darkForced = localStorage.getItem('darkForced') === 'true';
 
 // Status bar
 import { StatusBar, Style } from '@capacitor/status-bar';
 
 function checkDarkMode() {
 	isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-	colorForced = localStorage.getItem('colorForced') === 'true';
+	darkForced = localStorage.getItem('darkForced') === 'true';
 }
 
 function setStatusBarStyle() {
-	if (isDarkMode) {
+	if (isDarkMode || darkForced) {
 		StatusBar.setBackgroundColor({color: "#1C1B1F"});
 		StatusBar.setStyle({style: Style.Dark})
 	}
@@ -25,11 +25,31 @@ function setStatusBarStyle() {
 	}
 }
 
+function setStyle() {
+	checkDarkMode();
+	updateStatus();
+
+	if(isDarkMode || darkForced) {
+		// add .dark class to body
+		document.body.classList.add('dark');
+
+		// remove .light class from body
+		document.body.classList.remove('light');
+	}
+	else {
+		// add .light class to body
+		document.body.classList.add('light');
+
+		// remove .dark class from body
+		document.body.classList.remove('dark');
+	}
+}
+
 // Navigation bar
 import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
 
 function setNavigationBarStyle() {
-	if (isDarkMode) {
+	if (isDarkMode || darkForced) {
 		NavigationBar.setColor({
 				color: "#1C1B1F",
 				darkButtons: false
@@ -56,6 +76,9 @@ function updateStatus() {
 // Constantly check for dark mode
 updateStatus();
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateStatus);
+
+// constantly set style
+setInterval(setStyle, 100);
 
 import { AndroidShortcuts } from 'capacitor-android-shortcuts';
 import axios from 'axios';

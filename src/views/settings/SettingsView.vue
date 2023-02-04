@@ -123,26 +123,33 @@
                 getContributors(5).then((contributors) => {
                     this.contributors = contributors;
                 });
+            },
+            getUserData() {
+                let userData = JSON.parse(localStorage.getItem('userData'));
+
+                if (userData) {
+                    this.userName = userData.student.name;
+                    this.userClass = userData.class.name;
+                    this.userSchool = userData.class.school;
+                    this.userAvatar = userData.student.avatar;
+
+                    // check if user has custom avatar
+                    if (localStorage.getItem('customAvatar')) {
+                        this.userAvatar = localStorage.getItem('customAvatar');
+                    }
+                    else if(localStorage.getItem('avatarCache')) {
+                        this.userAvatar = localStorage.getItem('avatarCache');
+                    }
+                }
             }
         },
         mounted() {
             // Get user data
-            let userData = JSON.parse(localStorage.getItem('userData'));
+            this.getUserData();
 
-            if (userData) {
-                this.userName = userData.student.name;
-                this.userClass = userData.class.name;
-                this.userSchool = userData.class.school;
-                this.userAvatar = userData.student.avatar;
-
-                // check if user has custom avatar
-                if (localStorage.getItem('customAvatar')) {
-                    this.userAvatar = localStorage.getItem('customAvatar');
-                }
-                else if(localStorage.getItem('avatarCache')) {
-                    this.userAvatar = localStorage.getItem('avatarCache');
-                }
-            }
+            document.addEventListener('userDataUpdated', () => {
+                this.getUserData();
+            });
 
             this.getApiVersion();
             this.getContributorsList();

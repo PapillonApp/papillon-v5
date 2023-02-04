@@ -1,6 +1,7 @@
 <script>
 	import {
-		defineComponent
+		defineComponent,
+		ref,
 	} from 'vue';
 	import {
 		IonHeader,
@@ -160,6 +161,26 @@
 			// get tweakProgressBarShowPast ref
 			let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
 			tweakProgressBarShowPast.$el.checked = localStorage.getItem('tweakProgressBarShowPast') != 'false'; // default true
+
+			// get darkForced ref
+			let darkForced = this.$refs.darkForced;
+
+			// check if dark mode is enabled
+			function checkdark() {
+				let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+				if(isDarkMode) {
+					darkForced.$el.checked = true;
+					darkForced.$el.disabled = true;
+				}
+				else {
+					darkForced.$el.disabled = false;
+					darkForced.$el.checked = localStorage.getItem('darkForced') == 'true';
+				}
+			}
+
+			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', checkdark);
+			checkdark();
 		}
 	});
 </script>
@@ -190,6 +211,14 @@
 						<p>Couleur dominante de l'application</p>
 					</IonLabel>
 					<input type="color" ref="mainColorInput" class="colorInput" slot="end"/>
+				</IonItem>
+
+				<IonItem>
+					<span class="material-symbols-outlined mdls" slot="start">dark_mode</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Mode sombre</h2>
+					</IonLabel>
+					<IonToggle slot="end" ref="darkForced" @ionChange="changeTick('darkForced')"></IonToggle>
 				</IonItem>
 			</IonList>
 

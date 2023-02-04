@@ -62,11 +62,13 @@
 			return {
 				connected: false,
 				timetable: [],
+				ttbLoading: false,
 				nextCoursTime: "",
 				percentage: 0,
 				updateTime: null,
 				firstName: '',
 				homeworks: [],
+				hwLoading: false,
 				blockChangeDone: false,
 				editMode: false,
 				noCoursesEmoji: this.randomEmoji(),
@@ -201,7 +203,7 @@
 				return lessons;
 			},
 			getTimetable(force) {
-				this.timetable.loading = true;
+				this.ttbLoading = true;
 				GetTimetable(this.$rn, force).then((timetable) => {
 					if (timetable.error) {
 						this.timetable = [];
@@ -217,7 +219,7 @@
 							this.timetable = this.editTimetable(timetable);
 						}, 1000);
 
-						this.timetable.loading = false;
+						this.ttbLoading = false;
 					}
 				});
 			},
@@ -227,7 +229,7 @@
 				let dateTo = new Date(this.$rn);
 				dateTo.setDate(dateTo.getDate() + 7);
 
-				this.homeworks.loading = true;
+				this.hwLoading = true;
 				GetHomeworks(today, dateTo, force).then((homeworks) => {
 						if (homeworks.error) {
 							this.homeworks = [];
@@ -237,7 +239,7 @@
 								this.homeworks.error = null;
 							}
 						} else {
-							this.homeworks.loading = false;
+							this.hwLoading = false;
 
 							let homeworkDays = [];
 
@@ -317,6 +319,9 @@
 				}
 			},
 			async handleRefresh(event) {
+				this.timetable = [];
+				this.homeworks = [];
+
 				this.getTimetable(true);
 				this.getHomeworks(true);
 
@@ -416,7 +421,7 @@
 						</ion-label>
 					</ion-item>
 
-					<ion-item class="nextCours" v-if="timetable.length == 0" style="margin-top: 12px;"
+					<ion-item class="nextCours" v-if="!ttbLoading && timetable.length == 0" style="margin-top: 12px;"
 						@click="goto('timetable')">
 						<ion-ripple-effect></ion-ripple-effect>
 						<div slot="start" class="emoji">
@@ -428,7 +433,7 @@
 						</ion-label>
 					</ion-item>
 
-					<ion-item v-if="timetable.loading && timetable.length == 0" class="nextCours" lines="none">
+					<ion-item v-if="ttbLoading && timetable.length == 0" class="nextCours" lines="none">
 						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
 							<IonSpinner></IonSpinner>
 						</div>
@@ -492,21 +497,35 @@
 						</ion-label>
 					</ion-item>
 
-					<ion-item v-if="homeworks.length == 0" lines="none">
+					<ion-item v-if="homeworks.length == 0 && !hwLoading" lines="none">
+						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
+							<span class="material-symbols-outlined mdls">done_all</span>
+						</div>
 						<ion-label>
+							<h2>Pas de devoirs</h2>
 							<p>Vous n'avez aucun devoir à faire durant 7 jours.</p>
 						</ion-label>
 					</ion-item>
 
-					<ion-item v-if="homeworks.loading && homeworks.length == 0" lines="none">
-						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
-							<IonSpinner></IonSpinner>
+					<div v-if="hwLoading">
+						<div v-for="i in 2" :key="i">
+							<div class="homepage_divider">
+								<p><ion-skeleton-text :animated="true" style="width: 100px;"></ion-skeleton-text></p>
+								<div class="divider"></div>
+							</div>
+							<ion-item lines="none" v-for="n in 3" :key="n">
+								<ion-label>
+										<p><span class="courseColor"></span><ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text></p>
+										<h2><ion-skeleton-text :animated="true" style="width: 60%;"></ion-skeleton-text></h2>
+									</ion-label>
+
+									<ion-chip slot="end" color="medium">
+										<span class="material-symbols-outlined mdls">schedule</span>
+										<p style="padding-left: 5px;"><ion-skeleton-text :animated="true" style="width: 40px;"></ion-skeleton-text></p>
+									</ion-chip>
+							</ion-item>
 						</div>
-						<ion-label>
-							<h2>Veuillez patienter</h2>
-							<p>Chargement des devoirs...</p>
-						</ion-label>
-					</ion-item>
+					</div>
 				</ion-list>
 			</div>
 

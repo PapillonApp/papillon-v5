@@ -3,7 +3,36 @@
 }
 
 body {
-    background: black;
+    background: var(--ion-background-color);
+}
+
+ion-content {
+    --offset-bottom: auto !important;
+    --overflow: hidden;
+    overflow: auto;
+    background: var(--ion-background-color);
+}
+
+ion-content::-webkit-scrollbar {
+    display: none;
+}
+
+ion-content::part(scroll) {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+*::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.1);
+    background-color: transparent;
+}
+  
+*::-webkit-scrollbar {
+    background-color: transparent;
+}
+  
+*::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: transparent;
 }
 
 :root {

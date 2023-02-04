@@ -31,7 +31,6 @@
 			IonToggle,
 			IonTitle,
 			IonContent,
-			IonListHeader,
 		},
 		data() {
 			return {
@@ -95,13 +94,6 @@
 
 		<ion-content :fullscreen="true">
 			<IonList :inset="true" lines="inset">
-				<ion-list-header>
-					<ion-label>
-						Tweaks
-						<p>Ces options permettent de modifier le comportement de certaines fonctionnalités.</p>
-					</ion-label>
-				</ion-list-header>
-
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
 					<IonLabel class="ion-text-wrap">
@@ -122,13 +114,6 @@
 			</IonList>
 
 			<IonList :inset="true" lines="inset">
-				<ion-list-header>
-					<ion-label>
-						Expérimental
-						<p>Ces options risquent de ne pas fonctionner correctement.</p>
-					</ion-label>
-				</ion-list-header>
-
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">toggle_off</span>
 					<IonLabel class="ion-text-wrap">

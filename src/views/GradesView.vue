@@ -354,7 +354,7 @@
 						{{subject.name}}
 						<span class="material-symbols-outlined mdls" v-if="subject.grouped">join_inner</span>
 					</h3>
-					<p class="avg" v-if="subject.significant">{{subject.average}}<small>/20</small></p>
+					<p class="avg" v-if="subject.significant">{{subject.average.toFixed(2)}}<small>/20</small></p>
 					<p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
 				</div>
 
