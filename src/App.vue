@@ -181,6 +181,11 @@
                     this.avatar = data.student.avatar;
                 }
 
+                // check if user has custom name
+                if (localStorage.getItem('customName')) {
+                    this.userData.student.name = localStorage.getItem('customName') as string;
+                }
+
                 // set userData in localStorage
                 localStorage.userData = JSON.stringify(data);
             });
@@ -258,6 +263,14 @@
             }
             else if(localStorage.getItem('avatarCache')) {
                 this.avatar = localStorage.getItem('avatarCache') as string;
+            }
+
+            // check if user has custom name
+            if (localStorage.getItem('customName')) {
+                this.userData.student.name = localStorage.getItem('customName') as string;
+            }
+            else {
+                this.getUserData();
             }
         });
 

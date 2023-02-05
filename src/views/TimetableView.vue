@@ -212,6 +212,11 @@
             let firstName = JSON.parse(localStorage.getItem("userData")).student.name;
             firstName = firstName.split(" ")[firstName.split(" ").length - 1];
 
+            // if custom name is set, use it instead
+            if(localStorage.getItem("customName")) {
+                firstName = localStorage.getItem("customName").split(" ")[localStorage.getItem("customName").split(" ").length - 1];
+            }
+
             let urlElems = "";
             urlElems += firstName + ","; // first name
             urlElems += sharedCourse.name + ",";

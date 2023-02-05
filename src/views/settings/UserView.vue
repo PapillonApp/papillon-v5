@@ -18,6 +18,8 @@
 
     import { FilePicker } from '@capawesome/capacitor-file-picker';
 
+    import { Dialog } from '@capacitor/dialog';
+
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
@@ -85,6 +87,41 @@
                     'Photo de profil supprimée.'
                 );
             },
+            tweakChangeName() {
+                // get current name
+                let currentName = JSON.parse(localStorage.getItem("userData")).student.name;
+                
+                // if custom name is set, use it
+                if (localStorage.getItem("customName")) {
+                    currentName = localStorage.getItem("customName");
+                }
+
+                // ask for new name
+                Dialog.prompt({
+                    title: 'Changer de nom',
+                    message: 'Entrez votre nouveau nom',
+                    inputPlaceholder: currentName,
+                    okButtonTitle: 'Valider',
+                    cancelButtonTitle: 'Annuler'
+                }).then(result => {
+                    if (result.value) {
+                        localStorage.setItem('customName', result.value);
+                        document.dispatchEvent(new CustomEvent('userDataUpdated'));
+
+                        displayToast.presentNativeToast(
+                            'Nom modifié pour ' + result.value + '.'
+                        );
+                    }
+                });
+            },
+            tweakDeleteName() {
+                localStorage.removeItem('customName');
+                document.dispatchEvent(new CustomEvent('userDataUpdated'));
+
+                displayToast.presentNativeToast(
+                    'Nom supprimé.'
+                );
+            }
 		},
 		mounted() {
             return false;
@@ -119,6 +156,22 @@
                     <IonLabel>
                         <h2>Supprimer la photo de profil personnalisée</h2>
                         <p>Utiliser la photo de profil par défaut</p>
+                    </IonLabel>
+                </IonItem>
+            </IonList>
+
+            <IonList inset>
+                <IonItem button @click="tweakChangeName()">
+                    <span class="material-symbols-outlined mdls" slot="start">drive_file_rename_outline</span>
+                    <IonLabel>
+                        <h2>Changer de nom</h2>
+                        <p>Utiliser un nom différent dans l'application</p>
+                    </IonLabel>
+                </IonItem>
+                <IonItem button @click="tweakDeleteName()">
+                    <span class="material-symbols-outlined mdls" slot="start">delete</span>
+                    <IonLabel>
+                        <h2>Réinitialiser le nom utilisé</h2>
                     </IonLabel>
                 </IonItem>
             </IonList>

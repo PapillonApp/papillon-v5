@@ -140,6 +140,11 @@
                     else if(localStorage.getItem('avatarCache')) {
                         this.userAvatar = localStorage.getItem('avatarCache');
                     }
+
+                    // check if user has custom name
+                    if (localStorage.getItem('customName')) {
+                        this.userName = localStorage.getItem('customName');
+                    }
                 }
             }
         },
