@@ -188,10 +188,9 @@
         changePage(url : string) {
             // close menu
             const menu = document.querySelector('ion-menu');
-            menu?.toggle();
-
-            // change page
-            this.$router.push(url);
+            setTimeout(() => {
+                menu?.toggle();
+            }, 100);
         },
         async askNotifPerms() {
             await LocalNotifications.requestPermissions();
