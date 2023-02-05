@@ -68,6 +68,8 @@
 					min_average: 0,
 					out_of: 0,
 				},
+				selectedGrade: [],
+				selectedGradeSet: false,
 				out_of_20: localStorage.getItem('tweakGrades20') == "true" ? true : false,
 			}
 		},
@@ -232,7 +234,15 @@
 						return subject.name.toLowerCase().includes(search.toLowerCase());
 					});
 				}
-			}
+			},
+			openGradeModal(mark) {
+				this.selectedGrade = mark;
+
+				this.selectedGradeSet = true;
+				this.$refs.gradeModal.$el.present();
+
+				console.log(this.selectedGrade);
+			},
 		},
 		mounted() {
 			this.isLoading = true;
@@ -360,7 +370,7 @@
 
 				<div class="grades">
 
-					<ion-card class="grade" v-for="(mark, i) in subject.marks" v-bind:key="i">
+					<ion-card class="grade" v-for="(mark, i) in subject.marks" v-bind:key="i" @click="openGradeModal(mark)">
 						<div class="myGrade">
 							<p class="name">{{ mark.info.description }}</p>
 							<p class="coef">Coeff. : {{mark.grade.coefficient}}</p>
@@ -453,6 +463,58 @@
 			</IonList>
 
 			<br /> <br />
+
+			<IonModal ref="gradeModal" :keep-contents-mounted="true" :initial-breakpoint="0.5"
+				:breakpoints="[0, 0.5, 0.9]" :handle="true" :canDismiss="true">
+				<IonHeader>
+					<IonToolbar class="markToolbar">
+						<ion-label v-if="selectedGradeSet">
+							<h2>Note en {{ selectedGrade.info.subject }}</h2>
+							<p>{{ new Date(selectedGrade.info.date).toLocaleString('fr-FR', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>
+						</ion-label>
+					</IonToolbar>
+				</IonHeader>
+				<ion-content>
+					<ion-list v-if="selectedGradeSet">
+						<ion-item>
+							<span class="material-symbols-outlined mdls" slot="start">face</span>
+							<ion-label>
+								<p>Note de l'élève</p>
+								<h2>{{ parseFloat(selectedGrade.grade.value).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
+							</ion-label>
+
+							<ion-item slot="end" lines="none">
+								<span class="material-symbols-outlined mdls" slot="start">percent</span>
+								<ion-label>
+									<p>Coefficient</p>
+									<h2>{{selectedGrade.grade.coefficient}}</h2>
+								</ion-label>
+							</ion-item>
+						</ion-item>
+						<ion-item>
+							<span class="material-symbols-outlined mdls" slot="start">groups</span>
+							<ion-label>
+								<p>Note de la classe</p>
+								<h2>{{ parseFloat(selectedGrade.grade.average).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
+							</ion-label>
+						</ion-item>
+						<ion-item>
+							<span class="material-symbols-outlined mdls" slot="start">person</span>
+							<ion-label>
+								<p>Note la plus basse</p>
+								<h2>{{ parseFloat(selectedGrade.grade.min).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
+							</ion-label>
+						</ion-item>
+						<ion-item>
+							<span class="material-symbols-outlined mdls" slot="start">person</span>
+							<ion-label>
+								<p>Note la plus haute</p>
+								<h2>{{ parseFloat(selectedGrade.grade.max).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
+							</ion-label>
+						</ion-item>
+					</ion-list>
+				</ion-content>
+			</IonModal>
 
 			<IonModal ref="averageModal" :keep-contents-mounted="true" :initial-breakpoint="0.5"
 				:breakpoints="[0, 0.5, 0.9]" :handle="true" :canDismiss="true">
@@ -693,5 +755,22 @@
 
 	ion-spinner {
 		margin-right: 20px;
+	}
+
+	.markToolbar {
+		margin: 0 !important;
+	}
+
+	.markToolbar ion-label * {
+		text-align: center;
+		margin: 0;
+	}
+
+	.markToolbar h2 {
+		margin-top: 7px !important;
+	}
+
+	.markToolbar p {
+		margin-bottom: 2px !important;
 	}
 </style>
