@@ -2,6 +2,8 @@
   import { defineComponent } from 'vue';
   import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput } from '@ionic/vue';
 
+  import { Share } from '@capacitor/share';
+
   import { App } from '@capacitor/app';
   import { Network } from '@capacitor/network';
 
@@ -193,6 +195,42 @@
                         event.target.complete();
                     }, 200);
                 }
+            });
+        },
+        async shareCours(cours) {
+            let sharedCourse = {
+                name: cours.data.subject,
+                teachers: cours.data.teachers.join(', ') || "Aucun professeur",
+                rooms: cours.data.rooms.join(', ') || "Aucune salle",
+                start: cours.time.start.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                end: cours.time.end.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                status: cours.status.status,
+                color: cours.course.color
+            }
+
+            // get first name of user
+            let firstName = JSON.parse(localStorage.getItem("userData")).student.name;
+            firstName = firstName.split(" ")[firstName.split(" ").length - 1];
+
+            let urlElems = "";
+            urlElems += firstName + ","; // first name
+            urlElems += sharedCourse.name + ",";
+            urlElems += sharedCourse.teachers + ",";
+            urlElems += sharedCourse.rooms + ",";
+            urlElems += sharedCourse.start + ",";
+            urlElems += sharedCourse.end + ",";
+            urlElems += sharedCourse.color + ",";
+            urlElems += sharedCourse.status;
+
+            // base64 encode urlElems
+            let url = "https://getpapillon.xyz/course?c=" + btoa(urlElems);
+
+            console.log(url);
+
+            // share url
+            await Share.share({
+                url: url,
+                dialogTitle: "Partager votre cours de " + cours.data.subject
             });
         },
         async openCoursModal(cours) {
@@ -706,9 +744,9 @@
                             <p>Nom de la matière</p>
                             <h2>{{selectedCourse.name}}</h2>
                         </ion-label>
-                        <ion-button color="danger" fill="clear" class="itemBtn" slot="end" v-if="selectedCourse.custom" @click="deleteCustomCourse(selectedCourse.id)">
-                            <span class="material-symbols-outlined mdls" slot="start">delete</span>
-                            Supprimer
+                        <ion-button class="itemBtn" fill="clear" slot="end" @click="shareCours(selectedCourse.originalCourse)">
+                            <span class="material-symbols-outlined mdls" slot="start">share</span>
+                            Partager
                         </ion-button>
                     </ion-item>
 
@@ -783,6 +821,11 @@
                             <p>Statut</p>
                             <h2>{{selectedCourse.status}}</h2>
                         </ion-label>
+
+                        <ion-button color="danger" fill="clear" class="itemBtn" slot="end" v-if="selectedCourse.custom" @click="deleteCustomCourse(selectedCourse.id)">
+                            <span class="material-symbols-outlined mdls" slot="start">delete</span>
+                            Supprimer
+                        </ion-button>
                     </ion-item>
                 </ion-list>
             </ion-content>
