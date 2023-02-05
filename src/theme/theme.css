@@ -394,3 +394,8 @@ ion-action-sheet {
 ion-content {
     --padding-bottom: env(safe-area-inset-bottom) !important;
 }
+
+ion-fab .mdls {
+    width: auto;
+    margin-left: -3.5px;
+}
