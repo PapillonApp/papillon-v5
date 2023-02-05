@@ -128,7 +128,7 @@
 		</IonToolbar>
 	</IonHeader>
 
-    <ion-content class="content" :fullscreen="true">
+    <ion-content class="content showScroll" :fullscreen="true">
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 			<ion-refresher-content></ion-refresher-content>
 		</ion-refresher>

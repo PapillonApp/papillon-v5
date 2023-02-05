@@ -6,11 +6,20 @@ body {
     background: var(--ion-background-color);
 }
 
-ion-content {
-    --offset-bottom: auto !important;
-    --overflow: hidden;
-    overflow: auto;
-    background: var(--ion-background-color);
+*::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 0;
+    height: 0;
+    scrollbar-width: none;
+}
+
+.scroll-bar-indicator {
+    position: absolute;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, .3);
+    opacity: 1;
+    -webkit-transition: opacity .3s linear;
+    transition: opacity .3s linear
 }
 
 ion-content::-webkit-scrollbar {
