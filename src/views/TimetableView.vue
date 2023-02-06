@@ -205,7 +205,8 @@
                 start: cours.time.start.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
                 end: cours.time.end.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
                 status: cours.status.status,
-                color: cours.course.color
+                color: cours.course.color,
+                memo: cours.data.memo || "none"
             }
 
             // get first name of user
@@ -225,12 +226,11 @@
             urlElems += sharedCourse.start + "$";
             urlElems += sharedCourse.end + "$";
             urlElems += sharedCourse.color + "$";
-            urlElems += sharedCourse.status;
+            urlElems += sharedCourse.status + "$";
+            urlElems += sharedCourse.memo;
 
             // base64 encode urlElems
             let url = "https://getpapillon.xyz/course?c=" + btoa(urlElems);
-
-            console.log(url);
 
             // share url
             await Share.share({
