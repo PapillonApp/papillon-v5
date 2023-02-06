@@ -149,6 +149,8 @@
             }
         },
         mounted() {
+            this.getApiVersion();
+
             // Get user data
             this.getUserData();
 
