@@ -218,13 +218,13 @@
             }
 
             let urlElems = "";
-            urlElems += firstName + ","; // first name
-            urlElems += sharedCourse.name + ",";
-            urlElems += sharedCourse.teachers + ",";
-            urlElems += sharedCourse.rooms + ",";
-            urlElems += sharedCourse.start + ",";
-            urlElems += sharedCourse.end + ",";
-            urlElems += sharedCourse.color + ",";
+            urlElems += firstName + "$"; // first name
+            urlElems += sharedCourse.name + "$";
+            urlElems += sharedCourse.teachers + "$";
+            urlElems += sharedCourse.rooms + "$";
+            urlElems += sharedCourse.start + "$";
+            urlElems += sharedCourse.end + "$";
+            urlElems += sharedCourse.color + "$";
             urlElems += sharedCourse.status;
 
             // base64 encode urlElems
