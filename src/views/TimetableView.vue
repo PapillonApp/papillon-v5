@@ -197,6 +197,15 @@
                 }
             });
         },
+        getStringToAsciiArray(string) {
+            let charCodeArr = [];
+            for(let i = 0; i < string.length; i++){
+                let code = string.charCodeAt(i);
+                charCodeArr.push(code);
+            }
+
+            return charCodeArr;
+        },
         async shareCours(cours) {
             let sharedCourse = {
                 name: cours.data.subject,
@@ -217,6 +226,12 @@
             if(localStorage.getItem("customName")) {
                 firstName = localStorage.getItem("customName").split(" ")[localStorage.getItem("customName").split(" ").length - 1];
             }
+
+            // Set customizable data to ascii
+            firstName = this.getStringToAsciiArray(firstName).join(' ');
+            sharedCourse.name = this.getStringToAsciiArray(sharedCourse.name).join(' ');
+            sharedCourse.teachers = this.getStringToAsciiArray(sharedCourse.teachers).join(' ');
+            sharedCourse.rooms = this.getStringToAsciiArray(sharedCourse.rooms).join(' ');
 
             let urlElems = "";
             urlElems += firstName + "$"; // first name
