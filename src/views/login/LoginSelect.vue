@@ -1,16 +1,15 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonNavLink, IonListHeader, IonModal, IonButton, IonChip, IonBackButton } from '@ionic/vue';
+    import { IonItem, IonLabel, IonList, IonAvatar, IonNavLink, IonListHeader, IonBackButton } from '@ionic/vue';
     
     import { logoDiscord, logoGithub, bugOutline, bugSharp, informationCircleOutline, informationCircleSharp, globeOutline, globeSharp } from 'ionicons/icons';
 
-    import {version} from '/package'
+    import { version } from '/package'
     import { Capacitor } from '@capacitor/core';
 
-    import { Swiper, SwiperSlide } from 'swiper/vue';
-    import 'swiper/css';
-
     import SchoolSelection from './pronote/SchoolSelection.vue';
+
+    import { StatusBar, Style } from '@capacitor/status-bar';
 
     export default defineComponent({
         name: 'FolderPage',
@@ -90,18 +89,12 @@
                     this.$refs.swiper.$el.swiper.slideNext();
                 }, 200);
             },
-            getServerStatus() {
-                const API = this.$api;
-
-                fetch(API + "/infos")
-                    .then(response => response.json())
-                    .then(result => {
-                        this.status = result.status;
-                    })
-                    .catch(error => {
-                        this.status = "error";
-                    });
-            },
+            goOldStatusBar() {
+                if (Capacitor.getPlatform() === 'android') {
+                    StatusBar.setStyle({ style: Style.Dark });
+                    StatusBar.setBackgroundColor({color: "#12D4A6"});
+                }
+            }
         },
         data() {
             return {
@@ -111,7 +104,9 @@
             }
         },
         mounted() {
-            this.getServerStatus(); 
+            
+
+            return;
         }
     });
 </script>
@@ -164,6 +159,16 @@
                 <ion-label>
                     <h2>APSchool</h2>
                     <p>Utilisez vos identifiants APSchool pour vous connecter</p>
+                </ion-label>
+            </ion-item>
+
+            <ion-item button detail="true" disabled>
+                <ion-avatar slot="start">
+                    <img alt="Logo" src="/assets/welcome/lvs_logo.png" />
+                </ion-avatar>
+                <ion-label>
+                    <h2>La-Vie-Scolaire</h2>
+                    <p>Utilisez vos identifiants La-Vie-Scolaire.fr pour vous connecter</p>
                 </ion-label>
             </ion-item>
         </ion-list>

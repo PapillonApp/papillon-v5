@@ -39,7 +39,7 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
     });
     if (cacheSearch.length > 0 && !forceReload) {
         // return cached homework in promise
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             let homework = JSON.parse(cacheSearch[0].homework);
             resolve(constructPronoteHomework(homework));
         });
@@ -83,8 +83,8 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
 
                 if(error.code) {
                     // return empty timetable in promise
-                    return new Promise((resolve, reject) => {
-                        resolve({
+                    return new Promise((reject) => {
+                        reject({
                             error: error.code
                         });
                     });
@@ -140,4 +140,4 @@ function constructPronoteHomework(hw) {
 }
 
 // export
-export default getPronoteHomework;
+export default getHomeworks;

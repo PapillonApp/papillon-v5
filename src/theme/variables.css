@@ -61,13 +61,7 @@ http://ionicframework.com/docs/theming/ */
 	--ion-color-light-tint: #f5f6f9;
 }
 
-@media (prefers-color-scheme: dark) {
-  /*
-   * Dark Colors
-   * -------------------------------------------
-   */
-
-  body {
+  body.dark {
     --ion-color-primary: #12D4A6;
     --ion-color-primary-rgb: 18,212,166;
     --ion-color-primary-contrast: #000000;
@@ -102,7 +96,7 @@ http://ionicframework.com/docs/theming/ */
    * -------------------------------------------
    */
 
-  .ios body {
+  .ios body.dark {
     --ion-background-color: #121314;
     --ion-background-color-rgb: 18,19,20;
 
@@ -140,7 +134,7 @@ http://ionicframework.com/docs/theming/ */
     --ion-inset-background: hsl(210, 5%, 10%);
   }
 
-  .ios ion-modal {
+  .ios .dark ion-modal {
     --ion-toolbar-background: var(--ion-color-step-50);
   }
 
@@ -150,7 +144,7 @@ http://ionicframework.com/docs/theming/ */
    * -------------------------------------------
    */
 
-  .md body {
+  .md body.dark {
     --ion-background-color: #1C1B1F;
     --ion-background-color-rgb: 28,27,31;
 
@@ -186,15 +180,15 @@ http://ionicframework.com/docs/theming/ */
     --ion-card-background: hsl(255, 7%, 12%);
 
     --ion-inset-background: hsl(255, 7%, 15%);
+
+    --ion-border-color: #27262a;
   }
 
-  .md ion-modal {
+  .md .dark ion-modal {
     --ion-toolbar-background: var(--ion-color-step-50);
   }
-}
 
-@media (prefers-color-scheme: light) {
-  body {
+  body.light {
     --ion-background-color: #FFFFFF;
     --ion-background-color-rgb: 255,255,255;
 
@@ -223,13 +217,12 @@ http://ionicframework.com/docs/theming/ */
   }
   
 
-  .md body {
+  .md body.light {
     --ion-inset-background: hsl(255, 7%, 96%);
   }
 
-  .ios body {
+  .ios body.light {
     --ion-inset-background: hsl(255, 0%, 97%);
     --ion-toolbar-background: hsl(255, 0%, 96%);
     --ion-border-color: hsl(0, 0%, 90%) !important;
   }
-}

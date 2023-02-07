@@ -34,7 +34,7 @@ async function presentToastIcon(msg, color, icon) {
 	await toast.present();
 }
 
-async function presentToastFull(header, msg, color, icon) {
+async function presentToastFull(header, msg, color, icon, error = false, btn_content = null) {
 	// vibration
 	if(color == "danger") {
 		hapticsController.notification("error");
@@ -46,13 +46,29 @@ async function presentToastFull(header, msg, color, icon) {
 		hapticsController.notification("warning");
 	}
 
+	let btn = []
+	if (error == true) {
+		btn = [{
+			text: "Plus d'infos",
+			role: 'info',
+			handler: () => {
+				if(btn_content == "[object Object]" || btn_content == "undefined" || btn_content == null) {
+					btn_content = "Impossible d'obtenir plus d'infos."
+				}
+
+				alertDialogError(btn_content)
+			}
+		}]
+	}
+
 	const toast = await toastController.create({
 		header: header,
 		message: msg,
 		duration: 2000,
 		position: "bottom",
 		color: color,
-		icon: icon
+		icon: icon,
+		buttons: [...btn]
 	});
 
 	await toast.present();

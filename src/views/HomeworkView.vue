@@ -1,6 +1,6 @@
 <script>
 import { defineComponent } from 'vue';
-import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonChip, IonCheckbox } from '@ionic/vue';
+import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonModal, IonDatetime, IonRefresher, IonRefresherContent, IonSpinner, IonChip, IonCheckbox } from '@ionic/vue';
 
 import { calendarOutline, calendarSharp, todayOutline, todaySharp, alertCircle, checkmark } from 'ionicons/icons';
 
@@ -14,6 +14,7 @@ import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
 import GetToken from "@/functions/login/GetToken.js";
 
 import { Browser } from '@capacitor/browser';
+import { Network } from '@capacitor/network';
 
 import axios from 'axios';
 
@@ -74,7 +75,7 @@ export default defineComponent({
             // set homeworks to edit
             return homeworks;
         },
-        getHomeworks(force) {
+        async getHomeworks(force) {
             if(this.shouldResetSwiper) {
                 this.$refs.swiper.$el.swiper.slideTo(1, 0);
                 this.shouldResetSwiper = false;
@@ -94,16 +95,22 @@ export default defineComponent({
 
             // get homeworks for rn
             GetHomeworks(this.$rn, this.$rn, force).then((homeworks) => {
-                this.homeworks = homeworks;
+                if (homeworks.error) {
+                    this.homeworks = [];
+                    this.homeworks.error = homeworks.error;
+                } else {
 
-                this.loadedrnButtonString = this.createDateString(this.$rn);
-                this.homeworks.loading = false;
+                    this.homeworks = homeworks;
 
-                this.dontRetryCheck = true;
+                    this.loadedrnButtonString = this.createDateString(this.$rn);
+                    this.homeworks.loading = false;
 
-                setTimeout(() => {
-                    this.dontRetryCheck = false;
-                }, 200);
+                    this.dontRetryCheck = true;
+
+                    setTimeout(() => {
+                        this.dontRetryCheck = false;
+                    }, 200);
+                }
             });
 
             // get homeworks for yesterday
@@ -120,6 +127,10 @@ export default defineComponent({
                 this.tomorrow = homeworks;
                 this.tomorrow.loading = false;
             });
+
+            
+            this.connected = await Network.getStatus()
+            this.connected = this.connected.connected;
         },
         handleRefresh(event) {
             // get new homeworks data
@@ -127,9 +138,11 @@ export default defineComponent({
 
             // stop refresh when this.homeworks is updated
             this.$watch('homeworks', () => {
-                setTimeout(() => {
-                    event.target.complete();
-                }, 200);
+                if(this.homeworks.error != "STILL_LOADING" && this.homeworks.error != "ERR_BAD_REQUEST") {
+                    setTimeout(() => {
+                        event.target.complete();
+                    }, 200);
+                }
             });
         },
         openHomework(hw) {
@@ -139,7 +152,7 @@ export default defineComponent({
         closeHomework() {
             this.$refs.hwModal.$el.dismiss();
         },
-        async openLink(url, name) {
+        async openLink(url) {
             await Browser.open({
                 url: url
             });
@@ -169,7 +182,7 @@ export default defineComponent({
                     homeworkId: homeworkID,
                     dateFrom: dayString,
                     dateTo: dayString
-                }).then((response) => {
+                }).then(() => {
                     let checkboxID = `checkbox_${hw.data.id}`;
                     let checkbox = document.getElementById(checkboxID);
 
@@ -197,10 +210,7 @@ export default defineComponent({
                     this.getHomeworks();
                 })
                 .catch((error) => {
-                    let response = error.response;
-
-                    // microintéractions
-                    hapticsController.notification('error');
+                    let response = error.response.data;
 
                     // untick checkbox
                     let checkboxID = `checkbox_${hw.data.id}`;
@@ -215,30 +225,44 @@ export default defineComponent({
                         }, 100);
                     }, 200);
 
-                    if(response.data == "expired" || response.data == "notfound") {
-                        GetToken();
-
+                    if(response == "expired" || response == "notfound") {
                         displayToast.presentToastFull(
                             "Impossible de marquer ce devoir comme fait",
-                            "Le token à expiré (" + error + ")",
+                            "Le token à expiré",
                             "danger",
-                            alertCircle
+                            alertCircle,
+                        )
+
+                        GetToken();
+                    }
+                    else if(response.status == "not found") {
+                        displayToast.presentToastFull(
+                            "Impossible de marquer ce devoir comme fait",
+                            "Nous n'avons pas pu trouver ce devoir sur nos serveurs.",
+                            "danger",
+                            alertCircle,
+                            true,
+                            response.error
                         )
                     }
-                    else if(response.data == "not found") {
+                    else if(response.status == "error") {
                         displayToast.presentToastFull(
                             "Impossible de marquer ce devoir comme fait",
-                            "Nous n'avons pas pu trouver ce devoir sur nos serveurs. (" + error + ")",
+                            "Une erreur est survenue lors de la requête.",
                             "danger",
-                            alertCircle
+                            alertCircle,
+                            true,
+                            response.error
                         )
                     }
                     else {
                         displayToast.presentToastFull(
                             "Impossible de marquer ce devoir comme fait",
-                            "Erreur inconnue (" + error + ")",
+                            "Erreur inconnue",
                             "danger",
-                            alertCircle
+                            alertCircle,
+                            true,
+                            error
                         )
                     }
                 });
@@ -247,6 +271,7 @@ export default defineComponent({
     },
     data() {
         return {
+            connected: false,
             rnButtonString: this.createDateString(this.$rn),
             loadedrnButtonString: this.createDateString(this.$rn),
             rnCalendarString: this.$rn.toISOString().split('T')[0],
@@ -257,6 +282,7 @@ export default defineComponent({
             openedHw: [],
             dontRetryCheck: false,
             rnPickerModalOpen: false,
+            days: ['yesterday', 'homeworks', 'tomorrow'],
         }
     },
     mounted() {
@@ -272,12 +298,12 @@ export default defineComponent({
         this.getHomeworks();
 
         // on rnChanged, get new homeworks data
-        document.addEventListener('rnChanged', (e) => {
+        document.addEventListener('rnChanged', () => {
             this.getHomeworks();
         });
 
         // on token changed, get new homeworks data
-        document.addEventListener('tokenUpdated', (e) => {
+        document.addEventListener('tokenUpdated', () => {
             this.getHomeworks();
         });
 
@@ -352,10 +378,10 @@ export default defineComponent({
 
             <div id="noTouchZone"></div>
 
-            <swiper :initialSlide="1" ref="swiper">
-                <swiper-slide class="swiper-slide">
-                    <ion-list>
-                        <ion-item v-for="homework in yesterday" :key="homework.id" button>
+            <swiper :initialSlide="1" ref="swiper" :speed="300" :spaceBetween="10" :preventClicks="true" :effect="'fade'">
+                <swiper-slide v-for="(day, i) in days" :key="i">
+                    <IonList>
+                        <ion-item v-for="homework in $data[`${day}`]" :key="homework.id" button>
                             <div slot="start">
                                 <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
                             </div>
@@ -377,105 +403,36 @@ export default defineComponent({
                             </ion-label>
                         </ion-item>
 
-                        <div v-if="yesterday.loading" class="Error"><div class="NoCours" v-if="yesterday.length == 0">
+                        <div class="NoCours" v-if="$data[`${day}`].error == 'ERR_NETWORK' && $data[`${day}`].length == 0 && !connected">
+                            <span class="material-symbols-outlined mdls">wifi_off</span>
+							<h2>Aucune connexion internet</h2>
+							<p>Les devoirs ne peuvent pas être chargés sans connection internet, réessayer plus tard...</p>
+                        </div>
+
+                        <div class="NoCours" v-if="$data[`${day}`].error == 'ERR_NETWORK' && $data[`${day}`].length == 0 && connected">
+                            <span class="material-symbols-outlined mdls">crisis_alert</span>
+							<h2>Serveurs indisponibles</h2>
+							<p>Les devoirs ne peuvent pas être chargés, nos serveurs seront bientôt de nouveaux disponibles...</p>
+                        </div>
+
+                        <div class="NoCours" v-if="!$data[`${day}`].loading && !$data[`${day}`].error && $data[`${day}`].length == 0">
+                            <span class="material-symbols-outlined mdls">auto_stories</span>
+                            <h2>Pas de devoirs à faire pour cette journée</h2>
+                            <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
+                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                        </div>
+
+                        <div v-if="$data[`${day}`].loading && !$data[`${day}`].error && $data[`${day}`].length == 0" class="NoCours">
                             <IonSpinner></IonSpinner>
                             <br/>
                             <h2>Téléchargement des prochains devoirs...</h2>
                             <p>Veuillez patienter pendant qu'on récupère vos devoirs depuis nos serveurs...</p>
-                        </div></div>
-
-                        <div v-if="!yesterday.loading"><div class="NoCours" v-if="yesterday.length == 0">
-                            <span class="material-symbols-outlined mdls">auto_stories</span>
-                            <h2>Pas de devoirs à faire pour cette journée</h2>
-                            <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-
-                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                        </div></div>
-                    </ion-list>
-                </swiper-slide>
-                <swiper-slide>
-                    <ion-list>
-                        <ion-item v-for="homework in homeworks" :key="homework.id" button>
-                            <div slot="start">
-                                <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
-                            </div>
-                            <ion-label :style="`--courseColor: ${homework.data.color};`">
-                                <div @click="openHomework(homework)">
-                                    <p><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
-                                    <h2>{{ homework.homework.content }}</h2>
-                                </div>
-
-                                <div class="innerChips" v-if="homework.files.length !== 0">
-                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true" @click="openLink(attachment.url)">
-                                        <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
-
-                                        <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
-
-                                        <p>{{attachment.name}}</p>
-                                    </ion-chip>
-                                </div>
-                            </ion-label>
-                        </ion-item>
-
-                        <div v-if="homeworks.loading" class="Error"><div class="NoCours" v-if="homeworks.length == 0">
-                            <IonSpinner></IonSpinner>
-                            <br/>
-                            <h2>Téléchargement des prochains devoirs...</h2>
-                            <p>Veuillez patienter pendant qu'on récupère vos devoirs depuis nos serveurs...</p>
-                        </div></div>
-
-                        <div v-if="!homeworks.loading"><div class="NoCours" v-if="homeworks.length == 0">
-                            <span class="material-symbols-outlined mdls">auto_stories</span>
-                            <h2>Pas de devoirs à faire pour cette journée</h2>
-                            <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-
-                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                        </div></div>
-                    </ion-list>
-                </swiper-slide>
-                <swiper-slide>
-                    <ion-list>
-                        <ion-item v-for="homework in tomorrow" :key="homework.id" button>
-                            <div slot="start">
-                                <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
-                            </div>
-                            <ion-label :style="`--courseColor: ${homework.data.color};`">
-                                <div @click="openHomework(homework)">
-                                    <p><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
-                                    <h2>{{ homework.homework.content }}</h2>
-                                </div>
-
-                                <div class="innerChips" v-if="homework.files.length !== 0">
-                                    <ion-chip v-for="(attachment, i) in homework.files" :key="i" color="dark" :outline="true" @click="openLink(attachment.url)">
-                                        <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
-
-                                        <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
-
-                                        <p>{{attachment.name}}</p>
-                                    </ion-chip>
-                                </div>
-                            </ion-label>
-                        </ion-item>
-
-                        <div v-if="tomorrow.loading" class="Error"><div class="NoCours" v-if="tomorrow.length == 0">
-                            <IonSpinner></IonSpinner>
-                            <br/>
-                            <h2>Téléchargement des prochains devoirs...</h2>
-                            <p>Veuillez patienter pendant qu'on récupère vos devoirs depuis nos serveurs...</p>
-                        </div></div>
-
-                        <div v-if="!tomorrow.loading"><div class="NoCours" v-if="tomorrow.length == 0">
-                            <span class="material-symbols-outlined mdls">auto_stories</span>
-                            <h2>Pas de devoirs à faire pour cette journée</h2>
-                            <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-
-                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                        </div></div>
-                    </ion-list>
+                        </div>
+                    </IonList>
                 </swiper-slide>
             </swiper>
 
-            <IonModal ref="rnPickerModal" @didDismiss="changernPickerModalOpen(false)" :is-open="rnPickerModalOpen" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
+            <IonModal ref="rnPickerModal" @didDismiss="changernPickerModalOpen(false)" :is-open="rnPickerModalOpen" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.5" :breakpoints="[0, 0.5]">
                 <IonHeader>
                     <IonToolbar>
                         <ion-title>Sélection de la date</ion-title>

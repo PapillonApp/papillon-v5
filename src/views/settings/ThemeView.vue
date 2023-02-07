@@ -1,25 +1,21 @@
 <script>
 	import {
-		defineComponent
+		defineComponent,
+		ref,
 	} from 'vue';
 	import {
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
-		IonChip,
 		IonButtons,
 		IonButton,
 		IonLabel,
-		IonSelect,
-		IonSelectOption,
 		IonRadioGroup,
 		IonRadio,
 		IonToggle
 	} from '@ionic/vue';
 
-	const displayToast = require('@/functions/utils/displayToast.js');
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	export default defineComponent({
@@ -105,7 +101,23 @@
 				customizations.font = font;
 
 				localStorage.setItem('customizations', JSON.stringify(customizations));
-			}
+			},
+			tweakProgressBar() {
+				let tweakProgressBar = this.$refs.tweakProgressBar;
+				let tweakProgressBarChecked = tweakProgressBar.$el.checked;
+
+				localStorage.setItem('tweakProgressBar', tweakProgressBarChecked);
+
+				document.dispatchEvent(new CustomEvent('settingsUpdated'));
+			},
+			tweakProgressBarShowPast() {
+				let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
+				let tweakProgressBarShowPastChecked = tweakProgressBarShowPast.$el.checked;
+
+				localStorage.setItem('tweakProgressBarShowPast', tweakProgressBarShowPastChecked);
+
+				document.dispatchEvent(new CustomEvent('settingsUpdated'));
+			},
 		},
 		mounted() {
 			// mainColorInput
@@ -141,6 +153,34 @@
 			// fontSelect
 			// get --papillon-font from css
 			this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font'); 
+
+			// get tweakProgressBar ref
+			let tweakProgressBar = this.$refs.tweakProgressBar;
+			tweakProgressBar.$el.checked = localStorage.getItem('tweakProgressBar') == 'true';
+
+			// get tweakProgressBarShowPast ref
+			let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
+			tweakProgressBarShowPast.$el.checked = localStorage.getItem('tweakProgressBarShowPast') != 'false'; // default true
+
+			// get darkForced ref
+			let darkForced = this.$refs.darkForced;
+
+			// check if dark mode is enabled
+			function checkdark() {
+				let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+				if(isDarkMode) {
+					darkForced.$el.checked = true;
+					darkForced.$el.disabled = true;
+				}
+				else {
+					darkForced.$el.disabled = false;
+					darkForced.$el.checked = localStorage.getItem('darkForced') == 'true';
+				}
+			}
+
+			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', checkdark);
+			checkdark();
 		}
 	});
 </script>
@@ -174,12 +214,11 @@
 				</IonItem>
 
 				<IonItem>
-					<span class="material-symbols-outlined mdls" slot="start">invert_colors</span>
-					<IonLabel>
-						<h2>Utiliser les couleurs de votre service scolaire</h2>
-						<p>Permet d'utiliser les couleurs de votre service scolaire (Pronote, Ecoledirecte, ...) pour identifier les matières.</p>
+					<span class="material-symbols-outlined mdls" slot="start">dark_mode</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Mode sombre</h2>
 					</IonLabel>
-					<IonToggle slot="end" ref="useScolColors" @ionChange="changeTick('useScolColors')"></IonToggle>
+					<IonToggle slot="end" ref="darkForced" @ionChange="changeTick('darkForced')"></IonToggle>
 				</IonItem>
 			</IonList>
 
@@ -190,6 +229,35 @@
 						<ion-radio slot="end" :value="font.font"></ion-radio>
 					</ion-item>
 				</ion-radio-group>
+			</IonList>
+
+			<IonList :inset="true" lines="inset">
+				<IonItem>
+					<span class="material-symbols-outlined mdls" slot="start">invert_colors</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Utiliser les couleurs de votre service scolaire</h2>
+						<p>Permet d'utiliser les couleurs de votre service scolaire pour identifier les matières.</p>
+					</IonLabel>
+					<IonToggle slot="end" ref="useScolColors" @ionChange="changeTick('useScolColors')"></IonToggle>
+				</IonItem>
+
+				<IonItem>
+                    <span class="material-symbols-outlined mdls" slot="start">settings</span>
+                    <IonLabel class="ion-text-wrap">
+                        <h2>Activer l'animation de la progression d'un cours</h2>
+                        <p>(Expérimental) Indiquer la progression d'un cours en cours avec une animation</p>
+                    </IonLabel>
+                    <IonToggle slot="end" ref="tweakProgressBar" @ionChange="changeTick('tweakProgressBar')"></IonToggle>
+                </IonItem>
+
+                <IonItem>
+                    <span class="material-symbols-outlined mdls" slot="start">settings</span>
+                    <IonLabel class="ion-text-wrap">
+                        <h2>Montrer la progression des cours passés</h2>
+                        <p>(Expérimental) Indiquer les cours passés avec un style différent</p>
+                    </IonLabel>
+                    <IonToggle slot="end" ref="tweakProgressBarShowPast" @ionChange="changeTick('tweakProgressBarShowPast')"></IonToggle>
+                </IonItem>
 			</IonList>
 
 		</ion-content>

@@ -11,7 +11,6 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
 		IonItemSliding,
 		IonItemOption,
@@ -22,8 +21,6 @@
 		IonContent,
 		IonPage,
 		IonTitle,
-		IonCardContent,
-		IonCard,
 		IonRefresher,
 		IonRefresherContent,
 	} from '@ionic/vue';
@@ -70,7 +67,7 @@
 				localStorage.removeItem("logs");
 				this.logs = [];
 			},
-			clearLog(log, event) {
+			clearLog(log) {
 				this.logs = this.logs.filter(l => l !== log);
 				localStorage.setItem("logs", JSON.stringify(this.logs));
 			},

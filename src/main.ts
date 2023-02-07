@@ -4,6 +4,8 @@ import { createApp } from 'vue'
 import MainApp from './MainApp.vue'
 import router from './router';
 
+import VueLazyload from "vue-lazyload";
+
 import { IonicVue } from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
@@ -32,13 +34,18 @@ import './theme/theme.css';
 require('@/functions/app.ts');
 
 export const app = createApp(MainApp)
-  .use(IonicVue)
-  .use(router);
-  
+	.use(IonicVue)
+	.use(VueLazyload)
+	.use(router);
+	
 router.isReady().then(() => {
-  app.mount('#app');
+	app.mount('#app');
 });
 
 // Global vars in Vue
 app.config.globalProperties.$rn = new Date;
-app.config.globalProperties.$api = "https://api.getpapillon.xyz";
+if (localStorage.getItem('customApiUrl') == null) {
+	app.config.globalProperties.$api = "https://api.getpapillon.xyz";
+} else {
+	app.config.globalProperties.$api = localStorage.getItem('customApiUrl');
+}

@@ -1,115 +1,141 @@
 <script>
-	import {
-		defineComponent
-	} from 'vue';
+	import { defineComponent } from 'vue';
 	import {
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
 		IonLabel,
-        IonToggle,
-        IonButtons,
-        IonTitle,
-        IonContent,
-        IonNavLink,
+		IonButtons,
+		IonTitle,
+		IonContent,
+		IonNavLink,
 	} from '@ionic/vue';
 
-    import LogView from './LogView.vue';
+	import LogView from './LogView.vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
-    import GetToken from '@/functions/login/GetToken.js';
-    import PapillonBackButton from '@/components/PapillonBackButton.vue';
+	import GetToken from '@/functions/login/GetToken.js';
+	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
-    import { trash, refresh, checkmark, alertCircle } from 'ionicons/icons';
-
-    import { FilePicker } from '@capawesome/capacitor-file-picker';
+	import { Dialog } from '@capacitor/dialog';
 
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
 			IonHeader,
 			IonToolbar,
-            IonButtons,
-            PapillonBackButton,
-            IonList,
-            IonItem,
-            IonLabel,
-            IonTitle,
-            IonContent,
-            IonNavLink,
+			IonButtons,
+			PapillonBackButton,
+			IonList,
+			IonItem,
+			IonLabel,
+			IonTitle,
+			IonContent,
+			IonNavLink,
 		},
 		data() {
 			return {
-                LogView: LogView,
+				LogView: LogView,
 			}
 		},
 		methods: {
-            resetColors() {
-                localStorage.removeItem('SubjectColors');
+			resetColors() {
+				localStorage.removeItem('SubjectColors');
 
-                // show toast
-                setTimeout(() => {
-                    displayToast.presentNativeToast(
-                        'Couleurs des matières réinitialisées'
-                    );
-                    
-                    setTimeout(() => {
-                        this.localStorageSize = this.getLocalStorageSize() + ' kb';
-                    }, 1000);
-                }, 100);
-            },
-            emptyCache() {
-                // empty cache
-                localStorage.removeItem('UserCache');
-                localStorage.removeItem('TimetableCache');
-                localStorage.removeItem('NewsCache');
-                localStorage.removeItem('GradeCache');
-                localStorage.removeItem('HomeworkCache');
-                localStorage.removeItem('AbsencesCache');
-                localStorage.removeItem('PunishmentsCache');
-                localStorage.removeItem('DelaysCache');
-                localStorage.removeItem('MenuCache');
-                localStorage.removeItem('ConversationsCache');
-                localStorage.removeItem('SubjectColors');
+				// show toast
+				setTimeout(() => {
+					displayToast.presentNativeToast(
+						'Couleurs des matières réinitialisées'
+					);
+					
+					setTimeout(() => {
+						this.localStorageSize = this.getLocalStorageSize() + ' kb';
+					}, 1000);
+				}, 100);
+			},
+			emptyCache() {
+				// empty cache
+				localStorage.removeItem('UserCache');
+				localStorage.removeItem('TimetableCache');
+				localStorage.removeItem('NewsCache');
+				localStorage.removeItem('GradeCache');
+				localStorage.removeItem('HomeworkCache');
+				localStorage.removeItem('AbsencesCache');
+				localStorage.removeItem('PunishmentsCache');
+				localStorage.removeItem('DelaysCache');
+				localStorage.removeItem('MenuCache');
+				localStorage.removeItem('ConversationsCache');
+				localStorage.removeItem('SubjectColors');
 
-                // show toast
-                setTimeout(() => {
-                    displayToast.presentNativeToast(
-                        'Cache des données vidé'
-                    );
-                    
-                    setTimeout(() => {
-                        this.localStorageSize = this.getLocalStorageSize() + ' kb';
-                    }, 1000);
-                }, 100);
-            },
-            refreshToken() {
-                GetToken();
-                displayToast.presentNativeToast(
-                    'Nouvelles clés de connexion demandées'
-                );
+				// show toast
+				setTimeout(() => {
+					displayToast.presentNativeToast(
+						'Cache des données vidé'
+					);
+					
+					setTimeout(() => {
+						this.localStorageSize = this.getLocalStorageSize() + ' kb';
+					}, 1000);
+				}, 100);
+			},
+			refreshToken() {
+				GetToken();
+				displayToast.presentNativeToast(
+					'Nouvelles clés de connexion demandées'
+				);
 
-                // wait for tokenUpdated event
-                document.addEventListener('tokenUpdated', () => {
-                    displayToast.presentNativeToast(
-                        'Clés de connexion régénérées'
-                    );
-                });
-            },
-            clearLogs() {
+				// wait for tokenUpdated event
+				document.addEventListener('tokenUpdated', () => {
+					displayToast.presentNativeToast(
+						'Clés de connexion régénérées'
+					);
+				});
+			},
+			clearLogs() {
 				localStorage.removeItem("logs");
 				this.logs = [];
 
-                displayToast.presentNativeToast(
-                    'Logs effacés'
-                );
+				displayToast.presentNativeToast(
+					'Logs effacés'
+				);
+			},
+			async setCustomApiUrl() {
+				const { value, cancelled } = await Dialog.prompt({
+					title: 'URL personnalisée',
+					message: 'Entrez l\'URL personnalisée de l\'API',
+					cancelable: true,
+					inputPlaceholder: 'https://api.getpapillon.xyz',
+					confirmButtonText: 'Valider',
+					cancelButtonText: 'Par défaut',
+				});
+
+				if (value) {
+					localStorage.setItem('customApiUrl', value);
+					displayToast.presentNativeToast(
+						'URL personnalisée enregistrée'
+					);
+
+					await Dialog.alert({
+						title: 'Attention',
+						message: 'Vous devez redémarrer l\'application pour que les changements soient pris en compte',
+						confirmButtonText: 'OK',
+					});
+				}
+
+				if (cancelled) {
+					displayToast.presentNativeToast(
+						'Annulé'
+					);
+
+					localStorage.removeItem('customApiUrl');
+				}
 			},
 		},
 		mounted() {
-            return false;
-        }
+			localStorage.getItem('loginService') == 'pronote' ? this.isPronote = true : this.isPronote = false;
+			return false;
+		}
 	});
 </script>
 
@@ -126,54 +152,62 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-            <IonList :inset="true" lines="inset">
-                <IonItem button @click="emptyCache()">
-                    <span class="material-symbols-outlined mdls" slot="start">auto_delete</span>
-                    <IonLabel class="ion-text-wrap">
-                        <h2>Vider le cache des données</h2>
-                        <p>Réinitialise les données pré-téléchargées hors ligne</p>  
-                    </IonLabel>
-                </IonItem>
+			<IonList :inset="true" lines="inset">
+				<IonItem button @click="emptyCache()">
+					<span class="material-symbols-outlined mdls" slot="start">auto_delete</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Vider le cache des données</h2>
+						<p>Réinitialise les données pré-téléchargées hors ligne</p>  
+					</IonLabel>
+				</IonItem>
 
-                <IonItem button @click="resetColors()">
-                    <span class="material-symbols-outlined mdls" slot="start">format_color_fill</span>
-                    <IonLabel class="ion-text-wrap">
-                        <h2>Réattribuer les couleurs de matières</h2>
-                        <p>Réinitialise les couleurs des matières pour en obtenir de nouvelles</p>  
-                    </IonLabel>
-                </IonItem>
+				<IonItem button @click="resetColors()">
+					<span class="material-symbols-outlined mdls" slot="start">format_color_fill</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Réattribuer les couleurs de matières</h2>
+						<p>Réinitialise les couleurs des matières pour en obtenir de nouvelles</p>  
+					</IonLabel>
+				</IonItem>
 
-                <IonItem button @click="refreshToken()">
-                    <span class="material-symbols-outlined mdls" slot="start">key</span>
-                    <IonLabel class="ion-text-wrap">
-                        <h2>Régénérer les clés de connexion (avancé)</h2>
-                        <p>Permet de demander une nouvelle autorisation à votre établissement</p>  
-                    </IonLabel>
-                </IonItem>
+				<IonItem button @click="refreshToken()">
+					<span class="material-symbols-outlined mdls" slot="start">key</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Régénérer les clés de connexion (avancé)</h2>
+						<p>Permet de demander une nouvelle autorisation à votre établissement</p>  
+					</IonLabel>
+				</IonItem>
 
-                <IonItem button @click="clearLogs()">
-                    <span class="material-symbols-outlined mdls" slot="start">delete_sweep</span>
-                    <IonLabel class="ion-text-wrap">
-                        <h2>Effacer les logs</h2>
-                        <p>Supprime les logs de l'application</p>  
-                    </IonLabel>
-                </IonItem>
+				<IonItem button @click="setCustomApiUrl()" v-if="isPronote">
+					<span class="material-symbols-outlined mdls" slot="start">api</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Changer d'API</h2>
+						<p>Permet de définir sa propre URL vers une instance de Papillon-Python</p>  
+					</IonLabel>
+				</IonItem>
 
-                <ion-nav-link router-direction="forward" :component="LogView">
-                    <IonItem button>
-                        <span class="material-symbols-outlined mdls" slot="start">developer_mode</span>
-                        <IonLabel>
-                            <h2>Voir les logs</h2>
-                            <p>Consulter les logs de l'application</p>
-                        </IonLabel>
-                    </IonItem>
-                </ion-nav-link>
-            </IonList>
+				<IonItem button @click="clearLogs()">
+					<span class="material-symbols-outlined mdls" slot="start">delete_sweep</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Effacer les logs</h2>
+						<p>Supprime les logs de l'application</p>  
+					</IonLabel>
+				</IonItem>
+
+				<ion-nav-link router-direction="forward" :component="LogView">
+					<IonItem button>
+						<span class="material-symbols-outlined mdls" slot="start">developer_mode</span>
+						<IonLabel>
+							<h2>Voir les logs</h2>
+							<p>Consulter les logs de l'application</p>
+						</IonLabel>
+					</IonItem>
+				</ion-nav-link>
+			</IonList>
 		</ion-content>
 </template>
 
 <style scoped>
 	.md .paddingFixMd {
-        padding-left: 15px;
-    }
+		padding-left: 15px;
+	}
 </style>

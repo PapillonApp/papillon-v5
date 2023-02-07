@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonLabel, IonList, IonAvatar, IonIcon, IonBackButton, IonSearchbar, IonSkeletonText, IonThumbnail, IonModal, IonListHeader, IonSpinner, loadingController, actionSheetController } from '@ionic/vue';
+    import { IonItem, IonList, IonIcon, IonBackButton, IonSearchbar, IonModal, IonListHeader, IonSpinner, loadingController, actionSheetController } from '@ionic/vue';
 
     import axios from 'axios';
     import $ from "jquery";

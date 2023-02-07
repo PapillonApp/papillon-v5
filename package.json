@@ -1,6 +1,6 @@
 {
   "name": "papillon",
-  "version": "5.0.14",
+  "version": "5.0.15",
   "canal": "beta",
   "private": true,
   "scripts": {
@@ -47,6 +47,7 @@
     "sharp": "^0.31.3",
     "swiper": "^8.4.5",
     "vue": "^3.2.21",
+    "vue-lazyload": "^3.0.0-rc.2",
     "vue-router": "^4.0.12"
   },
   "devDependencies": {

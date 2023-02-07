@@ -1,6 +1,6 @@
 <br/>
 <p align="center">
-  <a href="https://github.com/PapillonApp/papillon-v5">
+  <a href="https://github.com/PapillonApp/Papillon">
     <img src="https://i.ibb.co/BL8qgJQ/image.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -10,34 +10,36 @@
     Your timetable, homeworks, grades, news and more in a fresh new UI for any French school service.
     <br/>
     <br/>
-    <a href="https://github.com/PapillonApp/papillon-v5"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/PapillonApp/Papillon"><strong>Explore the docs »</strong></a>
     <br/>
     <br/>
-    <a href="https://github.com/PapillonApp/papillon-v5/issues">Report Bug</a>
+    <a href="https://github.com/PapillonApp/Papillon/issues">Report Bug</a>
     |
-    <a href="https://github.com/PapillonApp/papillon-v5/issues">Request Feature</a>
+    <a href="https://github.com/PapillonApp/Papillon/issues">Request Feature</a>
   </p>
 </p>
 
-![Downloads](https://img.shields.io/github/downloads/PapillonApp/papillon-v5/total) ![Contributors](https://img.shields.io/github/contributors/PapillonApp/papillon-v5?color=dark-green) ![Issues](https://img.shields.io/github/issues/PapillonApp/papillon-v5) ![License](https://img.shields.io/github/license/PapillonApp/papillon-v5) 
+![Downloads](https://img.shields.io/github/downloads/PapillonApp/Papillon/total) ![Contributors](https://img.shields.io/github/contributors/PapillonApp/Papillon?color=dark-green) ![Issues](https://img.shields.io/github/issues/PapillonApp/Papillon) ![License](https://img.shields.io/github/license/PapillonApp/Papillon) 
 
 ## Table Of Contents
 
-* [About the Project](#about-the-project)
-* [Built With](#built-with)
-* [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
-  * [Installation](#installation)
-* [Usage](#usage)
-* [Roadmap](#roadmap)
-* [Contributing](#contributing)
-* [License](#license)
-* [Authors](#authors)
-* [Acknowledgements](#acknowledgements)
+- [Table Of Contents](#table-of-contents)
+- [About The Project](#about-the-project)
+- [Built With](#built-with)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+  - [Creating A Pull Request](#creating-a-pull-request)
+- [License](#license)
+- [Authors](#authors)
+- [Acknowledgements](#acknowledgements)
 
 ## About The Project
 
-![Screenshot](https://user-images.githubusercontent.com/32978709/215285204-18fdc07b-4f30-4722-bf26-31be149d634f.png)
+![image](https://user-images.githubusercontent.com/32978709/215358098-cb43aeb4-b37e-41d6-a28e-0c2d729681d0.png)
 
 * **Features of Pronote**
     - 📆 Timetable
@@ -106,15 +108,15 @@ Papillon is useful to any student using Pronote or EcoleDirecte. If their offici
 
 ## Roadmap
 
-See the [open issues](https://github.com/PapillonApp/papillon-v5/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/PapillonApp/Papillon/issues) for a list of proposed features (and known issues).
 
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-* If you have suggestions for adding or removing projects, feel free to [open an issue](https://github.com/PapillonApp/papillon-v5/issues/new) to discuss it, or directly create a pull request after you edit the *README.md* file with necessary changes.
+* If you have suggestions for adding or removing projects, feel free to [open an issue](https://github.com/PapillonApp/Papillon/issues/new) to discuss it, or directly create a pull request after you edit the *README.md* file with necessary changes.
 * Please make sure you check your spelling and grammar.
 * Create individual PR for each suggestion.
-* Please also read through the [Code Of Conduct](https://github.com/PapillonApp/papillon-v5/blob/main/CODE_OF_CONDUCT.md) before posting your first idea as well.
+* Please also read through the [Code Of Conduct](https://github.com/PapillonApp/Papillon/blob/main/CODE_OF_CONDUCT.md) before posting your first idea as well.
 
 ### Creating A Pull Request
 
@@ -126,7 +128,7 @@ Contributions are what make the open source community such an amazing place to b
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](https://github.com/PapillonApp/papillon-v5/blob/main/LICENSE.md) for more information.
+Distributed under the MIT License. See [LICENSE](https://github.com/PapillonApp/Papillon/blob/main/LICENSE.md) for more information.
 
 ## Authors
 

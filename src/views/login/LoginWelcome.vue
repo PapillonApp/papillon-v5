@@ -4,11 +4,11 @@
         IonButton
     } from '@ionic/vue';
 
-    import {version} from '/package'
+    import { version } from '/package'
     import { Capacitor } from '@capacitor/core';
 
-    import { Swiper, SwiperSlide } from 'swiper/vue';
-    import 'swiper/css';
+    import { StatusBar, Style } from '@capacitor/status-bar';
+    import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
 
     import LoginSelect from './LoginSelect.vue';
 
@@ -23,18 +23,35 @@
             }
         },
         methods: {
-            getServerStatus() {
-                const API = this.$api;
+            goNormalStatusBar() {
+                setTimeout(() => {
+                    if (Capacitor.getPlatform() === 'android') {
+                        let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                        if (isDarkMode) {
+                            StatusBar.setBackgroundColor({color: "#1C1B1F"});
+                            StatusBar.setStyle({style: Style.Dark})
+                        }
+                        else {
+                            StatusBar.setBackgroundColor({color: "#ffffff"});
+                            StatusBar.setStyle({style: Style.Light})
+                        }
 
-                fetch(API + "/infos")
-                    .then(response => response.json())
-                    .then(result => {
-                        this.status = result.status;
-                    })
-                    .catch(error => {
-                        this.status = "error";
-                    });
-            },
+                        if (isDarkMode) {
+                            NavigationBar.setColor({
+                                    color: "#1C1B1F",
+                                    darkButtons: false
+                            });
+                        }
+                        else {
+                            NavigationBar.setColor({
+                                    color: "#ffffff",
+                                    darkButtons: true
+                            });
+                        }
+                    }
+                }, 200);
+            }
         },
         data() {
             return {
@@ -45,7 +62,16 @@
             }
         },
         mounted() {
-            this.getServerStatus(); 
+            if (Capacitor.getPlatform() === 'android') {
+                StatusBar.setStyle({ style: Style.Dark });
+                StatusBar.setBackgroundColor({color: "#12D4A6"});
+                NavigationBar.setColor({
+                        color: "#186F5A",
+                        darkButtons: false
+                });
+            }
+
+            return;
         }
     });
 </script>
@@ -61,7 +87,7 @@
             <p class="welcomeText">Papillon, c’est votre nouveau portail vers votre scolarité, avec plein de fonctionnalités que vous allez forcément adorer.</p>
 
             <ion-nav-link router-direction="forward" :component="LoginSelect">
-                <ion-button mode="md" color="dark" fill="solid">
+                <ion-button mode="md" color="dark" fill="solid" @click="goNormalStatusBar">
                     Commencer
                     <span class="material-symbols-outlined mdls" slot="end">arrow_forward</span>
                 </ion-button>
@@ -83,7 +109,7 @@
         padding: 30px 30px !important;
         padding-top: calc(30px + env(safe-area-inset-top)) !important;
 
-        background: linear-gradient(191.52deg, #12D4A6 2.24%, #186F5A 91.53%);
+        background: linear-gradient(180deg, #12D4A6 2.24%, #186F5A 91.53%);
     }
 
     .content * {

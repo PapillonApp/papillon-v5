@@ -1,14 +1,17 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonIcon, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonFabButton, IonInput } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput } from '@ionic/vue';
+
+  import { Share } from '@capacitor/share';
 
   import { App } from '@capacitor/app';
+  import { Network } from '@capacitor/network';
 
   import displayToast from '@/functions/utils/displayToast.js';
   import subjectColor from '@/functions/utils/subjectColor.js';
   import timetableEdit from '@/functions/utils/timetableEdit.js';
   
-  import { calendarOutline, calendarSharp, todayOutline, todaySharp, add, checkmark, notifications } from 'ionicons/icons';
+  import { calendarOutline, calendarSharp, todayOutline, todaySharp, notifications } from 'ionicons/icons';
 
   import { LocalNotifications } from '@capacitor/local-notifications';
 
@@ -123,7 +126,7 @@
             this.yesterday.error = "STILL_LOADING";
             this.tomorrow.error = "STILL_LOADING";
         },
-        getTimetables(force) {
+        async getTimetables(force) {
             // get timetable for rn
             GetTimetable(this.$rn, force).then((timetable) => {
                 if(timetable.error) {
@@ -176,6 +179,10 @@
                     }
                 }
             });
+
+            // set connection status
+            this.connected = await Network.getStatus()
+            this.connected = this.connected.connected;
         },
         handleRefresh(event) {
             // get new timetable data
@@ -188,6 +195,62 @@
                         event.target.complete();
                     }, 200);
                 }
+            });
+        },
+        getStringToAsciiArray(string) {
+            let charCodeArr = [];
+            for(let i = 0; i < string.length; i++){
+                let code = string.charCodeAt(i);
+                charCodeArr.push(code);
+            }
+
+            return charCodeArr;
+        },
+        async shareCours(cours) {
+            let sharedCourse = {
+                name: cours.data.subject,
+                teachers: cours.data.teachers.join(', ') || "Aucun professeur",
+                rooms: cours.data.rooms.join(', ') || "Aucune salle",
+                start: cours.time.start.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                end: cours.time.end.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+                status: cours.status.status,
+                color: cours.course.color,
+                memo: cours.data.memo || "none"
+            }
+
+            // get first name of user
+            let firstName = JSON.parse(localStorage.getItem("userData")).student.name;
+            firstName = firstName.split(" ")[firstName.split(" ").length - 1];
+
+            // if custom name is set, use it instead
+            if(localStorage.getItem("customName")) {
+                firstName = localStorage.getItem("customName").split(" ")[localStorage.getItem("customName").split(" ").length - 1];
+            }
+
+            // Set customizable data to ascii
+            firstName = this.getStringToAsciiArray(firstName).join(' ');
+            sharedCourse.name = this.getStringToAsciiArray(sharedCourse.name).join(' ');
+            sharedCourse.teachers = this.getStringToAsciiArray(sharedCourse.teachers).join(' ');
+            sharedCourse.rooms = this.getStringToAsciiArray(sharedCourse.rooms).join(' ');
+
+            let urlElems = "";
+            urlElems += firstName + "$"; // first name
+            urlElems += sharedCourse.name + "$";
+            urlElems += sharedCourse.teachers + "$";
+            urlElems += sharedCourse.rooms + "$";
+            urlElems += sharedCourse.start + "$";
+            urlElems += sharedCourse.end + "$";
+            urlElems += sharedCourse.color + "$";
+            urlElems += sharedCourse.status + "$";
+            urlElems += sharedCourse.memo;
+
+            // base64 encode urlElems
+            let url = "https://getpapillon.xyz/course?c=" + btoa(urlElems);
+
+            // share url
+            await Share.share({
+                url: url,
+                dialogTitle: "Partager votre cours de " + cours.data.subject
             });
         },
         async openCoursModal(cours) {
@@ -404,7 +467,6 @@
             // find notification
             await LocalNotifications.getPending().then((res) => {
                 let notifs = res.notifications;
-                console.log(notifs);
 
                 let time = new Date(course.time.start);
                 time.setMinutes(time.getMinutes() - 5);
@@ -412,8 +474,6 @@
                 // check if time = schedule.at
                 notifs.forEach(async (notif) => {
                     let notifTime = new Date(notif.schedule.at);
-
-                    console.log(notifTime.getTime() + ' == ' + time.getTime());
 
                     if(notifTime.getTime() == time.getTime()) {
                         await LocalNotifications.cancel({ notifications: [notif] });
@@ -442,6 +502,7 @@
             timetable: [],
             yesterday: [],
             tomorrow: [],
+            connected: false,
             shouldResetSwiper: false,
             days: ['yesterday', 'timetable', 'tomorrow'],
             selectedCourse: {
@@ -471,12 +532,12 @@
         this.getTimetables();
 
         // on rnChanged, get new timetable data
-        document.addEventListener('rnChanged', (e) => {
+        document.addEventListener('rnChanged', () => {
             this.getTimetables();
         });
 
         // on token changed, get new timetable data
-        document.addEventListener('tokenUpdated', (e) => {
+        document.addEventListener('tokenUpdated', () => {
             this.getTimetables();
         });
 
@@ -576,8 +637,8 @@
                         :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
                         :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
                         :memo="cours.data.hasMemo"
-                        :start="cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
-                        :end="cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })"
+                        :start="cours.time.start"
+                        :end="cours.time.end"
                         :color="cours.course.color"
                         :sameTime="cours.course.sameTime"
                         :status="cours.status.status"
@@ -599,10 +660,16 @@
                         <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div>
 
-                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].error == 'ERR_NETWORK' && !$data[`${day}`].loading">
+                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].error == 'ERR_NETWORK' && !$data[`${day}`].loading && !connected">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
                         <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                    </div>
+
+                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].error == 'ERR_NETWORK' && !$data[`${day}`].loading && connected">
+                        <span class="material-symbols-outlined mdls">crisis_alert</span>
+                        <h2>Serveurs indisponibles</h2>
+                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance. Nos serveurs seront bientôt de nouveaux disponibles.</p>
                     </div>
 
                     <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].loading">
@@ -661,7 +728,7 @@
         </IonModal>
 
 
-        <IonModal :is-open="rnPickerModalOpen" ref="rnPickerModal" class="datetimeModal" @didDismiss="changernPickerModalOpen(false)" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55, 1]">
+        <IonModal :is-open="rnPickerModalOpen" ref="rnPickerModal" class="datetimeModal" @didDismiss="changernPickerModalOpen(false)" :keep-contents-mounted="true" :initial-breakpoint="0.5" :breakpoints="[0, 0.5]">
           <IonHeader>
             <IonToolbar>
               <ion-title>Sélection de la date</ion-title>
@@ -697,9 +764,9 @@
                             <p>Nom de la matière</p>
                             <h2>{{selectedCourse.name}}</h2>
                         </ion-label>
-                        <ion-button color="danger" fill="clear" class="itemBtn" slot="end" v-if="selectedCourse.custom" @click="deleteCustomCourse(selectedCourse.id)">
-                            <span class="material-symbols-outlined mdls" slot="start">delete</span>
-                            Supprimer
+                        <ion-button class="itemBtn" fill="clear" slot="end" @click="shareCours(selectedCourse.originalCourse)">
+                            <span class="material-symbols-outlined mdls" slot="start">share</span>
+                            Partager
                         </ion-button>
                     </ion-item>
 
@@ -774,6 +841,11 @@
                             <p>Statut</p>
                             <h2>{{selectedCourse.status}}</h2>
                         </ion-label>
+
+                        <ion-button color="danger" fill="clear" class="itemBtn" slot="end" v-if="selectedCourse.custom" @click="deleteCustomCourse(selectedCourse.id)">
+                            <span class="material-symbols-outlined mdls" slot="start">delete</span>
+                            Supprimer
+                        </ion-button>
                     </ion-item>
                 </ion-list>
             </ion-content>

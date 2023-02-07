@@ -63,7 +63,7 @@ function getPronoteLogin() {
                 localStorage.setItem('token', result.token);
 
                 // empty localstorage cache
-                localStorage.setItem('UserCache', JSON.stringify([]));
+                localStorage.setItem('UserCache', JSON.stringify({}));
                 localStorage.setItem('TimetableCache', JSON.stringify([]));
 
                 // broadcast event to document
@@ -89,7 +89,7 @@ function getPronoteLogin() {
                     displayToast.presentError("Une erreur s'est produite.", "danger", result.error)
                 }
                 // redirect to login page
-                console.log(result);
+                console.error(result);
             }
         });
     }

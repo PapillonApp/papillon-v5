@@ -7,7 +7,7 @@
   
 <script lang="ts">
     import { defineComponent } from 'vue';
-    import { IonPage, IonContent, IonNav } from '@ionic/vue';
+    import { IonPage, IonNav } from '@ionic/vue';
     import App from './App.vue';
   
     export default defineComponent({

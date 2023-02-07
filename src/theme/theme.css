@@ -3,7 +3,45 @@
 }
 
 body {
-    background: black;
+    background: var(--ion-background-color);
+}
+
+*::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 0;
+    height: 0;
+    scrollbar-width: none;
+}
+
+.scroll-bar-indicator {
+    position: absolute;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, .3);
+    opacity: 1;
+    -webkit-transition: opacity .3s linear;
+    transition: opacity .3s linear
+}
+
+ion-content::-webkit-scrollbar {
+    display: none;
+}
+
+ion-content::part(scroll) {
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+*::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.1);
+    background-color: transparent;
+}
+  
+*::-webkit-scrollbar {
+    background-color: transparent;
+}
+  
+*::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: transparent;
 }
 
 :root {
@@ -39,10 +77,8 @@ input.sc-ion-searchbar-md {
     margin-top: -5px;
 }
 
-@media screen and (prefers-color-scheme: dark) {
-    input.sc-ion-searchbar-md {
-        background: #292929 !important;
-    }
+body.dark input.sc-ion-searchbar-md {
+    background: #292929 !important;
 }
 
 /* (MD) Toolbar */
@@ -50,10 +86,8 @@ input.sc-ion-searchbar-md {
     border-bottom: 1px solid #e0e0e0;
 }
 
-@media screen and (prefers-color-scheme: dark) {
-    .header-md {
-        border-bottom: 1px solid #363636;
-    }
+body.dark .header-md {
+    border-bottom: 1px solid #363636;
 }
 
 .header-md::after {
@@ -77,10 +111,8 @@ input.sc-ion-searchbar-md {
     transition: background 0.2s;
 }
 
-@media screen and (prefers-color-scheme: dark) {
-    #rnPickerModalButton {
-        background-color: #ffffff11;
-    }
+body.dark #rnPickerModalButton {
+    background-color: #ffffff11;
 }
 
 #rnPickerModalButton span {
@@ -108,6 +140,7 @@ ion-header.ios:not(.header-collapse-condense-inactive) #rnPickerModalButton {
 @font-face {
     font-family: 'Material Symbols Outlined';
     font-style: normal;
+    font-display: block;
     src: url('/public/fonts/MaterialSymbolsOutlined.woff2') format('woff2');
 }
 
@@ -123,7 +156,6 @@ ion-header.ios:not(.header-collapse-condense-inactive) #rnPickerModalButton {
     word-wrap: normal;
     white-space: nowrap;
     direction: ltr;
-    font-display: block;
 }
 
 .mdls {
@@ -134,7 +166,10 @@ ion-header.ios:not(.header-collapse-condense-inactive) #rnPickerModalButton {
     'opsz' 24;
 
     font-size: 24px;
-    font-display: block;
+
+    width: 24px;
+    overflow: hidden;
+    isolation: isolate;
 }
 
 .mdls[slot="start"] {
@@ -175,6 +210,7 @@ ion-item .mdls[slot="start"] {
 }
 
 .NoCours .mdls {
+    width: auto;
     font-size: 24px;
     margin-bottom: 14px;
     font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 36;
@@ -357,4 +393,9 @@ ion-action-sheet {
 /* content */
 ion-content {
     --padding-bottom: env(safe-area-inset-bottom) !important;
+}
+
+ion-fab .mdls {
+    width: auto;
+    margin-left: -3.5px;
 }
