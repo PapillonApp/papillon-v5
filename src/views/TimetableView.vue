@@ -274,14 +274,22 @@
             let status = cours.status.status;
             let hasStatus = status != undefined;
 
-            if (cours.status.isOuting) {
-                status = "Vous êtes en sortie"
-                hasStatus = true;
-            } else if (cours.status.isTest) {
-                status = "Vous avez un contrôle"
-                hasStatus = true;
-            } else if(status == undefined) {
-                status = "Le cours se déroule normalement";
+            if (cours.status != undefined) {
+                if (cours.status.isOuting) {
+                    status = "Vous êtes en sortie et " + cours.status.status.toLowerCase()
+                } else if (cours.status.isTest) {
+                    status = "Vous avez un contrôle et " + cours.status.status.toLowerCase()
+                }
+            } else {
+                if (cours.status.isOuting) {
+                    status = "Vous êtes en sortie"
+                    hasStatus = true;
+                } else if (cours.status.isTest) {
+                    status = "Vous avez un contrôle"
+                    hasStatus = true;
+                } else {
+                    status = "Le cours se déroule normalement";
+                }
             }
 
             let notifEnabled = false;
@@ -829,7 +837,7 @@
 
                     <ion-item class="info-item" v-else-if="selectedCourse.hasStatus" style="color: var(--ion-color-warning);">
                         <span class="material-symbols-outlined mdls" slot="start">info</span>
-                        <ion-label>
+                        <ion-label class="ion-text-wrap">
                             <p>Statut</p>
                             <h2>{{selectedCourse.status}}</h2>
                         </ion-label>
