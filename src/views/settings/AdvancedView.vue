@@ -107,7 +107,7 @@
 					cancelable: true,
 					inputPlaceholder: 'https://api.getpapillon.xyz',
 					confirmButtonText: 'Valider',
-					cancelButtonText: 'Par défaut',
+					cancelButtonText: 'Réinitialiser',
 				});
 
 				if (value) {
