@@ -111,7 +111,7 @@
                     text: 'Annuler',
                     role: 'cancel',
                     handler: () => {
-                        this.presentToast("Vous devez choisir un ENT pour continuer.", "danger")
+                        displayToast.presentToast("Vous devez choisir un ENT pour continuer.", "danger")
                     },
                     data: {
                         action: 'cancel'
