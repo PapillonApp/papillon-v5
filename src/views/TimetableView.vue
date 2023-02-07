@@ -228,10 +228,10 @@
             }
 
             // Set customizable data to ascii
-            firstName = this.getStringToAsciiArray(firstName).join(' ');
-            sharedCourse.name = this.getStringToAsciiArray(sharedCourse.name).join(' ');
-            sharedCourse.teachers = this.getStringToAsciiArray(sharedCourse.teachers).join(' ');
-            sharedCourse.rooms = this.getStringToAsciiArray(sharedCourse.rooms).join(' ');
+            firstName = this.getStringToAsciiArray(firstName).join('-');
+            sharedCourse.name = this.getStringToAsciiArray(sharedCourse.name).join('-');
+            sharedCourse.teachers = this.getStringToAsciiArray(sharedCourse.teachers).join('-');
+            sharedCourse.rooms = this.getStringToAsciiArray(sharedCourse.rooms).join('-');
 
             let urlElems = "";
             urlElems += firstName + "$"; // first name
