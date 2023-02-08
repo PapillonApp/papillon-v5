@@ -152,7 +152,7 @@
 
 			// fontSelect
 			// get --papillon-font from css
-			this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font'); 
+			this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font').replace(/"/g, ''); 
 
 			// get tweakProgressBar ref
 			let tweakProgressBar = this.$refs.tweakProgressBar;
