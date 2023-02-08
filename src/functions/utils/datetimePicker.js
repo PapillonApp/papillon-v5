@@ -118,8 +118,11 @@ function maxCalendarDate() {
 	let currentSchoolYear = currentMonth >= 8 ? currentYear + "-" + (currentYear + 1) : (currentYear - 1) + "-" + currentYear;
 
 	const disableHolidays = JSON.parse(localStorage.getItem('disableHolidays'))
-	const summerHoliday = JSON.parse(localStorage.getItem('holidays')).find(holiday => holiday.name == "Vacances d'Été");
-
+	let summerHoliday = JSON.parse(localStorage.getItem('holidays'));
+	if (summerHoliday) {
+		summerHoliday = summerHoliday.find(holiday => holiday.name == "Vacances d'Été");
+	}
+	
 	if (summerHoliday && disableHolidays) {
 		let maxDate = new Date(summerHoliday.startDate);
 		maxDate.setDate(maxDate.getDate() + 1);
@@ -135,7 +138,10 @@ function minCalendarDate() {
 	let currentSchoolYear = currentMonth >= 8 ? currentYear + "-" + (currentYear + 1) : (currentYear - 1) + "-" + currentYear;
 
 	const disableHolidays = JSON.parse(localStorage.getItem('disableHolidays'))
-	const summerHoliday = JSON.parse(localStorage.getItem('holidays')).find(holiday => holiday.name == "Vacances d'Été");
+	let summerHoliday = JSON.parse(localStorage.getItem('holidays'));
+	if (summerHoliday) {
+		summerHoliday = summerHoliday.find(holiday => holiday.name == "Vacances d'Été");
+	}
 
 	if (summerHoliday && disableHolidays) {
 		let minDate = new Date(currentSchoolYear.split("-")[0] + "-" + summerHoliday.endDate.split("-")[1] + "-" + summerHoliday.endDate.split("-")[2]);
