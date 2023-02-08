@@ -635,6 +635,9 @@
         font-size: 16px;
         font-weight: 500;
         font-family: var(--papillon-font) !important;
+
+        -webkit-user-select: text;
+        -webkit-overflow-scrolling: auto;
     }
 
     .loginButton {
