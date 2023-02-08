@@ -242,7 +242,7 @@
 				</IonItem>
 
 				<IonItem>
-					<span class="material-symbols-outlined mdls" slot="start">settings</span>
+					<span class="material-symbols-outlined mdls" slot="start">timelapse</span>
 					<IonLabel class="ion-text-wrap">
 						<h2>Activer l'animation de la progression d'un cours</h2>
 						<p>(Expérimental) Indiquer la progression d'un cours en cours avec une animation</p>
@@ -251,7 +251,7 @@
 				</IonItem>
 
 				<IonItem>
-					<span class="material-symbols-outlined mdls" slot="start">settings</span>
+					<span class="material-symbols-outlined mdls" slot="start">fast_rewind</span>
 					<IonLabel class="ion-text-wrap">
 						<h2>Montrer la progression des cours passés</h2>
 						<p>(Expérimental) Indiquer les cours passés avec un style différent</p>
