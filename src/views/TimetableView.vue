@@ -48,10 +48,10 @@
         IonInput
     },
     setup() {
-        const isDateAvailable = require('@/functions/utils/datetimePicker.js').isDateAvailable;
-
         return {
-            isDateAvailable,
+            minDate: require('@/functions/utils/datetimePicker.js').minCalendarDate(),
+            maxDate: require('@/functions/utils/datetimePicker.js').maxCalendarDate(),
+            isDateAvailable: require('@/functions/utils/datetimePicker.js').isDateAvailable,
             calendarOutline,
             calendarSharp,
             todayOutline,
@@ -755,6 +755,8 @@
                 size="cover"
                 :value="rnCalendarString"
                 :firstDayOfWeek="1"
+                :min="minDate"
+                :max="maxDate"
                 :is-date-enabled="isDateAvailable"
                 @ionChange="rnInputChanged()"
             >

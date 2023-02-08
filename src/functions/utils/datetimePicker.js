@@ -112,4 +112,22 @@ function fetchDaysOffAndHolidays() {
 	}
 }
 
-export { isDateAvailable, fetchDaysOffAndHolidays };
+const maxCalendarDate = () => {
+	let currentYear = new Date().getFullYear();
+	let currentMonth = new Date().getMonth();
+	let currentSchoolYear = currentMonth >= 8 ? currentYear + "-" + (currentYear + 1) : (currentYear - 1) + "-" + currentYear;
+
+	let maxDate = new Date(currentSchoolYear.split("-")[1] + "-07-31");
+	return maxDate.toISOString().split('T')[0];
+}
+
+const minCalendarDate = () => {
+	let currentYear = new Date().getFullYear();
+	let currentMonth = new Date().getMonth();
+	let currentSchoolYear = currentMonth >= 8 ? currentYear + "-" + (currentYear + 1) : (currentYear - 1) + "-" + currentYear;
+
+	let minDate = new Date(currentSchoolYear.split("-")[0] + "-09-01");
+	return minDate.toISOString().split('T')[0];
+}
+
+export { isDateAvailable, fetchDaysOffAndHolidays, maxCalendarDate, minCalendarDate };
