@@ -63,10 +63,6 @@
 			}
 		},
 		methods: {
-			clear() {
-				localStorage.removeItem("logs");
-				this.logs = [];
-			},
 			clearLog(log) {
 				this.logs = this.logs.filter(l => l !== log);
 				localStorage.setItem("logs", JSON.stringify(this.logs));
@@ -216,7 +212,6 @@ ${this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} -
 				<ion-title mode="md">Logs</ion-title>
 
 				<ion-buttons slot="end">
-					<IonButton @click="clear()">Effacer les logs</IonButton>
 					<IonButton @click="share()">
 						<span class="material-symbols-outlined mdls">ios_share</span>
 					</IonButton>
