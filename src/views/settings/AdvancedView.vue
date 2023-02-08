@@ -16,6 +16,7 @@
 
 	import displayToast from '@/functions/utils/displayToast.js';
 	import GetToken from '@/functions/login/GetToken.js';
+	import { fetchDaysOffAndHolidays } from '@/functions/utils/datetimePicker.js';
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	import { Dialog } from '@capacitor/dialog';
@@ -131,6 +132,17 @@
 					localStorage.removeItem('customApiUrl');
 				}
 			},
+			refreshDaysAndHolidays() {
+				try {
+					fetchDaysOffAndHolidays();
+					displayToast.presentNativeToast(
+						'Jours fériés et vacances scolaires mis à jour'
+					);
+				} catch (error) {
+					console.error(error);
+					displayToast.presentError("Une erreur est survenue lors de la récupération des jours fériés et des vacances scolaires", "danger", error);
+				}
+			}
 		},
 		mounted() {
 			localStorage.getItem('loginService') == 'pronote' ? this.isPronote = true : this.isPronote = false;
@@ -172,8 +184,16 @@
 				<IonItem button @click="refreshToken()">
 					<span class="material-symbols-outlined mdls" slot="start">key</span>
 					<IonLabel class="ion-text-wrap">
-						<h2>Régénérer les clés de connexion (avancé)</h2>
+						<h2>Régénérer les clés de connexion</h2>
 						<p>Permet de demander une nouvelle autorisation à votre établissement</p>  
+					</IonLabel>
+				</IonItem>
+
+				<IonItem button @click="refreshDaysAndHolidays()">
+					<span class="material-symbols-outlined mdls" slot="start">event_repeat</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Récupérer de nouveau les vacances et jours fériés</h2>
+						<p>Permet de faire une nouvelle requête et de remplacer les vacances et jours fériés actuellement enregistrés</p>  
 					</IonLabel>
 				</IonItem>
 
