@@ -48,7 +48,10 @@
         IonInput
     },
     setup() {
-        return { 
+        const isDateAvailable = require('@/functions/utils/datetimePicker.js').isDateAvailable;
+
+        return {
+            isDateAvailable,
             calendarOutline,
             calendarSharp,
             todayOutline,
@@ -500,7 +503,7 @@
                     }
                 });
             });
-        }
+        },
     },
     data() {
         return {
@@ -752,6 +755,7 @@
                 size="cover"
                 :value="rnCalendarString"
                 :firstDayOfWeek="1"
+                :is-date-enabled="isDateAvailable"
                 @ionChange="rnInputChanged()"
             >
             </IonDatetime>
