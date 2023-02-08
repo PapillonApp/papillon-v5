@@ -193,7 +193,7 @@
 					<span class="material-symbols-outlined mdls" slot="start">join_inner</span>
 					<IonLabel class="ion-text-wrap">
 						<h2>Joindre les matières identiques</h2>
-						<p>Permet de joindre les matières identiques entre-elle</p>
+						<p>Permet de joindre les matières identiques entre-elles</p>
 					</IonLabel>
 					<IonToggle slot="end" ref="groupSubjects" @ionChange="changeGroupSubjects('groupSubjects')"></IonToggle>
 				</IonItem>
