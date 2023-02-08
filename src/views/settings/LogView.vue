@@ -230,7 +230,7 @@ ${this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} -
 			<div class="NoCours" v-if="logs.length == 0">
 				<span class="material-symbols-outlined mdls">developer_mode</span>
 				<h2>Aucun rapport n'a été enregistré.</h2>
-				<p>C'est parfait, il n'y a aucun problème sur l'application (ou alors vous les avez effacé). Détendez-vous, profitez-en !</p>
+				<p>C'est parfait, il n'y a aucun problème sur l'application (ou alors vous les avez effacés). Détendez-vous, profitez-en !</p>
 			</div>
 
 			<ion-list v-else>
