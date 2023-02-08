@@ -277,7 +277,7 @@
             let status = cours.status.status;
             let hasStatus = status != undefined;
 
-            if (cours.status != undefined) {
+            if (cours.status.status != undefined) {
                 if (cours.status.isOuting) {
                     status = "Vous êtes en sortie et " + cours.status.status.toLowerCase()
                 } else if (cours.status.isTest) {
