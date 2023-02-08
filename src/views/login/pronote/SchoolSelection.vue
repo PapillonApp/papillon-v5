@@ -8,6 +8,7 @@
     import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp } from 'ionicons/icons';
 
     import displayToast from '@/functions/utils/displayToast.js';
+    import { fetchDaysOffAndHolidays } from '@/functions/utils/datetimePicker.js';
 
     import { Geolocation } from '@capacitor/geolocation';
 
@@ -111,7 +112,7 @@
                     text: 'Annuler',
                     role: 'cancel',
                     handler: () => {
-                        this.presentToast("Vous devez choisir un ENT pour continuer.", "danger")
+                        displayToast.presentToast("Vous devez choisir un ENT pour continuer.", "danger")
                     },
                     data: {
                         action: 'cancel'
@@ -119,8 +120,8 @@
                 });
 
                 const actionSheet = await actionSheetController.create({
-                    header: 'Choisissez votre ENT',
-                    subHeader: 'Plusieurs ENT ont été trouvés. Choisissez celui que vous souhaitez utiliser.',
+                    header: 'Choisissez votre méthode de connexion',
+                    subHeader: 'Plusieurs méthode de connexion sont disponible pour votre établissement. Choisissez celle que vous souhaitez utiliser.',
                     buttons: options
                 });
 
@@ -143,7 +144,7 @@
                 this.terms = e.detail.value;
                 this.isLoading = true;
                 
-                axios.get('https://cors.api.pronote.plus/https://positionstack.com/geo_api.php?query=france+' + postal, {
+                axios.get('https://cors.api.getpapillon.xyz/https://positionstack.com/geo_api.php?query=france+' + postal, {
                     headers: {
                         'Access-Control-Allow-Origin': '*',
                         'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
@@ -302,11 +303,19 @@
                         // no CAS for this host
                         displayToast.presentToast(`Aucun CAS trouvé pour ${cas_host}.`, "danger")
                     }
-                    else if (all_cas_same_host.length == 1) {
-                        // only one CAS for this host
+                    else if (all_cas_same_host.length == 1 && all_cas_same_host[0].url == "index-education.net") {
+                        // only one CAS for this host and not an ENT
                         cas = all_cas_same_host[0].py;
-                    } else {
+                    }
+                    else if (all_cas_same_host.length >= 1) {
                         // multiple CAS for this host
+                        all_cas_same_host.push({
+                            name: "Connexion directe via Pronote",
+                            url: "index-education.net",
+                            py: "",
+                            educonnect: false,
+                        })
+
                         let listToChoose = {
                             etab : etab.toLowerCase(),
                             cas : all_cas_same_host,
@@ -402,6 +411,18 @@
                                 url: url,
                             }));
                             localStorage.loginService = "pronote";
+
+                            localStorage.setItem("disabledDays", JSON.stringify([0]));
+                            const ACAD_NAME_API = "https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-adresse-et-geolocalisation-etablissements-premier-et-second-degre&q=&facet=code_postal_uai&facet=nature_uai_libe&facet=libelle_academie&timezone=Europe%2FParis"
+                            axios.get(ACAD_NAME_API + "&refine.numero_uai=" + url.split("/")[2].split(".")[0].toUpperCase())
+                                .then(response => response.json())
+                                .then(result => {
+                                    if(result.records.length > 0) {
+                                        localStorage.setItem("acadName", result.records[0].fields.libelle_academie);
+                                    }
+                                })
+
+                            fetchDaysOffAndHolidays();
 
                             // go to home
                             window.location.replace("/");
@@ -530,7 +551,7 @@
                         <img src="assets/welcome/pronote_logo.png" alt="Pronote Logo" class="logo"/>
                         <div class="introData">
                             <h2>Connexion à Papillon</h2>
-                            <p>Vous souhaitez vous connecter à <B>Pronote</B> avec l'ENT <B>{{displayCas}}</B> à l'aide de Papillon.</p>
+                            <p>Vous souhaitez vous connecter à <B>Pronote</B> en utilisant <B>{{displayCas}}</B> à l'aide de Papillon.</p>
                             <br v-if="isEduconnectLogin">
                             <p v-if="isEduconnectLogin" class="isEduconnectLogin">Cet ENT utilise ÉduConnect, merci de rentrer les identifiants de ce service.</p>
                         </div>

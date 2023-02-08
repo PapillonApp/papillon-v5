@@ -45,7 +45,7 @@ function setStyle() {
 	}
 }
 
-// Navigation bar
+// Navigation bar (Android only)
 import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
 
 function setNavigationBarStyle() {
