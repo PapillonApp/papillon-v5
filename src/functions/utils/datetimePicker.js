@@ -5,7 +5,7 @@ const isDateAvailable = (dateString) => {
 	const utcDay = date.getUTCDay();
 	
 	const disabledDays = JSON.parse(localStorage.getItem('disabledDays'))
-	const disableHolidays = localStorage.getItem('disableHolidays')
+	const disableHolidays = JSON.parse(localStorage.getItem('disableHolidays'))
 	const daysOff = JSON.parse(localStorage.getItem('daysOff'))
 	const holidays = JSON.parse(localStorage.getItem('holidays'))
 
@@ -117,8 +117,16 @@ function maxCalendarDate() {
 	let currentMonth = new Date().getMonth();
 	let currentSchoolYear = currentMonth >= 8 ? currentYear + "-" + (currentYear + 1) : (currentYear - 1) + "-" + currentYear;
 
-	let maxDate = new Date(currentSchoolYear.split("-")[1] + "-07-31");
-	return maxDate.toISOString().split('T')[0];
+	const disableHolidays = JSON.parse(localStorage.getItem('disableHolidays'))
+	const summerHoliday = JSON.parse(localStorage.getItem('holidays')).find(holiday => holiday.name == "Vacances d'Été");
+
+	if (summerHoliday && disableHolidays) {
+		let maxDate = new Date(summerHoliday.startDate);
+		maxDate.setDate(maxDate.getDate() + 1);
+		return maxDate.toISOString().split('T')[0];
+	} else {
+		return currentSchoolYear.split("-")[1] + "-12-31";
+	}
 }
 
 function minCalendarDate() {
@@ -126,8 +134,15 @@ function minCalendarDate() {
 	let currentMonth = new Date().getMonth();
 	let currentSchoolYear = currentMonth >= 8 ? currentYear + "-" + (currentYear + 1) : (currentYear - 1) + "-" + currentYear;
 
-	let minDate = new Date(currentSchoolYear.split("-")[0] + "-09-01");
-	return minDate.toISOString().split('T')[0];
+	const disableHolidays = JSON.parse(localStorage.getItem('disableHolidays'))
+	const summerHoliday = JSON.parse(localStorage.getItem('holidays')).find(holiday => holiday.name == "Vacances d'Été");
+
+	if (summerHoliday && disableHolidays) {
+		let minDate = new Date(currentSchoolYear.split("-")[0] + "-" + summerHoliday.endDate.split("-")[1] + "-" + summerHoliday.endDate.split("-")[2]);
+		return minDate.toISOString().split('T')[0];
+	} else {
+		return currentSchoolYear.split("-")[0] + "-01-01";
+	}
 }
 
 export { isDateAvailable, fetchDaysOffAndHolidays, maxCalendarDate, minCalendarDate };
