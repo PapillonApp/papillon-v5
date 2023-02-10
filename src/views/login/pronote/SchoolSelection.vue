@@ -5,7 +5,7 @@
     import axios from 'axios';
     import $ from "jquery";
     
-    import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp } from 'ionicons/icons';
+    import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp, serverOutline, serverSharp } from 'ionicons/icons';
 
     import displayToast from '@/functions/utils/displayToast.js';
     import { fetchDaysOffAndHolidays } from '@/functions/utils/datetimePicker.js';
@@ -34,6 +34,8 @@
                 qrCodeSharp,
                 schoolOutline,
                 schoolSharp,
+                serverOutline,
+                serverSharp,
                 businessOutline,
                 businessSharp,
                 navigateOutline,
@@ -356,6 +358,39 @@
             dismiss() {
                 this.$refs.loginModal.$el.dismiss();
             },
+            async changeApi() {
+				const { value, cancelled } = await Dialog.prompt({
+					title: 'URL personnalisée',
+					message: 'Entrez l\'URL personnalisée de l\'API',
+					cancelable: true,
+					inputPlaceholder: 'https://api.getpapillon.xyz',
+					confirmButtonText: 'Valider',
+					cancelButtonText: 'Réinitialiser',
+				});
+
+				if (value) {
+					localStorage.setItem('customApiUrl', value);
+					displayToast.presentToast(
+						'URL d\'API personnalisée enregistrée',
+                        'success'
+					);
+
+					await Dialog.alert({
+						title: 'Attention',
+						message: 'Vous devez redémarrer l\'application pour que les changements soient pris en compte',
+						confirmButtonText: 'OK',
+					});
+				}
+
+				if (cancelled) {
+					displayToast.presentToast(
+						'API personnalisée réinitialisée',
+                        'danger'
+					);
+
+					localStorage.removeItem('customApiUrl');
+				}
+            },
             login() {
                 const API = this.$api;
 
@@ -529,6 +564,22 @@
                 <ion-label>
                     <h2>Se connecter avec un QR-Code</h2>
                     <p>Scannez le QR-Code de l'interface Pronote</p>
+                </ion-label>
+            </ion-item>
+        </ion-list>
+
+        <ion-list>
+            <ion-list-header>
+                <ion-label>
+                    <p>Options avancées</p>
+                </ion-label>
+            </ion-list-header>
+
+            <ion-item button disabled @click="changeApi()">
+                <ion-icon class="icon" slot="start" :ios="serverOutline" :md="serverSharp"></ion-icon>
+                <ion-label>
+                    <h2>Changer d'API</h2>
+                    <p>Utiliser une autre API que celle de Papillon que vous hébergez vous-mêmes.</p>
                 </ion-label>
             </ion-item>
         </ion-list>
