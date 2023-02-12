@@ -2,7 +2,6 @@
 // import { app } from '@/main.ts'
 import { Capacitor } from '@capacitor/core';
 import { App } from '@capacitor/app';
-import { useIonRouter } from '@ionic/vue';
 
 // Variables
 let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -196,9 +195,10 @@ console.debug = function(content :string){
 
 
 // Back hardware button to exit app
-const ionRouter = useIonRouter();
-App.addListener('backButton', () => {
-	if (!ionRouter.canGoBack()) {
+App.addListener('backButton', ({canGoBack}) => {
+	if(!canGoBack){
 		App.exitApp();
+	} else {
+		window.history.back();
 	}
 });
