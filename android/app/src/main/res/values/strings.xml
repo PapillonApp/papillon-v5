@@ -3,5 +3,5 @@
     <string name="app_name">Papillon</string>
     <string name="title_activity_main">Papillon</string>
     <string name="package_name">plus.pronote.app</string>
-    <string name="custom_url_scheme">plus.pronote.app</string>
+    <string name="custom_url_scheme">getpapillon</string>
 </resources>
