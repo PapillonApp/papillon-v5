@@ -80,6 +80,31 @@
 					}, 1000);
 				}, 100);
 			},
+			async setAcadName() {
+				const { value, cancelled } = await Dialog.prompt({
+					title: 'Nom de l\'académie',
+					message: 'Entrez le nom de l\'académie.\nAttention, cela doit être le nom exact de l\'académie, sinon les vacances scolaires ne seront pas affichées correctement.',
+					cancelable: true,
+					inputPlaceholder: 'Bordeaux',
+					confirmButtonText: 'Valider',
+					cancelButtonText: 'Réinitialiser',
+				});
+
+				if (value) {
+					localStorage.setItem('acadName', value);
+					displayToast.presentNativeToast(
+						'Nom de l\'académie enregistré'
+					);
+				}
+
+				if (cancelled) {
+					displayToast.presentNativeToast(
+						'Annulé'
+					);
+
+					localStorage.removeItem('acadName');
+				}
+			},
 			refreshToken() {
 				GetToken();
 				displayToast.presentNativeToast(
@@ -140,7 +165,7 @@
 					);
 				} catch (error) {
 					console.error(error);
-					displayToast.presentError("Une erreur est survenue lors de la récupération des jours fériés et des vacances scolaires", "danger", error);
+					displayToast.presentNativeToast("Une erreur est survenue lors de la récupération des jours fériés et des vacances scolaires");
 				}
 			}
 		},
@@ -194,6 +219,14 @@
 					<IonLabel class="ion-text-wrap">
 						<h2>Récupérer de nouveau les vacances et jours fériés</h2>
 						<p>Permet de faire une nouvelle requête et de remplacer les vacances et jours fériés actuellement enregistrés</p>  
+					</IonLabel>
+				</IonItem>
+
+				<IonItem button @click="setAcadName()">
+					<span class="material-symbols-outlined mdls" slot="start">badge</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Définir l'académie utilisée</h2>
+						<p>Permet de définir l'académie d'appartenance manuellement</p>  
 					</IonLabel>
 				</IonItem>
 
