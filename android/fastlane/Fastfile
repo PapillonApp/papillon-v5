@@ -44,15 +44,14 @@ begin
         track: 'alpha',
         package_name: ENV['APP_PACKAGE_NAME'],
         version_code: ENV['APP_VERSION_CODE'],
-        release_status: "inProgress",
+        release_status: "draft",
         aab: "#{AAB_LOCATION}",
         skip_upload_images: true,
         skip_upload_metadata: true,
         skip_upload_changelogs: true,
         skip_upload_screenshots: true,
         skip_upload_apk: true,
-        json_key: ENV['PLAY_CREDENTIALS_JSON'],
-        rollout: "1"
+        json_key: ENV['PLAY_CREDENTIALS_JSON']
       )
   end
 
