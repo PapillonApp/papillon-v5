@@ -122,7 +122,6 @@ jobs:
           path: "package.json"
           key: "canal"
           value: ${{ needs.initialize.outputs.DEPLOY_TYPE }}
-          commit: false
 
       - name: Ionic Capacitor Sync
         run: |
@@ -208,7 +207,6 @@ jobs:
           path: "package.json"
           key: "canal"
           value: ${{ needs.initialize.outputs.DEPLOY_TYPE }}
-          commit: false
 
       - name: Ionic Capacitor Sync
         run: |
