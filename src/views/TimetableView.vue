@@ -48,7 +48,10 @@
         IonInput
     },
     setup() {
-        return { 
+        return {
+            minDate: require('@/functions/utils/datetimePicker.js').minCalendarDate(),
+            maxDate: require('@/functions/utils/datetimePicker.js').maxCalendarDate(),
+            isDateAvailable: require('@/functions/utils/datetimePicker.js').isDateAvailable,
             calendarOutline,
             calendarSharp,
             todayOutline,
@@ -228,10 +231,10 @@
             }
 
             // Set customizable data to ascii
-            firstName = this.getStringToAsciiArray(firstName).join(' ');
-            sharedCourse.name = this.getStringToAsciiArray(sharedCourse.name).join(' ');
-            sharedCourse.teachers = this.getStringToAsciiArray(sharedCourse.teachers).join(' ');
-            sharedCourse.rooms = this.getStringToAsciiArray(sharedCourse.rooms).join(' ');
+            firstName = this.getStringToAsciiArray(firstName).join('-');
+            sharedCourse.name = this.getStringToAsciiArray(sharedCourse.name).join('-');
+            sharedCourse.teachers = this.getStringToAsciiArray(sharedCourse.teachers).join('-');
+            sharedCourse.rooms = this.getStringToAsciiArray(sharedCourse.rooms).join('-');
 
             let urlElems = "";
             urlElems += firstName + "$"; // first name
@@ -274,14 +277,22 @@
             let status = cours.status.status;
             let hasStatus = status != undefined;
 
-            if (cours.status.isOuting) {
-                status = "Vous êtes en sortie"
-                hasStatus = true;
-            } else if (cours.status.isTest) {
-                status = "Vous avez un contrôle"
-                hasStatus = true;
-            } else if(status == undefined) {
-                status = "Le cours se déroule normalement";
+            if (cours.status.status != undefined) {
+                if (cours.status.isOuting) {
+                    status = "Vous êtes en sortie et " + cours.status.status.toLowerCase()
+                } else if (cours.status.isTest) {
+                    status = "Vous avez un contrôle et " + cours.status.status.toLowerCase()
+                }
+            } else {
+                if (cours.status.isOuting) {
+                    status = "Vous êtes en sortie"
+                    hasStatus = true;
+                } else if (cours.status.isTest) {
+                    status = "Vous avez un contrôle"
+                    hasStatus = true;
+                } else {
+                    status = "Le cours se déroule normalement";
+                }
             }
 
             let notifEnabled = false;
@@ -492,7 +503,7 @@
                     }
                 });
             });
-        }
+        },
     },
     data() {
         return {
@@ -744,6 +755,9 @@
                 size="cover"
                 :value="rnCalendarString"
                 :firstDayOfWeek="1"
+                :min="minDate"
+                :max="maxDate"
+                :is-date-enabled="isDateAvailable"
                 @ionChange="rnInputChanged()"
             >
             </IonDatetime>
@@ -829,7 +843,7 @@
 
                     <ion-item class="info-item" v-else-if="selectedCourse.hasStatus" style="color: var(--ion-color-warning);">
                         <span class="material-symbols-outlined mdls" slot="start">info</span>
-                        <ion-label>
+                        <ion-label class="ion-text-wrap">
                             <p>Statut</p>
                             <h2>{{selectedCourse.status}}</h2>
                         </ion-label>

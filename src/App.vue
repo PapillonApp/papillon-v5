@@ -329,7 +329,7 @@
 <template>
   <ion-app>
     <ion-split-pane content-id="main-content">
-      <ion-menu type="push" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
+      <ion-menu type="overlay" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
         <ion-header collapse="fade">
           <ion-toolbar>
             <div class="userItem" :style="`background-image: url('${avatar}');`">

@@ -152,7 +152,7 @@
 
 			// fontSelect
 			// get --papillon-font from css
-			this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font'); 
+			this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font').replace(/"/g, ''); 
 
 			// get tweakProgressBar ref
 			let tweakProgressBar = this.$refs.tweakProgressBar;
@@ -242,22 +242,22 @@
 				</IonItem>
 
 				<IonItem>
-                    <span class="material-symbols-outlined mdls" slot="start">settings</span>
-                    <IonLabel class="ion-text-wrap">
-                        <h2>Activer l'animation de la progression d'un cours</h2>
-                        <p>(Expérimental) Indiquer la progression d'un cours en cours avec une animation</p>
-                    </IonLabel>
-                    <IonToggle slot="end" ref="tweakProgressBar" @ionChange="changeTick('tweakProgressBar')"></IonToggle>
-                </IonItem>
+					<span class="material-symbols-outlined mdls" slot="start">timelapse</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Activer l'animation de la progression d'un cours</h2>
+						<p>(Expérimental) Indiquer la progression d'un cours en cours avec une animation</p>
+					</IonLabel>
+					<IonToggle slot="end" ref="tweakProgressBar" @ionChange="changeTick('tweakProgressBar')"></IonToggle>
+				</IonItem>
 
-                <IonItem>
-                    <span class="material-symbols-outlined mdls" slot="start">settings</span>
-                    <IonLabel class="ion-text-wrap">
-                        <h2>Montrer la progression des cours passés</h2>
-                        <p>(Expérimental) Indiquer les cours passés avec un style différent</p>
-                    </IonLabel>
-                    <IonToggle slot="end" ref="tweakProgressBarShowPast" @ionChange="changeTick('tweakProgressBarShowPast')"></IonToggle>
-                </IonItem>
+				<IonItem>
+					<span class="material-symbols-outlined mdls" slot="start">fast_rewind</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Montrer la progression des cours passés</h2>
+						<p>(Expérimental) Indiquer les cours passés avec un style différent</p>
+					</IonLabel>
+					<IonToggle slot="end" ref="tweakProgressBarShowPast" @ionChange="changeTick('tweakProgressBarShowPast')"></IonToggle>
+				</IonItem>
 			</IonList>
 
 		</ion-content>

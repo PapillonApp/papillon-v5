@@ -13,6 +13,7 @@
 		IonButtons,
 		IonTitle,
 		IonContent,
+		alertController
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -30,11 +31,11 @@
 			IonLabel,
 			IonToggle,
 			IonTitle,
-			IonContent,
+			IonContent
 		},
 		data() {
 			return {
-				
+
 			}
 		},
 		methods: {
@@ -59,6 +60,71 @@
 					);
 				}
 			},
+			async disabledDaysChanges() {
+				try {
+					window.nav.$el.pop()
+					const disabledDays = JSON.parse(localStorage.getItem('disabledDays'));
+
+					const alert = await alertController.create({
+						header: 'Sélectionnez les jours désactivés',
+						buttons: ['OK'],
+						inputs: [
+							{
+								label: 'Lundi',
+								type: 'checkbox',
+								value: 1,
+								checked: disabledDays.includes(1),
+							},
+							{
+								label: 'Mardi',
+								type: 'checkbox',
+								value: 2,
+								checked: disabledDays.includes(2),
+							},
+							{
+								label: 'Mercredi',
+								type: 'checkbox',
+								value: 3,
+								checked: disabledDays.includes(3),
+							},
+							{
+								label: 'Jeudi',
+								type: 'checkbox',
+								value: 4,
+								checked: disabledDays.includes(4),
+							},
+							{
+								label: 'Vendredi',
+								type: 'checkbox',
+								value: 5,
+								checked: disabledDays.includes(5),
+							},
+							{
+								label: 'Samedi',
+								type: 'checkbox',
+								value: 6,
+								checked: disabledDays.includes(6),
+							},
+							{
+								label: 'Dimanche',
+								type: 'checkbox',
+								value: 0,
+								checked: disabledDays.includes(0),
+							},
+						],
+					});
+
+					await alert.present();
+					const data = await alert.onDidDismiss();
+
+					localStorage.setItem('disabledDays', JSON.stringify(data.data.values));
+				} catch (error) {
+					console.error(error);
+					displayToast.presentNativeToast(
+						'Une erreur est survenue'
+					);
+				}
+			}
 		},
 		mounted() {
 			// get tweakGrades20 ref
@@ -76,6 +142,10 @@
 			// get groupSubjects ref
 			let groupSubjects = this.$refs.groupSubjects;
 			groupSubjects.$el.checked = localStorage.getItem('groupSubjects') == 'true';
+
+			// get disableHolidays ref
+			let disableHolidays = this.$refs.disableHolidays;
+			disableHolidays.$el.checked = localStorage.getItem('disableHolidays') == 'true';
 		}
 	});
 </script>
@@ -104,10 +174,27 @@
 				</IonItem>
 
 				<IonItem>
+					<span class="material-symbols-outlined mdls" slot="start">holiday_village</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Vacances désactivées</h2>
+						<p>Désactiver les vacances et jours fériés du calendrier</p>
+					</IonLabel>
+					<IonToggle slot="end" ref="disableHolidays" @ionChange="changeTick('disableHolidays')"></IonToggle>
+				</IonItem>
+
+				<IonItem button @click="disabledDaysChanges()">
+					<span class="material-symbols-outlined mdls" slot="start">event_busy</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Contraintes journalières du calendrier</h2>
+						<p>Désactiver certains jours de la semaine du calendrier</p>
+					</IonLabel>
+				</IonItem>
+
+				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">join_inner</span>
 					<IonLabel class="ion-text-wrap">
 						<h2>Joindre les matières identiques</h2>
-						<p>Permet de joindre les matières identiques entre-elle</p>
+						<p>Permet de joindre les matières identiques entre-elles</p>
 					</IonLabel>
 					<IonToggle slot="end" ref="groupSubjects" @ionChange="changeGroupSubjects('groupSubjects')"></IonToggle>
 				</IonItem>
