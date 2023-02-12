@@ -51,7 +51,8 @@ begin
         skip_upload_changelogs: true,
         skip_upload_screenshots: true,
         skip_upload_apk: true,
-        json_key: ENV['PLAY_CREDENTIALS_JSON']
+        json_key: ENV['PLAY_CREDENTIALS_JSON'],
+        rollout: 1
       )
   end
 
