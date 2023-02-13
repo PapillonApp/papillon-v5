@@ -131,6 +131,21 @@
 				this.apiVersion = cacheApiVersion ?? 'Inconnue';
 			}, 
 			async share() {
+				let link = "";
+				try {
+					// Post logs to hastebin (https://logs.getpapillon.xyz)
+					let response = await fetch("https://logs.getpapillon.xyz/documents", {
+						method: "POST",
+						body: this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} - ${log.message}`; }).join("\n")
+					});
+					let result = await response.json();
+
+					// Get the link
+					link = `https://logs.getpapillon.xyz/${result.key}`;
+				} catch (error) {
+					console.error("[Log View]: " + error);
+				}
+
 				try {
 					await Share.share({
 						title: 'Exporter les logs',
@@ -156,9 +171,9 @@ Contient **${this.logs.length}** logs
 > **Établissement** : ${this.account.etab}
 > **URL** : ${this.account.etabUrl}
 > **CAS** : ${this.account.cas}\n
-` + "```yaml" + `
-${this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} - ${log.message}`; }).join("\n")}
-` + "```",
+
+**Voir les logs** : ${link}\n
+> NB. Les logs sont supprimés après 48h de nos serveurs.`,
 						dialogTitle: 'Partager les logs sur Github ou Discord à l\'équipe de développement'
 					});
 				}
