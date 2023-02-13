@@ -240,8 +240,6 @@
 
 				this.selectedGradeSet = true;
 				this.$refs.gradeModal.$el.present();
-
-				console.log(this.selectedGrade);
 			},
 		},
 		mounted() {

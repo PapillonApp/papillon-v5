@@ -489,8 +489,6 @@
                     if(notifTime.getTime() == time.getTime()) {
                         await LocalNotifications.cancel({ notifications: [notif] });
 
-                        console.log('notif cancelled');
-
                         // notify user
                         this.selectedCourse.notificationEnabled = false;
 
