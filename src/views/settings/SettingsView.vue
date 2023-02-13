@@ -272,7 +272,7 @@
                 <span class="material-symbols-outlined mdls" slot="start">security_update_good</span>
                 <IonLabel>
                     <p>Version de l'app</p>
-                    <h2>papillon {{ appVersion }}-{{ appPlatform }}</h2>
+                    <h2>{{ appVersion }}-{{ appPlatform }}</h2>
                 </IonLabel>
 
                 <IonChip v-if="appCanal == 'dev'" slot="end" color="danger">
