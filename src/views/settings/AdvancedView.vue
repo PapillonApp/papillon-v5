@@ -119,7 +119,7 @@
 				});
 			},
 			clearLogs() {
-				localStorage.removeItem("logs");
+				localStorage.setItem("logs", JSON.stringify([]));
 				this.logs = [];
 
 				displayToast.presentNativeToast(

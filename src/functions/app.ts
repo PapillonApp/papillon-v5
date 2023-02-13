@@ -162,6 +162,10 @@ function saveInLocalStorage(content :string, type: string){
 	localStorage.setItem('logs', JSON.stringify(logs));
 }
 
+if (localStorage.getItem('logs') === null) {
+	localStorage.setItem('logs', JSON.stringify([]));
+}
+
 const consoleLog = console.log;
 const consoleWarn = console.warn;
 const consoleError = console.error;
