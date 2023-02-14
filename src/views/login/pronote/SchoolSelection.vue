@@ -169,60 +169,58 @@
                 })
             },
             findEstablishments(lat, lon) {
-                $.ajax('https://www.index-education.com/swie/geoloc.php', {
-                    crossDomain: true,
-                    data: {
-                    data: JSON.stringify({
-                        "nomFonction": "geoLoc",
-                        "lat": lat,
-                        "long": lon,
-                    })
-                    },
-                    method: "POST"})
-                    .done((data) => {
-                        this.etabs = data;
+                axios.post('https://www.index-education.com/swie/geoloc.php', {
+                    nomFonction: "geoLoc",
+                    lat: lat,
+                    long: lon
+                }, {
+                    headers: { 'Content-Type': 'application/json' },
+                    crossDomain: true
+                })
+                .then((response) => {
+                    this.etabs = response.data;
+                    
+                    if(this.etabs.length == 0) {
+                        this.etabsEmpty = true;
+                    } else {
+                        this.etabsEmpty = false;
+                    }
 
-                        if(this.etabs.length == 0) {
-                            this.etabsEmpty = true;
-                        } else {
-                            this.etabsEmpty = false;
+                    if(JSON.stringify(response.data) == "{}") {
+                        this.locationFailed = true;
+                    } else {
+                        this.locationFailed = false;
+                    }
+                    
+                    // remove all etabs with no URL
+                    for (let i = 0; i < this.etabs.length; i++) {
+                        if (this.etabs[i].url == "" || this.etabs[i].url == null) {
+                            this.etabs.splice(i, 1);
                         }
+                    }
 
-                        if(JSON.stringify(data) == "{}") {
-                            this.locationFailed = true;
-                        } else {
-                            this.locationFailed = false;
-                        }
-                        
-                        // remove all etabs with no URL
-                        for (let i = 0; i < this.etabs.length; i++) {
-                            if (this.etabs[i].url == "" || this.etabs[i].url == null) {
-                                this.etabs.splice(i, 1);
-                            }
-                        }
+                    // decode etabName html entities
+                    for (let i = 0; i < this.etabs.length; i++) {
+                        this.etabs[i].nomEtab = this.decodeEntities(this.etabs[i].nomEtab);
+                    }
 
-                        // decode etabName html entities
-                        for (let i = 0; i < this.etabs.length; i++) {
-                            this.etabs[i].nomEtab = this.decodeEntities(this.etabs[i].nomEtab);
-                        }
-
+                    setTimeout(() => {
+                        this.isLoading = false;
+                    }, 200);
+                })
+                .catch((error) => {
+                    console.error("[Find Establishment]: " + error)
+                                            
+                    if(this.retries < 3) {
                         setTimeout(() => {
-                            this.isLoading = false;
-                        }, 200);
-                    })
-                    .fail((error) => {
-                        console.error("[Find Establishment]: " + error)
-                        
-                        if(this.retries < 3) {
-                            setTimeout(() => {
-                                this.findEstablishments(lat, lon);
-                            }, 1000);
-                            this.retries++;
-                        }
-                        else {
-                            displayToast.presentError(`Une erreur s'est produite pour obtenir les établissements à proximité.`, "danger", error.stack)
-                        }
-                    });
+                            this.findEstablishments(lat, lon);
+                        }, 1000);
+                        this.retries++;
+                    }
+                    else {
+                        displayToast.presentError(`Une erreur s'est produite pour obtenir les établissements à proximité.`, "danger", error.stack)
+                    }
+                });
             },
             clearEtabs() {
                 this.etabs = [];
