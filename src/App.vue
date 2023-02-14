@@ -331,7 +331,6 @@
     <ion-split-pane content-id="main-content">
       <ion-menu type="overlay" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
         <ion-header collapse="fade">
-          <ion-toolbar>
             <div class="userItem" :style="`background-image: url('${avatar}');`">
                 <div class="userItem_content">
                     <div class="avatar" v-if="dataLoading">
@@ -349,7 +348,6 @@
                     </div>
                 </div>
             </div>
-          </ion-toolbar>
         </ion-header>
         <ion-content mode="md">
           <ion-list id="inbox-list"> 
@@ -372,10 +370,13 @@
 </template>
 
 <style scoped>
+    ion-menu::part(container) {
+        border-radius: 0px 20px 20px 0px;
+    }
+
     .navLink {
         text-decoration: none;
     }
-
 
     .userItem {
         display: flex;
@@ -384,6 +385,10 @@
 
         background-size: cover;
         background-position: center;
+    }
+
+    .ios .userItem {
+        width: 100%;
     }
 
     .userItem * {
@@ -401,7 +406,9 @@
 
         background-color: #00000080;
         backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(20px);
+
+        padding-top: calc(env(safe-area-inset-top) + 10px) !important;
     }
 
     .userItem .avatar {
@@ -429,10 +436,6 @@
         white-space: nowrap;
     }
 
-    .ios .userItem h3 {
-        font-size: 18px;
-        margin-bottom: 0;
-    }
 
     .userItem p {
         font-size: 15px;
@@ -450,32 +453,23 @@
         font-family: var(--papillon-font);
     }
 
-
-    .md .userItem_content {
+    .userItem_content {
         flex-direction: column;
         align-items: flex-start;
         padding: 16px 16px;
         color: #fff;
     }
 
-    .md .userItem h3 {
+    .userItem h3 {
         font-size: 20px;
     }
 
-    .md .userItem p {
+    .userItem p {
         color: #ffffffc2;
     }
 
-    .md .userData {
+    .userData {
         width: calc(100%);
-    }
-
-    .ios .userItem {
-        background-image: none !important;
-    }
-
-    .ios .userItem_content {
-        background-color: #ffffff00;
     }
 
     ion-menu ion-content {
@@ -526,7 +520,7 @@
     ion-menu ion-item {
         --padding-start: 15px;
         --padding-end: 10px;
-        border-radius: 6px;
+        border-radius: 300px;
         isolation: isolate;
     }
 

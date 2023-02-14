@@ -89,6 +89,9 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-light-contrast-rgb: 255,255,255;
     --ion-color-light-shade: #1e2023;
     --ion-color-light-tint: #383a3e;
+  
+    --ion-text-color-transparent: #ffffff50;
+    --ion-text-color-transparent-rgb: 255,255,255,0.31;
   }
 
   /*
@@ -194,6 +197,9 @@ http://ionicframework.com/docs/theming/ */
 
     --ion-text-color: #181B1C;
     --ion-text-color-rgb: 24,27,28;
+
+    --ion-text-color-transparent: #00000050;
+    --ion-text-color-transparent-rgb: 0,0,0,0.31;
 
     --ion-color-step-50: #f3f4f4;
     --ion-color-step-100: #e8e8e8;
