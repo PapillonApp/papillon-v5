@@ -30,8 +30,12 @@ import './theme/fixes.css';
 import './theme/fonts.css';
 import './theme/theme.css';
 
+/*extensions*/
+import { Extension } from '@/functions/extensions/Extension';
+
 // TypeScript custom components
 require('@/functions/app.ts');
+
 
 export const app = createApp(MainApp)
 	.use(IonicVue)
@@ -39,7 +43,21 @@ export const app = createApp(MainApp)
 	.use(router);
 	
 router.isReady().then(() => {
-	app.mount('#app');
+	app.mount('#app')
+
+	// TODO systme de repo d'extensions
+	setTimeout(() => {
+
+	const textExt : Extension = new Extension();
+	console.log(textExt);
+
+	textExt.fromURL('https://raw.githubusercontent.com/andronedev/papillon_extension_demo/master/papillonManifest.json').then((ext) => {
+		console.log(ext);
+		ext.init();
+	});
+
+	}, 100);
+		
 });
 
 // Global vars in Vue
