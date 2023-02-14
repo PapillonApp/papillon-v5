@@ -131,7 +131,7 @@
             },
             getPostal(e) {
                 let postal = e.detail.value
-                
+
                 if (postal.length != 5) {
                     return;
                 }
@@ -170,6 +170,7 @@
                     this.findEstablishments(lat, lon)
                 })
                 .catch(error => {
+                    this.isLoading = false;
                     displayToast.presentError(`Une erreur s'est produite pour obtenir votre code postal.`, "danger", error.stack)
                 })
             },
