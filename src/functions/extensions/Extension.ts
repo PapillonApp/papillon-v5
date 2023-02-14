@@ -1,29 +1,5 @@
 // modules
 import axios from 'axios';
-import router from '../../router';
-// https://androne.dev/dlprofil/papillonManifest.json
-
-/*
-{
-	"name": "Télécharger votre photo de profil",
-	"author": "andronedev",
-	"authorDisplayName": "Nicolas Chandelier",
-	"description": "Permet de télécharger votre photo de profil (utile pour avoir sa photo facilement)",
-	"icon": "face_6",
-    "version": "1.0.0",
-	"javascript": [],
-	"css": [],
-	"tabs": [
-		{
-		"name": "Téléch. photo de profil",
-		"icon": "download",
-		"path": "dev.androne.dlprofil",
-		"html": "dlprofil.html"
-		}
-	]
-}
-*/
-
 
 interface Tab {
     name: string;
@@ -147,7 +123,7 @@ export class Extension {
 
     }
 
-    async setupRoutes(): Promise < void > {
+    async activate(): Promise < void > {
         // add it to localstorage
         const extensions = JSON.parse(localStorage.getItem('extensions') || '[]');
         if (!extensions.find((extension : Extension) => extension.rootUrl === this.rootUrl)) {
@@ -159,9 +135,19 @@ export class Extension {
 
     }
 
+    async deactivate(): Promise < void > {
+        // remove it from localstorage if it exists
+        const extensions = JSON.parse(localStorage.getItem('extensions') || '[]');
+        const index = extensions.findIndex((extension : Extension) => extension.rootUrl === this.rootUrl);
+        if (index !== -1) {
+            extensions.splice(index, 1);
+            localStorage.setItem('extensions', JSON.stringify(extensions));
+            window.location.reload();
+        }
+    }
 
     async init(): Promise < void > {
-        await this.setupRoutes();
+        await this.activate();
         await this.setupGlobalJSandCSS();
 
     }
