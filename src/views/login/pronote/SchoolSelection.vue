@@ -211,7 +211,7 @@
                         }, 200);
                     })
                     .fail((error) => {
-                        console.error(error)
+                        console.error("[Find Establishment]: " + error)
                         
                         if(this.retries < 3) {
                             setTimeout(() => {

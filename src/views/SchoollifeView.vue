@@ -40,7 +40,7 @@
 						this.absError = false;
 					})
 					.catch((err) => {
-						console.error(err);
+						console.error("[School Life View]: Get absences - " + err);
 						this.absError = true;
 					});
 
@@ -48,7 +48,7 @@
 						this.punishments = res;
 					})
 					.catch((err) => {
-						console.error(err);
+						console.error("[School Life View]: Get punishments - " + err);
 						this.punishmentsError = true;
 					});
 
@@ -56,12 +56,12 @@
 						this.delays = res;
 					})
 					.catch((err) => {
-						console.error(err);
+						console.error("[School Life View]: Get delays - " + err);
 						this.delaysError = true;
 					});
 				}
 				catch (err) {
-					console.error(err);
+					console.error("[School Life View]: " + err);
 					this.punishmentsError = true;
 					this.absError = true;
 					this.delaysError = true;

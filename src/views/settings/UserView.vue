@@ -73,7 +73,7 @@
                     }
                 }
                 catch (error) {
-                    console.error(error);
+                    console.error("[Change Avatar]:" + error);
                     displayToast.presentNativeToast(
                         'Erreur lors du changement de photo de profil.'
                     );
