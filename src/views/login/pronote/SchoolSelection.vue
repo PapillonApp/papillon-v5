@@ -123,7 +123,7 @@
 
                 const actionSheet = await actionSheetController.create({
                     header: 'Choisissez votre méthode de connexion',
-                    subHeader: 'Plusieurs méthode de connexion sont disponible pour votre établissement. Choisissez celle que vous souhaitez utiliser.',
+                    subHeader: 'Plusieurs méthodes de connexion sont disponible pour votre établissement. Choisissez celle que vous souhaitez utiliser.',
                     buttons: options
                 });
 
