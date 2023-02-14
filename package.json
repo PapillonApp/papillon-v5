@@ -41,7 +41,6 @@
     "capacitor-notification-badge": "^1.0.6",
     "core-js": "^3.6.5",
     "ionicons": "^6.0.3",
-    "jquery": "^3.6.2",
     "lucide-vue-next": "^0.104.0",
     "pica": "^9.0.1",
     "sharp": "^0.31.3",
