@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
+// IonicModule is required for the tabs component
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { defineComponent } from 'vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -62,8 +65,31 @@ const loginRoutes = [
   }
 ]
 
+const extensionRoutes : Array<RouteRecordRaw> = []
+
+const extensions = JSON.parse(localStorage.getItem('extensions') || '[]')
+extensions.forEach((extension: any) => {
+  console.log("Chargement de l'extension dans le router: " + extension.name)
+  extension.tabs.forEach((tab: any) => {
+    console.log("Chargement de l'onglet " + tab.name + " dans le router")
+    // create component vue for each tab
+
+
+    extensionRoutes.push({ // replace special characters in path
+      path: "/" + extension.name.replace(/[^a-zA-Z0-9]/g, "") + "/" + tab.path.replace(/[^a-zA-Z0-9]/g, ""),
+      name: tab.name,
+      component: () => import("../views/ExtensionView.vue")
+    })
+  })
+})
+
+
 // push for each login route
 loginRoutes.forEach(route => routes.push(route))
+
+// push for each extension route
+extensionRoutes.forEach(route => routes.push(route))
+
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
