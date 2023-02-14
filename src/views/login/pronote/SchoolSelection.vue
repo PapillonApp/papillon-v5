@@ -176,19 +176,24 @@
                 })
             },
             findEstablishments(lat, lon) {
-                axios.post('https://cors.api.getpapillon.xyz/https://www.index-education.com/swie/geoloc.php', {
-                    nomFonction: "geoLoc",
-                    lat: lat,
-                    long: lon
-                }, {
-                    headers: { 
-                        'Content-Type': 'application/json',
+                fetch('https://cors.api.getpapillon.xyz/https://www.index-education.com/swie/geoloc.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
                         'Access-Control-Allow-Origin': '*',
                         'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
                         'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-                        'Access-Control-Allow-Credentials': 'true'
+                        'Access-Control-Allow-Credentials': 'true',
+                        'X-Requested-With': 'XMLHttpRequest',
                     },
-                    crossDomain: true
+                    crossDomain: true,
+                    body: {
+                        data: JSON.stringify({
+                            "nomFonction": "geoLoc",
+                            "lat": lat,
+                            "long": lon,
+                        })
+                    }
                 })
                 .then((response) => {
                     this.etabs = response.data;
@@ -231,6 +236,8 @@
                         this.retries++;
                     }
                     else {
+                        this.isLoading = false;
+                        this.locationFailed = true;
                         displayToast.presentError(`Une erreur s'est produite pour obtenir les établissements à proximité.`, "danger", error.stack)
                     }
                 });
