@@ -132,7 +132,7 @@
             getPostal(e) {
                 let postal = e.detail.value
 
-                if (postal.length != 5) {
+                if (postal.trim().length != 5) {
                     return;
                 }
 
@@ -148,7 +148,7 @@
                 this.etabs = [];
                 this.etabsEmpty = false;
                 this.locationFailed = false;
-                this.terms = e.detail.value;
+                this.terms = postal;
                 this.isLoading = true;
                 
                 axios.get('https://cors.api.getpapillon.xyz/https://positionstack.com/geo_api.php?query=france+' + postal, {
@@ -171,6 +171,7 @@
                 })
                 .catch(error => {
                     this.isLoading = false;
+                    this.locationFailed = true;
                     displayToast.presentError(`Une erreur s'est produite pour obtenir votre code postal.`, "danger", error.stack)
                 })
             },
@@ -502,7 +503,7 @@
             </ion-buttons>
         </ion-toolbar>
         <ion-toolbar>
-            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Chercher avec un code postal..." type="number" @ionChange="getPostal($event)" @ionClear="clearEtabs()" v-bind="terms" maxlength="5"></ion-searchbar>
+            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Chercher avec un code postal..." type="number" @ionChange="getPostal($event)" @ionClear="clearEtabs()" maxlength="5"></ion-searchbar>
         </ion-toolbar>
     </ion-header>
       
@@ -535,7 +536,7 @@
                 <ion-icon class="icon" slot="start" :ios="navigateOutline" :md="navigateSharp"></ion-icon>
                 <ion-label>
                     <h2>Emplacement introuvable</h2>
-                    <p>Impossible de trouver des établissements à "{{terms}}"</p>
+                    <p>Impossible de trouver des établissements à "{{ terms }}"</p>
                 </ion-label>
             </ion-item>
         </ion-list>
