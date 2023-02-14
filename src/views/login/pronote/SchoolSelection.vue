@@ -176,12 +176,18 @@
                 })
             },
             findEstablishments(lat, lon) {
-                axios.post('https://www.index-education.com/swie/geoloc.php', {
+                axios.post('https://cors.api.getpapillon.xyz/https://www.index-education.com/swie/geoloc.php', {
                     nomFonction: "geoLoc",
                     lat: lat,
                     long: lon
                 }, {
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+                        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+                        'Access-Control-Allow-Credentials': 'true'
+                    },
                     crossDomain: true
                 })
                 .then((response) => {
