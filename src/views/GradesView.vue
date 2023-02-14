@@ -559,7 +559,7 @@
 							<span class="material-symbols-outlined mdls" slot="start">join</span>
 							<ion-label class="ion-text-wrap">
 								<p>Combinaison</p>
-								<h3>Cette matière est un regroupement de plusieurs matière.</h3>
+								<h3>Cette matière est un regroupement de plusieurs matières.</h3>
 							</ion-label>
 
 							<ion-button class="itemBtn" fill="clear" slot="end"
