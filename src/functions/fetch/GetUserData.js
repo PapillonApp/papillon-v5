@@ -1,6 +1,9 @@
 // modules
 import axios from 'axios';
 
+const FastAverageColor = require('fast-average-color').FastAverageColor;
+const fac = new FastAverageColor();
+
 // vars
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
@@ -69,12 +72,23 @@ async function getPronoteUser(force) {
                         reader.readAsDataURL(blob);
 
                         // read blob
-                        reader.onloadend = function () {
+                        reader.onloadend = async function () {
                             // get base64
                             let base64 = reader.result;
 
                             // save in cache
                             let avatarURL = `${base64}`;
+
+                            // get average color
+                            fac.getColorAsync(avatarURL)
+                                .then(color => {
+                                    localStorage.setItem('averageColor', JSON.stringify(color));
+                                    
+                                    document.dispatchEvent(new CustomEvent('averageColorUpdated'));
+                                })
+                                .catch(e => {
+                                    console.log(e);
+                                });
 
                             // save in cache
                             localStorage.setItem('avatarCache', avatarURL);

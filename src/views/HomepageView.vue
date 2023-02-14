@@ -72,7 +72,10 @@
 				blockChangeDone: false,
 				editMode: false,
 				noCoursesEmoji: this.randomEmoji(),
-				noCoursesMsg: this.randomMsg()
+				noCoursesMsg: this.randomMsg(),
+				userData: [],
+				userName: "",
+				avatar: "",
 			}
 		},
 		methods: {
@@ -356,13 +359,18 @@
 			});
 
 			this.getHomeworks();
+
+			// get userData
+			this.userData = JSON.parse(localStorage.userData);
+
+			this.userName = JSON.parse(localStorage.userData).student.name.split(" ")[JSON.parse(localStorage.userData).student.name.split(" ").length - 1]
 		}
 	});
 </script>
 
 <template>
 	<ion-page ref="page">
-		<IonHeader class="AppHeader" translucent collapse="fade">
+		<IonHeader class="AppHeader" collapse="fade">
 			<IonToolbar>
 
 				<ion-buttons slot="start">
@@ -374,12 +382,15 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-
-			<PapillonIonIcon name="heart"></PapillonIonIcon>
-
 			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
+
+			<IonHeader collapse="condense">
+				<IonToolbar>
+					<ion-title size="large">Bonjour, {{ userName }} !</ion-title>
+				</IonToolbar>
+			</IonHeader>
 
 			<div id="components" ref="components">
 				<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
@@ -645,5 +656,23 @@
 
 	.hw_group ion-chip span {
 		margin-right: 5px;
+	}
+
+	.welcome {
+		margin-top: calc(-200px - env(safe-area-inset-top));
+
+		background-size: cover;
+		background-position: center;
+	}
+
+	.welcome_content {
+		background-color: #00000020;
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+
+		padding: 8px 20px;
+		padding-top: calc(200px + env(safe-area-inset-top));
+
+		color: #fff;
 	}
 </style>

@@ -1,8 +1,12 @@
 <script lang="ts">
     import { IonApp, IonContent, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText } from '@ionic/vue';
 
+    import Values from 'values.js'
+
     import { defineComponent, ref } from 'vue';
     import { useRoute } from 'vue-router';
+
+    const subjectColor = require('@/functions/utils/subjectColor.js');
 
     import { globeOutline } from 'ionicons/icons';
     import { AndroidShortcuts } from 'capacitor-android-shortcuts';
@@ -159,6 +163,25 @@
                 }
             })
         },
+        RGBToHSL(r: number, g: number, b: number) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+            const l = Math.max(r, g, b);
+            const s = l - Math.min(r, g, b);
+            const h = s
+                ? l === r
+                ? (g - b) / s
+                : l === g
+                ? 2 + (b - r) / s
+                : 4 + (r - g) / s
+                : 0;
+            return [
+                60 * h < 0 ? 60 * h + 360 : 60 * h,
+                100 * (s ? (l <= 0.5 ? s / (2 * l - s) : s / (2 - (2 * l - s))) : 0),
+                (100 * (2 * l - s)) / 2,
+            ];
+        },
         async presentToast(header: string, msg: string, color: string, icon: any) {
             const toast = await toastController.create({
                 header: header,
@@ -227,7 +250,24 @@
                 .addAnimation(leavingAnimation);
 
             return animation;
-        }
+        },
+        setAverageColor(averageColorCustom: any) {
+            document.body.style.setProperty('--ion-color-primary', averageColorCustom.hex);
+            document.body.style.setProperty('--ion-color-primary-rgb', `${averageColorCustom.value[0]}, ${averageColorCustom.value[1]}, ${averageColorCustom.value[2]}`);
+            document.body.style.setProperty('--ion-color-primary-shade', averageColorCustom.hex);
+            document.body.style.setProperty('--ion-color-primary-tint', averageColorCustom.hex);
+        },
+        applyAverageColor() {
+            let averageColor = JSON.parse(localStorage.getItem('averageColor') as any);
+            let averageColorCustom = JSON.parse(localStorage.getItem('averageColorCustom') as any);
+
+            if(averageColorCustom !== null) {
+                this.setAverageColor(averageColorCustom)
+            }
+            else if(averageColor !== null) {
+                this.setAverageColor(averageColor)
+            }
+        },
     },
     mounted() {
         // hide splash screen when dom is loaded
@@ -311,17 +351,17 @@
         if(localStorage.getItem('customizations')) {
             let customizations = JSON.parse(localStorage.getItem('customizations') as string);
 
-            if(customizations.mainColor) {
-                document.body.style.setProperty('--ion-color-primary', customizations.mainColor.hex);
-                document.body.style.setProperty('--ion-color-primary-rgb', customizations.mainColor.rgb);
-                document.body.style.setProperty('--ion-color-primary-shade', customizations.mainColor.hex);
-                document.body.style.setProperty('--ion-color-primary-tint', customizations.mainColor.hex);
-            }
-
             if(customizations.font) {
                 document.body.style.setProperty('--papillon-font', customizations.font);
             }
         }
+
+        // apply average color
+        this.applyAverageColor()
+
+        document.addEventListener('averageColorUpdated', () => {
+            this.applyAverageColor()
+        })
     }
   });
 </script>
@@ -331,7 +371,6 @@
     <ion-split-pane content-id="main-content">
       <ion-menu type="overlay" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
         <ion-header collapse="fade">
-          <ion-toolbar>
             <div class="userItem" :style="`background-image: url('${avatar}');`">
                 <div class="userItem_content">
                     <div class="avatar" v-if="dataLoading">
@@ -349,7 +388,6 @@
                     </div>
                 </div>
             </div>
-          </ion-toolbar>
         </ion-header>
         <ion-content mode="md">
           <ion-list id="inbox-list"> 
@@ -372,10 +410,21 @@
 </template>
 
 <style scoped>
+    ion-menu::part(container) {
+        border-radius: 0px 20px 20px 0px;
+    }
+
+    ion-menu ion-content::part(scroll) {
+        background: rgba(var(--ion-color-primary-rgb), 0.08);
+    }
+
+    ion-menu ion-list {
+        background: none;
+    }
+
     .navLink {
         text-decoration: none;
     }
-
 
     .userItem {
         display: flex;
@@ -384,6 +433,10 @@
 
         background-size: cover;
         background-position: center;
+    }
+
+    .ios .userItem {
+        width: 100%;
     }
 
     .userItem * {
@@ -401,7 +454,9 @@
 
         background-color: #00000080;
         backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(20px);
+
+        padding-top: calc(env(safe-area-inset-top) + 10px) !important;
     }
 
     .userItem .avatar {
@@ -429,10 +484,6 @@
         white-space: nowrap;
     }
 
-    .ios .userItem h3 {
-        font-size: 18px;
-        margin-bottom: 0;
-    }
 
     .userItem p {
         font-size: 15px;
@@ -450,32 +501,23 @@
         font-family: var(--papillon-font);
     }
 
-
-    .md .userItem_content {
+    .userItem_content {
         flex-direction: column;
         align-items: flex-start;
         padding: 16px 16px;
         color: #fff;
     }
 
-    .md .userItem h3 {
+    .userItem h3 {
         font-size: 20px;
     }
 
-    .md .userItem p {
+    .userItem p {
         color: #ffffffc2;
     }
 
-    .md .userData {
+    .userData {
         width: calc(100%);
-    }
-
-    .ios .userItem {
-        background-image: none !important;
-    }
-
-    .ios .userItem_content {
-        background-color: #ffffff00;
     }
 
     ion-menu ion-content {
@@ -526,13 +568,14 @@
     ion-menu ion-item {
         --padding-start: 15px;
         --padding-end: 10px;
-        border-radius: 6px;
+        border-radius: 300px;
         isolation: isolate;
     }
 
     ion-menu ion-item {
         color: var(--ion-color-step-500);
         margin-bottom: 2px;
+        --background: transparent;
     }
 
     ion-menu .router-link-active ion-item {
