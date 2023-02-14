@@ -172,6 +172,7 @@
                 .catch(error => {
                     this.isLoading = false;
                     this.locationFailed = true;
+                    console.error("[Get Postal Code]: " + error)
                     displayToast.presentError(`Une erreur s'est produite pour obtenir votre code postal.`, "danger", error.stack)
                 })
             },
