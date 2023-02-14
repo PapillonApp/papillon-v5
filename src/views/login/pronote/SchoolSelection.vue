@@ -131,6 +131,11 @@
             },
             getPostal(e) {
                 let postal = e.detail.value
+                
+                if (postal.length != 5) {
+                    return;
+                }
+
                 postal = postal.normalize("NFD").replace(/\p{Diacritic}/gu, "");
 
                 if(postal.trim() == "") {
@@ -496,7 +501,7 @@
             </ion-buttons>
         </ion-toolbar>
         <ion-toolbar>
-            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Chercher avec un code postal..." type="number" :debounce="1000" @ionChange="getPostal($event)" @ionClear="clearEtabs()" v-bind="terms"></ion-searchbar>
+            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Chercher avec un code postal..." type="number" @ionChange="getPostal($event)" @ionClear="clearEtabs()" v-bind="terms" maxlength="5"></ion-searchbar>
         </ion-toolbar>
     </ion-header>
       
