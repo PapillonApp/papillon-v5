@@ -1,11 +1,14 @@
 <script>
     import { defineComponent } from 'vue';
     import {
-        IonButton
+        IonButton,
+        alertController
     } from '@ionic/vue';
 
     import { version } from '/package'
     import { Capacitor } from '@capacitor/core';
+
+    import { Browser } from '@capacitor/browser';
 
     import { StatusBar, Style } from '@capacitor/status-bar';
     import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
@@ -51,6 +54,32 @@
                         }
                     }
                 }, 200);
+            },
+            async openURL(url) {
+                await Browser.open({
+                    url: url
+                });
+            },
+            async displayServiceMsg() {
+                const alert = await alertController.create({
+                    header: 'Vous ne voyez pas votre service scolaire',
+                    message: 'Papillon fonctionne grâce à une équipe de développeurs volontaires. <br/><br/> Si vous pensez pouvoir ajouter un service à Papillon, n\'hésitez pas à contribuer.',
+                    mode: 'md',
+                    buttons: [
+                        {
+                            text: 'Contribuer',
+                            handler: () => {
+                                this.openURL('https://github.com/PapillonApp/Papillon');
+                            },
+                            cssClass: 'btn_secondary',
+                        },
+                        {
+                            text: 'Je comprends',
+                        }
+                    ]
+                });
+
+                await alert.present();
             }
         },
         data() {
@@ -108,20 +137,30 @@
                     d="M308.474 61.5914C308.027 61.5914 307.654 61.442 307.356 61.1434C307.058 60.8448 306.909 60.4715 306.909 60.0236V20.3811C306.909 19.9332 307.058 19.5599 307.356 19.2613C307.654 18.9627 308.027 18.8134 308.474 18.8134H314.285C314.732 18.8134 315.105 18.9627 315.403 19.2613C315.701 19.5599 315.85 19.9332 315.85 20.3811V23.89C317.24 21.9987 318.879 20.5305 320.767 19.4853C322.704 18.3903 324.815 17.8428 327.099 17.8428C329.931 17.8428 332.464 18.5147 334.699 19.8585C336.984 21.2024 338.772 23.0688 340.063 25.4578C341.354 27.8468 342 30.5344 342 33.5206V60.0236C342 60.4715 341.851 60.8448 341.553 61.1434C341.255 61.442 340.882 61.5914 340.435 61.5914H334.624C334.177 61.5914 333.805 61.442 333.507 61.1434C333.209 60.8448 333.06 60.4715 333.06 60.0236V34.6405C333.06 32.0026 332.389 29.9869 331.048 28.5933C329.707 27.15 327.82 26.4283 325.386 26.4283C322.456 26.4283 320.121 27.3988 318.383 29.3399C316.694 31.2312 315.85 33.8441 315.85 37.1788V60.0236C315.85 60.4715 315.701 60.8448 315.403 61.1434C315.105 61.442 314.732 61.5914 314.285 61.5914H308.474Z"
                     fill="white" />
             </svg>
+            <p class="description">Bienvenue sur Papillon, votre nouvelle app scolaire que vous risquez d'adorer !</p>
 
-            <h1 class="welcomeTitle">Bienvenue dans la nouvelle ère de la vie scolaire numérique</h1>
-            <p class="welcomeText">Papillon, c’est votre nouveau portail vers votre scolarité, avec plein de fonctionnalités que vous allez forcément adorer.</p>
+            <div class="buttons">
+                <ion-nav-link router-direction="forward" :component="LoginSelect">
+                    <ion-button mode="md" color="dark" fill="solid" @click="goNormalStatusBar">
+                        Se connecter avec
+                        
+                        <div class="logo_services" slot="end">
+                            <img alt="Logo" src="/assets/welcome/pronote_logo.png" />
+                            <img alt="Logo" src="/assets/welcome/ecoledirecte_logo.png" />
+                            <img alt="Logo" src="/assets/welcome/apschool_logo.png" />
+                            <img alt="Logo" src="/assets/welcome/lvs_logo.png" />
+                        </div>
+                    </ion-button>
+                </ion-nav-link>
 
-            <ion-nav-link router-direction="forward" :component="LoginSelect">
-                <ion-button mode="md" color="dark" fill="solid" @click="goNormalStatusBar">
-                    Commencer
-                    <span class="material-symbols-outlined mdls" slot="end">arrow_forward</span>
+                <ion-button class="no_service" mode="md" color="dark" fill="clear" @click="displayServiceMsg">
+                    Je ne vois pas mon service scolaire
                 </ion-button>
-            </ion-nav-link>
+            </div>
 
-            <small class="version">
-                <span>version {{ appVersion }}-{{ appPlatform }}</span><br />
-            </small>
+            <div class="version">
+                <p class="version_text"><span>version {{ appVersion }}-{{ appPlatform }}</span></p>
+            </div>
         </div>
       </ion-content>
 </template>
@@ -136,6 +175,11 @@
         padding-top: calc(30px + env(safe-area-inset-top)) !important;
 
         background: linear-gradient(180deg, #12D4A6 2.24%, #186F5A 91.53%);
+    
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     .content * {
@@ -150,32 +194,32 @@
         fill: #fff;
         height: 36px;
         width: auto;
+        margin-top: -10vh;
     }
 
-    .welcomeTitle {
-        font-size: 2rem;
-        line-height: 1.9rem;
-        letter-spacing: -0.02em;
-        font-weight: 600 !important;
-        text-align: left;
-        margin-top: 20px;
+    .description {
+        max-width: 80vw;
+        text-align: center;
+
+        font-family: var(--papillon-font);
+
+        font-size: 17px;
+        line-height: 17px;
+        font-weight: 500;
+
+        margin: 0;
+        margin-top: 10px;
+
+        opacity: 0.7;
     }
 
-    .welcomeText {
-        font-size: 1.1rem;
-        line-height: 1.2rem;
-        letter-spacing: -0.01em;
-        text-align: left;
-        margin-top: 15px;
-        font-weight: 500 !important;
-        font-family: var(--papillon-font), sans-serif;
+    .buttons {
+        margin-top: 30px;
+        width: 90vw;
     }
 
     ion-button {
-        margin-top: 10px;
-        position: absolute;
-        bottom: calc(25px + env(safe-area-inset-bottom));
-        right: 30px;
+        width: 100%;
         --border-radius: 8px !important;
     }
 
@@ -184,13 +228,39 @@
         color: #186F5A !important;
     }
 
+    .logo_services {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 5px;
+        margin-left: 10px;
+    }
+
+    .logo_services img {
+        height: 24px;
+        width: auto;
+    }
+
+    .no_service {
+        font-size: 13px;
+        font-weight: 500;
+        opacity: 0.7;
+    }
+
     .version {
         position: absolute;
         bottom: calc(28px + env(safe-area-inset-bottom));
         left: 30px;
+        width: calc(100% - 30px * 2);
+    }
+
+    .version_text {
         font-size: 11px;
-        font-weight: 500;
+        font-weight: 400;
         opacity: 0.3;
-        width: calc(100% - 180px - 30px * 2);
+        width: 100%;
+        text-align: center;
+        margin: 0;
     }
 </style>
