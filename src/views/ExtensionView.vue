@@ -9,6 +9,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/vue";
+import { app } from "@/main";
 
 export default defineComponent({
   name: "ExtensionView",
@@ -27,10 +28,9 @@ export default defineComponent({
     };
   },
   setup() {
-    const extensions = JSON.parse(localStorage.getItem("extensions") || "[]"); // [{"name":"Démo","author":"andronedev","authorDisplayName":"Papillon","description":"Test Plugin Papillon","icon":"more","version":"1.0.0","javascript":["test.js"],"css":[],"tabs":[{"name":"Notifications","icon":"notifications","path":"dev.androne.notifications","html":"settings.html"}],"manifestUrl":"","rootUrl":"https://raw.githubusercontent.com/andronedev/papillon_extension_demo/master/"}]
-    //http://localhost:8080/D%C3%A9mo/dev.androne.notifications
-    // name = Démo
-    // tab path = dev.androne.notifications
+    
+    const extensions = app.config.globalProperties.$localRepo.getExtensions();
+
     console.log(window.location.pathname.split("/"));
     const extension = extensions.find(
       (extension) =>
@@ -61,9 +61,7 @@ export default defineComponent({
   },
   watch: {
     html() {
-      console.log("html chargé");
       this.$nextTick(() => {
-        console.log("nextTick");
         this.$refs.html.querySelectorAll("script").forEach((oldScript) => {
           const newScript = document.createElement("script");
           Array.from(oldScript.attributes).forEach((attr) =>
