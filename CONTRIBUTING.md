@@ -24,4 +24,4 @@ Si vous avez des compétences techniques, vous pouvez contribuer en soumettant d
 Nous examinerons votre pull request dès que possible et nous vous fournirons des commentaires pour vous aider à l'améliorer si nécessaire.
 
 ## Licence
-Le projet Papillon est sous licence MIT. En contribuant à ce projet, vous acceptez que vos contributions soient sous licence MIT également.
+Le projet Papillon est sous licence GPL-3.0. En contribuant à ce projet, vous acceptez que vos contributions soient sous licence GPL-3.0 également.
