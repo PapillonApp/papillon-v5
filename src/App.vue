@@ -232,7 +232,7 @@
                 message: "Exemple de notification",
                 duration: 200000,
                 position: "top",
-                color: "success",
+                color: "light",
             });
 
             await toast.present();
