@@ -137,7 +137,7 @@
         }
 
     
-        const extensions = app.config.globalProperties.$LocalRepo.getExtensions();
+        const extensions = app.config.globalProperties.$localRepo.getExtensions();
         extensions.forEach((extension: any) => {
             extension.tabs.forEach((tab: any) => {
                 appPages.push({
