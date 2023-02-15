@@ -265,6 +265,13 @@
                     <h2>Contribuer au projet Papillon</h2>
                 </IonLabel>
             </IonItem>
+            <IonItem button @click="openURL('https://getpapillon.xyz/privacy.pdf')">
+                <span class="material-symbols-outlined mdls" slot="start">shield</span>
+                <IonLabel>
+                    <p>Document officiel</p>
+                    <h2>Politique de confidentialité</h2>
+                </IonLabel>
+            </IonItem>
         </IonList>
 
         <IonList :inset="true" lines="inset">
