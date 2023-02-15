@@ -81,7 +81,7 @@
 					<PapillonBackButton></PapillonBackButton>
 				</ion-buttons>
 
-				<ion-title mode="md">Extensions</ion-title>
+				<ion-title mode="md">Mes Extensions</ion-title>
 
 			
 
@@ -102,14 +102,18 @@
                         <p>{{ extension.description }}</p>
                     </ion-label>
 
-                    <ion-button fill="outline" slot="end" @click="localRepo.uninstallExtension(extension.rootUrl)">Supprimer</ion-button>
+                    <ion-button
+                    color="danger"
+                    fill="outline"
+                    slot="end" 
+                    @click="localRepo.uninstallExtension(extension.rootUrl)">Supprimer</ion-button>
 
                 </ion-item>
             </ion-list>
 
             <ion-fab vertical="bottom" horizontal="end" slot="fixed">
                 <ion-fab-button @click="installExtension()">
-                    <ion-icon :icon="addOutline"></ion-icon>
+                    <span class="material-symbols-outlined">add</span>
                 </ion-fab-button>
             </ion-fab>
 
