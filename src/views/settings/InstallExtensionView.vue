@@ -87,14 +87,14 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-            <ion-list>
-                <ion-item>
-                    <ion-label position="stacked">URL de l'extension</ion-label>
+            <ion-list class="addExtension">
+                <ion-item mode="md" fill="solid" class="input">
+                    <ion-label position="floating">URL de l'extension</ion-label>
                     <ion-input v-model="url"></ion-input>
                 </ion-item>
-            </ion-list>
-            <ion-button @click="installExtensionFromUrl(url)">Installer</ion-button>
 
+				<ion-button mode="md" expand="block" @click="installExtensionFromUrl(url)">Installer</ion-button>
+            </ion-list>
 		</ion-content>
 	</ion-page>
 </template>
@@ -102,5 +102,19 @@
 <style scoped>
 	.md .paddingFixMd {
 		padding-left: 15px;
+	}
+
+	.addExtension {
+		margin: 10px 20px;
+	}
+
+	.addExtension input::part(native) {
+		--border-top-left-radius: 8px;
+		--border-top-right-radius: 8px;
+	}
+
+	.addExtension ion-button {
+		--border-radius: 8px;
+		margin-top: 10px;
 	}
 </style>
