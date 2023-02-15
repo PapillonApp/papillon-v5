@@ -81,6 +81,13 @@
                     }, 300);
                     this.ents = response.data.ent_list;
                 })
+                .catch(error => {
+                    setTimeout(() => {
+                        loading.dismiss();
+                    }, 300);
+                    console.error(error)
+                    displayToast.presentError("Impossible de récupérer les ENTS. La connexion risque de ne pas fonctionner.", "danger", error)
+                })
             },    
             async GetLocation() {
                 const coordinates = await Geolocation.getCurrentPosition();
@@ -585,7 +592,7 @@
                 </ion-label>
             </ion-list-header>
 
-            <ion-item button disabled @click="changeApi()">
+            <ion-item button @click="changeApi()">
                 <ion-icon class="icon" slot="start" :ios="serverOutline" :md="serverSharp"></ion-icon>
                 <ion-label>
                     <h2>Changer d'API</h2>
