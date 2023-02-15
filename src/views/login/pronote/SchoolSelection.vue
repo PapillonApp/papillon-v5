@@ -629,12 +629,12 @@
 
                     <ion-list class="loginInput">
                         <ion-item mode="md" fill="solid" class="userIn">
-                            <ion-label>Identifiant</ion-label>
+                            <ion-label position="floating">Identifiant</ion-label>
                             <ion-input ref="user" type="text" placeholder="j.dupont6" autocomplete="username"></ion-input>
                         </ion-item>
 
                         <ion-item mode="md" fill="solid" class="passIn">
-                            <ion-label>Mot de passe</ion-label>
+                            <ion-label position="floating">Mot de passe</ion-label>
                             <ion-input ref="pass" type="password" placeholder="*********"></ion-input>
                         </ion-item>
 
