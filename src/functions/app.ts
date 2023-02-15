@@ -15,9 +15,26 @@ function checkDarkMode() {
 	darkForced = localStorage.getItem('darkForced') === 'true';
 }
 
+// hsl to hex
+function hslToHex(h: number, s: number, l: number) {
+	s /= 100;
+	l /= 100;
+	const a = s * Math.min(l, 1 - l);
+	const f = (n: number) => {
+		const k = (n + h / 30) % 12;
+		const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+		return Math.round(255 * color).toString(16).padStart(2, '0');
+	};
+	return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+let hue = getComputedStyle(document.body).getPropertyValue('--ion-color-primary-hue');
+
 function setStatusBarStyle() {
+	const DarkColor = hslToHex(parseInt(hue), 10, 12);
+
 	if (isDarkMode || darkForced) {
-		StatusBar.setBackgroundColor({color: "#1C1B1F"});
+		StatusBar.setBackgroundColor({color: DarkColor});
 		StatusBar.setStyle({style: Style.Dark})
 	}
 	else {
@@ -50,9 +67,11 @@ function setStyle() {
 import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
 
 function setNavigationBarStyle() {
+	const DarkColor = hslToHex(parseInt(hue), 5, 7);
+
 	if (isDarkMode || darkForced) {
 		NavigationBar.setColor({
-				color: "#1C1B1F",
+				color: DarkColor,
 				darkButtons: false
 		});
 	}
@@ -65,6 +84,8 @@ function setNavigationBarStyle() {
 }
 
 function updateStatus() {
+	hue = getComputedStyle(document.body).getPropertyValue('--ion-color-primary-hue');
+
 	if (Capacitor.getPlatform() !== 'web') {
 		checkDarkMode();
 		setStatusBarStyle();
@@ -76,10 +97,10 @@ function updateStatus() {
 
 // Constantly check for dark mode
 updateStatus();
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateStatus);
 
 // constantly set style
 setInterval(setStyle, 100);
+setInterval(updateStatus, 100);
 
 import { AndroidShortcuts } from 'capacitor-android-shortcuts';
 import axios from 'axios';

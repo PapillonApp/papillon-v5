@@ -386,12 +386,6 @@
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
 
-			<IonHeader collapse="condense">
-				<IonToolbar>
-					<ion-title size="large">Bonjour, {{ userName }} !</ion-title>
-				</IonToolbar>
-			</IonHeader>
-
 			<div id="components" ref="components">
 				<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
 					<ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none"

@@ -256,6 +256,12 @@
             document.body.style.setProperty('--ion-color-primary-rgb', `${averageColorCustom.value[0]}, ${averageColorCustom.value[1]}, ${averageColorCustom.value[2]}`);
             document.body.style.setProperty('--ion-color-primary-shade', averageColorCustom.hex);
             document.body.style.setProperty('--ion-color-primary-tint', averageColorCustom.hex);
+
+            let hsl = this.RGBToHSL(averageColorCustom.value[0], averageColorCustom.value[1], averageColorCustom.value[2]);
+            document.body.style.setProperty('--ion-color-primary-hsl', `${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%`);
+            document.body.style.setProperty('--ion-color-primary-hue', `${hsl[0]}`);
+            document.body.style.setProperty('--ion-color-primary-saturation', `${hsl[1]}%`);
+            document.body.style.setProperty('--ion-color-primary-lightness', `${hsl[2]}%`);
         },
         applyAverageColor() {
             let averageColor = JSON.parse(localStorage.getItem('averageColor') as any);
@@ -410,12 +416,13 @@
 </template>
 
 <style scoped>
+
     ion-menu::part(container) {
         border-radius: 0px 20px 20px 0px;
     }
 
     ion-menu ion-content::part(scroll) {
-        background: rgba(var(--ion-color-primary-rgb), 0.08);
+        /* background: rgba(var(--ion-color-primary-rgb), 0.08); */
     }
 
     ion-menu ion-list {
@@ -496,7 +503,7 @@
     }
 
     .ios .userItem p {
-        font-size: 15px;
+        font-size: 16px;
         margin-top: 0;
         font-family: var(--papillon-font);
     }

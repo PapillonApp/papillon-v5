@@ -176,7 +176,7 @@
                 })
             },
             findEstablishments(lat, lon) {
-                axios.post('https://cors.api.getpapillon.xyz/https://www.index-education.com/swie/geoloc.php', {
+                axios.post('https://www.index-education.com/swie/geoloc.php', {
                     nomFonction: "geoLoc",
                     lat: lat,
                     long: lon

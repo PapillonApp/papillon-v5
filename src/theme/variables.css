@@ -100,7 +100,7 @@ http://ionicframework.com/docs/theming/ */
    */
 
   .ios body.dark {
-    --ion-background-color: #121314;
+    --ion-background-color: hsl(var(--ion-color-primary-hue), 5%, 7%);
     --ion-background-color-rgb: 18,19,20;
 
     --ion-text-color: #ffffff;
@@ -126,15 +126,15 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-step-900: #e7e7e8;
     --ion-color-step-950: #f3f3f3;
 
-    --ion-item-background: #121314;
+    --ion-item-background: hsl(var(--ion-color-primary-hue), 5%, 7%);
 
-    --ion-toolbar-background: hsl(210, 5%, 10%);
+    --ion-toolbar-background: hsl(var(--ion-color-primary-hue), 5%, 10%);
 
-    --ion-tab-bar-background: hsl(210, 5%, 7%);
+    --ion-tab-bar-background: hsl(var(--ion-color-primary-hue), 5%, 10%);
 
-    --ion-card-background: hsl(210, 5%, 9%);
+    --ion-card-background: hsl(var(--ion-color-primary-hue), 5%, 10%);
 
-    --ion-inset-background: hsl(210, 5%, 10%);
+    --ion-inset-background: hsl(var(--ion-color-primary-hue), 5%, 10%);
   }
 
   .ios .dark ion-modal {
@@ -148,7 +148,7 @@ http://ionicframework.com/docs/theming/ */
    */
 
   .md body.dark {
-    --ion-background-color: #1C1B1F;
+    --ion-background-color: hsl(var(--ion-color-primary-hue), 5%, 7%);
     --ion-background-color-rgb: 28,27,31;
 
     --ion-text-color: #fff;
@@ -174,17 +174,17 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-step-900: #e8e8e9;
     --ion-color-step-950: #f4f4f4;
 
-    --ion-item-background: #1C1B1F;
+    --ion-item-background: hsl(var(--ion-color-primary-hue), 5%, 7%);
 
-    --ion-toolbar-background: #1C1B1F;
+    --ion-toolbar-background: hsl(var(--ion-color-primary-hue), 10%, 12%);
 
-    --ion-tab-bar-background: #1C1B1F;
+    --ion-tab-bar-background: hsl(var(--ion-color-primary-hue), 10%, 12%);
 
-    --ion-card-background: hsl(255, 7%, 12%);
+    --ion-card-background: hsl(var(--ion-color-primary-hue), 10%, 12%);
 
-    --ion-inset-background: hsl(255, 7%, 15%);
+    --ion-inset-background: hsl(var(--ion-color-primary-hue), 10%, 12%);
 
-    --ion-border-color: #27262a;
+    --ion-border-color: hsl(var(--ion-color-primary-hue), 10%, 30%);
   }
 
   .md .dark ion-modal {
