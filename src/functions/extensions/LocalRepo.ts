@@ -1,0 +1,88 @@
+// modules
+import axios from 'axios';
+import { Extension } from './Extension';
+//'https://raw.githubusercontent.com/andronedev/papillon_extension_demo/master/papillonManifest.json'
+export class LocalRepo {
+    installedExtensions: {name: string, author: string, authorDisplayName: string, description: string, icon: string, version: string, javascript: string[], css: string[], tabs: {name: string, icon: string, path: string, html: string}[], manifestUrl: string, rootUrl: string}[];
+    extensions: Extension[];
+    constructor() {
+        this.installedExtensions = localStorage.getItem('extensions') ? JSON.parse(localStorage.getItem('extensions') || '[]') : []; //[{"name":"demo","author":"andronedev","authorDisplayName":"Papillon","description":"Test Plugin Papillon","icon":"more","version":"1.0.0","javascript":["test.js"],"css":[],"tabs":[{"name":"Extension de Test","icon":"cruelty_free","path":"dev.androne.test","html":"test.html"}],"manifestUrl":"","rootUrl":"https://raw.githubusercontent.com/andronedev/papillon_extension_demo/master/"}]
+        this.extensions = [];
+    }
+
+    /**
+        * Get the list of installed extensions
+        * @returns {string[]} List of installed extensions
+
+    */
+    getInstalledExtensions(): {name: string, author: string, authorDisplayName: string, description: string, icon: string, version: string, javascript: string[], css: string[], tabs: {name: string, icon: string, path: string, html: string}[], manifestUrl: string, rootUrl: string}[] {
+        return this.installedExtensions;
+    }
+
+    /**
+        * Get the list of extensions
+        * @returns {Extension[]} List of extensions
+    */
+    getExtensions(): Extension[] {
+        
+        return this.extensions;
+    }
+
+    /**
+        * Install an extension
+        * @param {string} url - The url of the extension
+        * @returns {boolean} True if the extension is installed
+    */
+    async installExtension(url: string): Promise<boolean> {
+        const newExtension = new Extension();
+        newExtension.fromURL(url).then((ext : Extension) => {
+            console.log(ext);
+            ext.init();
+        });
+        return true;
+    }
+
+    /**
+        * Uninstall an extension
+        * @param {string} url - The url of the extension
+        * @returns {boolean} True if the extension is uninstalled
+    */
+    uninstallExtension(url: string): void {
+        //TODO
+    }
+
+    /**
+        * Update all installed extensions
+    */
+    updateAllInstalled(): void {
+        for (const extension of this.installedExtensions) {
+            const rootUrl = extension.rootUrl;
+            const manifestUrl = rootUrl + 'papillonManifest.json';
+            const newExtension = new Extension();
+
+            newExtension.fromURL(manifestUrl).then((ext : Extension) => {
+                if (ext.version !== extension.version) {
+                    this.uninstallExtension(extension.rootUrl);
+                    this.installExtension(ext.rootUrl);
+                }
+            });
+        }
+    }
+
+    /**
+        * Update an extension
+        * @param {string} url - The url of the extension
+    */
+    init(): void {
+        for (const extension of this.installedExtensions) {
+            const ext = new Extension();    
+            ext.fromJSON(extension, extension.rootUrl);
+            this.extensions.push(ext);
+            ext.init();
+        }
+    }
+
+}
+
+
+

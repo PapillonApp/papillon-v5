@@ -29,9 +29,7 @@ import './theme/variables.css';
 import './theme/fixes.css';
 import './theme/fonts.css';
 import './theme/theme.css';
-
-/*extensions*/
-import { Extension } from '@/functions/extensions/Extension';
+import { LocalRepo } from './functions/extensions/LocalRepo';
 
 // TypeScript custom components
 require('@/functions/app.ts');
@@ -41,22 +39,13 @@ export const app = createApp(MainApp)
 	.use(IonicVue)
 	.use(VueLazyload)
 	.use(router);
-	
+
+const localRepo = new LocalRepo();
+app.config.globalProperties.$LocalRepo = localRepo;
 router.isReady().then(() => {
-	app.mount('#app')
-
-	// TODO systme de repo d'extensions
-	setTimeout(() => {
-
-	const textExt : Extension = new Extension();
-	console.log(textExt);
-
-	textExt.fromURL('https://raw.githubusercontent.com/andronedev/papillon_extension_demo/master/papillonManifest.json').then((ext) => {
-		console.log(ext);
-		ext.init();
-	});
-
-	}, 100);
+	app.mount('#app')	
+	localRepo.init();
+	
 		
 });
 

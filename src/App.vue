@@ -1,6 +1,6 @@
 <script lang="ts">
     import { IonApp, IonContent, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText } from '@ionic/vue';
-
+    import { app } from '@/main'
     import { defineComponent, ref } from 'vue';
     import { useRoute } from 'vue-router';
 
@@ -122,19 +122,18 @@
             appPages.splice(4, 1);
         }
 
-        // if have extensions add them
-        if(localStorage.getItem('extensions')) {
-            const extensions = JSON.parse(localStorage.getItem('extensions') as string);
-            extensions.forEach((extension: any) => {
-                extension.tabs.forEach((tab: any) => {
-                    appPages.push({
-                        title: tab.name,
-                        url: "/" + extension.name.replace(/[^a-zA-Z0-9]/g, "") + "/" + tab.path.replace(/[^a-zA-Z0-9]/g, ""),
-                        icon: tab.icon,
-                    });
+    
+        const extensions = app.config.globalProperties.$LocalRepo.getExtensions();
+        extensions.forEach((extension: any) => {
+            extension.tabs.forEach((tab: any) => {
+                appPages.push({
+                    title: tab.name,
+                    url: "/" + extension.name.replace(/[^a-zA-Z0-9]/g, "") + "/" + tab.path.replace(/[^a-zA-Z0-9]/g, ""),
+                    icon: tab.icon,
                 });
             });
-        }
+        });
+    
         
         // weird ionic stuff
         const path = window.location.pathname.split('folder/')[1];
