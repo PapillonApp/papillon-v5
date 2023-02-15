@@ -3,6 +3,7 @@
     import { IonItem, IonList, IonIcon, IonBackButton, IonSearchbar, IonModal, IonListHeader, IonSpinner, loadingController, actionSheetController } from '@ionic/vue';
 
     import axios from 'axios';
+    import $ from "jquery";
     
     import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp, serverOutline, serverSharp } from 'ionicons/icons';
 
@@ -79,6 +80,13 @@
                         loading.dismiss();
                     }, 300);
                     this.ents = response.data.ent_list;
+                })
+                .catch(error => {
+                    setTimeout(() => {
+                        loading.dismiss();
+                    }, 300);
+                    console.error(error)
+                    displayToast.presentError("Impossible de récupérer les ENTS. La connexion risque de ne pas fonctionner.", "danger", error)
                 })
             },    
             async GetLocation() {
@@ -176,64 +184,62 @@
                 })
             },
             findEstablishments(lat, lon) {
-                axios.post('https://www.index-education.com/swie/geoloc.php', {
-                    nomFonction: "geoLoc",
-                    lat: lat,
-                    long: lon
-                }, {
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-                        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-                        'Access-Control-Allow-Credentials': 'true'
+                $.ajax('https://www.index-education.com/swie/geoloc.php', {
+                    crossDomain: true,
+                    data: {
+                    data: JSON.stringify({
+                        "nomFonction": "geoLoc",
+                        "lat": lat,
+                        "long": lon,
+                    })
                     },
-                    crossDomain: true
-                })
-                .then((response) => {
-                    this.etabs = response.data;
-                    
-                    if(this.etabs.length == 0) {
-                        this.etabsEmpty = true;
-                    } else {
-                        this.etabsEmpty = false;
-                    }
-
-                    if(JSON.stringify(response.data) == "{}") {
-                        this.locationFailed = true;
-                    } else {
-                        this.locationFailed = false;
-                    }
-                    
-                    // remove all etabs with no URL
-                    for (let i = 0; i < this.etabs.length; i++) {
-                        if (this.etabs[i].url == "" || this.etabs[i].url == null) {
-                            this.etabs.splice(i, 1);
+                    method: "POST"})
+                    .done((data) => {
+                        this.etabs = data;
+                        
+                        if(this.etabs.length == 0) {
+                            this.etabsEmpty = true;
+                        } else {
+                            this.etabsEmpty = false;
                         }
-                    }
 
-                    // decode etabName html entities
-                    for (let i = 0; i < this.etabs.length; i++) {
-                        this.etabs[i].nomEtab = this.decodeEntities(this.etabs[i].nomEtab);
-                    }
+                        if(JSON.stringify(data) == "{}") {
+                            this.locationFailed = true;
+                        } else {
+                            this.locationFailed = false;
+                        }
+                        
+                        // remove all etabs with no URL
+                        for (let i = 0; i < this.etabs.length; i++) {
+                            if (this.etabs[i].url == "" || this.etabs[i].url == null) {
+                                this.etabs.splice(i, 1);
+                            }
+                        }
 
-                    setTimeout(() => {
-                        this.isLoading = false;
-                    }, 200);
-                })
-                .catch((error) => {
-                    console.error("[Find Establishment]: " + error)
-                                            
-                    if(this.retries < 3) {
+                        // decode etabName html entities
+                        for (let i = 0; i < this.etabs.length; i++) {
+                            this.etabs[i].nomEtab = this.decodeEntities(this.etabs[i].nomEtab);
+                        }
+
                         setTimeout(() => {
-                            this.findEstablishments(lat, lon);
-                        }, 1000);
-                        this.retries++;
-                    }
-                    else {
-                        displayToast.presentError(`Une erreur s'est produite pour obtenir les établissements à proximité.`, "danger", error.stack)
-                    }
-                });
+                            this.isLoading = false;
+                        }, 200);
+                    })
+                    .fail((error) => {
+                        console.error("[Find Establishment]: " + error)
+                                                
+                        if(this.retries < 3) {
+                            setTimeout(() => {
+                                this.findEstablishments(lat, lon);
+                            }, 1000);
+                            this.retries++;
+                        }
+                        else {
+                            this.isLoading = false;
+                            this.locationFailed = true;
+                            displayToast.presentError(`Une erreur s'est produite pour obtenir les établissements à proximité.`, "danger", error.stack)
+                        }
+                    });
             },
             clearEtabs() {
                 this.etabs = [];
@@ -586,7 +592,7 @@
                 </ion-label>
             </ion-list-header>
 
-            <ion-item button disabled @click="changeApi()">
+            <ion-item button @click="changeApi()">
                 <ion-icon class="icon" slot="start" :ios="serverOutline" :md="serverSharp"></ion-icon>
                 <ion-label>
                     <h2>Changer d'API</h2>
