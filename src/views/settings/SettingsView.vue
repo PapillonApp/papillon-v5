@@ -217,14 +217,15 @@
 
         
         <IonList :inset="true" lines="none">
-                <IonItem button @click="this.$router.push({ name: 'Extensions' })">
+            <ion-nav-link router-direction="forward" :component="ExtensionsView">
+                <IonItem button>
                     <span class="material-symbols-outlined mdls" slot="start">extension</span>
                     <IonLabel class="ion-text-wrap">
                         <h2>Extensions</h2>
                         <p>Installer des extensions pour Papillon</p>
                     </IonLabel>
                 </IonItem>
-          
+            </ion-nav-link>
         </IonList>
 
 
