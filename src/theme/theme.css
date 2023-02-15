@@ -434,3 +434,8 @@ ion-alert.md .alert-wrapper {
 ion-alert.md .btn_secondary {
     color: #888;
 }
+
+.alert-button.sc-ion-alert-md {
+    border-radius: 300px;
+    padding: 10px 15px !important;
+}
