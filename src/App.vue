@@ -316,7 +316,7 @@
 
         // check internet connection
         window.addEventListener('online', () => {
-            this.presentToast('Vous êtes de nouveau connecté.','Certaines informations nécéssiteront peut-être un rafraîchissement.', 'success', globeOutline)
+            this.presentToast('Vous êtes de nouveau connecté.','Certaines informations nécessiteront peut-être un rafraîchissement.', 'success', globeOutline)
         });
 
         window.addEventListener('offline', () => {
