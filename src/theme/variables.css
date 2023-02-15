@@ -62,7 +62,9 @@ http://ionicframework.com/docs/theming/ */
 }
 
   body.dark {
-    --ion-color-primary: #12D4A6;
+    --ion-color-primary-hue: 166;
+
+    --ion-color-primary: #12d4a6;
     --ion-color-primary-rgb: 18,212,166;
     --ion-color-primary-contrast: #000000;
     --ion-color-primary-contrast-rgb: 0,0,0;
@@ -190,6 +192,8 @@ http://ionicframework.com/docs/theming/ */
   }
 
   body.light {
+    --ion-color-primary-hue: 166;
+    
     --ion-background-color: #FFFFFF;
     --ion-background-color-rgb: 255,255,255;
 

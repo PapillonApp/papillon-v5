@@ -69,16 +69,12 @@ ion-title, h2, h3 {
 
 input.sc-ion-searchbar-md {
     box-shadow: none !important;
-    background: #f0f0f0 !important;
+    background: var(--ion-color-step-200) !important;
     border-radius: 300px !important;
 }
 
 .md .toolbar-searchbar {
     margin-top: -5px;
-}
-
-body.dark input.sc-ion-searchbar-md {
-    background: #292929 !important;
 }
 
 /* (MD) Toolbar */
