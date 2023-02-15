@@ -399,6 +399,9 @@ ion-fab .mdls {
 /* beta chip */
 .beta-chip {
     margin-top: 0px;
+    height: fit-content;
+
+    padding: 4px 10px;
 }
 
 /* debug banner */
