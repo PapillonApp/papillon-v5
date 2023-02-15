@@ -1,8 +1,5 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
-// IonicModule is required for the tabs component
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-import { defineComponent } from 'vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
