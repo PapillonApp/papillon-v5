@@ -1,7 +1,9 @@
 <script lang="ts">
-    import { IonApp, IonContent, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText } from '@ionic/vue';
+    import { IonApp, IonContent, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText, alertController } from '@ionic/vue';
 
     import Values from 'values.js'
+
+    const { version, canal } = require('/package')
 
     import { defineComponent, ref } from 'vue';
     import { useRoute } from 'vue-router';
@@ -136,6 +138,7 @@
         
         return { 
             selectedIndex,
+            appCanal: canal,
             appPages,
             labels : [],
             isSelected: (url: string) => url === route.path ? 'selected' : ''
@@ -274,6 +277,16 @@
                 this.setAverageColor(averageColor)
             }
         },
+        async displayDevMsg() {
+			const alert = await alertController.create({
+				header: 'Version de développement',
+				message: 'Papillon fonctionne actuellement en mode développement. <br/><br/> Certaines fonctionnalités ne sont pas encore terminées et risquent de ne pas fonctionner correctement.',
+				mode: 'md',
+				buttons: ['Je comprends']
+			});
+
+			await alert.present();
+		}
     },
     mounted() {
         // hide splash screen when dom is loaded
@@ -374,6 +387,10 @@
 
 <template>
   <ion-app>
+    <div id="debug_banner" v-if="appCanal == 'dev'" @click="displayDevMsg">
+        DEVBUILD
+    </div>
+
     <ion-split-pane content-id="main-content">
       <ion-menu type="overlay" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
         <ion-header collapse="fade">

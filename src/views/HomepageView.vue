@@ -343,6 +343,7 @@
 				const alert = await alertController.create({
 					header: 'Page d\'accueil',
 					message: 'Cette page est en cours de développement. Elle ne contient pas tous le contenu prévu et subira de multiples changements dans l\'avenir.',
+					mode: 'md',
 					buttons: ['Je comprends']
 				});
 
@@ -387,7 +388,7 @@
 					<ion-menu-button color="dark" mode="md"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Vue d'ensemble <ion-chip color="warning" @click="displayBetaMsg()">BÉTA</ion-chip></ion-title>
+				<ion-title mode="md">Vue d'ensemble <ion-chip class="beta-chip" color="warning" @click="displayBetaMsg()">BETA</ion-chip></ion-title>
 			</IonToolbar>
 		</IonHeader>
 
