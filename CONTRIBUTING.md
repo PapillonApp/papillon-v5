@@ -16,11 +16,11 @@ Si vous avez une idée pour une nouvelle fonctionnalité, veuillez ouvrir une is
 ### Soumettre des pull requests
 Si vous avez des compétences techniques, vous pouvez contribuer en soumettant des pull requests. Voici les étapes à suivre :
 
--Clonez le dépôt GitHub.
--Créez une nouvelle branche à partir de la branche main.
--Effectuez vos modifications sur la nouvelle branche.
--Testez les modifications pour vous assurer qu'elles fonctionnent correctement.
--Soumettez une pull request en expliquant les modifications que vous avez apportées et en fournissant des captures d'écran si cela est pertinent.
+- Clonez le dépôt GitHub.
+- Créez une nouvelle branche à partir de la branche main.
+- Effectuez vos modifications sur la nouvelle branche.
+- Testez les modifications pour vous assurer qu'elles fonctionnent correctement.
+- Soumettez une pull request en expliquant les modifications que vous avez apportées et en fournissant des captures d'écran si cela est pertinent.
 Nous examinerons votre pull request dès que possible et nous vous fournirons des commentaires pour vous aider à l'améliorer si nécessaire.
 
 ## Licence
