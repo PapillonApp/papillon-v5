@@ -24,7 +24,6 @@ export class LocalRepo {
         * @returns {Extension[]} List of extensions
     */
     getExtensions(): Extension[] {
-        
         return this.extensions;
     }
 
@@ -48,7 +47,13 @@ export class LocalRepo {
         * @returns {boolean} True if the extension is uninstalled
     */
     uninstallExtension(url: string): void {
-        //TODO
+        for (let i = 0; i < this.installedExtensions.length; i++) {
+            if (this.installedExtensions[i].rootUrl === url) {
+                this.installedExtensions.splice(i, 1);
+                localStorage.setItem('extensions', JSON.stringify(this.installedExtensions));
+                break;
+            }
+        }
     }
 
     /**
