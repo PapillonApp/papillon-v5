@@ -79,14 +79,15 @@ export default defineComponent({
 <template>
   <ion-page ref="page">
     <IonHeader class="AppHeader" collapse="fade" translucent>
-      <IonToolbar>
-        <IonButtons slot="start">
-          <IonMenuButton />
-        </IonButtons>
+        <IonToolbar>
 
-        <IonTitle>{{ extension.name }}</IonTitle>
-      </IonToolbar>
-    </IonHeader>
+          <ion-buttons slot="start">
+            <ion-menu-button color="dark" mode="md"></ion-menu-button>
+          </ion-buttons>
+
+          <ion-title mode="md">{{ extension.name }}</ion-title>
+        </IonToolbar>
+      </IonHeader>
 
     <ion-content :fullscreen="true">
       <div :innerHTML="html" ref="html"></div>
