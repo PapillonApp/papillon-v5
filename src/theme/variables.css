@@ -131,7 +131,7 @@ http://ionicframework.com/docs/theming/ */
 
     --ion-tab-bar-background: hsl(var(--ion-color-primary-hue), 10%, 10%);
 
-    --ion-card-background: hsl(var(--ion-color-primary-hue), 10%, 10%);
+    --ion-card-background: hsl(var(--ion-color-primary-hue), 10%, 8%);
 
     --ion-inset-background: hsl(var(--ion-color-primary-hue), 10%, 10%);
   }
@@ -178,11 +178,11 @@ http://ionicframework.com/docs/theming/ */
 
     --ion-tab-bar-background: hsl(var(--ion-color-primary-hue), 10%, 12%);
 
-    --ion-card-background: hsl(var(--ion-color-primary-hue), 10%, 12%);
+    --ion-card-background: hsl(var(--ion-color-primary-hue), 8%, 8%);
 
     --ion-inset-background: hsl(var(--ion-color-primary-hue), 10%, 12%);
 
-    --ion-border-color: hsl(var(--ion-color-primary-hue), 10%, 30%);
+    --ion-border-color: hsl(var(--ion-color-primary-hue), 10%, 10%);
   }
 
   .md .dark ion-modal {

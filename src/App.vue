@@ -433,13 +433,14 @@
 </template>
 
 <style scoped>
-
     ion-menu::part(container) {
         border-radius: 0px 20px 20px 0px;
     }
 
-    ion-menu ion-content::part(scroll) {
-        /* background: rgba(var(--ion-color-primary-rgb), 0.08); */
+    @media screen and (min-width: 992px) {
+        ion-menu::part(container) {
+            border-radius: 0px 0px 0px 0px;
+        }
     }
 
     ion-menu ion-list {
