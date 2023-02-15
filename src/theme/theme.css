@@ -425,3 +425,9 @@ ion-fab .mdls {
 
     box-shadow: 1px 1px 5px #00000055;
 }
+
+/* alerts */
+ion-alert.md .alert-wrapper {
+    --background: var(--ion-color-step-100);
+    border-radius: 24px !important;
+}

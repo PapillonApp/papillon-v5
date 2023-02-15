@@ -106,12 +106,12 @@ http://ionicframework.com/docs/theming/ */
     --ion-text-color: #ffffff;
     --ion-text-color-rgb: 255,255,255;
 
-    --ion-color-step-50: hsl(var(--ion-color-primary-hue), 10%, 12%);
-    --ion-color-step-100: hsl(var(--ion-color-primary-hue), 10%, 20%);
-    --ion-color-step-150: hsl(var(--ion-color-primary-hue), 10%, 25%);
-    --ion-color-step-200: hsl(var(--ion-color-primary-hue), 10%, 30%);
-    --ion-color-step-250: hsl(var(--ion-color-primary-hue), 10%, 35%);
-    --ion-color-step-300: hsl(var(--ion-color-primary-hue), 10%, 40%);
+    --ion-color-step-50: hsl(var(--ion-color-primary-hue), 10%, 10%);
+    --ion-color-step-100: hsl(var(--ion-color-primary-hue), 10%, 12%);
+    --ion-color-step-150: hsl(var(--ion-color-primary-hue), 10%, 14%);
+    --ion-color-step-200: hsl(var(--ion-color-primary-hue), 10%, 18%);
+    --ion-color-step-250: hsl(var(--ion-color-primary-hue), 10%, 24%);
+    --ion-color-step-300: hsl(var(--ion-color-primary-hue), 10%, 30%);
     --ion-color-step-350: hsl(var(--ion-color-primary-hue), 10%, 45%);
     --ion-color-step-400: hsl(var(--ion-color-primary-hue), 10%, 50%);
     --ion-color-step-450: hsl(var(--ion-color-primary-hue), 10%, 55%);
@@ -153,12 +153,12 @@ http://ionicframework.com/docs/theming/ */
     --ion-text-color: #fff;
     --ion-text-color-rgb: 255,255,255;
 
-    --ion-color-step-50: hsl(var(--ion-color-primary-hue), 10%, 12%);
-    --ion-color-step-100: hsl(var(--ion-color-primary-hue), 10%, 20%);
-    --ion-color-step-150: hsl(var(--ion-color-primary-hue), 10%, 25%);
-    --ion-color-step-200: hsl(var(--ion-color-primary-hue), 10%, 30%);
-    --ion-color-step-250: hsl(var(--ion-color-primary-hue), 10%, 35%);
-    --ion-color-step-300: hsl(var(--ion-color-primary-hue), 10%, 40%);
+    --ion-color-step-50: hsl(var(--ion-color-primary-hue), 10%, 10%);
+    --ion-color-step-100: hsl(var(--ion-color-primary-hue), 10%, 12%);
+    --ion-color-step-150: hsl(var(--ion-color-primary-hue), 10%, 14%);
+    --ion-color-step-200: hsl(var(--ion-color-primary-hue), 10%, 18%);
+    --ion-color-step-250: hsl(var(--ion-color-primary-hue), 10%, 24%);
+    --ion-color-step-300: hsl(var(--ion-color-primary-hue), 10%, 30%);
     --ion-color-step-350: hsl(var(--ion-color-primary-hue), 10%, 45%);
     --ion-color-step-400: hsl(var(--ion-color-primary-hue), 10%, 50%);
     --ion-color-step-450: hsl(var(--ion-color-primary-hue), 10%, 55%);
