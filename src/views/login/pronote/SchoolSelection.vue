@@ -1,6 +1,7 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonList, IonIcon, IonBackButton, IonSearchbar, IonModal, IonListHeader, IonSpinner, loadingController, actionSheetController } from '@ionic/vue';
+    import { IonItem, IonList, IonIcon, IonBackButton, IonSearchbar, IonModal, IonListHeader, IonSpinner, loadingController, IonInput, 
+    IonButton, actionSheetController } from '@ionic/vue';
 
     import axios from 'axios';
     import $ from "jquery";
@@ -24,7 +25,9 @@
             IonSearchbar,
             IonModal,
             IonListHeader,
-            IonSpinner
+            IonSpinner,
+            IonInput,
+            IonButton
         },
         setup() {
             return { 
@@ -266,8 +269,8 @@
                 this.loginToEtab("https://demo.index-education.net/pronote");
 
                 setTimeout(() => {
-                    this.$refs.user.value = "demonstration";
-                    this.$refs.pass.value = "pronotevs";
+                    this.$refs.user.$el.value = "demonstration";
+                    this.$refs.pass.$el.value = "pronotevs";
 
                     this.login();
                 }, 1000);
@@ -411,8 +414,8 @@
             login() {
                 const API = this.$api;
 
-                let username = this.$refs.user.value;
-                let password = this.$refs.pass.value;
+                let username = this.$refs.user.$el.value;
+                let password = this.$refs.pass.$el.value;
                 let cas = this.etabCas;
                 let url = this.etabUrl;
 
@@ -432,7 +435,7 @@
                     redirect: 'follow'
                 };
 
-                displayToast.presentToast("Connexion en cours...", "dark", true)
+                displayToast.presentToast("Connexion en cours...", "light", true)
 
                 fetch(API + "/generatetoken", requestOptions)
                     .then(response => response.json())
@@ -619,18 +622,26 @@
                         <img src="assets/welcome/pronote_logo.png" alt="Pronote Logo" class="logo"/>
                         <div class="introData">
                             <h2>Connexion à Papillon</h2>
-                            <p>Vous souhaitez vous connecter à <B>Pronote</B> en utilisant <B>{{displayCas}}</B> à l'aide de Papillon.</p>
-                            <br v-if="isEduconnectLogin">
+                            <p class="description">Vous souhaitez vous connecter à <B>Pronote</B> en utilisant <B>{{displayCas}}</B>.</p>
                             <p v-if="isEduconnectLogin" class="isEduconnectLogin">Cet ENT utilise ÉduConnect, merci de rentrer les identifiants de ce service.</p>
                         </div>
                     </div>
 
-                    <div class="loginForm">
-                        <input ref="user" type="text" placeholder="Identifiant" class="loginInput" appAutofill autocomplete="username" value=""/>
-                        <input ref="pass" type="password" placeholder="Mot de passe" class="loginInput" appAutofill autocomplete="password" value=""/><br/>
+                    <ion-list class="loginInput">
+                        <ion-item mode="md" fill="solid" class="userIn">
+                            <ion-label>Identifiant</ion-label>
+                            <ion-input ref="user" type="text" placeholder="j.dupont6" autocomplete="username"></ion-input>
+                        </ion-item>
 
-                        <button @click="login" class="loginButton">Se connecter</button>
-                    </div>
+                        <ion-item mode="md" fill="solid" class="passIn">
+                            <ion-label>Mot de passe</ion-label>
+                            <ion-input ref="pass" type="password" placeholder="*********"></ion-input>
+                        </ion-item>
+
+                        <ion-button class="loginBtn" @click="login" expand="block" mode="md">
+                            Se connecter
+                        </ion-button>
+                    </ion-list>
 
                     <div class="loginConditions">
                         Vos données ne sont pas stockées sur nos serveurs. En vous connectant avec cette application, vous acceptez les <a href="https://getpapillon.xyz/privacy.pdf">conditions d'utilisation</a> de Papillon.
@@ -648,99 +659,71 @@
         opacity: 50%;
     }
 
-    .loginPage {
-        position: absolute;
-        top: 0;
-        left: 0;
-        background-color: #ffffff;
-        color: #000;
-        width: 100%;
-        height: 100vh;
-        overflow: hidden;
+    .loginIntro {
+        background: var(--ion-color-step-50);
+        margin: 20px;
+        border-radius: 10px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        padding: 20px;
+        gap: 20px;
     }
 
-    .loginPage * {
-        font-family: sans-serif !important;
+    .loginIntro * {
         margin: 0;
     }
 
-    .loginIntro {
-        padding: 20px;
-        text-align: left;
-        background: linear-gradient(180deg, #009C34 0%, #00AC6E 100%);
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-    } 
-
-    .introData h2 {
-        font-size: 24px;
-        font-family: var(--papillon-font) !important;
-        font-weight: 700;
-    }
-    
     .loginIntro .logo {
-        height: 42px;
-        width: 42px;
+        height: 44px;
     }
 
-    .loginIntro p {
-        margin-top: 5px;
+    .loginIntro .introData {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
     }
 
-    .isEduconnectLogin {
-        font-size: 14px;
-        font-weight: 500;
-        color: #ffffffc0;
+    .loginIntro .introData h2 {
+        font-size: 18px;
     }
 
-    .loginConditions {
-        padding: 5px 20px;
-        text-align: center;
-        font-size: 13px;
-        color: #999999;
+    .loginIntro .introData .description {
+        font-size: 15px;
+        opacity: 0.7;
     }
 
-    .loginConditions a {
-        color: #009c34;
-    }
-
-    .loginForm {
-        padding: 20px;
+    .loginIntro .isEduconnectLogin {
+        font-size: 15px;
+        opacity: 0.5;
+        margin-top: 10px;
     }
 
     .loginInput {
-        width: 100%;
-        padding: 15px 15px;
-        border: none;
-        background: #00000010;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        overflow: hidden;
-        isolation: isolate;
-
-        font-size: 16px;
-        font-weight: 500;
-        font-family: var(--papillon-font) !important;
-
-        -webkit-user-select: text;
-        -webkit-overflow-scrolling: auto;
+        margin: 0px 20px;
     }
 
-    .loginButton {
-        width: 100%;
-        padding: 15px 15px;
-        border: 1px solid #009c34;
-        border-radius: 8px;
-        background-color: #009c34;
-        color: #ffffff;
-        font-weight: 600;
-        font-size: 17px;
-        cursor: pointer;
-        overflow: hidden;
-        isolation: isolate;
-        font-family: var(--papillon-font) !important;
+    .loginBtn {
+        margin-top: 20px;
+        --border-radius: 8px !important;
+    }
+
+    .loginInput ion-item {
+        margin-bottom: 10px;
+    }
+
+    .loginInput ion-item::part(native) {
+        --border-color: var(--ion-color-step-200) !important;
+        --border-top-left-radius: 8px !important;
+        --border-top-right-radius: 8px !important;
+    }
+
+    .loginConditions {
+        margin: 20px;
+        font-size: 12px;
+        opacity: 0.5;
+        text-align: center;
     }
 </style>
