@@ -8,12 +8,13 @@
     import OptionsView from './OptionsView.vue';
     import UserView from './UserView.vue';
     import AdvancedView from './AdvancedView.vue';
-
+    import ExtensionsView from './ExtensionsView.vue';
     import { version, canal } from '/package'
     import { Capacitor } from '@capacitor/core';
 
     import getContributors from '@/functions/fetch/GetContributors';
 
+    
     export default defineComponent({
         name: 'FolderPage',
         components: {
@@ -47,6 +48,7 @@
                 OptionsView: OptionsView,
                 UserView: UserView,
                 AdvancedView: AdvancedView,
+                ExtensionsView: ExtensionsView,
             }
         },
         methods: {
@@ -146,7 +148,7 @@
                         this.userName = localStorage.getItem('customName');
                     }
                 }
-            }
+            },
         },
         mounted() {
             this.getApiVersion();
@@ -182,8 +184,7 @@
       
       <ion-content :fullscreen="true">
         <IonList :inset="true" lines="inset">
-            <ion-nav-link router-direction="forward" :component="UserView">
-                <IonItem button>
+                <IonItem button @click="openExtensionView">
                     <img :src="userAvatar" slot="start" class="avatar" />
                     <IonLabel>
                         <p>Utilisateur connecté</p>
@@ -191,7 +192,6 @@
                         <p>{{ userClass }} - {{ userSchool }}</p>
                     </IonLabel>
                 </IonItem>
-            </ion-nav-link>
         </IonList>
 
         <IonList :inset="true" lines="none">
@@ -214,6 +214,19 @@
                 </IonItem>
             </ion-nav-link>
         </IonList>
+
+        
+        <IonList :inset="true" lines="none">
+                <IonItem button @click="this.$router.push({ name: 'Extensions' })">
+                    <span class="material-symbols-outlined mdls" slot="start">extension</span>
+                    <IonLabel class="ion-text-wrap">
+                        <h2>Extensions</h2>
+                        <p>Installer des extensions pour Papillon</p>
+                    </IonLabel>
+                </IonItem>
+          
+        </IonList>
+
 
         <IonList :inset="true" lines="none">
             <IonItem button @click="logout()">

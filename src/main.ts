@@ -40,13 +40,13 @@ export const app = createApp(MainApp)
 	.use(VueLazyload)
 	.use(router);
 
+// Initialize LocalRepo
 const localRepo = new LocalRepo();
-app.config.globalProperties.$LocalRepo = localRepo;
+app.config.globalProperties.$localRepo = localRepo;
+
 router.isReady().then(() => {
 	app.mount('#app')	
 	localRepo.init();
-	
-		
 });
 
 // Global vars in Vue

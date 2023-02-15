@@ -129,7 +129,6 @@ export class Extension {
         if (!extensions.find((extension : Extension) => extension.rootUrl === this.rootUrl)) {
             extensions.push(this);
             localStorage.setItem('extensions', JSON.stringify(extensions));
-            window.location.reload();
         }
 
 
@@ -142,7 +141,6 @@ export class Extension {
         if (index !== -1) {
             extensions.splice(index, 1);
             localStorage.setItem('extensions', JSON.stringify(extensions));
-            window.location.reload();
         }
     }
 

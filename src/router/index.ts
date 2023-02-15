@@ -52,6 +52,16 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Settings',
     component: () => import ('../views/settings/SettingsView.vue')
   },
+  {
+    path: '/settings/extensions',
+    name: 'Extensions',
+    component: () => import ('../views/settings/ExtensionsView.vue')
+  },
+  {
+    path: '/settings/extensions/install',
+    name: 'InstallExtension',
+    component: () => import ('../views/settings/InstallExtensionView.vue')
+  }
 ]
 
 const loginRoutes = [
