@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { IonApp, IonContent, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText, alertController } from '@ionic/vue';
+    import { IonApp, IonContent, IonButton, IonButtons, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText, alertController, IonModal, IonThumbnail } from '@ionic/vue';
 
     import Values from 'values.js'
 
@@ -9,6 +9,8 @@
     import { useRoute } from 'vue-router';
 
     const subjectColor = require('@/functions/utils/subjectColor.js');
+
+    const { changelog } = require('/src/update') 
 
     import { globeOutline } from 'ionicons/icons';
     import { AndroidShortcuts } from 'capacitor-android-shortcuts';
@@ -53,6 +55,10 @@
         IonHeader,
         IonToolbar,
         IonSkeletonText,
+        IonModal,
+        IonThumbnail,
+        IonButtons,
+        IonButton
     },
     data() {
         return {
@@ -74,6 +80,7 @@
                 }
             },
             avatar: '',
+            presentingElement: undefined as any,
         }
     },
     setup() {
@@ -139,6 +146,8 @@
         return { 
             selectedIndex,
             appCanal: canal,
+            appVersion: version,
+            appUpdates: changelog,
             appPages,
             labels : [],
             isSelected: (url: string) => url === route.path ? 'selected' : ''
@@ -286,7 +295,19 @@
 			});
 
 			await alert.present();
-		}
+		},
+        showChangelog() {
+            // update version
+            localStorage.setItem('version', this.appVersion);
+
+            // show changelog
+            let refs = this.$refs as any;
+            refs.changelogModal.$el.present();
+        },
+        hideChangelog() {
+            let refs = this.$refs as any;
+            refs.changelogModal.$el.dismiss();
+        },
     },
     mounted() {
         // hide splash screen when dom is loaded
@@ -381,6 +402,23 @@
         document.addEventListener('averageColorUpdated', () => {
             this.applyAverageColor()
         })
+
+        // check current version in local storage
+        if(localStorage.getItem('version')) {
+            if(localStorage.getItem('version') !== this.appVersion) {
+                this.showChangelog();
+            }
+        }
+        else if(!this.loggedIn) {
+            // do nothing
+        }
+        else {
+            this.showChangelog();
+        }
+
+        document.addEventListener('showChangelog', () => {
+            this.showChangelog();
+        })
     }
   });
 </script>
@@ -429,6 +467,62 @@
         </keep-alive>
     </ion-router-outlet>
     </ion-split-pane>
+
+    <ion-modal ref="changelogModal">
+        <ion-header>
+            <ion-toolbar>
+                <ion-title>Notes de mise à jour</ion-title>
+                <ion-buttons slot="end">
+                    <ion-button :strong="true" @click="hideChangelog">Terminé</ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content class="update">
+            <div class="update_inner">
+                <div id="update-header">
+                    <span class="material-symbols-outlined mdls" slot="start">temp_preferences_custom</span>
+
+                    <h1>Notes de mise à jour</h1>
+                    <p>Voici les dernières nouveautés de Papillon.</p>
+                </div>
+
+                <ion-button mode="md" @click="hideChangelog" fill="solid" class="endButton">Accéder à Papillon</ion-button>
+                <p class="warning">Cet écran n'apparaîtera pas au redémarrage de Papillon. Il restera accessible dans les paramètres.</p>
+
+                <ion-list>
+                    <ion-list-header>
+                        <ion-label>
+                            Nouvelles fonctionnalités
+                        </ion-label>
+                    </ion-list-header>
+
+                    <ion-item v-for="(feature, i) in appUpdates.features" :key="i">
+                        <span class="material-symbols-outlined mdls" slot="start">{{feature.icon}}</span>
+                        <ion-label class="ion-text-wrap">
+                            <h2>{{ feature.name }}</h2>
+                            <p>{{ feature.description }}</p>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+
+                <ion-list>
+                    <ion-list-header>
+                        <ion-label>
+                            Correctifs
+                        </ion-label>
+                    </ion-list-header>
+
+                    <ion-item v-for="(fix, i) in appUpdates.fixes" :key="i">
+                        <span class="material-symbols-outlined mdls" slot="start">{{fix.icon}}</span>
+                        <ion-label class="ion-text-wrap">
+                            <h2>{{ fix.name }}</h2>
+                            <p>{{ fix.description }}</p>
+                        </ion-label>
+                    </ion-item>
+                </ion-list>
+            </div>
+        </ion-content>
+    </ion-modal>
   </ion-app>
 </template>
 
@@ -660,5 +754,64 @@
 
     .fade-enter, .fade-leave-active {
         opacity: 0
+    }
+
+    /* updates */
+    #update-header {
+        margin: 20px;
+        padding: 20px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        background: var(--ion-color-step-50);
+
+        color: #fff;
+        border-radius: 10px;
+    }
+
+    #update-header * {
+        margin: 0;
+        padding: 0;
+    }
+
+    #update-header span {
+        margin-bottom: 15px !important;
+
+        font-size: 36px;
+        width: 36px;
+    }
+
+    #update-header small {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 10px;
+        opacity: 0.5;
+    }
+
+    #update-header p {
+        font-size: 16px;
+        opacity: 0.5;
+    }
+
+    .update .warning {
+        margin: 0px 40px;
+        font-size: 13px;
+        opacity: 0.5;
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .update::part(scroll) {
+        padding-bottom: calc(env(safe-area-inset-bottom) + 100px) !important;
+    }
+
+    .endButton {
+        width: calc(100vw - 40px);
+        margin: 0px 20px;
+
+        --border-radius: 8px;
     }
 </style>

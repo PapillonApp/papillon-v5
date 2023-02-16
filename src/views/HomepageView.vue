@@ -399,7 +399,7 @@
 
 			<div id="components" ref="components">
 				<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
-					<ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none"
+					<ion-item button class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none"
 						@click="goto('timetable')" :style="`--courseColor: ${cours.course.color};`"
 						:class="{ 'HasStatus' : cours.hasStatus }">
 						<ion-ripple-effect></ion-ripple-effect>

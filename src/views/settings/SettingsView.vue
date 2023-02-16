@@ -128,6 +128,9 @@
                     this.contributors = contributors;
                 });
             },
+            showChangelog() {
+                document.dispatchEvent(new CustomEvent('showChangelog'));
+            },
             getUserData() {
                 let userData = JSON.parse(localStorage.getItem('userData'));
 
@@ -300,7 +303,7 @@
         </IonList>
 
         <IonList :inset="true" lines="inset">
-            <IonItem>
+            <IonItem @click="showChangelog">
                 <span class="material-symbols-outlined mdls" slot="start">security_update_good</span>
                 <IonLabel>
                     <p>Version de l'app</p>
