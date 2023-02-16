@@ -766,15 +766,15 @@
         justify-content: center;
         flex-direction: column;
 
-        background: var(--ion-color-step-700);
+        background: var(--ion-color-step-50);
 
-        color: #fff;
+        color: #000;
         border-radius: 10px;
     }
 
     @media screen and (prefers-color-scheme: dark) {
         #update-header {
-            background: var(--ion-color-step-50) !important;
+            color: #fff;
         }
     }
 
