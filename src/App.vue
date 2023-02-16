@@ -766,10 +766,16 @@
         justify-content: center;
         flex-direction: column;
 
-        background: var(--ion-color-step-50);
+        background: var(--ion-color-step-700);
 
         color: #fff;
         border-radius: 10px;
+    }
+
+    @media screen and (prefers-color-scheme: dark) {
+        #update-header {
+            background: var(--ion-color-step-50) !important;
+        }
     }
 
     #update-header * {
