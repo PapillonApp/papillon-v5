@@ -99,10 +99,17 @@
                 <ion-item v-for="extension in extensions" :key="extension.id">
 					<span class="material-symbols-outlined mdls" slot="start">{{ extension.icon }}</span>
                     <ion-label>
-                        <h2>{{ extension.name }}</h2>
-                        <p>{{ extension.description }}</p>
+                        <div class="title"><h2>{{ extension.name }}</h2><span class="badge">
+							v{{ extension.version }}
+						</span></div>
+                        <p>{{ extension.description }} par {{ extension.authorDisplayName }} ({{ extension.author }})</p>						
+						
                     </ion-label>
 
+					<ion-button color="primary" fill="clear" slot="end"
+						@click="localRepo.updateExtension(extension.rootUrl)">
+						<span class="material-symbols-outlined mdls" slot="icon-only">refresh</span>
+					</ion-button>
                     <ion-button color="danger" fill="clear" slot="end" 
                     @click="localRepo.uninstallExtension(extension.rootUrl)">
 						<span class="material-symbols-outlined mdls" slot="icon-only">delete</span>
@@ -144,4 +151,16 @@
         width: 56px;
         height: 56px;
     }
+	.title {
+		display: flex;
+		align-items: center;
+	}
+	.badge {
+		margin-left: 10px;
+		padding: 1px 5px;
+		border-radius: 5px;
+		background-color: #e0e0e0;
+		color: #000;
+		font-size: 11px;
+	}
 </style>
