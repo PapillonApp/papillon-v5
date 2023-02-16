@@ -439,3 +439,8 @@ ion-alert.md .btn_secondary {
     border-radius: 300px;
     padding: 10px 15px !important;
 }
+
+/* ion-content */
+ion-content::part(scroll) {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 40px) !important;
+}

@@ -804,10 +804,6 @@
         margin-top: 10px;
     }
 
-    .update::part(scroll) {
-        padding-bottom: calc(env(safe-area-inset-bottom) + 100px) !important;
-    }
-
     .endButton {
         width: calc(100vw - 40px);
         margin: 0px 20px;
