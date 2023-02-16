@@ -419,6 +419,10 @@
                 let cas = this.etabCas;
                 let url = this.etabUrl;
 
+                if (cas == '') {
+                    url = url + '?login=true'
+                }
+
                 var myHeaders = new Headers();
                 myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
                 
@@ -441,7 +445,7 @@
                     .then(response => response.json())
                     .then(result => {
                         if(!result.token) {
-                            if(result.error.includes("probably wrong login information")) {
+                            if(result.error.includes("probably wrong login information") || result.error.includes("probably bad username/password")) {
                                 displayToast.presentError("Identifiants incorrects.", "danger", result.error)
                             } else if(result == "missingusername") {
                                 displayToast.presentToast("Veuillez entrer un identifiant.", "danger")
