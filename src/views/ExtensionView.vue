@@ -90,9 +90,21 @@ export default defineComponent({
       </IonHeader>
 
     <ion-content :fullscreen="true">
-      <div :innerHTML="html" ref="html"></div>
+      <div class="html" :innerHTML="html" ref="html"></div>
     </ion-content>
   </ion-page>
 </template>
 
-<style scoped></style>
+<style scoped>
+
+.html {
+  height: calc(100%);
+  width: 100%;
+  overflow: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+
+  
+}
+
+</style>
