@@ -86,6 +86,27 @@ export class LocalRepo {
         }
     }
 
+    updateExtension(url: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            for (const extension of this.installedExtensions) {
+                if (extension.rootUrl === url) {
+                    const rootUrl = extension.rootUrl;
+                    const manifestUrl = rootUrl + 'papillonManifest.json';
+                    const newExtension = new Extension();
+                    newExtension.fromURL(manifestUrl).then((ext : Extension) => {
+                        this.uninstallExtension(extension.rootUrl);
+                        ext.init();
+                        window.location.reload();
+                        resolve(true);
+                    }).catch((err) => {
+                        reject(err);
+                    });
+                }
+            }
+        });
+    }
+                
+
     /**
         * Update an extension
         * @param {string} url - The url of the extension
