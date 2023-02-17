@@ -311,6 +311,7 @@
 		margin: 15px 5vw;
 
 		background: var(--ion-color-step-100);
+		opacity: 0.75;
 		border-radius: 9px;
 	}
 
