@@ -133,6 +133,8 @@
 			async share() {
 				let link = "Indisponible";
 				try {
+					displayToast.presentNativeToast("Préparation des logs...");
+
 					// Post logs to hastebin (https://logs.getpapillon.xyz)
 					let response = await fetch("https://logs.getpapillon.xyz/documents", {
 						method: "POST",
@@ -142,6 +144,7 @@
 
 					// Get the link
 					link = `https://logs.getpapillon.xyz/${result.key}`;
+					displayToast.presentNativeToast("Logs prêts à être partagés");
 				} catch (error) {
 					console.error("[Log View]: Failed upload logs - " + error);
 					displayToast.presentNativeToast("Impossible d'envoyer les logs sur le serveur")
