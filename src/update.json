@@ -5,19 +5,14 @@
                 "icon": "palette",
                 "name": "Nouvelle interface améliorée",
                 "description": "Votre photo de profil définit la couleur de votre interface. Papillon ne vous à jamais autant ressemblé !"
-            },
+            }
+        ],
+        "fixes": [
             {
                 "icon": "speed",
                 "name": "Meilleure performances & optimisations",
                 "description": "Papillon est maintenant plus fluide et plus rapide que jamais !"
             },
-            {
-                "icon": "extension",
-                "name": "Arrivée des extensions (bêta)",
-                "description": "Les extensions sont des plugins qui peuvent être ajoutés à Papillon pour ajouter de nouvelles fonctionnalités."
-            }
-        ],
-        "fixes": [
             {
                 "icon": "login",
                 "name": "Connexion depuis Pronote",

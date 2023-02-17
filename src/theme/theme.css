@@ -442,5 +442,5 @@ ion-alert.md .btn_secondary {
 
 /* ion-content */
 ion-content::part(scroll) {
-    padding-bottom: calc(env(safe-area-inset-bottom) + 40px) !important;
+    padding-bottom: calc(env(safe-area-inset-bottom)) !important;
 }
