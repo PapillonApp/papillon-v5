@@ -52,6 +52,7 @@
                 AdvancedView: AdvancedView,
                 randomTextWidth: [],
                 randomTitleWidth: [],
+                ExtensionsView: ExtensionsView,
             }
         },
         methods: {

@@ -4,7 +4,6 @@
     import Values from 'values.js'
 
     const { version, canal } = require('/package')
-
     import { app } from '@/main'
     import { defineComponent, ref } from 'vue';
     import { useRoute } from 'vue-router';
