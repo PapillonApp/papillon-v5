@@ -78,9 +78,8 @@ function getPronoteLogin() {
                     "success",
                     checkmark
                 );
-            }
-            else {
-                if(result == "missingpassword" || result == "missingusername" || result.error.includes("probably wrong login information")) {
+            } else {
+                if(result.error == "Missing password" || result.error == "Missing username" || result.error.includes("probably wrong login information") || result.error.includes("probably bad username/password")) {
                     displayToast.presentToast("Merci de vous reconnecter.", "danger")
                 } else if(result.error == "Your IP address is suspended.") {
                     displayToast.presentError("Une erreur s'est produite", "danger", "L'adresse IP de nos serveurs est suspendue pour votre établissement. S'il vous plaît réessayez dans quelques heures.")
@@ -92,6 +91,10 @@ function getPronoteLogin() {
                 console.error('[Get Token]: Return to login page - ' + result);
             }
         })
+        .catch(error => {
+            displayToast.presentError("Impossible de joindre le serveur.", "danger", error)
+            console.error('[Get Token]: Unable to join server - ' + error);
+        });
     }
 }
 
