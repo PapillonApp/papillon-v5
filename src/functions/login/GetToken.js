@@ -58,10 +58,7 @@ function getPronoteLogin() {
         fetch(API + "/generatetoken", requestOptions)
         .then(response => response.json())
         .then(result => {
-            if (!result.ok) {
-                displayToast.presentError("Impossible de joindre le serveur.", "danger", result)
-            }
-            else if(result.token) {
+            if(result.token) {
                 // save token
                 localStorage.setItem('token', result.token);
 
