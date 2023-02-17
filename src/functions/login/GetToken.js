@@ -59,7 +59,7 @@ function getPronoteLogin() {
         .then(response => response.json())
         .then(result => {
             if (!result.ok) {
-                displayToast.presentError("Impossible de joindre le serveur.", "danger", result.error)
+                displayToast.presentError("Impossible de joindre le serveur.", "danger", result)
             }
             else if(result.token) {
                 // save token
