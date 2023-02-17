@@ -788,10 +788,8 @@
         border-radius: 10px;
     }
 
-    @media screen and (prefers-color-scheme: dark) {
-        #update-header {
-            color: #fff !important;
-        }
+    .dark #update-header {
+        color: #fff !important;
     }
 
     #update-header * {
