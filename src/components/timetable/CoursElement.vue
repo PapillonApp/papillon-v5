@@ -310,7 +310,7 @@
 
 		margin: 15px 5vw;
 
-		background: var(--ion-color-step-50);
+		background: var(--ion-color-step-150);
 		border-radius: 9px;
 	}
 
