@@ -42,7 +42,6 @@
     "core-js": "^3.6.5",
     "fast-average-color": "^9.3.0",
     "ionicons": "^6.0.3",
-    "jquery": "^3.6.3",
     "lucide-vue-next": "^0.104.0",
     "pica": "^9.0.1",
     "sharp": "^0.31.3",

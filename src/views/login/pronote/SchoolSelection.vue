@@ -4,7 +4,6 @@
     IonButton, actionSheetController } from '@ionic/vue';
 
     import axios from 'axios';
-    import $ from "jquery";
     
     import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp, serverOutline, serverSharp } from 'ionicons/icons';
 
@@ -187,62 +186,82 @@
                 })
             },
             findEstablishments(lat, lon) {
-                $.ajax('https://www.index-education.com/swie/geoloc.php', {
-                    crossDomain: true,
-                    data: {
-                    data: JSON.stringify({
-                        "nomFonction": "geoLoc",
-                        "lat": lat,
-                        "long": lon,
-                    })
-                    },
-                    method: "POST"})
-                    .done((data) => {
-                        this.etabs = data;
-                        
-                        if(this.etabs.length == 0) {
-                            this.etabsEmpty = true;
-                        } else {
-                            this.etabsEmpty = false;
-                        }
+                fetch("https://www.index-education.com/swie/geoloc.php", {
+                headers: {
+                    accept: "*/*",
+                    "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "sec-ch-ua":
+                    '"Chromium";v="110", "Not A(Brand";v="24", "Google Chrome";v="110"',
+                    "sec-ch-ua-mobile": "?0",
+                    "sec-ch-ua-platform": '"Windows"',
+                    "sec-fetch-dest": "empty",
+                    "sec-fetch-mode": "cors",
+                    "sec-fetch-site": "cross-site",
+                    "sec-gpc": "1",
+                },
+                referrer: "http://localhost:8081/",
+                referrerPolicy: "strict-origin-when-cross-origin",
+                body: 
+                    "data=%7B%22nomFonction%22%3A%22geoLoc%22%2C%22lat%22%3A" +
+                    lat +
+                    "%2C%22long%22%3A" +
+                    lon +
+                    "%7D",
+                method: "POST",
+                mode: "cors",
+                credentials: "omit",
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    this.etabs = data;
 
-                        if(JSON.stringify(data) == "{}") {
-                            this.locationFailed = true;
-                        } else {
-                            this.locationFailed = false;
-                        }
-                        
-                        // remove all etabs with no URL
-                        for (let i = 0; i < this.etabs.length; i++) {
-                            if (this.etabs[i].url == "" || this.etabs[i].url == null) {
-                                this.etabs.splice(i, 1);
-                            }
-                        }
+                    if (this.etabs.length == 0) {
+                    this.etabsEmpty = true;
+                    } else {
+                    this.etabsEmpty = false;
+                    }
 
-                        // decode etabName html entities
-                        for (let i = 0; i < this.etabs.length; i++) {
-                            this.etabs[i].nomEtab = this.decodeEntities(this.etabs[i].nomEtab);
-                        }
+                    if (JSON.stringify(data) == "{}") {
+                    this.locationFailed = true;
+                    } else {
+                    this.locationFailed = false;
+                    }
 
-                        setTimeout(() => {
-                            this.isLoading = false;
-                        }, 200);
-                    })
-                    .fail((error) => {
-                        console.error("[Find Establishment]: " + error)
-                                                
-                        if(this.retries < 3) {
-                            setTimeout(() => {
-                                this.findEstablishments(lat, lon);
-                            }, 1000);
-                            this.retries++;
-                        }
-                        else {
-                            this.isLoading = false;
-                            this.locationFailed = true;
-                            displayToast.presentError(`Une erreur s'est produite pour obtenir les établissements à proximité.`, "danger", error.stack)
-                        }
-                    });
+                    // remove all etabs with no URL
+                    for (let i = 0; i < this.etabs.length; i++) {
+                    if (this.etabs[i].url == "" || this.etabs[i].url == null) {
+                        this.etabs.splice(i, 1);
+                    }
+                    }
+
+                    // decode etabName html entities
+                    for (let i = 0; i < this.etabs.length; i++) {
+                    this.etabs[i].nomEtab = this.decodeEntities(this.etabs[i].nomEtab);
+                    }
+
+                    setTimeout(() => {
+                    this.isLoading = false;
+                    }, 200);
+                })
+                .catch((error) => {
+                    console.error("[Find Establishment]: " + error);
+
+                    if (this.retries < 3) {
+                    setTimeout(() => {
+                        this.findEstablishments(lat, lon);
+                    }, 1000);
+                    this.retries++;
+                    } else {
+                    this.isLoading = false;
+                    this.locationFailed = true;
+                    displayToast.presentError(
+                        `Une erreur s'est produite pour obtenir les établissements à proximité.`,
+                        "danger",
+                        error.stack
+                    );
+                    }
+                })
             },
             clearEtabs() {
                 this.etabs = [];
@@ -447,9 +466,9 @@
                         if(!result.token) {
                             if(result.error.includes("probably wrong login information") || result.error.includes("probably bad username/password")) {
                                 displayToast.presentError("Identifiants incorrects.", "danger", result.error)
-                            } else if(result == "missingusername") {
+                            } else if(result.error == "Missing username") {
                                 displayToast.presentToast("Veuillez entrer un identifiant.", "danger")
-                            } else if(result == "missingpassword") {
+                            } else if(result.error == "Missing password") {
                                 displayToast.presentToast("Veuillez entrer un mot de passe.", "danger")
                             } else if(result.error == "Your IP address is suspended.") {
                                 displayToast.presentError("Une erreur s'est produite", "danger", "L'adresse IP de nos serveurs est suspendue pour votre établissement. S'il vous plaît réessayez dans quelques heures.")
