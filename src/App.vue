@@ -2,6 +2,7 @@
     import { IonApp, IonContent, IonButton, IonButtons, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText, alertController, IonModal, IonThumbnail } from '@ionic/vue';
 
     import Values from 'values.js'
+    import { AppActions } from 'capacitor-app-actions'
 
     const { version, canal } = require('/package')
 
@@ -175,6 +176,20 @@
                 }
             })
         },
+        checkIosShortcuts() {
+            AppActions.addListener("timetable", (info) => {
+                // open timetable
+                this.$router.push('/timetable');
+            });
+            AppActions.addListener("homework", (info) => {
+                // open homework
+                this.$router.push('/homework');
+            });
+            AppActions.addListener("grades", (info) => {
+                // open grades
+                this.$router.push('/grades');
+            });
+        },
         RGBToHSL(r: number, g: number, b: number) {
             r /= 255;
             g /= 255;
@@ -319,6 +334,7 @@
 
         // shortcuts
         this.checkAndroidShortcuts();
+        this.checkIosShortcuts();
 
         // user data if logged in
         if(localStorage.loggedIn) {

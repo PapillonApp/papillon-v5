@@ -228,3 +228,50 @@ App.addListener('backButton', ({canGoBack}) => {
 		window.history.back();
 	}
 });
+
+// iOS App Actions
+import { AppActions } from 'capacitor-app-actions'
+
+let iOSActions = [] as any;
+iOSActions = [ 
+	{ 
+		id: "timetable",
+		title: "Emploi du temps",
+		icon: "calendar"
+	},
+	{ 
+		id: "homework",
+		title: "Travail à faire",
+		icon: "text.book.closed.fill"
+	},
+	{ 
+		id: "grades",
+		title: "Notes",
+		icon: "chart.xyaxis.line"
+	}
+];
+
+// if UserCache is set in localstorage
+if (localStorage.getItem('UserCache') !== null) {
+	// get user name from localstorage
+	const user = JSON.parse(localStorage.getItem('UserCache')||"{}");
+	const name = user.name;
+
+	const newNameAction = {
+		id: "user",
+		title: name,
+		subtitle: "Utilisateur connecté",
+		icon: "person.fill"
+	}
+
+	// add new action to the top of the array
+	iOSActions.unshift(newNameAction);
+}
+
+async function setActions() {
+	await Capacitor.Plugins.AppActions.set({ "actions": iOSActions});
+}
+
+if (Capacitor.getPlatform() === 'ios') {
+	setActions();
+}
