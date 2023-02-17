@@ -447,9 +447,9 @@
                         if(!result.token) {
                             if(result.error.includes("probably wrong login information") || result.error.includes("probably bad username/password")) {
                                 displayToast.presentError("Identifiants incorrects.", "danger", result.error)
-                            } else if(result == "missingusername") {
+                            } else if(result.error == "Missing username") {
                                 displayToast.presentToast("Veuillez entrer un identifiant.", "danger")
-                            } else if(result == "missingpassword") {
+                            } else if(result.error == "Missing password") {
                                 displayToast.presentToast("Veuillez entrer un mot de passe.", "danger")
                             } else if(result.error == "Your IP address is suspended.") {
                                 displayToast.presentError("Une erreur s'est produite", "danger", "L'adresse IP de nos serveurs est suspendue pour votre établissement. S'il vous plaît réessayez dans quelques heures.")
