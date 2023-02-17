@@ -1,6 +1,7 @@
 # Specifies intentionally untracked files to ignore when using Git
 # http://git-scm.com/docs/gitignore
 
+# Ignore
 *~
 *.sw[mnpcod]
 .tmp
@@ -32,3 +33,6 @@ npm-debug.log*
 /www
 
 capacitor.config.ts
+
+# Allow
+!/node_modules/capacitor-app-actions/CapacitorAppActions.podspec
