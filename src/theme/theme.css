@@ -46,6 +46,7 @@ ion-content::part(scroll) {
 
 :root {
     --papillon-font: 'Hind';
+    --ion-box-shadow: 0 1px 2px #00000005, 0 2px 6px #00000005;
 }
 
 ion-title, h1, h2, h3, ion-button {
@@ -363,6 +364,12 @@ ion-list.list-inset.ios ion-list-header ion-label {
 
 ion-list.list-inset.md ion-list-header {
     padding-top: 8px;
+}
+
+.ios ion-list.list-inset {
+    --ion-inset-background: var(--ion-plain-background-color) !important;
+    box-shadow: var(--ion-box-shadow) !important;
+    border-radius: 12px !important;
 }
 
 /* action sheet */

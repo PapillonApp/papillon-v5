@@ -593,9 +593,11 @@
 	}
 
 	.ios .nextCours::part(native) {
-		background: var(--ion-inset-background);
+		background: var(--ion-plain-background-color);
 		border-radius: 12px;
 		padding: 5px 15px;
+
+		box-shadow: var(--ion-box-shadow) !important;
 	}
 
 	.md .nextCours {
