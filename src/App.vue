@@ -790,7 +790,7 @@
 
     @media screen and (prefers-color-scheme: dark) {
         #update-header {
-            color: #fff;
+            color: #fff !important;
         }
     }
 
