@@ -119,7 +119,7 @@
 				});
 			},
 			clearLogs() {
-				localStorage.removeItem("logs");
+				localStorage.setItem("logs", JSON.stringify([]));
 				this.logs = [];
 
 				displayToast.presentNativeToast(
@@ -164,7 +164,7 @@
 						'Jours fériés et vacances scolaires mis à jour'
 					);
 				} catch (error) {
-					console.error(error);
+					console.error("[Refresh Holidays and Days off]: " + error);
 					displayToast.presentNativeToast("Une erreur est survenue lors de la récupération des jours fériés et des vacances scolaires");
 				}
 			}

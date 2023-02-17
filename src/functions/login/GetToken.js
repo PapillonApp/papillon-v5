@@ -89,7 +89,7 @@ function getPronoteLogin() {
                     displayToast.presentError("Une erreur s'est produite.", "danger", result.error)
                 }
                 // redirect to login page
-                console.error(result);
+                console.error('[Get Token]: Return to login page - ' + result);
             }
         });
     }

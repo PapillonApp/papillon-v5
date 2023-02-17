@@ -1,9 +1,9 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonItem, IonList, IonIcon, IonBackButton, IonSearchbar, IonModal, IonListHeader, IonSpinner, loadingController, actionSheetController } from '@ionic/vue';
+    import { IonItem, IonList, IonIcon, IonBackButton, IonSearchbar, IonModal, IonListHeader, IonSpinner, loadingController, IonInput, 
+    IonButton, actionSheetController } from '@ionic/vue';
 
     import axios from 'axios';
-    import $ from "jquery";
     
     import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp, serverOutline, serverSharp } from 'ionicons/icons';
 
@@ -24,7 +24,9 @@
             IonSearchbar,
             IonModal,
             IonListHeader,
-            IonSpinner
+            IonSpinner,
+            IonInput,
+            IonButton
         },
         setup() {
             return { 
@@ -81,6 +83,13 @@
                     }, 300);
                     this.ents = response.data.ent_list;
                 })
+                .catch(error => {
+                    setTimeout(() => {
+                        loading.dismiss();
+                    }, 300);
+                    console.error(error)
+                    displayToast.presentError("Impossible de récupérer les ENTS. La connexion risque de ne pas fonctionner.", "danger", error)
+                })
             },    
             async GetLocation() {
                 const coordinates = await Geolocation.getCurrentPosition();
@@ -123,7 +132,7 @@
 
                 const actionSheet = await actionSheetController.create({
                     header: 'Choisissez votre méthode de connexion',
-                    subHeader: 'Plusieurs méthode de connexion sont disponible pour votre établissement. Choisissez celle que vous souhaitez utiliser.',
+                    subHeader: 'Plusieurs méthodes de connexion sont disponible pour votre établissement. Choisissez celle que vous souhaitez utiliser.',
                     buttons: options
                 });
 
@@ -131,6 +140,11 @@
             },
             getPostal(e) {
                 let postal = e.detail.value
+
+                if (postal.trim().length != 5) {
+                    return;
+                }
+
                 postal = postal.normalize("NFD").replace(/\p{Diacritic}/gu, "");
 
                 if(postal.trim() == "") {
@@ -143,7 +157,7 @@
                 this.etabs = [];
                 this.etabsEmpty = false;
                 this.locationFailed = false;
-                this.terms = e.detail.value;
+                this.terms = postal;
                 this.isLoading = true;
                 
                 axios.get('https://cors.api.getpapillon.xyz/https://positionstack.com/geo_api.php?query=france+' + postal, {
@@ -165,64 +179,89 @@
                     this.findEstablishments(lat, lon)
                 })
                 .catch(error => {
+                    this.isLoading = false;
+                    this.locationFailed = true;
+                    console.error("[Get Postal Code]: " + error)
                     displayToast.presentError(`Une erreur s'est produite pour obtenir votre code postal.`, "danger", error.stack)
                 })
             },
             findEstablishments(lat, lon) {
-                $.ajax('https://www.index-education.com/swie/geoloc.php', {
-                    crossDomain: true,
-                    data: {
-                    data: JSON.stringify({
-                        "nomFonction": "geoLoc",
-                        "lat": lat,
-                        "long": lon,
-                    })
-                    },
-                    method: "POST"})
-                    .done((data) => {
-                        this.etabs = data;
+                fetch("https://www.index-education.com/swie/geoloc.php", {
+                headers: {
+                    accept: "*/*",
+                    "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
+                    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "sec-ch-ua":
+                    '"Chromium";v="110", "Not A(Brand";v="24", "Google Chrome";v="110"',
+                    "sec-ch-ua-mobile": "?0",
+                    "sec-ch-ua-platform": '"Windows"',
+                    "sec-fetch-dest": "empty",
+                    "sec-fetch-mode": "cors",
+                    "sec-fetch-site": "cross-site",
+                    "sec-gpc": "1",
+                },
+                referrer: "http://localhost:8081/",
+                referrerPolicy: "strict-origin-when-cross-origin",
+                body: 
+                    "data=%7B%22nomFonction%22%3A%22geoLoc%22%2C%22lat%22%3A" +
+                    lat +
+                    "%2C%22long%22%3A" +
+                    lon +
+                    "%7D",
+                method: "POST",
+                mode: "cors",
+                credentials: "omit",
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    this.etabs = data;
 
-                        if(this.etabs.length == 0) {
-                            this.etabsEmpty = true;
-                        } else {
-                            this.etabsEmpty = false;
-                        }
+                    if (this.etabs.length == 0) {
+                    this.etabsEmpty = true;
+                    } else {
+                    this.etabsEmpty = false;
+                    }
 
-                        if(JSON.stringify(data) == "{}") {
-                            this.locationFailed = true;
-                        } else {
-                            this.locationFailed = false;
-                        }
-                        
-                        // remove all etabs with no URL
-                        for (let i = 0; i < this.etabs.length; i++) {
-                            if (this.etabs[i].url == "" || this.etabs[i].url == null) {
-                                this.etabs.splice(i, 1);
-                            }
-                        }
+                    if (JSON.stringify(data) == "{}") {
+                    this.locationFailed = true;
+                    } else {
+                    this.locationFailed = false;
+                    }
 
-                        // decode etabName html entities
-                        for (let i = 0; i < this.etabs.length; i++) {
-                            this.etabs[i].nomEtab = this.decodeEntities(this.etabs[i].nomEtab);
-                        }
+                    // remove all etabs with no URL
+                    for (let i = 0; i < this.etabs.length; i++) {
+                    if (this.etabs[i].url == "" || this.etabs[i].url == null) {
+                        this.etabs.splice(i, 1);
+                    }
+                    }
 
-                        setTimeout(() => {
-                            this.isLoading = false;
-                        }, 200);
-                    })
-                    .fail((error) => {
-                        console.error(error)
-                        
-                        if(this.retries < 3) {
-                            setTimeout(() => {
-                                this.findEstablishments(lat, lon);
-                            }, 1000);
-                            this.retries++;
-                        }
-                        else {
-                            displayToast.presentError(`Une erreur s'est produite pour obtenir les établissements à proximité.`, "danger", error.stack)
-                        }
-                    });
+                    // decode etabName html entities
+                    for (let i = 0; i < this.etabs.length; i++) {
+                    this.etabs[i].nomEtab = this.decodeEntities(this.etabs[i].nomEtab);
+                    }
+
+                    setTimeout(() => {
+                    this.isLoading = false;
+                    }, 200);
+                })
+                .catch((error) => {
+                    console.error("[Find Establishment]: " + error);
+
+                    if (this.retries < 3) {
+                    setTimeout(() => {
+                        this.findEstablishments(lat, lon);
+                    }, 1000);
+                    this.retries++;
+                    } else {
+                    this.isLoading = false;
+                    this.locationFailed = true;
+                    displayToast.presentError(
+                        `Une erreur s'est produite pour obtenir les établissements à proximité.`,
+                        "danger",
+                        error.stack
+                    );
+                    }
+                })
             },
             clearEtabs() {
                 this.etabs = [];
@@ -249,8 +288,8 @@
                 this.loginToEtab("https://demo.index-education.net/pronote");
 
                 setTimeout(() => {
-                    this.$refs.user.value = "demonstration";
-                    this.$refs.pass.value = "pronotevs";
+                    this.$refs.user.$el.value = "demonstration";
+                    this.$refs.pass.$el.value = "pronotevs";
 
                     this.login();
                 }, 1000);
@@ -394,10 +433,14 @@
             login() {
                 const API = this.$api;
 
-                let username = this.$refs.user.value;
-                let password = this.$refs.pass.value;
+                let username = this.$refs.user.$el.value;
+                let password = this.$refs.pass.$el.value;
                 let cas = this.etabCas;
                 let url = this.etabUrl;
+
+                if (cas == '') {
+                    url = url + '?login=true'
+                }
 
                 var myHeaders = new Headers();
                 myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -415,17 +458,17 @@
                     redirect: 'follow'
                 };
 
-                displayToast.presentToast("Connexion en cours...", "dark", true)
+                displayToast.presentToast("Connexion en cours...", "light", true)
 
                 fetch(API + "/generatetoken", requestOptions)
                     .then(response => response.json())
                     .then(result => {
                         if(!result.token) {
-                            if(result.error.includes("probably wrong login information")) {
+                            if(result.error.includes("probably wrong login information") || result.error.includes("probably bad username/password")) {
                                 displayToast.presentError("Identifiants incorrects.", "danger", result.error)
-                            } else if(result == "missingusername") {
+                            } else if(result.error == "Missing username") {
                                 displayToast.presentToast("Veuillez entrer un identifiant.", "danger")
-                            } else if(result == "missingpassword") {
+                            } else if(result.error == "Missing password") {
                                 displayToast.presentToast("Veuillez entrer un mot de passe.", "danger")
                             } else if(result.error == "Your IP address is suspended.") {
                                 displayToast.presentError("Une erreur s'est produite", "danger", "L'adresse IP de nos serveurs est suspendue pour votre établissement. S'il vous plaît réessayez dans quelques heures.")
@@ -498,7 +541,7 @@
             </ion-buttons>
         </ion-toolbar>
         <ion-toolbar>
-            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Chercher avec un code postal..." type="number" :debounce="1000" @ionChange="getPostal($event)" @ionClear="clearEtabs()" v-bind="terms"></ion-searchbar>
+            <ion-searchbar autocomplete="off" ref="postalInput" placeholder="Chercher avec un code postal..." type="number" @ionChange="getPostal($event)" @ionClear="clearEtabs()" maxlength="5"></ion-searchbar>
         </ion-toolbar>
     </ion-header>
       
@@ -531,7 +574,7 @@
                 <ion-icon class="icon" slot="start" :ios="navigateOutline" :md="navigateSharp"></ion-icon>
                 <ion-label>
                     <h2>Emplacement introuvable</h2>
-                    <p>Impossible de trouver des établissements à "{{terms}}"</p>
+                    <p>Impossible de trouver des établissements à "{{ terms }}"</p>
                 </ion-label>
             </ion-item>
         </ion-list>
@@ -575,7 +618,7 @@
                 </ion-label>
             </ion-list-header>
 
-            <ion-item button disabled @click="changeApi()">
+            <ion-item button @click="changeApi()">
                 <ion-icon class="icon" slot="start" :ios="serverOutline" :md="serverSharp"></ion-icon>
                 <ion-label>
                     <h2>Changer d'API</h2>
@@ -602,18 +645,26 @@
                         <img src="assets/welcome/pronote_logo.png" alt="Pronote Logo" class="logo"/>
                         <div class="introData">
                             <h2>Connexion à Papillon</h2>
-                            <p>Vous souhaitez vous connecter à <B>Pronote</B> en utilisant <B>{{displayCas}}</B> à l'aide de Papillon.</p>
-                            <br v-if="isEduconnectLogin">
+                            <p class="description">Vous souhaitez vous connecter à <B>Pronote</B> en utilisant <B>{{displayCas}}</B>.</p>
                             <p v-if="isEduconnectLogin" class="isEduconnectLogin">Cet ENT utilise ÉduConnect, merci de rentrer les identifiants de ce service.</p>
                         </div>
                     </div>
 
-                    <div class="loginForm">
-                        <input ref="user" type="text" placeholder="Identifiant" class="loginInput" appAutofill autocomplete="username" value=""/>
-                        <input ref="pass" type="password" placeholder="Mot de passe" class="loginInput" appAutofill autocomplete="password" value=""/><br/>
+                    <ion-list class="loginInput">
+                        <ion-item mode="md" fill="solid" class="userIn">
+                            <ion-label position="floating">Identifiant</ion-label>
+                            <ion-input ref="user" type="text" placeholder="j.dupont6" autocomplete="username"></ion-input>
+                        </ion-item>
 
-                        <button @click="login" class="loginButton">Se connecter</button>
-                    </div>
+                        <ion-item mode="md" fill="solid" class="passIn">
+                            <ion-label position="floating">Mot de passe</ion-label>
+                            <ion-input ref="pass" type="password" placeholder="*********"></ion-input>
+                        </ion-item>
+
+                        <ion-button class="loginBtn" @click="login" expand="block" mode="md">
+                            Se connecter
+                        </ion-button>
+                    </ion-list>
 
                     <div class="loginConditions">
                         Vos données ne sont pas stockées sur nos serveurs. En vous connectant avec cette application, vous acceptez les <a href="https://getpapillon.xyz/privacy.pdf">conditions d'utilisation</a> de Papillon.
@@ -631,99 +682,71 @@
         opacity: 50%;
     }
 
-    .loginPage {
-        position: absolute;
-        top: 0;
-        left: 0;
-        background-color: #ffffff;
-        color: #000;
-        width: 100%;
-        height: 100vh;
-        overflow: hidden;
+    .loginIntro {
+        background: var(--ion-color-step-50);
+        margin: 20px;
+        border-radius: 10px;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        padding: 20px;
+        gap: 20px;
     }
 
-    .loginPage * {
-        font-family: sans-serif !important;
+    .loginIntro * {
         margin: 0;
     }
 
-    .loginIntro {
-        padding: 20px;
-        text-align: left;
-        background: linear-gradient(180deg, #009C34 0%, #00AC6E 100%);
-        color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-    } 
-
-    .introData h2 {
-        font-size: 24px;
-        font-family: var(--papillon-font) !important;
-        font-weight: 700;
-    }
-    
     .loginIntro .logo {
-        height: 42px;
-        width: 42px;
+        height: 44px;
     }
 
-    .loginIntro p {
-        margin-top: 5px;
+    .loginIntro .introData {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
     }
 
-    .isEduconnectLogin {
-        font-size: 14px;
-        font-weight: 500;
-        color: #ffffffc0;
+    .loginIntro .introData h2 {
+        font-size: 18px;
     }
 
-    .loginConditions {
-        padding: 5px 20px;
-        text-align: center;
-        font-size: 13px;
-        color: #999999;
+    .loginIntro .introData .description {
+        font-size: 15px;
+        opacity: 0.7;
     }
 
-    .loginConditions a {
-        color: #009c34;
-    }
-
-    .loginForm {
-        padding: 20px;
+    .loginIntro .isEduconnectLogin {
+        font-size: 15px;
+        opacity: 0.5;
+        margin-top: 10px;
     }
 
     .loginInput {
-        width: 100%;
-        padding: 15px 15px;
-        border: none;
-        background: #00000010;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        overflow: hidden;
-        isolation: isolate;
-
-        font-size: 16px;
-        font-weight: 500;
-        font-family: var(--papillon-font) !important;
-
-        -webkit-user-select: text;
-        -webkit-overflow-scrolling: auto;
+        margin: 0px 20px;
     }
 
-    .loginButton {
-        width: 100%;
-        padding: 15px 15px;
-        border: 1px solid #009c34;
-        border-radius: 8px;
-        background-color: #009c34;
-        color: #ffffff;
-        font-weight: 600;
-        font-size: 17px;
-        cursor: pointer;
-        overflow: hidden;
-        isolation: isolate;
-        font-family: var(--papillon-font) !important;
+    .loginBtn {
+        margin-top: 20px;
+        --border-radius: 8px !important;
+    }
+
+    .loginInput ion-item {
+        margin-bottom: 10px;
+    }
+
+    .loginInput ion-item::part(native) {
+        --border-color: var(--ion-color-step-200) !important;
+        --border-top-left-radius: 8px !important;
+        --border-top-right-radius: 8px !important;
+    }
+
+    .loginConditions {
+        margin: 20px;
+        font-size: 12px;
+        opacity: 0.5;
+        text-align: center;
     }
 </style>

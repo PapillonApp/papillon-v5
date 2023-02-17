@@ -119,7 +119,7 @@
 
 					localStorage.setItem('disabledDays', JSON.stringify(data.data.values));
 				} catch (error) {
-					console.error(error);
+					console.error("[Change days disabled]: " + error);
 					displayToast.presentNativeToast(
 						'Une erreur est survenue'
 					);

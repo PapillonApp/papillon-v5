@@ -131,6 +131,7 @@ async function alertDialogError(err) {
 		header: "Détails de l'erreur",
 		subHeader: "Une erreur s'est produite",
 		message: err,
+		mode: 'md',
 		buttons: ['OK'],
 	});
 

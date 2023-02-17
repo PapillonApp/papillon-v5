@@ -10,7 +10,7 @@
     Your timetable, homeworks, grades, news and more in a fresh new UI for any French school service.
     <br/>
     <br/>
-    <a href="https://github.com/PapillonApp/Papillon"><strong>Explore the docs »</strong></a>
+    <a href="https://docs.getpapillon.xyz/"><strong>Explore the docs »</strong></a>
     <br/>
     <br/>
     <a href="https://github.com/PapillonApp/Papillon/issues">Report Bug</a>

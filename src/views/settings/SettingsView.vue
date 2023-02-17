@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonListHeader, IonLabel, IonItem, actionSheetController, IonNavLink, IonChip } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonListHeader, IonLabel, IonItem, actionSheetController, IonNavLink, IonChip, IonSkeletonText, IonSpinner } from '@ionic/vue';
 
     import { Browser } from '@capacitor/browser';
 
@@ -29,7 +29,9 @@
             IonItem,
             IonNavLink,
             IonPage,
-            IonChip
+            IonChip,
+            IonSkeletonText,
+            IonSpinner
         },
         setup() {
             return { 
@@ -47,6 +49,8 @@
                 OptionsView: OptionsView,
                 UserView: UserView,
                 AdvancedView: AdvancedView,
+                randomTextWidth: [],
+                randomTitleWidth: [],
             }
         },
         methods: {
@@ -124,6 +128,9 @@
                     this.contributors = contributors;
                 });
             },
+            showChangelog() {
+                document.dispatchEvent(new CustomEvent('showChangelog'));
+            },
             getUserData() {
                 let userData = JSON.parse(localStorage.getItem('userData'));
 
@@ -163,6 +170,12 @@
 
             // Get localStorage size
             this.localStorageSize = this.getLocalStorageSize() + ' kb';
+
+            // Set random width for skeleton text
+            for (let i = 0; i < 6; i++) {
+                this.randomTextWidth.push(Math.floor(Math.random() * 50) + 50);
+                this.randomTitleWidth.push(Math.floor(Math.random() * 50) + 20);
+            }
         }
     });
 </script>
@@ -241,13 +254,28 @@
                 </IonLabel>
             </IonListHeader>
 
-            <IonItem v-for="(contributor, i) in contributors" :key="i" button @click="openURL(contributor.html_url)">
-            <img :src="contributor.avatar_url" slot="start" class="avatar" />
-            <IonLabel>
-                <h2>{{ contributor.login }}</h2>
-                <p>{{ contributor.contributions }} contributions à Papillon</p>
-            </IonLabel>
-            </IonItem>
+            <div v-if="contributors != null">
+                <IonItem v-for="(contributor, i) in contributors" :key="i" button @click="openURL(contributor.html_url)">
+                    <img :src="contributor.avatar_url" slot="start" class="avatar" />
+                    <IonLabel>
+                        <h2>{{ contributor.login }}</h2>
+                        <p>{{ contributor.contributions }} contributions à Papillon</p>
+                    </IonLabel>
+                </IonItem>
+            </div>
+
+            <div v-else>
+                <IonItem v-for="n in 5" :key="n">
+                    <div slot="start" class="avatar" style="margin-left: 5px;">
+                        <IonSpinner></IonSpinner>
+                    </div>
+
+                    <IonLabel>
+                        <IonSkeletonText :animated="true" :style="{width: randomTitleWidth[n] + '%'}"></IonSkeletonText>
+                        <IonSkeletonText :animated="true" :style="{width: randomTextWidth[n] + '%'}"></IonSkeletonText>
+                    </IonLabel>
+                </IonItem>
+            </div>
         </IonList>
 
         <IonList :inset="true" lines="inset">
@@ -265,14 +293,21 @@
                     <h2>Contribuer au projet Papillon</h2>
                 </IonLabel>
             </IonItem>
+            <IonItem button @click="openURL('https://getpapillon.xyz/privacy.pdf')">
+                <span class="material-symbols-outlined mdls" slot="start">shield</span>
+                <IonLabel>
+                    <p>Document officiel</p>
+                    <h2>Politique de confidentialité</h2>
+                </IonLabel>
+            </IonItem>
         </IonList>
 
         <IonList :inset="true" lines="inset">
-            <IonItem>
+            <IonItem @click="showChangelog">
                 <span class="material-symbols-outlined mdls" slot="start">security_update_good</span>
                 <IonLabel>
                     <p>Version de l'app</p>
-                    <h2>papillon {{ appVersion }}-{{ appPlatform }}</h2>
+                    <h2>{{ appVersion }}-{{ appPlatform }}</h2>
                 </IonLabel>
 
                 <IonChip v-if="appCanal == 'dev'" slot="end" color="danger">

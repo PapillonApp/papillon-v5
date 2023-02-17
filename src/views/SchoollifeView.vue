@@ -10,6 +10,7 @@
 		IonItem,
 		IonChip,
 		IonPage,
+		alertController
 	} from '@ionic/vue';
 
 	import GetAbsences from '@/functions/fetch/GetAbsences.js';
@@ -40,7 +41,7 @@
 						this.absError = false;
 					})
 					.catch((err) => {
-						console.error(err);
+						console.error("[School Life View]: Get absences - " + err);
 						this.absError = true;
 					});
 
@@ -48,7 +49,7 @@
 						this.punishments = res;
 					})
 					.catch((err) => {
-						console.error(err);
+						console.error("[School Life View]: Get punishments - " + err);
 						this.punishmentsError = true;
 					});
 
@@ -56,12 +57,12 @@
 						this.delays = res;
 					})
 					.catch((err) => {
-						console.error(err);
+						console.error("[School Life View]: Get delays - " + err);
 						this.delaysError = true;
 					});
 				}
 				catch (err) {
-					console.error(err);
+					console.error("[School Life View]: " + err);
 					this.punishmentsError = true;
 					this.absError = true;
 					this.delaysError = true;
@@ -74,6 +75,15 @@
 				setTimeout(() => {
 					event.detail.complete();
 				}, 2000);
+			},
+			async displayBetaMsg() {
+				const alert = await alertController.create({
+					header: 'Page vie scolaire',
+					message: 'Cette page est en cours de développement. Elle ne contient pas tous le contenu prévu et subira de multiples changements dans l\'avenir.',
+					buttons: ['Je comprends']
+				});
+
+				await alert.present();
 			}
 		},
 		data() {
@@ -101,7 +111,7 @@
 					<ion-menu-button color="dark" mode="md"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Vie scolaire</ion-title>
+				<ion-title mode="md">Vie scolaire <ion-chip color="warning" @click="displayBetaMsg()">BÉTA</ion-chip></ion-title>
 
 			</IonToolbar>
 		</IonHeader>
@@ -113,7 +123,7 @@
 
 			<IonHeader collapse="condense">
 				<IonToolbar>
-					<ion-title size="large">Vie scolaire</ion-title>
+					<ion-title size="large">Vie scolaire <ion-chip color="warning" @click="displayBetaMsg()">BÉTA</ion-chip></ion-title>
 				</IonToolbar>
 			</IonHeader>
 

@@ -131,6 +131,22 @@
 				this.apiVersion = cacheApiVersion ?? 'Inconnue';
 			}, 
 			async share() {
+				let link = "Indisponible";
+				try {
+					// Post logs to hastebin (https://logs.getpapillon.xyz)
+					let response = await fetch("https://logs.getpapillon.xyz/documents", {
+						method: "POST",
+						body: this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} - ${log.message}`; }).join("\n")
+					});
+					let result = await response.json();
+
+					// Get the link
+					link = `https://logs.getpapillon.xyz/${result.key}`;
+				} catch (error) {
+					console.error("[Log View]: Failed upload logs - " + error);
+					displayToast.presentNativeToast("Impossible d'envoyer les logs sur le serveur")
+				}
+
 				try {
 					await Share.share({
 						title: 'Exporter les logs',
@@ -156,9 +172,9 @@ Contient **${this.logs.length}** logs
 > **Établissement** : ${this.account.etab}
 > **URL** : ${this.account.etabUrl}
 > **CAS** : ${this.account.cas}\n
-` + "```yaml" + `
-${this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} - ${log.message}`; }).join("\n")}
-` + "```",
+
+**Voir les logs** : *${link}*
+> NB. Les logs sont supprimés après 48h de nos serveurs.`,
 						dialogTitle: 'Partager les logs sur Github ou Discord à l\'équipe de développement'
 					});
 				}
@@ -238,7 +254,7 @@ ${this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} -
 					<ion-item>
 						<ion-label class="ion-text-wrap" :color="getTypeColor(log.type)">
 							<h2>{{ log.message }}</h2>
-							<p>{{ new Date(log.date).toLocaleString("fr-fr", {dateStyle: 'long', timeStyle: 'medium'}) }}</p>
+							<p>{{ new Date(log.date).toLocaleString("fr-fr", {dateStyle: 'long', timeStyle: 'short'}) }}</p>
 						</ion-label>
 					</ion-item>
 

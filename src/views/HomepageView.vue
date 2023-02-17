@@ -19,7 +19,8 @@
 		IonItemGroup,
 		IonButtons,
 		IonRefresherContent,
-		IonSkeletonText
+		IonSkeletonText,
+		alertController
 	} from '@ionic/vue';
 
 	import { NotificationBadge } from 'capacitor-notification-badge';
@@ -72,7 +73,10 @@
 				blockChangeDone: false,
 				editMode: false,
 				noCoursesEmoji: this.randomEmoji(),
-				noCoursesMsg: this.randomMsg()
+				noCoursesMsg: this.randomMsg(),
+				userData: [],
+				userName: "",
+				avatar: "",
 			}
 		},
 		methods: {
@@ -334,6 +338,16 @@
 				setTimeout(() => {
 					event.detail.complete();
 				}, 1000);
+			},
+			async displayBetaMsg() {
+				const alert = await alertController.create({
+					header: 'Page d\'accueil',
+					message: 'Cette page est en cours de développement. Elle ne contient pas tous le contenu prévu et subira de multiples changements dans l\'avenir.',
+					mode: 'md',
+					buttons: ['Je comprends']
+				});
+
+				await alert.present();
 			}
 		},
 		async mounted() {
@@ -356,34 +370,36 @@
 			});
 
 			this.getHomeworks();
+
+			// get userData
+			this.userData = JSON.parse(localStorage.userData);
+
+			this.userName = JSON.parse(localStorage.userData).student.name.split(" ")[JSON.parse(localStorage.userData).student.name.split(" ").length - 1]
 		}
 	});
 </script>
 
 <template>
 	<ion-page ref="page">
-		<IonHeader class="AppHeader" translucent collapse="fade">
+		<IonHeader class="AppHeader" collapse="fade">
 			<IonToolbar>
 
 				<ion-buttons slot="start">
 					<ion-menu-button color="dark" mode="md"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Vue d'ensemble</ion-title>
+				<ion-title mode="md">Vue d'ensemble <ion-chip class="beta-chip" color="warning" @click="displayBetaMsg()">BETA</ion-chip></ion-title>
 			</IonToolbar>
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-
-			<PapillonIonIcon name="heart"></PapillonIonIcon>
-
 			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
 
 			<div id="components" ref="components">
 				<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
-					<ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none"
+					<ion-item button class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none"
 						@click="goto('timetable')" :style="`--courseColor: ${cours.course.color};`"
 						:class="{ 'HasStatus' : cours.hasStatus }">
 						<ion-ripple-effect></ion-ripple-effect>
@@ -645,5 +661,23 @@
 
 	.hw_group ion-chip span {
 		margin-right: 5px;
+	}
+
+	.welcome {
+		margin-top: calc(-200px - env(safe-area-inset-top));
+
+		background-size: cover;
+		background-position: center;
+	}
+
+	.welcome_content {
+		background-color: #00000020;
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+
+		padding: 8px 20px;
+		padding-top: calc(200px + env(safe-area-inset-top));
+
+		color: #fff;
 	}
 </style>
