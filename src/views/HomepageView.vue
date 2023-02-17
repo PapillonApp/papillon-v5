@@ -277,6 +277,13 @@
 							this.checkUndone();
 
 							this.homeworks = homeworkDays;
+
+							// if no homeworks
+							if (homeworkDays.length == 0) {
+								NotificationBadge.setBadgeCount({
+									count: 0,
+								})
+							}
 						}
 					})
 					.catch(() => {
