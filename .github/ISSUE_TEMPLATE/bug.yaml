@@ -30,28 +30,30 @@ body:
   - type: input
     attributes:
       label: Appareil
-      placeholder: iPhone X
+      placeholder: iPhone 11
     validations:
       required: true
   - type: input
     attributes:
-      label: OS
-      placeholder: iOS 10
+      label: Système d`exploitation
+      placeholder: iOS 16
     validations:
       required: true
   - type: input
     attributes:
       label: Version
-      placeholder: "5.0.0-beta.1"
+      placeholder: "5.0.17 beta"
+      value: "5.0."
     validations:
       required: true
   - type: dropdown
     attributes:
       label: Environnement
       options:
-        - Application Android
-        - Application iOS
-        - Développement local
+        - Application native Android
+        - Application native iOS
+        - Développement local (Web)
+        - Développement local (iOS ou Android)
     validations:
       required: true
   - type: textarea
