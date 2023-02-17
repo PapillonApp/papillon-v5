@@ -27,7 +27,7 @@ npm-debug.log*
 !/.vscode/extensions.json
 /coverage
 /dist
-/node_modules
+/node_modules/*
 /platforms
 /plugins
 /www
@@ -36,3 +36,4 @@ capacitor.config.ts
 
 # Allow
 !/node_modules/capacitor-app-actions/CapacitorAppActions.podspec
+!/ios/Plugin/AppActionsPlugin.swift

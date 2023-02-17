@@ -58,7 +58,10 @@ function getPronoteLogin() {
         fetch(API + "/generatetoken", requestOptions)
         .then(response => response.json())
         .then(result => {
-            if(result.token) {
+            if (!result.ok) {
+                displayToast.presentError("Impossible de joindre le serveur.", "danger", result.error)
+            }
+            else if(result.token) {
                 // save token
                 localStorage.setItem('token', result.token);
 
@@ -91,7 +94,7 @@ function getPronoteLogin() {
                 // redirect to login page
                 console.error('[Get Token]: Return to login page - ' + result);
             }
-        });
+        })
     }
 }
 
