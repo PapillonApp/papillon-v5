@@ -377,10 +377,8 @@ ion-action-sheet {
     --ion-color-primary: #0075ff !important;
 }
 
-@media screen and (prefers-color-scheme: light) {
-    ion-segment * {
-        --indicator-color: var(--ion-background-color) !important;
-    }
+.light ion-segment * {
+    --indicator-color: var(--ion-background-color) !important;
 }
 
 /* only md */
