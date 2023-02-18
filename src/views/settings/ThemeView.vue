@@ -43,6 +43,8 @@
 					{ name: "OpenDyslexic (Expérimental)", font: "OpenDyslexic" },
 					{ name: "Système", font: "system-ui" },
 				],
+				customThemeModeList: localStorage.getItem('customThemeMode') == 'true',
+				currentTheme: localStorage.getItem('themeMode'),
 				currentFont: getComputedStyle(document.body).getPropertyValue('--papillon-font'),
 			}
 		},
@@ -54,9 +56,12 @@
 				localStorage.setItem(option, elChecked);
 
 				document.dispatchEvent(new CustomEvent('settingsUpdated'));
+				this.checkThemeMode();
 
 				if (option == "useScolColors") {
 					localStorage.removeItem('SubjectColors');
+				} else if (option == "customThemeMode" && elChecked == false) {
+					localStorage.removeItem('themeMode');
 				}
 			},
 			reset() {
@@ -82,6 +87,14 @@
 
 				localStorage.setItem('customizations', JSON.stringify(customizations));
 			},
+			changeThemeMode() {
+				let themeModeValue = this.$refs.themeMode.$el.value;
+
+				localStorage.setItem('themeMode', themeModeValue);
+
+				this.checkThemeMode();
+				document.dispatchEvent(new CustomEvent('settingsUpdated'));
+			},
 			tweakProgressBar() {
 				let tweakProgressBar = this.$refs.tweakProgressBar;
 				let tweakProgressBarChecked = tweakProgressBar.$el.checked;
@@ -98,6 +111,26 @@
 
 				document.dispatchEvent(new CustomEvent('settingsUpdated'));
 			},
+			checkThemeMode() {
+				let themeMode = this.$refs.themeMode;
+				let customThemeMode = this.$refs.customThemeMode;
+
+				if (localStorage.getItem('customThemeMode') == 'true') {
+					let enableTheme = null;
+					if (localStorage.getItem('themeMode')) {
+						enableTheme = localStorage.getItem('themeMode') == 'dark' ? 'dark' : 'light';
+					} else {
+						enableTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+					}
+
+					this.customThemeModeList = true;
+					customThemeMode.$el.checked = true;
+					themeMode.$el.value = enableTheme;
+				} else {
+					this.customThemeModeList = false;
+					customThemeMode.$el.checked = false;
+				}
+			}
 		},
 		mounted() {		
 			// get useScolColors ref
@@ -116,25 +149,8 @@
 			let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
 			tweakProgressBarShowPast.$el.checked = localStorage.getItem('tweakProgressBarShowPast') != 'false'; // default true
 
-			// get darkForced ref
-			let darkForced = this.$refs.darkForced;
-
-			// check if dark mode is enabled
-			function checkdark() {
-				let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-				if(isDarkMode) {
-					darkForced.$el.checked = true;
-					darkForced.$el.disabled = true;
-				}
-				else {
-					darkForced.$el.disabled = false;
-					darkForced.$el.checked = localStorage.getItem('darkForced') == 'true';
-				}
-			}
-
-			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', checkdark);
-			checkdark();
+			// check if custom theme mode is enabled
+			this.checkThemeMode();
 		}
 	});
 </script>
@@ -160,12 +176,26 @@
 
 			<IonList :inset="true" lines="inset">
 				<IonItem>
-					<span class="material-symbols-outlined mdls" slot="start">dark_mode</span>
+					<span class="material-symbols-outlined mdls" slot="start">contrast</span>
 					<IonLabel class="ion-text-wrap">
-						<h2>Mode sombre</h2>
+						<h2>Choisir le thème manuellement</h2>
 					</IonLabel>
-					<IonToggle slot="end" ref="darkForced" @ionChange="changeTick('darkForced')"></IonToggle>
+					<IonToggle slot="end" ref="customThemeMode" @ionChange="changeTick('customThemeMode')"></IonToggle>
 				</IonItem>
+
+				<ion-radio-group v-if="customThemeModeList" :value="currentTheme" ref="themeMode" @ionChange="changeThemeMode">
+					<ion-item :key="0">
+						<span class="material-symbols-outlined mdls" slot="start">dark_mode</span>
+						<ion-label>Mode sombre</ion-label>
+						<ion-radio slot="end" value="dark"></ion-radio>
+					</ion-item>
+
+					<ion-item :key="1">
+						<span class="material-symbols-outlined mdls" slot="start">light_mode</span>
+						<ion-label>Mode clair</ion-label>
+						<ion-radio slot="end" value="light"></ion-radio>
+					</ion-item>
+				</ion-radio-group>
 			</IonList>
 
 			<IonList :inset="true" lines="inset">

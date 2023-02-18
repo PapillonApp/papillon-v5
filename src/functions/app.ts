@@ -5,14 +5,14 @@ import { App } from '@capacitor/app';
 
 // Variables
 let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-let darkForced = localStorage.getItem('darkForced') === 'true';
+let themeMode = localStorage.getItem('themeMode');
 
 // Status bar
 import { StatusBar, Style } from '@capacitor/status-bar';
 
 function checkDarkMode() {
 	isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-	darkForced = localStorage.getItem('darkForced') === 'true';
+	themeMode = localStorage.getItem('themeMode');
 }
 
 // hsl to hex
@@ -33,11 +33,10 @@ let hue = getComputedStyle(document.body).getPropertyValue('--ion-color-primary-
 function setStatusBarStyle() {
 	const DarkColor = hslToHex(parseInt(hue), 10, 12);
 
-	if (isDarkMode || darkForced) {
+	if (themeMode === 'dark' || (isDarkMode && themeMode !== 'light')) {
 		StatusBar.setBackgroundColor({color: DarkColor});
 		StatusBar.setStyle({style: Style.Dark})
-	}
-	else {
+	} else {
 		StatusBar.setBackgroundColor({color: "#ffffff"});
 		StatusBar.setStyle({style: Style.Light})
 	}
@@ -47,14 +46,13 @@ function setStyle() {
 	checkDarkMode();
 	updateStatus();
 
-	if(isDarkMode || darkForced) {
+	if (themeMode === 'dark' || (isDarkMode && themeMode !== 'light')) {
 		// add .dark class to body
 		document.body.classList.add('dark');
 
 		// remove .light class from body
 		document.body.classList.remove('light');
-	}
-	else {
+	} else {
 		// add .light class to body
 		document.body.classList.add('light');
 
@@ -69,13 +67,12 @@ import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
 function setNavigationBarStyle() {
 	const DarkColor = hslToHex(parseInt(hue), 5, 7);
 
-	if (isDarkMode || darkForced) {
+	if (themeMode === 'dark' || (isDarkMode && themeMode !== 'light')) {
 		NavigationBar.setColor({
 				color: DarkColor,
 				darkButtons: false
 		});
-	}
-	else {
+	} else {
 		NavigationBar.setColor({
 				color: "#ffffff",
 				darkButtons: true
