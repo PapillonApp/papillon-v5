@@ -196,7 +196,7 @@ http://ionicframework.com/docs/theming/ */
   body.light {
     --ion-color-primary-hue: 166;
     
-    --ion-background-color: #FFFFFF;
+    --ion-background-color: hsl(var(--ion-color-primary-hue), 5%, 94%);
     --ion-background-color-rgb: 255,255,255;
 
     --ion-text-color: #181B1C;
