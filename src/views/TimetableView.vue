@@ -910,18 +910,16 @@
         --background : var(--ion-background-color) !important;
     }
 
-    @media screen and (prefers-color-scheme: dark) {
-        .ios .newCoursModal ion-list.list-inset {
-            background : var(--ion-color-step-100) !important;
-        }
+    .dark .ios .newCoursModal ion-list.list-inset {
+        background : var(--ion-color-step-100) !important;
+    }
 
-        .ios .newCoursModal ion-list.list-inset > * {
-            --background : var(--ion-color-step-100) !important;
-        }
+    .dark .ios .newCoursModal ion-list.list-inset > * {
+        --background : var(--ion-color-step-100) !important;
+    }
 
-        .ios .newCoursModal .timeInput {
-            background: var(--ion-color-step-150) !important;
-        }
+    .dark .ios .newCoursModal .timeInput {
+        background: var(--ion-color-step-150) !important;
     }
 
     .ios .newCoursModal .timeInput {

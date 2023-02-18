@@ -237,10 +237,8 @@
         white-space: nowrap;
     }
 
-    @media screen and (prefers-color-scheme: dark) {
-        .newsModalContent hr {
-            background: #fff !important;
-        }
+    .dark .newsModalContent hr {
+        background: #fff !important;
     }
 
     .newsModalContent h1 {

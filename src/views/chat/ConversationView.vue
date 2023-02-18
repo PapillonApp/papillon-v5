@@ -176,10 +176,8 @@
         border-top: 1px solid #e0e0e0;
     }
 
-    @media screen and (prefers-color-scheme: dark) {
-        .md .chatbox {
-            border-top: 1px solid #363636;
-        }
+    .dark .md .chatbox {
+        border-top: 1px solid #363636;
     }
 
     .chatbox_input {
