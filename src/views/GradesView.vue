@@ -638,10 +638,8 @@
 		overflow: hidden;
 	}
 
-	@media screen and (prefers-color-scheme: dark) {
-		.grade {
-			background: var(--ion-color-step-50);
-		}
+	.dark .grade {
+		background: var(--ion-color-step-50);
 	}
 
 	.myGrade {
