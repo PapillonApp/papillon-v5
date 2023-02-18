@@ -117,7 +117,7 @@
 
 				if (localStorage.getItem('customThemeMode') == 'true') {
 					let enableTheme = null;
-					if (localStorage.getItem('themeMode')) {
+					if (localStorage.getItem('themeMode') != null) {
 						enableTheme = localStorage.getItem('themeMode') == 'dark' ? 'dark' : 'light';
 					} else {
 						enableTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
