@@ -26,6 +26,8 @@
 	import GetGrades from '@/functions/fetch/GetGrades.js';
 	import ChangePeriod from '@/functions/login/ChangePeriod.js';
 
+	import { Share } from '@capacitor/share';
+
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
@@ -74,26 +76,6 @@
 			}
 		},
 		methods: {
-			getRandomColor() {
-				var color = '#';
-				for (var i = 0; i < 6; i++) {
-					color += Math.floor(Math.random() * 10);
-				}
-				return color;
-			},
-			LightenColor(color, percent) {
-				var num = parseInt(color, 16),
-					amt = Math.round(2.55 * percent),
-					R = (num >> 16) + amt,
-					B = (num >> 8 & 0x00FF) + amt,
-					G = (num & 0x0000FF) + amt;
-
-				return (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + (B < 255 ? B < 1 ? 0 : B : 255) *
-					0x100 + (G < 255 ? G < 1 ? 0 : G : 255)).toString(16).slice(1);
-			},
-			darkenHexColor(col) {
-				return '#' + this.LightenColor(col.split("#")[1], -40);
-			},
 			getPeriods() {
 				let allPeriods = JSON.parse(localStorage.getItem('userData')).periods;
 
@@ -217,6 +199,81 @@
 					this.classAverages = data.averages.class;
 				})
 			},
+			getStringToAsciiArray(string) {
+				let charCodeArr = [];
+				for(let i = 0; i < string.length; i++){
+					let code = string.charCodeAt(i);
+					charCodeArr.push(code);
+				}
+
+				return charCodeArr;
+			},
+			async shareGrade(grade, color) {
+				let sharedGrade = {
+					grade: {
+						value: grade.grade.value,
+						out_of: grade.grade.out_of,
+						max: grade.grade.max,
+						min: grade.grade.min,
+						coefficient: grade.grade.coefficient,
+						average: grade.grade.average,
+					},
+					info: {
+						subject: grade.info.subject,
+						description: grade.info.description,
+						...grade.info
+					},
+
+					color: color
+				}
+
+				// get first name of user
+				let firstName = JSON.parse(localStorage.getItem("userData")).student.name;
+				firstName = firstName.split(" ")[firstName.split(" ").length - 1];
+
+				// if custom name is set, use it instead
+				if(localStorage.getItem("customName")) {
+					firstName = localStorage.getItem("customName").split(" ")[localStorage.getItem("customName").split(" ").length - 1];
+				}
+
+				// Set customizable data to ascii
+				firstName = this.getStringToAsciiArray(firstName).join('-');
+				sharedGrade.info.subject = this.getStringToAsciiArray(sharedGrade.info.subject).join('-');
+				sharedGrade.info.description = this.getStringToAsciiArray(sharedGrade.info.description).join('-');
+
+				let urlElems = "";
+
+				// Datas
+				urlElems += firstName + "$"; // first name
+				urlElems += sharedGrade.info.subject + "$";
+				urlElems += sharedGrade.info.description + "$";
+				urlElems += sharedGrade.info.outOf20 + "$";
+				urlElems += sharedGrade.info.bonus + "$";
+				urlElems += sharedGrade.info.optional + "$";
+				urlElems += sharedGrade.info.significant + "$";
+				urlElems += sharedGrade.info.significantReason + "$";
+				urlElems += sharedGrade.info.significantZero + "$";
+				urlElems += sharedGrade.info.significantAverage + "$";
+				urlElems += sharedGrade.info.date + "$";
+				urlElems += color + "$";
+
+				// Grade
+				urlElems += sharedGrade.grade.value + "$";
+				urlElems += sharedGrade.grade.out_of + "$";
+				urlElems += sharedGrade.grade.coefficient + "$";
+				urlElems += sharedGrade.grade.average + "$";
+				urlElems += sharedGrade.grade.max + "$";
+				urlElems += sharedGrade.grade.min;
+
+				// base64 encode urlElems
+				let url = "https://getpapillon.xyz/grade?g=" + btoa(urlElems);
+
+				// share url
+				await Share.share({
+					url: url,
+					dialogTitle: "Partager votre note de " + sharedGrade.info.subject
+				});
+			},
 			handleRefresh(event) {
 				// get new Grades data
 				this.getGradesRefresh()
@@ -242,8 +299,10 @@
 					});
 				}
 			},
-			openGradeModal(mark) {
+			openGradeModal(mark, color) {
 				this.selectedGrade = mark;
+
+				this.selectedGrade.color = color;
 
 				this.selectedGradeSet = true;
 				this.$refs.gradeModal.$el.present();
@@ -375,7 +434,7 @@
 
 				<div class="grades">
 
-					<ion-card class="grade" v-for="(mark, i) in subject.marks" v-bind:key="i" @click="openGradeModal(mark)">
+					<ion-card class="grade" v-for="(mark, i) in subject.marks" v-bind:key="i" @click="openGradeModal(mark, subject.color)">
 						<div class="myGrade">
 							<p class="name">{{ mark.info.description }}</p>
 							<p class="coef">Coeff. : {{mark.grade.coefficient}}</p>
@@ -477,6 +536,12 @@
 							<h2>Note en {{ selectedGrade.info.subject }}</h2>
 							<p>{{ new Date(selectedGrade.info.date).toLocaleString('fr-FR', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>
 						</ion-label>
+
+						<ion-buttons slot="end">
+							<IonButton @click="shareGrade(selectedGrade, selectedGrade.color)">
+								<span class="material-symbols-outlined mdls">ios_share</span>
+							</IonButton>
+						</ion-buttons>
 					</IonToolbar>
 				</IonHeader>
 				<ion-content>
