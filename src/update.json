@@ -2,26 +2,36 @@
     "changelog": {
         "features": [
             {
-                "icon": "palette",
-                "name": "Nouvelle interface améliorée",
-                "description": "Votre photo de profil définit la couleur de votre interface. Papillon ne vous à jamais autant ressemblé !"
+                "icon": "contrast",
+                "name": "Sélection de la couleur de l'interface",
+                "description": "Vous pouvez désormais choisir la couleur de l'interface de Papillon et désactiver le mode automatique."
+            },
+            {
+                "icon": "join_inner",
+                "name": "Joindre les matières",
+                "description": "Vous l'avez demandé, la voici ! Vous pouvez désormais joindre les matières plus facilement depuis l'interface de Papillon."
+            },
+            {
+                "icon": "event",
+                "name": "Affichage du calendrier",
+                "description": "Maintenant les exclusions de dates s'appliquent à tous les calendriers de Papillon. Direction les paramètres pour régler ces derniers !"
+            },
+            {
+                "icon": "send",
+                "name": "Partage de notes",
+                "description": "Vous pouvez désormais partager facilement vos notes avec vos amis !"
             }
         ],
         "fixes": [
             {
-                "icon": "speed",
-                "name": "Meilleure performances & optimisations",
-                "description": "Papillon est maintenant plus fluide et plus rapide que jamais !"
+                "icon": "bug_report",
+                "name": "Correction de bugs",
+                "description": "Nous avons corrigé quelques bugs qui nous ont été signalés."
             },
             {
-                "icon": "login",
-                "name": "Connexion depuis Pronote",
-                "description": "Beaucoup de problèmes de connexion à Pronote ont été réparés."
-            },
-            {
-                "icon": "crisis_alert",
-                "name": "Meilleur support des logs d'erreurs",
-                "description": "C'est désormais plus facile de nous envoyer vos logs d'erreurs afin que nous puissions les corriger au plus vite."
+                "icon": "apps",
+                "name": "Interface retravaillée",
+                "description": "Nous avons retravaillé l'interface iOS de Papillon pour vous offrir une meilleure expérience utilisateur."
             }
         ]
     }
