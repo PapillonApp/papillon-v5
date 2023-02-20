@@ -197,7 +197,8 @@ function groupSubjects(subjectData, markArray) {
 		subject: subject, 
 		subjectName: subjectName, 
 		subjectId: subjectId, 
-		grouped: grouped
+		grouped: grouped,
+		excluded: excluded
 	}
 }
 
@@ -211,7 +212,7 @@ function constructPronoteGrades(grades) {
 	// for each mark, add it to the corresponding subject in the array
 	marks.forEach(mark => {
 		// check if subject exists
-		let { subject, subjectName, subjectId, grouped } = groupSubjects(mark.subject, markArray);
+		let { subject, subjectName, subjectId, grouped, excluded } = groupSubjects(mark.subject, markArray);
 
 		if(subject == undefined) {
 			// subject doesn't exist, create it
@@ -219,6 +220,7 @@ function constructPronoteGrades(grades) {
 				name: subjectName,
 				id: subjectId,
 				grouped: grouped,
+				grpExcluded: excluded,
 				marks: []
 			}
 

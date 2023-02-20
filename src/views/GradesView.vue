@@ -154,6 +154,7 @@
 					min_average: subject.class.min,
 					out_of: 20,
 					grouped: subject.grouped,
+					excluded: subject.grpExcluded,
 				}
 
 				this.$refs.averageModal.$el.present(subject);
@@ -178,15 +179,21 @@
 			},
 			setExcludedJoinSubject(subjectName) {
 				let excludedGroupSubjects = localStorage.getItem('excludedGroupSubjects');
-
+				subjectName = subjectName.split(" > ")[0].trim();
 				excludedGroupSubjects = JSON.parse(excludedGroupSubjects) || [];
-				excludedGroupSubjects.push(subjectName);
+
+				// Set subject as excluded if not already and remove it from excludedGroupSubjects if it is
+				if (excludedGroupSubjects.includes(subjectName)) {
+					excludedGroupSubjects.splice(excludedGroupSubjects.indexOf(subjectName), 1);
+					displayToast.presentToast("Cette matière sera désormais regroupé.", "success");
+				} else {
+					excludedGroupSubjects.push(subjectName);
+					displayToast.presentToast("Cette matière ne sera désormais plus regroupé.", "warning");
+				}
 
 				localStorage.setItem('excludedGroupSubjects', JSON.stringify(excludedGroupSubjects));
 				this.getGradesRefresh();
 				this.$refs.averageModal.$el.dismiss();
-
-				displayToast.presentToast("Cette matière ne sera désormais plus regroupé.", "warning");
 			},
 			getGradesRefresh(fromSegChange) {
 				if (fromSegChange) {
@@ -556,7 +563,7 @@
 						</ion-item>
 
 						<ion-item v-if="selectedMark.grouped">
-							<span class="material-symbols-outlined mdls" slot="start">join</span>
+							<span class="material-symbols-outlined mdls" slot="start">join_inner</span>
 							<ion-label class="ion-text-wrap">
 								<p>Combinaison</p>
 								<h3>Cette matière est un regroupement de plusieurs matières.</h3>
@@ -566,6 +573,20 @@
 								@click="setExcludedJoinSubject(selectedMark.subject)">
 								<span class="material-symbols-outlined mdls" slot="start">visibility_off</span>
 								Ne pas regrouper
+							</ion-button>
+						</ion-item>
+
+						<ion-item v-else-if="selectedMark.excluded">
+							<span class="material-symbols-outlined mdls" slot="start">join</span>
+							<ion-label class="ion-text-wrap">
+								<p>Exclue</p>
+								<h3>Cette matière n'est actuellement pas regroupée</h3>
+							</ion-label>
+
+							<ion-button class="itemBtn" fill="clear" slot="end"
+								@click="setExcludedJoinSubject(selectedMark.subject)">
+								<span class="material-symbols-outlined mdls" slot="start">visibility</span>
+								Regrouper
 							</ion-button>
 						</ion-item>
 					</ion-list>
