@@ -40,7 +40,10 @@ export default defineComponent({
         IonCheckbox
     },
     setup() {
-        return {
+        return {            
+            minDate: require('@/functions/utils/datetimePicker.js').minCalendarDate(),
+            maxDate: require('@/functions/utils/datetimePicker.js').maxCalendarDate(),
+            isDateAvailable: require('@/functions/utils/datetimePicker.js').isDateAvailable,
             calendarOutline,
             calendarSharp,
             todayOutline,
@@ -432,7 +435,7 @@ export default defineComponent({
                 </swiper-slide>
             </swiper>
 
-            <IonModal ref="rnPickerModal" @didDismiss="changernPickerModalOpen(false)" :is-open="rnPickerModalOpen" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.5" :breakpoints="[0, 0.5]">
+            <IonModal ref="rnPickerModal" @didDismiss="changernPickerModalOpen(false)" :is-open="rnPickerModalOpen" class="datetimeModal" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55]">
                 <IonHeader>
                     <IonToolbar>
                         <ion-title>Sélection de la date</ion-title>
@@ -448,6 +451,9 @@ export default defineComponent({
                         size="cover"
                         :value="rnCalendarString"
                         :firstDayOfWeek="1"
+                        :min="minDate"
+                        :max="maxDate"
+                        :is-date-enabled="isDateAvailable"
                         @ionChange="rnInputChanged()"
                     >
                     </IonDatetime>

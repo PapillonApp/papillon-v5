@@ -737,7 +737,7 @@
         </IonModal>
 
 
-        <IonModal :is-open="rnPickerModalOpen" ref="rnPickerModal" class="datetimeModal" @didDismiss="changernPickerModalOpen(false)" :keep-contents-mounted="true" :initial-breakpoint="0.5" :breakpoints="[0, 0.5]">
+        <IonModal :is-open="rnPickerModalOpen" ref="rnPickerModal" class="datetimeModal" @didDismiss="changernPickerModalOpen(false)" :keep-contents-mounted="true" :initial-breakpoint="0.55" :breakpoints="[0, 0.55]">
           <IonHeader>
             <IonToolbar>
               <ion-title>Sélection de la date</ion-title>
