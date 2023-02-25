@@ -223,7 +223,6 @@ jobs:
 
       - name: Ionic Capacitor Sync
         run: |
-          npm version ${{ needs.initialize.outputs.VERSION_NUMBER }} --no-git-tag-version
           ionic capacitor sync ios --prod
      
       - name: Setup Ruby
