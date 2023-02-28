@@ -142,14 +142,17 @@
                 let postal = e.detail.value
 
                 if (postal.trim().length != 5) {
+                    if (postal.trim().length == 0) {
+                        this.clearEtabs();
+                        this.locationFailed = false;
+                    }
                     return;
                 }
 
                 postal = postal.normalize("NFD").replace(/\p{Diacritic}/gu, "");
 
                 if(postal.trim() == "") {
-                    this.etabs = [];
-                    this.etabsEmpty = true;
+                    this.clearEtabs();
                     this.locationFailed = false;
                     return;
                 }
