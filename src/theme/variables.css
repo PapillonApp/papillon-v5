@@ -174,9 +174,7 @@ http://ionicframework.com/docs/theming/ */
   }
 
   body.light {
-    --ion-color-primary-hue: 166;
-    
-    --ion-background-color: hsl(var(--ion-color-primary-hue), 5%, 94%);
+    --ion-background-color: #f9f9f9;
     --ion-background-color-rgb: 255,255,255;
 
     --ion-text-color: #181B1C;
@@ -205,7 +203,10 @@ http://ionicframework.com/docs/theming/ */
 	--ion-color-step-900: #191919;
 	--ion-color-step-950: #0d0d0d;
 
-    --ion-plain-background-color: #ffffff;
+    --ion-plain-background-color: #ffffff !important;
+	--ion-inset-background: #ffffff !important;
+
+	--ion-toolbar-background: #f0f0f0 !important;
   }
   
 body {

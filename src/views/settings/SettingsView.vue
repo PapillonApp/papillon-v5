@@ -185,7 +185,7 @@
       <IonHeader class="AppHeader" collapse="fade" translucent>
         <IonToolbar>
 
-          <ion-buttons slot="start">
+          <ion-buttons slot="start"  mode="md">
             <ion-menu-button color="dark" mode="md"></ion-menu-button>
           </ion-buttons>
 
