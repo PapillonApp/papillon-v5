@@ -314,6 +314,7 @@
 					return day.date == tomorrowDate.toDateString();
 				});
 
+				/*
 				// for each homework, check if it's done
 				let undone = 0;
 				if (tomorrow) {
@@ -327,7 +328,7 @@
 
 						}
 					});
-				}
+				} */
 			},
 			async handleRefresh(event) {
 				this.timetable = [];
