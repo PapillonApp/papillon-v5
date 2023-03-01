@@ -104,40 +104,31 @@ http://ionicframework.com/docs/theming/ */
    */
 
   .ios body.dark {
-    --ion-background-color: hsl(var(--ion-color-primary-hue), 5%, 7%);
-    --ion-background-color-rgb: 18,19,20;
+    --ion-background-color: #111112;
+	--ion-background-color-rgb: 17,17,18;
 
-    --ion-text-color: #ffffff;
-    --ion-text-color-rgb: 255,255,255;
+	--ion-text-color: #FFFFFF;
+	--ion-text-color-rgb: 255,255,255;
 
-    --ion-color-step-50: hsl(var(--ion-color-primary-hue), 10%, 10%);
-    --ion-color-step-100: hsl(var(--ion-color-primary-hue), 10%, 12%);
-    --ion-color-step-150: hsl(var(--ion-color-primary-hue), 10%, 14%);
-    --ion-color-step-200: hsl(var(--ion-color-primary-hue), 10%, 18%);
-    --ion-color-step-250: hsl(var(--ion-color-primary-hue), 10%, 24%);
-    --ion-color-step-300: hsl(var(--ion-color-primary-hue), 10%, 30%);
-    --ion-color-step-350: hsl(var(--ion-color-primary-hue), 10%, 45%);
-    --ion-color-step-400: hsl(var(--ion-color-primary-hue), 10%, 50%);
-    --ion-color-step-450: hsl(var(--ion-color-primary-hue), 10%, 55%);
-    --ion-color-step-500: hsl(var(--ion-color-primary-hue), 10%, 60%);
-    --ion-color-step-550: hsl(var(--ion-color-primary-hue), 10%, 65%);
-    --ion-color-step-600: hsl(var(--ion-color-primary-hue), 10%, 70%);
-    --ion-color-step-650: hsl(var(--ion-color-primary-hue), 10%, 75%);
-    --ion-color-step-700: hsl(var(--ion-color-primary-hue), 10%, 80%);
-    --ion-color-step-750: hsl(var(--ion-color-primary-hue), 10%, 85%);
-    --ion-color-step-800: hsl(var(--ion-color-primary-hue), 10%, 90%);
-    --ion-color-step-850: hsl(var(--ion-color-primary-hue), 10%, 95%);
-    --ion-color-step-900: hsl(var(--ion-color-primary-hue), 10%, 100%);
-
-    --ion-item-background: hsl(var(--ion-color-primary-hue), 5%, 7%);
-
-    --ion-toolbar-background: hsl(var(--ion-color-primary-hue), 10%, 10%);
-
-    --ion-tab-bar-background: hsl(var(--ion-color-primary-hue), 10%, 10%);
-
-    --ion-card-background: hsl(var(--ion-color-primary-hue), 10%, 8%);
-
-    --ion-inset-background: hsl(var(--ion-color-primary-hue), 10%, 10%);
+    --ion-color-step-50: #1d1d1e;
+	--ion-color-step-100: #29292a;
+	--ion-color-step-150: #353536;
+	--ion-color-step-200: #414141;
+	--ion-color-step-250: #4d4d4d;
+	--ion-color-step-300: #585859;
+	--ion-color-step-350: #646465;
+	--ion-color-step-400: #707071;
+	--ion-color-step-450: #7c7c7d;
+	--ion-color-step-500: #888889;
+	--ion-color-step-550: #949494;
+	--ion-color-step-600: #a0a0a0;
+	--ion-color-step-650: #acacac;
+	--ion-color-step-700: #b8b8b8;
+	--ion-color-step-750: #c4c4c4;
+	--ion-color-step-800: #cfcfd0;
+	--ion-color-step-850: #dbdbdb;
+	--ion-color-step-900: #e7e7e7;
+	--ion-color-step-950: #f3f3f3;
   }
 
   .ios .dark ion-modal {
@@ -151,42 +142,31 @@ http://ionicframework.com/docs/theming/ */
    */
 
   .md body.dark {
-    --ion-background-color: hsl(var(--ion-color-primary-hue), 5%, 7%);
-    --ion-background-color-rgb: 28,27,31;
+    --ion-background-color: #111112;
+	--ion-background-color-rgb: 17,17,18;
 
-    --ion-text-color: #fff;
-    --ion-text-color-rgb: 255,255,255;
+	--ion-text-color: #FFFFFF;
+	--ion-text-color-rgb: 255,255,255;
 
-    --ion-color-step-50: hsl(var(--ion-color-primary-hue), 10%, 10%);
-    --ion-color-step-100: hsl(var(--ion-color-primary-hue), 10%, 12%);
-    --ion-color-step-150: hsl(var(--ion-color-primary-hue), 10%, 14%);
-    --ion-color-step-200: hsl(var(--ion-color-primary-hue), 10%, 18%);
-    --ion-color-step-250: hsl(var(--ion-color-primary-hue), 10%, 24%);
-    --ion-color-step-300: hsl(var(--ion-color-primary-hue), 10%, 30%);
-    --ion-color-step-350: hsl(var(--ion-color-primary-hue), 10%, 45%);
-    --ion-color-step-400: hsl(var(--ion-color-primary-hue), 10%, 50%);
-    --ion-color-step-450: hsl(var(--ion-color-primary-hue), 10%, 55%);
-    --ion-color-step-500: hsl(var(--ion-color-primary-hue), 10%, 60%);
-    --ion-color-step-550: hsl(var(--ion-color-primary-hue), 10%, 65%);
-    --ion-color-step-600: hsl(var(--ion-color-primary-hue), 10%, 70%);
-    --ion-color-step-650: hsl(var(--ion-color-primary-hue), 10%, 75%);
-    --ion-color-step-700: hsl(var(--ion-color-primary-hue), 10%, 80%);
-    --ion-color-step-750: hsl(var(--ion-color-primary-hue), 10%, 85%);
-    --ion-color-step-800: hsl(var(--ion-color-primary-hue), 10%, 90%);
-    --ion-color-step-850: hsl(var(--ion-color-primary-hue), 10%, 95%);
-    --ion-color-step-900: hsl(var(--ion-color-primary-hue), 10%, 100%);
-
-    --ion-item-background: hsl(var(--ion-color-primary-hue), 5%, 7%);
-
-    --ion-toolbar-background: hsl(var(--ion-color-primary-hue), 10%, 12%);
-
-    --ion-tab-bar-background: hsl(var(--ion-color-primary-hue), 10%, 12%);
-
-    --ion-card-background: hsl(var(--ion-color-primary-hue), 8%, 8%);
-
-    --ion-inset-background: hsl(var(--ion-color-primary-hue), 10%, 12%);
-
-    --ion-border-color: hsl(var(--ion-color-primary-hue), 10%, 10%);
+    --ion-color-step-50: #1d1d1e;
+	--ion-color-step-100: #29292a;
+	--ion-color-step-150: #353536;
+	--ion-color-step-200: #414141;
+	--ion-color-step-250: #4d4d4d;
+	--ion-color-step-300: #585859;
+	--ion-color-step-350: #646465;
+	--ion-color-step-400: #707071;
+	--ion-color-step-450: #7c7c7d;
+	--ion-color-step-500: #888889;
+	--ion-color-step-550: #949494;
+	--ion-color-step-600: #a0a0a0;
+	--ion-color-step-650: #acacac;
+	--ion-color-step-700: #b8b8b8;
+	--ion-color-step-750: #c4c4c4;
+	--ion-color-step-800: #cfcfd0;
+	--ion-color-step-850: #dbdbdb;
+	--ion-color-step-900: #e7e7e7;
+	--ion-color-step-950: #f3f3f3;
   }
 
   .md .dark ion-modal {
@@ -205,38 +185,33 @@ http://ionicframework.com/docs/theming/ */
     --ion-text-color-transparent: #00000050;
     --ion-text-color-transparent-rgb: 0,0,0,0.31;
 
-    --ion-color-step-50: hsl(var(--ion-color-primary-hue), 10%, 90%);
-    --ion-color-step-100: hsl(var(--ion-color-primary-hue), 10%, 85%);
-    --ion-color-step-150: hsl(var(--ion-color-primary-hue), 10%, 80%);
-    --ion-color-step-200: hsl(var(--ion-color-primary-hue), 10%, 75%);
-    --ion-color-step-250: hsl(var(--ion-color-primary-hue), 10%, 70%);
-    --ion-color-step-300: hsl(var(--ion-color-primary-hue), 10%, 65%);
-    --ion-color-step-350: hsl(var(--ion-color-primary-hue), 10%, 60%);
-    --ion-color-step-400: hsl(var(--ion-color-primary-hue), 10%, 55%);
-    --ion-color-step-450: hsl(var(--ion-color-primary-hue), 10%, 50%);
-    --ion-color-step-500: hsl(var(--ion-color-primary-hue), 10%, 45%);
-    --ion-color-step-550: hsl(var(--ion-color-primary-hue), 10%, 40%);
-    --ion-color-step-600: hsl(var(--ion-color-primary-hue), 10%, 35%);
-    --ion-color-step-650: hsl(var(--ion-color-primary-hue), 10%, 30%);
-    --ion-color-step-700: hsl(var(--ion-color-primary-hue), 10%, 25%);
-    --ion-color-step-750: hsl(var(--ion-color-primary-hue), 10%, 20%);
-    --ion-color-step-800: hsl(var(--ion-color-primary-hue), 10%, 15%);
-    --ion-color-step-850: hsl(var(--ion-color-primary-hue), 10%, 10%);
-    --ion-color-step-900: hsl(var(--ion-color-primary-hue), 10%, 5%);
-    --ion-color-step-950: hsl(var(--ion-color-primary-hue), 10%, 0%);
+    --ion-color-step-50: #f2f2f2;
+	--ion-color-step-100: #e6e6e6;
+	--ion-color-step-150: #d9d9d9;
+	--ion-color-step-200: #cccccc;
+	--ion-color-step-250: #bfbfbf;
+	--ion-color-step-300: #b3b3b3;
+	--ion-color-step-350: #a6a6a6;
+	--ion-color-step-400: #999999;
+	--ion-color-step-450: #8c8c8c;
+	--ion-color-step-500: #808080;
+	--ion-color-step-550: #737373;
+	--ion-color-step-600: #666666;
+	--ion-color-step-650: #595959;
+	--ion-color-step-700: #4d4d4d;
+	--ion-color-step-750: #404040;
+	--ion-color-step-800: #333333;
+	--ion-color-step-850: #262626;
+	--ion-color-step-900: #191919;
+	--ion-color-step-950: #0d0d0d;
 
     --ion-plain-background-color: #ffffff;
   }
   
-
-  .md body.light {
-    --ion-inset-background: hsl(255, 7%, 96%);
-  }
-
-  .ios body.light {
-    --ion-background-color: hsl(var(--ion-color-primary-hue), 5%, 94%);
-
-    --ion-inset-background: hsl(var(--ion-color-primary-hue), 8%, 90%);
-    --ion-toolbar-background: hsl(var(--ion-color-primary-hue), 8%, 90%);
-    --ion-border-color: hsl(var(--ion-color-primary-hue), 0%, 80%) !important;
-  }
+body {
+    --ion-item-background: var(--ion-background-color);
+  
+    --ion-inset-background: var(--ion-color-step-50) !important;
+	--ion-plain-background-color: var(--ion-color-step-50) !important;
+    --ion-card-background: var(--ion-color-step-50);
+}
