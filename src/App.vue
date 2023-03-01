@@ -278,29 +278,6 @@
 
             return animation;
         },
-        setAverageColor(averageColorCustom: any) {
-            document.body.style.setProperty('--ion-color-primary', averageColorCustom.hex);
-            document.body.style.setProperty('--ion-color-primary-rgb', `${averageColorCustom.value[0]}, ${averageColorCustom.value[1]}, ${averageColorCustom.value[2]}`);
-            document.body.style.setProperty('--ion-color-primary-shade', averageColorCustom.hex);
-            document.body.style.setProperty('--ion-color-primary-tint', averageColorCustom.hex);
-
-            let hsl = this.RGBToHSL(averageColorCustom.value[0], averageColorCustom.value[1], averageColorCustom.value[2]);
-            document.body.style.setProperty('--ion-color-primary-hsl', `${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%`);
-            document.body.style.setProperty('--ion-color-primary-hue', `${hsl[0]}`);
-            document.body.style.setProperty('--ion-color-primary-saturation', `${hsl[1]}%`);
-            document.body.style.setProperty('--ion-color-primary-lightness', `${hsl[2]}%`);
-        },
-        applyAverageColor() {
-            let averageColor = JSON.parse(localStorage.getItem('averageColor') as any);
-            let averageColorCustom = JSON.parse(localStorage.getItem('averageColorCustom') as any);
-
-            if(averageColorCustom !== null) {
-                this.setAverageColor(averageColorCustom)
-            }
-            else if(averageColor !== null) {
-                this.setAverageColor(averageColor)
-            }
-        },
         async displayDevMsg() {
 			const alert = await alertController.create({
 				header: 'Version de développement',
@@ -411,14 +388,7 @@
                 document.body.style.setProperty('--papillon-font', customizations.font);
             }
         }
-
-        // apply average color
-        this.applyAverageColor()
-
-        document.addEventListener('averageColorUpdated', () => {
-            this.applyAverageColor()
-        })
-
+        
         // check current version in local storage
         if(localStorage.getItem('version')) {
             if(localStorage.getItem('version') !== this.appVersion) {
