@@ -4,6 +4,8 @@
     import Values from 'values.js'
     import { AppActions } from 'capacitor-app-actions'
 
+    import { Capacitor } from '@capacitor/core';
+
     const { version, canal } = require('/package')
 
     import { defineComponent, ref } from 'vue';
@@ -19,6 +21,7 @@
     import { createAnimation } from '@ionic/vue';
 
     const GetUser = require('./functions/fetch/GetUserData');
+    const GetRecap = require('./functions/fetch/GetRecap');
 
     import { LocalNotifications } from '@capacitor/local-notifications';
 
@@ -310,8 +313,12 @@
         })
 
         // shortcuts
-        this.checkAndroidShortcuts();
-        this.checkIosShortcuts();
+        if(Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'android') {
+            this.checkAndroidShortcuts();
+        }
+        else if(Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
+            this.checkIosShortcuts();
+        }
 
         // user data if logged in
         if(localStorage.loggedIn) {
@@ -405,6 +412,10 @@
         document.addEventListener('showChangelog', () => {
             this.showChangelog();
         })
+
+        /* GetRecap.default().then((data: any) => {
+            console.log(data);
+        }); */
     }
   });
 </script>
