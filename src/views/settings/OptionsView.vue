@@ -151,7 +151,7 @@
 </script>
 
 <template>
-		<IonHeader class="AppHeader" collapse="fade" translucent>
+		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
 
 				<ion-buttons slot="start">
