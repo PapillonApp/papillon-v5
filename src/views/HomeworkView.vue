@@ -1,6 +1,6 @@
 <script>
 import { defineComponent } from 'vue';
-import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonModal, IonDatetime, IonRefresher, IonRefresherContent, IonSpinner, IonChip, IonCheckbox } from '@ionic/vue';
+import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonModal, IonDatetime, IonRefresher, IonRefresherContent, IonSpinner, IonChip, IonCheckbox, IonRippleEffect } from '@ionic/vue';
 
 import { calendarOutline, calendarSharp, todayOutline, todaySharp, alertCircle, checkmark } from 'ionicons/icons';
 
@@ -37,7 +37,8 @@ export default defineComponent({
         IonRefresherContent,
         IonSpinner,
         IonChip,
-        IonCheckbox
+        IonCheckbox,
+        IonRippleEffect
     },
     setup() {
         return {            
@@ -383,15 +384,16 @@ export default defineComponent({
 
             <swiper :initialSlide="1" ref="swiper" :speed="300" :spaceBetween="10" :preventClicks="true" :effect="'fade'">
                 <swiper-slide v-for="(day, i) in days" :key="i">
-                    <IonList>
-                        <ion-item v-for="homework in $data[`${day}`]" :key="homework.id" button>
-                            <div slot="start">
+                    <IonList class="hwList">
+                        <div class="homeworkElement" v-for="homework in $data[`${day}`]" :key="homework.id">
+                            <ion-ripple-effect></ion-ripple-effect>
+                            <div class="hwCheckbox">
                                 <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
                             </div>
-                            <ion-label :style="`--courseColor: ${homework.data.color};`">
+                            <div class="hwData" :style="`--courseColor: ${homework.data.color};`" @click="openHomework(homework)">
                                 <div @click="openHomework(homework)">
-                                    <p><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
-                                    <h2>{{ homework.homework.content }}</h2>
+                                    <p class="hwSubject"><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
+                                    <p class="hwContent">{{ homework.homework.content }}</p>
                                 </div>
 
                                 <div class="innerChips" v-if="homework.files.length !== 0">
@@ -403,8 +405,8 @@ export default defineComponent({
                                         <p>{{attachment.name}}</p>
                                     </ion-chip>
                                 </div>
-                            </ion-label>
-                        </ion-item>
+                            </div>
+                        </div>
 
                         <div class="NoCours" v-if="$data[`${day}`].error == 'ERR_NETWORK' && $data[`${day}`].length == 0 && !connected">
                             <span class="material-symbols-outlined mdls">wifi_off</span>
@@ -548,5 +550,51 @@ export default defineComponent({
         background-color: var(--courseColor);
         display: inline-block;
         margin-right: 5px;
+    }
+
+    .hwList {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .homeworkElement {
+        background: var(--ion-plain-background-color);
+        margin: 0px 16px;
+        box-shadow: var(--ion-box-shadow);
+        border-radius: 8px;
+        display: flex;
+        padding: 15px 20px;
+        gap: 20px;
+    }
+
+    .homeworkElement * {
+        margin: 0;
+    }
+
+    .hwCheckbox {
+        padding-top: 5px;
+    }
+
+    .hwSubject {
+        font-weight: 600;
+        font-family: var(--papillon-font);
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .hwSubject .courseColor {
+        margin-right: 5px;
+        transform: translateY(-1px);
+    }
+
+    .hwContent {
+        font-size: 16px;
+        word-break: break-word !important;
+    }
+
+    .innerChips {
+        margin-top: 10px;
     }
 </style>
