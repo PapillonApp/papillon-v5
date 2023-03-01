@@ -59,8 +59,14 @@ project(':capawesome-capacitor-file-picker').projectDir = new File('../node_modu
 include ':hugotomazi-capacitor-navigation-bar'
 project(':hugotomazi-capacitor-navigation-bar').projectDir = new File('../node_modules/@hugotomazi/capacitor-navigation-bar/android')
 
+include ':transistorsoft-capacitor-background-fetch'
+project(':transistorsoft-capacitor-background-fetch').projectDir = new File('../node_modules/@transistorsoft/capacitor-background-fetch/android')
+
 include ':capacitor-android-shortcuts'
 project(':capacitor-android-shortcuts').projectDir = new File('../node_modules/capacitor-android-shortcuts/android')
+
+include ':capacitor-app-actions'
+project(':capacitor-app-actions').projectDir = new File('../node_modules/capacitor-app-actions/android')
 
 include ':capacitor-notification-badge'
 project(':capacitor-notification-badge').projectDir = new File('../node_modules/capacitor-notification-badge/android')

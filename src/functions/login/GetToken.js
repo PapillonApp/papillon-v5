@@ -55,7 +55,7 @@ function getPronoteLogin() {
         )
 
         // get token from API
-        fetch(API + "/generatetoken", requestOptions)
+        return fetch(API + "/generatetoken", requestOptions)
         .then(response => response.json())
         .then(result => {
             if(result.token) {
@@ -78,6 +78,8 @@ function getPronoteLogin() {
                     "success",
                     checkmark
                 );
+
+                return result.token;
             } else {
                 if(result.error == "Missing password" || result.error == "Missing username" || result.error.includes("probably wrong login information") || result.error.includes("probably bad username/password")) {
                     displayToast.presentToast("Merci de vous reconnecter.", "danger")

@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key></key>
+	<string></string>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>plus.pronote.checkUpdates</string>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>fr</string>
 	<key>CFBundleDisplayName</key>
@@ -18,19 +24,19 @@
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(MARKETING_VERSION)</string>
-	<key>CFBundleVersion</key>
-	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
-	<dict>
-		<key>CFBundleURLName</key>
-		<string>plus.pronote.app</string>
-		<key>CFBundleURLSchemes</key>
-		<array>
-		<string>getpapillon</string>
-		</array>
-	</dict>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>plus.pronote.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>getpapillon</string>
+			</array>
+		</dict>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
@@ -39,6 +45,11 @@
 	<string>On utilise ta localisation pour déterminer automatiquement ton établissement.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>On utilise ta localisation pour déterminer automatiquement ton établissement.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

@@ -4,6 +4,8 @@
     import Values from 'values.js'
     import { AppActions } from 'capacitor-app-actions'
 
+    const { BackgroundFetch } = require("@transistorsoft/capacitor-background-fetch");
+
     import { Capacitor } from '@capacitor/core';
 
     const { version, canal } = require('/package')
@@ -22,6 +24,7 @@
 
     const GetUser = require('./functions/fetch/GetUserData');
     const GetRecap = require('./functions/fetch/GetRecap');
+    const GetToken = require('./functions/login/GetToken');
 
     import { LocalNotifications } from '@capacitor/local-notifications';
 
@@ -179,6 +182,92 @@
                 }
             })
         },
+        async notify(title: string, body: string) {
+            LocalNotifications.schedule({
+                notifications: [
+                    {
+                        title: title,
+                        body: body,
+                        id: 1,
+                        schedule: { at: new Date(Date.now() + 1000) },
+                    }
+                ]
+            });
+        },
+        async backgroundFetchEvent(taskId: any) {
+            GetToken.default().then(async (token: any) => {
+                if(token) {
+                    GetRecap.default().then(async (recap: any) => {
+                        if(recap) {
+                            // grades
+                            const lastGrades = JSON.parse(localStorage.getItem('lastGrades') || '[]');
+                            const recapGrades = recap.grades.last;
+
+                            if(lastGrades.length === 0) {
+                                localStorage.setItem('lastGrades', JSON.stringify(recapGrades));
+                            }
+                            else if (lastGrades !== recapGrades) {
+                                // get last grade
+                                let lastGrade = recapGrades[0];
+                                let description = lastGrade.info.description
+
+                                // get grade as 20
+                                let gradeAs20 = Math.round((lastGrade.grade.value / lastGrade.grade.out_of) * 20);
+
+                                const reactions = {
+                                    0: 'Aie aie aie... 😭',
+                                    5: 'Aie aie aie... 😤',
+                                    10: 'Peut-être une prochaine fois... 🫡',
+                                    12: 'Bien joué 👍',
+                                    14: 'Sympa ! 👌',
+                                    17: 'Bravo ! 🤩',
+                                    18: 'Félicitations ! 👏',
+                                    20: 'Champagne ! 🍾'
+                                }
+
+                                let reaction = '';
+
+                                // get reaction if gradeAs20 is over a certain value
+                                for (const [key, value] of Object.entries(reactions)) {
+                                    if(gradeAs20 >= parseInt(key)) {
+                                        reaction = value;
+                                    }
+                                }
+
+                                if(description.trim() === '') {
+                                    description = 'votre nouvelle note.';
+                                }
+                                else {
+                                    description = '"' + description + '".';
+                                }
+
+                                this.notify(
+                                    'Nouvelle note en ' + lastGrade.info.subject,
+                                    'Vous avez eu ' + lastGrade.grade.value + '/' + lastGrade.grade.out_of + ' sur ' + description + ' ' + reaction
+                                );
+
+                                localStorage.setItem('lastGrades', JSON.stringify(recapGrades));
+                            }
+                        }
+                        await BackgroundFetch.finish(taskId);
+                    });
+                }
+            });
+        },
+        async configureBackgroundFetch() {
+            await BackgroundFetch.configure({minimumFetchInterval: 15}, async (taskId: any) => {
+                console.log('[js] BackgroundFetch event received: ', taskId);
+                
+                try {
+                    this.backgroundFetchEvent(taskId);
+                } catch (e) {
+                    console.log(e);
+                    await BackgroundFetch.finish(taskId);
+                }
+            }, (error: any) => {
+                console.log('[js] RNBackgroundFetch failed to start');
+            });
+        },
         checkIosShortcuts() {
             AppActions.addListener("timetable", (info) => {
                 // open timetable
@@ -313,11 +402,12 @@
         })
 
         // shortcuts
-        if(Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'android') {
+        if(Capacitor.getPlatform() === 'android') {
             this.checkAndroidShortcuts();
         }
-        else if(Capacitor.isNativePlatform() && Capacitor.getPlatform() === 'ios') {
+        else if(Capacitor.getPlatform() === 'ios') {
             this.checkIosShortcuts();
+            this.configureBackgroundFetch();
         }
 
         // user data if logged in

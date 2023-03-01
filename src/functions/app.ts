@@ -86,9 +86,8 @@ function updateStatus() {
 	if (Capacitor.getPlatform() !== 'web') {
 		checkDarkMode();
 
-		setStatusBarStyle();
-		
 		if (Capacitor.getPlatform() === 'android') {
+			setStatusBarStyle();
 			setNavigationBarStyle();
 		}
 	}
@@ -96,6 +95,14 @@ function updateStatus() {
 
 // Constantly check for dark mode
 updateStatus();
+
+// on prefers color scheme change
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+	if (Capacitor.getPlatform() !== 'web') {
+		checkDarkMode();
+		setStatusBarStyle();
+	}
+});
 
 // constantly set style
 setInterval(setStyle, 100);
