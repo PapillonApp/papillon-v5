@@ -188,11 +188,14 @@
                     {
                         title: title,
                         body: body,
-                        id: 1,
+                        id: this.randomID(),
                         schedule: { at: new Date(Date.now() + 1000) },
                     }
                 ]
             });
+        },
+        randomID() {
+            return Math.floor(Math.random() * 100000 + 1000);
         },
         async backgroundFetchEvent(taskId: any) {
             GetToken.default().then(async (token: any) => {
@@ -206,7 +209,7 @@
                             if(lastGrades.length === 0) {
                                 localStorage.setItem('lastGrades', JSON.stringify(recapGrades));
                             }
-                            else if (lastGrades !== recapGrades) {
+                            else if (JSON.stringify(lastGrades[0]) == JSON.stringify(recapGrades[0])) {
                                 // get last grade
                                 let lastGrade = recapGrades[0];
                                 let description = lastGrade.info.description
@@ -502,10 +505,6 @@
         document.addEventListener('showChangelog', () => {
             this.showChangelog();
         })
-
-        /* GetRecap.default().then((data: any) => {
-            console.log(data);
-        }); */
     }
   });
 </script>
