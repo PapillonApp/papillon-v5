@@ -48,7 +48,9 @@
             return {
                 extensions: [],
                 localRepo: app.config.globalProperties.$localRepo,
-                url: ""
+                url: "",
+				warningCounter: 10,
+				warningInterval : null
             }
         },
         mounted() {
@@ -62,7 +64,19 @@
                 this.localRepo.installExtension(url)
                 // return back 
                 this.$router.back()
-            }
+            },
+			urlChanged() {
+				this.warningCounter = 10
+				if (this.warningInterval) {
+					clearInterval(this.warningInterval)
+				}
+				this.warningInterval = setInterval(() => {
+					this.warningCounter--
+					if (this.warningCounter <= 0) {
+						clearInterval(this.warningInterval)
+					}
+				}, 1000)
+			}
         }
 
 	});
@@ -90,10 +104,12 @@
             <ion-list class="addExtension">
                 <ion-item mode="md" fill="solid" class="input">
                     <ion-label position="floating">URL de l'extension</ion-label>
-                    <ion-input v-model="url"></ion-input>
+                    <ion-input v-model="url" @ionChange="urlChanged"></ion-input>
                 </ion-item>
-
-				<ion-button mode="md" expand="block" @click="installExtensionFromUrl(url)">Installer</ion-button>
+				<ion-text color="danger">
+					<p>ATTENTION ! installer une extension depuis une URL non fiable peut être dangereux. Papillon ne peut être tenu responsable des extensions installées. <span v-if="url.length>0 && warningCounter>0"><br><b>Veuillez confirmer votre choix en cliquant sur le bouton "Installer" dans <b>{{warningCounter}}</b> secondes.</b></span></p>
+				</ion-text>
+				<ion-button mode="md" expand="block" @click="installExtensionFromUrl(url)" :disabled="url == '' || warningCounter > 0">Installer</ion-button>
             </ion-list>
 		</ion-content>
 	</ion-page>
