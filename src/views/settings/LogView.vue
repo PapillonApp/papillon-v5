@@ -136,7 +136,7 @@
 					displayToast.presentNativeToast("Préparation des logs...");
 
 					// Post logs to hastebin (https://logs.getpapillon.xyz)
-					let response = await fetch("https://logs.getpapillon.xyz/documents", {
+					let response = await fetch("https://cors.api.getpapillon.xyz/https://logs.getpapillon.xyz/documents", {
 						method: "POST",
 						body: this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} - ${log.message}`; }).join("\n")
 					});
