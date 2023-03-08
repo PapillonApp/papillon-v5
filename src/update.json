@@ -2,37 +2,28 @@
     "changelog": {
         "features": [
             {
-                "icon": "contrast",
-                "name": "Sélection du thème de l'interface",
-                "description": "Vous pouvez désormais choisir le mode sombre ou clair pour l'interface de Papillon et désactiver le mode automatique."
+                "icon": "bug_report",
+                "name": "Améliorations et corrections de bugs",
+                "description": "Nous avons corrigé quelques bugs et amélioré l'expérience utilisateur de Papillon."
             },
             {
-                "icon": "join_inner",
-                "name": "Joindre les matières",
-                "description": "Vous l'avez demandé, la voici ! Vous pouvez désormais joindre les matières plus facilement depuis l'interface de Papillon."
+                "icon": "home",
+                "name": "Écran d'accueil amélioré",
+                "description": "Vous l'avez demandé, le voici ! L'écran d'accueil de Papillon a été entièrement revu pour vous offrir une expérience plus fluide et plus agréable."
             },
             {
-                "icon": "event",
-                "name": "Affichage du calendrier",
-                "description": "Maintenant les exclusions de dates s'appliquent à tous les calendriers de Papillon. Direction les paramètres pour régler ces derniers !"
+                "icon": "auto_stories",
+                "name": "Travail à faire",
+                "description": "L'affichage des devoirs est maintenant encore plus agréable !"
             },
             {
-                "icon": "send",
-                "name": "Partage de notes",
-                "description": "Vous pouvez désormais partager facilement vos notes avec vos amis ! "
+                "icon": "sentiment_satisfied",
+                "name": "Dernière ligne droite",
+                "description": "On a jamais été aussi proche de la sortie officielle ! C'est l'heure de reporter les derniers bugs et de finir les dernières fonctionnalités !"
             }
         ],
         "fixes": [
-            {
-                "icon": "bug_report",
-                "name": "Correction de bugs",
-                "description": "Nous avons corrigé quelques bugs qui nous ont été signalés."
-            },
-            {
-                "icon": "apps",
-                "name": "Interface retravaillée",
-                "description": "Nous avons retravaillé l'interface iOS de Papillon pour vous offrir une meilleure expérience utilisateur et préparer un prochain changement."
-            }
+            
         ]
     }
 }
