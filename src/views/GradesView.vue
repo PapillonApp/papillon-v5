@@ -449,7 +449,7 @@
 							<!-- si absent -->
 							<p class="grd main" v-if="!mark.info.significant">
 								{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></p>
-							<p class="coef" v-if="mark.grade.original_value && !mark.info.significant"><br /></p>
+							<p class="coef" v-if="mark.grade.updated_value && !mark.info.significant"><br /></p>
 						</div>
 						<div class="averages" v-if="mark.info.significantAverage">
 							<div class="average">
