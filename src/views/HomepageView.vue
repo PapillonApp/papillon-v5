@@ -82,6 +82,7 @@
 				userData: [],
 				userName: "",
 				avatar: "",
+				grades: [],
 			}
 		},
 		methods: {
@@ -249,6 +250,10 @@
 					// homeworks
 					const homeworks = recap.homeworks;
 					this.homeworks = this.formatHomeworks(homeworks);
+
+					// grades
+					this.grades = recap.grades.last;
+					console.log(this.grades);
 				});
 			},
 			formatHomeworks(homeworks) {
@@ -400,36 +405,53 @@
 
 			<div id="components" ref="components">
 				<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
-					<ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none"
-						@click="goto('timetable')" :style="`--courseColor: ${cours.course.color};`"
-						:class="{ 'HasStatus' : cours.hasStatus }">
-						<ion-ripple-effect></ion-ripple-effect>
-						<div slot="start">
-							<IonChip>
-								{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}
-							</IonChip>
-						</div>
-						<ion-label :style="`--courseColor: ${cours.course.color};`">
-							<h2><span class="courseColor"></span> {{ cours.data.subject }}</h2>
+					<ion-ripple-effect></ion-ripple-effect>
+					<div class="coursElemNext" v-for="cours in timetable" :key="cours.id" :style="`--courseColor: ${cours.course.color};`">
+						<ion-item class="nextCours"  lines="none"
+							@click="goto('timetable')" 
+							:class="{ 'HasStatus' : cours.hasStatus }">
+							<div slot="start">
+								<IonChip>
+									{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}
+								</IonChip>
+							</div>
+							<ion-label :style="`--courseColor: ${cours.course.color};`">
+								<h2><span class="courseColor"></span> {{ cours.data.subject }}</h2>
 
-							<div class="progression" v-if="nextCoursStarted">
-								<p class="startProg">{{ nextCoursTime }}</p>
+								<div class="progression" v-if="nextCoursStarted">
+									<p class="startProg">{{ nextCoursTime }}</p>
 
-								<div class="progressBar">
-									<div class="progress" :style="`width: ${nextCoursCompletion}%`"></div>
+									<div class="progressBar">
+										<div class="progress" :style="`width: ${nextCoursCompletion}%`"></div>
+									</div>
+
+									<p class="endProg">{{ cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</p>
+								</div>
+								<div v-else>
+									<p>{{ nextCoursTime }}</p>
 								</div>
 
-								<p class="endProg">{{ cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</p>
-							</div>
-							<div v-else>
-								<p>{{ nextCoursTime }}</p>
-							</div>
+								<div class="CoursInfoContainer">
+									<div class="CoursInfo room" v-if="rooms !== null">
+										<span class="material-symbols-outlined smol" slot="start">location_on</span>
 
-							<p>salle {{ cours.data.rooms.join(', ') || 'Pas de salle' }} - avec
-								{{ cours.data.teachers.join(', ') || 'Pas de professeur' }}</p>
-							<p v-if="cours.status.status">{{ cours.status.status }}</p>
-						</ion-label>
-					</ion-item>
+										<p>{{ cours.data.rooms.join(', ') || 'Pas de salle' }}</p>
+									</div>
+									<div class="separator"></div>
+									<div class="CoursInfo">
+										<span class="material-symbols-outlined smol" slot="start">face</span>
+
+										<p>{{ cours.data.teachers.join(', ') || 'Pas de professeur' }}</p>
+									</div>
+								</div>
+
+							</ion-label>
+						</ion-item>
+						<div class="nextStatus" v-if="cours.status.status">
+							<span class="material-symbols-outlined mdls">info</span>
+							<p>{{ cours.status.status }}</p>
+						</div>
+					</div>
 
 					<ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0 && !connected" style="margin-top: 12px;"
 						class="nextCours" lines="none">
@@ -473,6 +495,31 @@
 							<h3><ion-skeleton-text :animated="true" style="width: 35%;"></ion-skeleton-text></h3>
 							<p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
 						</ion-label>
+					</ion-item>
+				</ion-list>
+
+				<ion-list id="comp-grades" ref="comp-grades" lines="none" inset="true" class="hw_group">
+					<ion-list-header>
+						<ion-label>
+							<h2 style="font-size: 20px;">Dernières notes</h2>
+						</ion-label>
+						<ion-button @click="goto('homework')">Voir tout</ion-button>
+					</ion-list-header>
+
+					<ion-item v-for="grade in grades" :key="grade.id">
+						<ion-label :style="`--courseColor: ${grade.subject.color};`">
+							<p><span class="courseColor"></span> {{ grade.subject.name }}</p>
+							<h2>{{ grade.info.description }}</h2>
+						</ion-label>
+
+						<div slot="end">
+							<ion-label v-if="grade.info.significant">
+								<h2>{{ grade.grade.value }}<small>/{{ grade.grade.out_of }}</small></h2>
+							</ion-label>
+							<ion-label v-else>
+								<h2>{{ grade.info.significantReason }}<small>/{{ grade.grade.out_of }}</small></h2>
+							</ion-label>
+						</div>
 					</ion-item>
 				</ion-list>
 
@@ -559,6 +606,7 @@
 					</div>
 				</ion-list>
 			</div>
+			
 
 		</ion-content>
 	</ion-page>
@@ -592,6 +640,11 @@
 		font-family: var(--papillon-font);
 	}
 
+	.nextCourse {
+		border-radius: 12px !important;
+		overflow: hidden;
+	}
+
 	.ios .nextCours.HasStatus::part(native) {
 		border-radius: 12px 12px 0 0 !important;
 	}
@@ -607,7 +660,7 @@
 
 	.ios .nextCours::part(native) {
 		background: var(--ion-plain-background-color);
-		border-radius: 12px;
+		border-radius: 12px !important;
 		padding: 5px 15px;
 
 		box-shadow: var(--ion-box-shadow) !important;
@@ -659,6 +712,37 @@
 	}
 
 	.nextCours .progression .endProg {
+		font-weight: 500;
+	}
+
+	.nextStatus {
+		width: calc(100% - 16px * 2);
+		background: var(--courseColor) !important;
+
+		display: flex;
+		align-items: center;
+		gap: 12px;
+
+		margin: 0px 16px;
+		padding: 8px 24px;
+
+		margin-top: -5px;
+		margin-bottom: 5px;
+		color: #fff;
+
+		border-radius: 0 0 12px 12px !important;
+	}
+
+	.nextStatus * {
+		margin: 0;
+	}
+
+	.nextStatus span {
+		font-size: 20px;
+	}
+
+	.nextStatus p {
+		font-size: 15px;
 		font-weight: 500;
 	}
 
@@ -723,5 +807,48 @@
 		padding-top: calc(200px + env(safe-area-inset-top));
 
 		color: #fff;
+	}
+
+	.CoursInfoContainer {
+		margin-top: 2px;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+
+		width: calc(100vw - 145px);
+		margin-top: 5px;
+	}
+
+	.CoursInfoContainer .separator {
+		width: 1px;
+		height: 15px;
+		background: var(--ion-color-step-200);
+	}
+
+	.CoursInfo {
+		display: flex;
+		align-items: center;
+
+		font-size: 0.9em;
+		font-weight: 400;
+
+		opacity: 0.7;
+
+		width: fit-content;
+		max-width: 55%;
+
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		margin-bottom: 3px;
+	}
+
+	.CoursInfo span {
+		margin-right: 5px;
+	}
+
+	.CoursInfo.room {
+		opacity: 100%;
+		font-weight: 600;
 	}
 </style>

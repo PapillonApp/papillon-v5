@@ -59,7 +59,14 @@ function getPronoteRecap(force) {
             let allGrades = [];
             for (let i = 0; i < grades.full.marks.length; i++) {
                 for (let j = 0; j < grades.full.marks[i].marks.length; j++) {
-                    allGrades.push(grades.full.marks[i].marks[j]);
+                    let newGrade = grades.full.marks[i].marks[j];
+                    // add subject data
+                    newGrade.subject = {
+                        name: grades.full.marks[i].name,
+                        color: grades.full.marks[i].color
+                    };
+                    
+                    allGrades.push(newGrade);
                 }
             }
 
