@@ -39,7 +39,6 @@
     "@transistorsoft/capacitor-background-fetch": "^1.0.3",
     "axios": "^1.2.1",
     "capacitor-android-shortcuts": "^4.0.0",
-    "capacitor-app-actions": "^1.0.3",
     "capacitor-notification-badge": "^1.0.6",
     "core-js": "^3.6.5",
     "fast-average-color": "^9.3.0",

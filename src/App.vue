@@ -2,7 +2,6 @@
     import { IonApp, IonContent, IonButton, IonButtons, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText, alertController, IonModal, IonThumbnail } from '@ionic/vue';
 
     import Values from 'values.js'
-    import { AppActions } from 'capacitor-app-actions'
 
     const { BackgroundFetch } = require("@transistorsoft/capacitor-background-fetch");
 
@@ -272,18 +271,7 @@
             });
         },
         checkIosShortcuts() {
-            AppActions.addListener("timetable", (info) => {
-                // open timetable
-                this.$router.push('/timetable');
-            });
-            AppActions.addListener("homework", (info) => {
-                // open homework
-                this.$router.push('/homework');
-            });
-            AppActions.addListener("grades", (info) => {
-                // open grades
-                this.$router.push('/grades');
-            });
+            return false;
         },
         RGBToHSL(r: number, g: number, b: number) {
             r /= 255;

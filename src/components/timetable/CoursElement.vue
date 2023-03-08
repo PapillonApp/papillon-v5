@@ -461,6 +461,10 @@
 	.TestInfo {
 		max-width: 100%;
 		margin-top: 5px;
+		margin-bottom: 1px !important;
+		opacity: 1;
+		color: var(--backgroundColor);
+		filter: brightness(0.6);
 	}
 
 	.Status {
