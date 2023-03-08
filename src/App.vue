@@ -493,9 +493,6 @@
         document.addEventListener('showChangelog', () => {
             this.showChangelog();
         })
-
-        // devt purposes
-        this.showChangelog();
     }
   });
 </script>
