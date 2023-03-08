@@ -262,22 +262,23 @@
 
 						{{ status }}
 					</p>
+
+					<p class="CoursInfo TestInfo" v-if="isTest">
+						<span class="material-symbols-outlined smol" slot="start">quiz</span>
+						Vous avez un contrôle
+					</p>
+
+					<p class="CoursInfo" v-if="isOuting">
+						<span class="material-symbols-outlined smol" slot="start">directions_walk</span>
+						Sortie scolaire
+					</p>
+
+					<p class="CoursInfo" v-if="memo">
+						<span class="material-symbols-outlined smol" slot="start">sticky_note_2</span>
+						Contient un mémo
+					</p>
 				</div>
 			</ion-label>
-
-			<div slot="end" class="TypeIcon">
-				<span v-if="isTest">
-					<span class="material-symbols-outlined smol">quiz</span>
-				</span>
-
-				<span v-if="isOuting">
-					<span class="material-symbols-outlined smol">directions_walk</span>
-				</span>
-
-				<span v-if="memo">
-					<span class="material-symbols-outlined smol">sticky_note_2</span>
-				</span>
-			</div>
 		</div>
 	</div>
 </template>
@@ -457,19 +458,24 @@
 		font-weight: 600;
 	}
 
+	.TestInfo {
+		max-width: 100%;
+		margin-top: 5px;
+	}
+
 	.Status {
 		opacity: 1;
 		color: #fff;
 		padding: 5px 10px;
-		background: #ffffff10;
+		border: 1px solid var(--backgroundColor);
 		border-radius: 300px;
 		margin-top: 5px;
 		max-width: fit-content;
+		filter: brightness(0.6);
 	}
 
 	.light .Status {
-		color: var(--ion-color-warning);
-		background: rgba(var(--ion-color-warning-rgb), 0.1);
+		color: var(--backgroundColor);
 	}
 
 	.true .cours {
@@ -479,11 +485,6 @@
 
 	.true .cours .CoursColor {
 		background: var(--ion-color-danger) !important;
-	}
-
-	.true .cours .Status {
-		color: var(--ion-color-danger);
-		background: rgba(var(--ion-color-danger-rgb), 0.1);
 	}
 
 	.CoursTime {
