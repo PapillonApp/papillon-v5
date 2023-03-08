@@ -36,6 +36,9 @@
 	// homeworks
 	import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
 
+	// recap
+	import GetRecap from "@/functions/fetch/GetRecap.js";
+
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
@@ -206,51 +209,29 @@
 
 				return lessons;
 			},
-			getTimetable(force) {
-				this.ttbLoading = true;
-				GetTimetable(this.$rn, force).then((timetable) => {
-					if (timetable.error) {
-						this.timetable = [];
-						this.timetable.error = timetable.error;
+			getRecap(force) {
+				GetRecap(force).then((recap) => {
+					console.log(recap);
 
-						if (timetable.error == "ERR_BAD_REQUEST") {
-							this.timetable.error = null;
-						}
-					} else {
-						this.timetable = this.editTimetable(timetable);
+					// timetable
+					const timetable = recap.timetable;
+					this.timetable = this.editTimetable(timetable);
 
-						this.updateTime = setInterval(() => {
-							this.timetable = this.editTimetable(timetable);
-						}, 1000);
-
-						this.ttbLoading = false;
-					}
+					// homeworks
+					const homeworks = recap.homeworks;
+					this.homeworks = this.formatHomeworks(homeworks);
 				});
 			},
-			getHomeworks(force) {
-				// get date for this.$rn + 1 day
-				let today = new Date(this.$rn);
-				let dateTo = new Date(this.$rn);
-				dateTo.setDate(dateTo.getDate() + 7);
+			formatHomeworks(homeworks) {
+				let homeworkDays = [];
+				let today = new Date();
 
-				this.hwLoading = true;
-				GetHomeworks(today, dateTo, force).then((homeworks) => {
-						if (homeworks.error) {
-							this.homeworks = [];
-							this.homeworks.error = homeworks.error;
-
-							if (homeworks.error == "ERR_BAD_REQUEST") {
-								this.homeworks.error = null;
-							}
-						} else {
-							this.hwLoading = false;
-
-							let homeworkDays = [];
-
-							// sort homeworks by day
-							for (let i = 0; i < homeworks.length; i++) {
+				// sort homeworks by day
+				for (let i = 0; i < homeworks.length; i++) {
 								let homework = homeworks[i];
 								let date = new Date(homework.data.date);
+
+								homeworks[i].homework.content = homeworks[i].homework.content.replace('<br/>', ' ');
 
 								homeworks[i].data.timeLeft = Math.floor((date - today) / 1000 / 60 / 60 / 24);
 
@@ -274,21 +255,7 @@
 								return new Date(a.date) - new Date(b.date);
 							});
 
-							this.checkUndone();
-
-							this.homeworks = homeworkDays;
-
-							// if no homeworks
-							if (homeworkDays.length == 0) {
-								NotificationBadge.setBadgeCount({
-									count: 0,
-								})
-							}
-						}
-					})
-					.catch(() => {
-						this.homeworks = [];
-					});
+							return homeworkDays;
 			},
 			reorder() {
 				let order = ["comp-hw", "comp-tt"]
@@ -370,14 +337,11 @@
 			this.connected = this.connected.connected;
 
 			// get data
-			this.getTimetable();
+			this.getRecap();
 
 			document.addEventListener('tokenUpdated', () => {
-				this.getTimetable();
-				this.getHomeworks();
+				this.getRecap();
 			});
-
-			this.getHomeworks();
 
 			// get userData
 			this.userData = JSON.parse(localStorage.userData);

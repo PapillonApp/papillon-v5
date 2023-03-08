@@ -11,15 +11,15 @@ import getGrades from './GetGrades';
 import getNews from './GetNews';
 
 // main function
-async function getRecap() {
+async function getRecap(force) {
     // as only pronote is supported for now, we can just return the pronote timetable
     
     // return pronote timetable
-    return getPronoteRecap();
+    return getPronoteRecap(force);
 }
 
 // pronote : get timetable
-function getPronoteRecap() {
+function getPronoteRecap(force) {
     // promise
     return new Promise((resolve, reject) => {
         // vars
@@ -34,22 +34,24 @@ function getPronoteRecap() {
         let requestsDone = 0;
         
         // timetable
-        getTimetable(new Date(), true).then((response) => {
+        getTimetable(new Date(), force).then((response) => {
             timetable = response;
             requestsDone++;
         });
 
         // homeworks
-        let tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
+        let today = new Date();
 
-        getHomeworks(tomorrow, tomorrow, true).then((response) => {
+        let endDate = new Date();
+        endDate.setDate(endDate.getDate() + 3);
+
+        getHomeworks(today, endDate, force).then((response) => {
             homeworks = response;
             requestsDone++;
         });
 
         // grades
-        getGrades(true).then((response) => {
+        getGrades(force).then((response) => {
             grades.full = response;
             requestsDone++;
 
@@ -73,7 +75,7 @@ function getPronoteRecap() {
         });
 
         // news
-        getNews(true).then((response) => {
+        getNews(force).then((response) => {
             news = response;
             requestsDone++;
         });
