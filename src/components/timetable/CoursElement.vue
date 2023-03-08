@@ -360,7 +360,7 @@
 		flex-direction: column;
 		justify-content: center;
 
-		width: calc(100% - 20px);
+		width: 100%;
 		height: 100%;
 
 		padding: 8px 0px;
@@ -463,9 +463,28 @@
 		margin-top: 5px;
 		margin-bottom: 1px !important;
 		opacity: 1;
+
+		padding: 5px 10px;
+		border-radius: 8px;
+		
 		color: var(--backgroundColor);
 		filter: brightness(0.6);
 		font-weight: 500 !important;
+
+		position: relative;
+	}
+
+	.Status:after {
+		width: 100%;
+		height: 100%;
+		content: '';
+		background: var(--backgroundColor);
+
+		position: absolute;
+		top: 0;
+		left: 0;
+
+		opacity: 0.1;
 	}
 	
 	.dark .Status {
