@@ -31,7 +31,8 @@
 			IonLabel,
 			IonToggle,
 			IonTitle,
-			IonContent
+			IonContent,
+			IonListHeader
 		},
 		data() {
 			return {
@@ -165,15 +166,6 @@
 		<ion-content :fullscreen="true">
 			<IonList :inset="true" lines="inset">
 				<IonItem>
-					<span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
-					<IonLabel class="ion-text-wrap">
-						<h2>Remettre les notes sur 20</h2>
-						<p>Uniformise le barème de toutes les notes</p>
-					</IonLabel>
-					<IonToggle slot="end" ref="tweakGrades20" @ionChange="changeTick('tweakGrades20')"></IonToggle>
-				</IonItem>
-
-				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">holiday_village</span>
 					<IonLabel class="ion-text-wrap">
 						<h2>Vacances désactivées</h2>
@@ -191,20 +183,25 @@
 				</IonItem>
 
 				<IonItem>
-					<span class="material-symbols-outlined mdls" slot="start">join_inner</span>
+					<span class="material-symbols-outlined mdls" slot="start">gavel</span>
 					<IonLabel class="ion-text-wrap">
-						<h2>Joindre les matières identiques</h2>
-						<p>Permet de joindre les matières identiques entre-elles</p>
+						<h2>Activer l'onglet vie scolaire</h2>
+						<p>Active l'onglet de vie scolaire</p>
 					</IonLabel>
-					<IonToggle slot="end" ref="groupSubjects" @ionChange="changeGroupSubjects('groupSubjects')"></IonToggle>
+					<IonToggle slot="end" ref="viescolaireEnabled" @ionChange="changeTick('viescolaireEnabled')"></IonToggle>
 				</IonItem>
 			</IonList>
 
 			<IonList :inset="true" lines="inset">
+				<IonListHeader>
+					<IonLabel>
+						<p>Onglet Notes</p>
+					</IonLabel>
+				</IonListHeader>
+
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">toggle_off</span>
 					<IonLabel class="ion-text-wrap">
-						<h5>Onglet notes</h5>
 						<h2>Activer la sélection de période</h2>
 						<p>Permet de changer de trimestre/semestre</p>
 					</IonLabel>
@@ -212,12 +209,21 @@
 				</IonItem>
 
 				<IonItem>
-					<span class="material-symbols-outlined mdls" slot="start">gavel</span>
+					<span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
 					<IonLabel class="ion-text-wrap">
-						<h2>Activer l'onglet vie scolaire</h2>
-						<p>Active l'onglet de vie scolaire</p>
+						<h2>Remettre les notes sur 20</h2>
+						<p>Uniformise le barème de toutes les notes</p>
 					</IonLabel>
-					<IonToggle slot="end" ref="viescolaireEnabled" @ionChange="changeTick('viescolaireEnabled')"></IonToggle>
+					<IonToggle slot="end" ref="tweakGrades20" @ionChange="changeTick('tweakGrades20')"></IonToggle>
+				</IonItem>
+
+				<IonItem>
+					<span class="material-symbols-outlined mdls" slot="start">join_inner</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Joindre les matières identiques</h2>
+						<p>Permet de joindre les matières identiques entre-elles</p>
+					</IonLabel>
+					<IonToggle slot="end" ref="groupSubjects" @ionChange="changeGroupSubjects('groupSubjects')"></IonToggle>
 				</IonItem>
 			</IonList>
 		</ion-content>
