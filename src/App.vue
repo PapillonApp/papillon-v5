@@ -493,6 +493,9 @@
         document.addEventListener('showChangelog', () => {
             this.showChangelog();
         })
+
+        // devt purposes
+        this.showChangelog();
     }
   });
 </script>
@@ -554,22 +557,13 @@
         <ion-content class="update">
             <div class="update_inner">
                 <div id="update-header">
-                    <span class="material-symbols-outlined mdls" slot="start">temp_preferences_custom</span>
+                    <img src="/assets/updateIcon.svg" class="updateIcon">
 
-                    <h1>Notes de mise à jour</h1>
+                    <h1>Quoi de neuf dans Papillon ?</h1>
                     <p>Voici les dernières nouveautés de Papillon.</p>
                 </div>
 
-                <ion-button mode="md" @click="hideChangelog" fill="solid" class="endButton">Accéder à Papillon</ion-button>
-                <p class="warning">Cet écran n'apparaîtera pas au redémarrage de Papillon. Il restera accessible dans les paramètres.</p>
-
-                <ion-list>
-                    <ion-list-header>
-                        <ion-label>
-                            Nouvelles fonctionnalités
-                        </ion-label>
-                    </ion-list-header>
-
+                <ion-list inset>
                     <ion-item v-for="(feature, i) in appUpdates.features" :key="i">
                         <span class="material-symbols-outlined mdls" slot="start">{{feature.icon}}</span>
                         <ion-label class="ion-text-wrap">
@@ -579,21 +573,8 @@
                     </ion-item>
                 </ion-list>
 
-                <ion-list>
-                    <ion-list-header>
-                        <ion-label>
-                            Correctifs
-                        </ion-label>
-                    </ion-list-header>
-
-                    <ion-item v-for="(fix, i) in appUpdates.fixes" :key="i">
-                        <span class="material-symbols-outlined mdls" slot="start">{{fix.icon}}</span>
-                        <ion-label class="ion-text-wrap">
-                            <h2>{{ fix.name }}</h2>
-                            <p>{{ fix.description }}</p>
-                        </ion-label>
-                    </ion-item>
-                </ion-list>
+                <ion-button mode="md" @click="hideChangelog" fill="solid" class="endButton">Accéder à Papillon</ion-button>
+                <p class="warning">Cet écran n'apparaîtera pas au redémarrage de Papillon. Il restera accessible dans les paramètres.</p>
             </div>
         </ion-content>
     </ion-modal>
@@ -832,18 +813,17 @@
 
     /* updates */
     #update-header {
-        margin: 20px;
-        padding: 20px;
+        margin: 40px 25px;
 
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
 
-        background: var(--ion-color-step-50);
-
         color: #000;
         border-radius: 10px;
+
+        margin-bottom: 30px;
     }
 
     .dark #update-header {
@@ -853,20 +833,20 @@
     #update-header * {
         margin: 0;
         padding: 0;
+        text-align: center;
     }
 
-    #update-header span {
+    #update-header .updateIcon {
         margin-bottom: 15px !important;
 
-        font-size: 36px;
-        width: 36px;
+        height: 62px;
     }
 
-    #update-header small {
-        display: block;
-        font-size: 14px;
-        margin-bottom: 10px;
-        opacity: 0.5;
+    #update-header h1 {
+        font-size: 28px;
+        letter-spacing: -0.2px;
+        margin-bottom: 5px;
+        color: var(--ion-color-primary);
     }
 
     #update-header p {
@@ -891,5 +871,9 @@
         margin: 0px 20px;
 
         --border-radius: 8px;
+    }
+
+    .update ion-list {
+        margin-bottom: 30px;
     }
 </style>
