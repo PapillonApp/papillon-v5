@@ -114,6 +114,21 @@ function constructPronoteHomework(hw) {
             }
         });
 
+        // get homework description
+        let homeworkDescription = homework.description;
+        // limit to 50 chars but let it end on a word
+        if (homeworkDescription.length > 80) {
+            homeworkDescription = homeworkDescription.substring(0, 80);
+            homeworkDescription = homeworkDescription.substring(0, homeworkDescription.lastIndexOf(" "));
+            homeworkDescription += "...";
+        }
+
+        // replace new lines in homework.description with <br/>
+        homework.description = homework.description.replace(/\n/g, "<br/>");
+
+        // parse links in homework.description
+        homework.description = homework.description.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+
         // construct course
         let newHomework = {
             data: {
@@ -125,6 +140,7 @@ function constructPronoteHomework(hw) {
             homework: {
                 subject: homework.subject.name,
                 content: homework.description,
+                shortContent: homeworkDescription,
             },
             files: homework.files,
         };

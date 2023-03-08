@@ -393,7 +393,7 @@ export default defineComponent({
                             <div class="hwData" :style="`--courseColor: ${homework.data.color};`" @click="openHomework(homework)">
                                 <div @click="openHomework(homework)">
                                     <p class="hwSubject"><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
-                                    <p class="hwContent">{{ homework.homework.content }}</p>
+                                    <p class="hwContent" v-html="homework.homework.shortContent"></p>
                                 </div>
 
                                 <div class="innerChips" v-if="homework.files.length !== 0">
@@ -472,9 +472,7 @@ export default defineComponent({
                     </IonToolbar>
                 </IonHeader>
                 <IonContent class="ionPadding hwModalContent">
-                    <div class="contentText">
-                        {{ openedHw.homework.content }}
-                    </div>
+                    <div class="contentText" v-html="openedHw.homework.content"></div>
 
                     <div class="chips" v-if="openedHw.files.length !== 0">
                         <ion-chip v-for="(attachment, i) in openedHw.files" :key="i" @click="openLink(attachment.url)" color="dark" :outline="true">
@@ -502,6 +500,7 @@ export default defineComponent({
 
     .contentText {
         padding: 15px;
+        line-height: 20px !important;
     }
 
     .hwModalContent .chips {
@@ -514,15 +513,17 @@ export default defineComponent({
     ion-chip {
         margin-right: 5px;
         margin-bottom: 5px;
+        max-width: 80%;
     }
 
     ion-chip span {
         opacity: 50%;
         margin-right: 8px;
+        min-width: 24px;
     }
 
     ion-chip p {
-        max-width: 160px;
+        max-width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -532,12 +533,19 @@ export default defineComponent({
         width: 20px;
     }
 
+    .hwData {
+        width: calc(100% - 26px - 20px);
+    }
+
     .innerChips {
-        overflow-y: scroll;
+        overflow-y: hidden;
+        display: flex;
+
+        width: 100%;
+        gap: 10px;
     }
 
     .innerChips ion-chip p {
-        max-width: 50px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
