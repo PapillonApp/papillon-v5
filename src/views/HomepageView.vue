@@ -68,6 +68,8 @@
 				timetable: [],
 				ttbLoading: false,
 				nextCoursTime: "",
+				nextCoursStarted: false,
+				nextCoursCompletion: 0,
 				percentage: 0,
 				updateTime: null,
 				firstName: '',
@@ -142,6 +144,15 @@
 						timetable.push(customCourse.course);
 					}
 				});
+				
+				// if 2 courses at the same time
+				// remove all courses with sameTime = true
+				timetable = timetable.filter((course) => {
+					if (course.sameTime) {
+						return false;
+					}
+					return true;
+				});
 
 				// get next lesson (cours.time.start)
 				lessons = timetable.filter((lesson) => {
@@ -159,8 +170,21 @@
 					// if less than 60 mins
 					if (mins < 60 && mins > 0) {
 						this.nextCoursTime = `dans ${mins} minutes`;
+						this.nextCoursStarted = false;
 					} else if (mins <= 0) {
-						this.nextCoursTime = "Cours commencé";
+						this.nextCoursStarted = true;
+
+						// get percentage of lesson done
+						let lessonTime = lessonEnd - lessonStart;
+						let lessonTimeDone = now - lessonStart;
+						let percentage = Math.floor((lessonTimeDone / lessonTime) * 100);
+
+						this.nextCoursCompletion = percentage;
+
+						// get minutes before lesson ends
+						mins = Math.floor((lessonEnd - now) / 1000 / 60);
+
+						this.nextCoursTime = `${mins} min rest.`;
 
 						if (lessonEnd <= now) {
 							return false;
@@ -170,6 +194,7 @@
 						mins = mins % 60;
 
 						this.nextCoursTime = `dans ${hours} heures et ${mins} minutes`;
+						this.nextCoursStarted = false;
 					}
 
 					if (mins < gap) {
@@ -202,6 +227,7 @@
 						}
 
 						this.nextCoursTime = "Cours terminé";
+						this.nextCoursStarted = false;
 						lessons.push(lesson);
 						break;
 					}
@@ -211,11 +237,14 @@
 			},
 			getRecap(force) {
 				GetRecap(force).then((recap) => {
-					console.log(recap);
 
 					// timetable
 					const timetable = recap.timetable;
 					this.timetable = this.editTimetable(timetable);
+
+					this.updateTime = setInterval(() => {
+						this.timetable = this.editTimetable(timetable);
+					}, 600);
 
 					// homeworks
 					const homeworks = recap.homeworks;
@@ -371,7 +400,7 @@
 
 			<div id="components" ref="components">
 				<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
-					<ion-item button class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none"
+					<ion-item class="nextCours" v-for="cours in timetable" :key="cours.id" lines="none"
 						@click="goto('timetable')" :style="`--courseColor: ${cours.course.color};`"
 						:class="{ 'HasStatus' : cours.hasStatus }">
 						<ion-ripple-effect></ion-ripple-effect>
@@ -382,7 +411,20 @@
 						</div>
 						<ion-label :style="`--courseColor: ${cours.course.color};`">
 							<h2><span class="courseColor"></span> {{ cours.data.subject }}</h2>
-							<h3>{{ nextCoursTime }}</h3>
+
+							<div class="progression" v-if="nextCoursStarted">
+								<p class="startProg">{{ nextCoursTime }}</p>
+
+								<div class="progressBar">
+									<div class="progress" :style="`width: ${nextCoursCompletion}%`"></div>
+								</div>
+
+								<p class="endProg">{{ cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</p>
+							</div>
+							<div v-else>
+								<p>{{ nextCoursTime }}</p>
+							</div>
+
 							<p>salle {{ cours.data.rooms.join(', ') || 'Pas de salle' }} - avec
 								{{ cours.data.teachers.join(', ') || 'Pas de professeur' }}</p>
 							<p v-if="cours.status.status">{{ cours.status.status }}</p>
@@ -543,7 +585,7 @@
 	}
 
 	.nextCourse ion-chip {
-		padding: 6px 9px !important;
+		padding: 2px 9px !important;
 		height: fit-content;
 		font-weight: 600;
 		font-size: 16px;
@@ -589,6 +631,35 @@
 		background-color: var(--courseColor);
 		display: inline-block;
 		margin-right: 5px;
+	}
+
+	.nextCours .progression {
+		display: flex;
+		align-items: center;
+		gap: 5px;
+	}
+
+	.nextCours .progression .progressBar {
+		width: 100%;
+		height: 5px;
+		background-color: var(--ion-color-step-150);
+		border-radius: 5px;
+		margin-right: 5px;
+		transition: 5s;
+	}
+
+	.nextCours .progression .progressBar .progress {
+		height: 100%;
+		background-color: var(--courseColor);
+		border-radius: 5px;
+	}
+
+	.nextCours .progression .startProg {
+		opacity: 0.5;
+	}
+
+	.nextCours .progression .endProg {
+		font-weight: 500;
 	}
 
 	.homepage_divider {
