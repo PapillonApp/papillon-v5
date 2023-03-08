@@ -390,10 +390,10 @@ export default defineComponent({
                             <div class="hwCheckbox">
                                 <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
                             </div>
-                            <div class="hwData" :style="`--courseColor: ${homework.data.color};`" @click="openHomework(homework)">
+                            <div class="hwData" :style="`--courseColor: ${homework.data.color};`">
                                 <div @click="openHomework(homework)">
                                     <p class="hwSubject"><span class="courseColor"></span>  {{ homework.homework.subject }}</p>
-                                    <p class="hwContent" v-html="homework.homework.shortContent"></p>
+                                    <p class="hwContent">{{ homework.homework.shortContent }}</p>
                                 </div>
 
                                 <div class="innerChips" v-if="homework.files.length !== 0">
