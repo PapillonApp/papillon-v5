@@ -449,7 +449,6 @@
 
 					<ion-item class="nextCours" v-if="!ttbLoading && timetable.length == 0" style="margin-top: 12px;"
 						@click="goto('timetable')">
-						<ion-ripple-effect></ion-ripple-effect>
 						<div slot="start" class="emoji">
 							{{ noCoursesEmoji }}
 						</div>
