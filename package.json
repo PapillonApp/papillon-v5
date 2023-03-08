@@ -1,6 +1,6 @@
 {
   "name": "papillon",
-  "version": "5.0.18",
+  "version": "5.0.19",
   "canal": "dev",
   "private": true,
   "scripts": {
