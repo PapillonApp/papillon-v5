@@ -547,7 +547,7 @@
 			<ion-searchbar autocomplete="off" ref="postalInput" placeholder="Chercher avec un code postal..." type="number" @ionChange="getPostal($event)" @ionClear="clearEtabs()" maxlength="5"></ion-searchbar>
 		</ion-toolbar>
 	</ion-header>
-	  
+
 	<ion-content :fullscreen="true">
 
 		<ion-list>
