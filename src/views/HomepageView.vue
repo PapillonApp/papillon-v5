@@ -503,7 +503,7 @@
 						<ion-label>
 							<h2 style="font-size: 20px;">Dernières notes</h2>
 						</ion-label>
-						<ion-button @click="goto('homework')">Voir tout</ion-button>
+						<ion-button @click="goto('grades')">Voir tout</ion-button>
 					</ion-list-header>
 
 					<ion-item v-for="grade in grades" :key="grade.id">
