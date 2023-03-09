@@ -204,13 +204,6 @@
 
 					lesson.hasStatus = lesson.status.status != undefined;
 
-					// add percentage of lesson done
-					let lessonTime = lessonEnd - lessonStart;
-					let lessonTimeDone = now - lessonStart;
-					let percentage = Math.floor((lessonTimeDone / lessonTime) * 100);
-
-					this.percentage = percentage;
-
 					lessons.push(lesson)
 					return true;
 				});
