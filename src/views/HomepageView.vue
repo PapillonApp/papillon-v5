@@ -173,6 +173,10 @@
 						this.nextCoursTime = `dans ${mins} minutes`;
 						this.nextCoursStarted = false;
 					} else if (mins <= 0) {
+						if (lessonEnd <= now) {
+							return false;
+						}
+
 						this.nextCoursStarted = true;
 
 						// get percentage of lesson done
@@ -183,13 +187,9 @@
 						this.nextCoursCompletion = percentage;
 
 						// get minutes before lesson ends
-						mins = Math.floor((lessonEnd - now) / 1000 / 60);
+						let endMins = Math.floor((lessonEnd - now) / 1000 / 60);
 
-						this.nextCoursTime = `${mins} min rest.`;
-
-						if (lessonEnd <= now) {
-							return false;
-						}
+						this.nextCoursTime = `${endMins} min rest.`;
 					} else {
 						let hours = Math.floor(mins / 60);
 						mins = mins % 60;
@@ -213,11 +213,31 @@
 					for (let i = timetable.length - 1; i >= 0; i--) {
 						let lesson = timetable[i];
 
-						let end = new Date(lesson.time.end);
-						let mins = Math.floor((end - now) / 1000 / 60);
+						let lessonEnd = new Date(lesson.time.end);
+						let lessonStart = new Date(lesson.time.start);
+						let endMins = Math.floor((lessonEnd - now) / 1000 / 60);
+						let startMins = Math.floor((lessonStart - now) / 1000 / 60);
 
-						if (lesson.status.isCancelled || mins < -120) {
+						let lessonDuration = -(Math.floor((lessonEnd - lessonStart) / 1000 / 60));
+
+						if (endMins < -120) {
 							continue;
+						}
+
+						if (startMins > lessonDuration) {
+							this.nextCoursStarted = true;
+
+							// get percentage of lesson done
+							let lessonTime = lessonEnd - lessonStart;
+							let lessonTimeDone = now - lessonStart;
+							let percentage = Math.floor((lessonTimeDone / lessonTime) * 100);
+
+							this.nextCoursCompletion = percentage;
+
+							this.nextCoursTime = `${endMins} min rest.`;
+
+							lessons.push(lesson);
+							break;
 						}
 
 						this.nextCoursTime = "Cours terminé";
