@@ -220,6 +220,12 @@
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
 
+			<IonHeader collapse="condense">
+				<IonToolbar>
+					<ion-title size="large">Conversations</ion-title>
+				</IonToolbar>
+			</IonHeader>
+
 			<IonFab slot="fixed" vertical="bottom" horizontal="end" class="newCoursBtnFab">
 				<ion-button @click="startNewChat()" size="large" shape="round" class="newCoursBtn" mode="md">
 					<span class="material-symbols-outlined mdls" slot="icon-only">add</span>
