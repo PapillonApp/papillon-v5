@@ -569,14 +569,14 @@
 							</ion-label>
 						</ion-item>
 						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start">person</span>
+							<span class="material-symbols-outlined mdls" slot="start">person_remove</span>
 							<ion-label>
 								<p>Note la plus basse</p>
 								<h2>{{ parseFloat(selectedGrade.grade.min).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
 							</ion-label>
 						</ion-item>
 						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start">person</span>
+							<span class="material-symbols-outlined mdls" slot="start">person_add</span>
 							<ion-label>
 								<p>Note la plus haute</p>
 								<h2>{{ parseFloat(selectedGrade.grade.max).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
@@ -604,7 +604,7 @@
 						</ion-item>
 
 						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start">school</span>
+							<span class="material-symbols-outlined mdls" slot="start">groups</span>
 							<ion-label>
 								<p>Moyenne de classe</p>
 								<h2>{{ selectedMark.class_average }}<small>/20</small></h2>
