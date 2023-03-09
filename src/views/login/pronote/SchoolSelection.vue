@@ -4,6 +4,8 @@
 	IonButton, actionSheetController, alertController } from '@ionic/vue';
 
 	import axios from 'axios';
+
+	import { App } from '@capacitor/app';
 	
 	import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp, serverOutline, serverSharp } from 'ionicons/icons';
 
@@ -11,7 +13,6 @@
 	import { fetchDaysOffAndHolidays } from '@/functions/utils/datetimePicker.js';
 
 	import { Geolocation } from '@capacitor/geolocation';
-
 	import { Dialog } from '@capacitor/dialog';
 
 	export default defineComponent({
@@ -275,21 +276,47 @@
 				this.etabsEmpty = true;
 			},
 			async URLLogin() {
-				const { value, cancelled } = await Dialog.prompt({
-					title: 'Connexion avec une URL Pronote',
-					message: `Entrez l'URL Pronote fournie par votre établissement.`,
+				const alert = await alertController.create({
+					header: 'Connexion avec une URL Pronote',
+					message: 'Veuillez entrer l\'URL de votre établissement Pronote.',
+					mode: 'md',
+					buttons: [
+						{
+							text: 'Annuler',
+							role: 'cancel',
+							cssClass: 'btn_secondary',
+							handler: () => {
+								alert.dismiss();
+							}
+						}, {
+							text: 'Se connecter',
+							handler: (data) => {
+								let etaburl = data.url;
+
+								if (etaburl == '') {
+									displayToast.presentToast('Veuillez entrer une URL valide.', 'danger');
+									return;
+								}
+
+								// remove everything after the last / if includes 'eleve.html'
+								if(etaburl.includes('eleve.html')) {
+									etaburl = etaburl.split('/').slice(0, -1).join('/');
+								}
+
+								this.loginToEtab(etaburl);
+							}
+						}
+					],
+					inputs: [
+						{
+							name: 'url',
+							type: 'url',
+							placeholder: 'https://XXXXXXXY.index-education.net/pronote'
+						}
+					]
 				});
 
-				if(!cancelled) {
-					let etaburl = value;
-
-					// remove everything after the last / if includes 'eleve.html'
-					if(etaburl.includes('eleve.html')) {
-						etaburl = etaburl.split('/').slice(0, -1).join('/');
-					}
-
-					this.loginToEtab(etaburl);
-				}
+				await alert.present();
 			},
 			loginToDemo() {
 				this.loginToEtab("https://demo.index-education.net/pronote");
@@ -405,37 +432,71 @@
 				this.$refs.loginModal.$el.dismiss();
 			},
 			async changeApi() {
-				const { value, cancelled } = await Dialog.prompt({
-					title: 'URL personnalisée',
-					message: 'Entrez l\'URL personnalisée de l\'API',
-					cancelable: true,
-					inputPlaceholder: 'https://api.getpapillon.xyz',
-					confirmButtonText: 'Valider',
-					cancelButtonText: 'Réinitialiser',
+				const rebootAlert = await alertController.create({
+					header: 'Redémarrage requis',
+					message: 'Vous devez redémarrer l\'application pour appliquer les changements.',
+					mode: 'md',
+					buttons: [
+						{
+							text: 'Plus tard',
+							role: 'cancel',
+							cssClass: 'btn_secondary',
+							handler: () => {
+								alert.dismiss();
+							}
+						}, {
+							text: 'Quitter',
+							handler: () => {
+								App.exitApp();
+							}
+						}
+					]
 				});
 
-				if (value) {
-					localStorage.setItem('customApiUrl', value);
-					displayToast.presentToast(
-						'URL d\'API personnalisée enregistrée',
-						'success'
-					);
 
-					await Dialog.alert({
-						title: 'Attention',
-						message: 'Vous devez redémarrer l\'application pour que les changements soient pris en compte',
-						confirmButtonText: 'OK',
-					});
-				}
+				const alert = await alertController.create({
+					header: 'URL personnalisée',
+					message: 'Entrez l\'URL personnalisée de l\'API',
+					mode: 'md',
+					buttons: [
+						{
+							text: 'Réinitialiser',
+							role: 'reset',
+							cssClass: 'btn_secondary',
+							handler: () => {
+								displayToast.presentToast(
+									'API personnalisée réinitialisée',
+									'danger'
+								);
 
-				if (cancelled) {
-					displayToast.presentToast(
-						'API personnalisée réinitialisée',
-						'danger'
-					);
+								localStorage.removeItem('customApiUrl');
 
-					localStorage.removeItem('customApiUrl');
-				}
+								alert.dismiss();
+							}
+						}, {
+							text: 'OK',
+							handler: (value) => {
+								localStorage.setItem('customApiUrl', value.url);
+								displayToast.presentToast(
+									'URL d\'API personnalisée enregistrée',
+									'success'
+								);
+
+								rebootAlert.present();
+							}
+						}
+					],
+					inputs: [
+						{
+							name: 'url',
+							type: 'url',
+							placeholder: 'https://api.example.com',
+							value: localStorage.getItem('customApiUrl')
+						}
+					],
+				});
+
+				await alert.present();
 			},
 			login() {
 				const API = this.$api;
