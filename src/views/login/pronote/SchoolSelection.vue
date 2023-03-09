@@ -1,7 +1,7 @@
 <script>
 	import { defineComponent } from 'vue';
 	import { IonItem, IonList, IonIcon, IonBackButton, IonSearchbar, IonModal, IonListHeader, IonSpinner, loadingController, IonInput, 
-	IonButton, actionSheetController } from '@ionic/vue';
+	IonButton, actionSheetController, alertController } from '@ionic/vue';
 
 	import axios from 'axios';
 	
@@ -52,13 +52,17 @@
 		},
 		methods: {
 			decodeEntities(encodedString) {
-				var translate_re = /&(nbsp|amp|quot|lt|gt);/g;
+				var translate_re = /&(nbsp|amp|quot|lt|gt|Eacute|eacute|Egrave|egrave);/g;
 				var translate = {
-					"nbsp":" ",
+					"nbsp": " ",
 					"amp" : "&",
 					"quot": "\"",
 					"lt"  : "<",
-					"gt"  : ">"
+					"gt"  : ">",
+					"Eacute" : "É",
+					"eacute" : "é",
+					"Egrave" : "È",
+					"egrave" : "è",
 				};
 				return encodedString.replace(translate_re, function(match, entity) {
 					return translate[entity];
@@ -240,7 +244,7 @@
 
 					// decode etabName html entities
 					for (let i = 0; i < this.etabs.length; i++) {
-					this.etabs[i].nomEtab = this.decodeEntities(this.etabs[i].nomEtab);
+						this.etabs[i].nomEtab = this.decodeEntities(this.etabs[i].nomEtab);
 					}
 
 					setTimeout(() => {
