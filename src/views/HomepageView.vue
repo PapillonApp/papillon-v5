@@ -443,7 +443,7 @@
 								</div>
 
 								<div class="CoursInfoContainer">
-									<div class="CoursInfo room" v-if="cours.data.rooms !== null">
+									<div class="CoursInfo room">
 										<span class="material-symbols-outlined smol" slot="start">location_on</span>
 
 										<p>{{ cours.data.rooms.join(', ') || 'Pas de salle' }}</p>
