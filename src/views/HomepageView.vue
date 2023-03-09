@@ -253,7 +253,6 @@
 
 					// grades
 					this.grades = recap.grades.last;
-					console.log(this.grades);
 				});
 			},
 			formatHomeworks(homeworks) {
@@ -335,8 +334,7 @@
 				this.timetable = [];
 				this.homeworks = [];
 
-				this.getTimetable(true);
-				this.getHomeworks(true);
+				this.getRecap(true);
 
 				this.noCoursesMsg = this.randomMsg();
 				this.noCoursesEmoji = this.randomEmoji();
