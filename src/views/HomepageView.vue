@@ -727,7 +727,7 @@
 		font-weight: 500;
 	}
 
-	.nextCours.cancelled {
+	.nextCours.cancelled ion-chip {
 		opacity: 0.5;
 	}
 
