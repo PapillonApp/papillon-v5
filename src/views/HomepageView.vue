@@ -274,34 +274,34 @@
 
 				// sort homeworks by day
 				for (let i = 0; i < homeworks.length; i++) {
-								let homework = homeworks[i];
-								let date = new Date(homework.data.date);
+					let homework = homeworks[i];
+					let date = new Date(homework.data.date);
 
-								homeworks[i].homework.content = homeworks[i].homework.content.replace('<br/>', ' ');
+					homeworks[i].homework.content = homeworks[i].homework.content.replace('<br/>', ' ');
 
-								homeworks[i].data.timeLeft = Math.floor((date - today) / 1000 / 60 / 60 / 24);
+					homeworks[i].data.timeLeft = Math.floor((date - today) / 1000 / 60 / 60 / 24);
 
-								let day = homeworkDays.find((day) => {
-									return day.date == date.toDateString();
-								});
+					let day = homeworkDays.find((day) => {
+						return day.date == date.toDateString();
+					});
 
-								if (!day) {
-									day = {
-										date: date.toDateString(),
-										homeworks: []
-									}
-									homeworkDays.push(day);
-								}
+					if (!day) {
+						day = {
+							date: date.toDateString(),
+							homeworks: []
+						}
+						homeworkDays.push(day);
+					}
 
-								day.homeworks.push(homework);
-							}
+					day.homeworks.push(homework);
+				}
 
-							// sort homeworkDays by date
-							homeworkDays.sort((a, b) => {
-								return new Date(a.date) - new Date(b.date);
-							});
+				// sort homeworkDays by date
+				homeworkDays.sort((a, b) => {
+					return new Date(a.date) - new Date(b.date);
+				});
 
-							return homeworkDays;
+				return homeworkDays;
 			},
 			reorder() {
 				let order = ["comp-hw", "comp-tt"]
@@ -346,6 +346,7 @@
 			async handleRefresh(event) {
 				this.timetable = [];
 				this.homeworks = [];
+				this.grades = [];
 
 				this.getRecap(true);
 
