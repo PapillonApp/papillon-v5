@@ -63,9 +63,10 @@ function getPronoteRecap(force) {
                     // add subject data
                     newGrade.subject = {
                         name: grades.full.marks[i].name,
-                        color: grades.full.marks[i].color
+                        color: grades.full.marks[i].color,
+                        id: grades.full.marks[i].id
                     };
-                    
+
                     allGrades.push(newGrade);
                 }
             }
@@ -77,7 +78,9 @@ function getPronoteRecap(force) {
 
             // get last 5 grades
             for (let i = 0; i < 5; i++) {
-                grades.last.push(allGrades[i]);
+                if (allGrades[i] != undefined) {
+                    grades.last.push(allGrades[i]);
+                }
             }
         });
 
