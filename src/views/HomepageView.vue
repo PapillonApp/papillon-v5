@@ -148,11 +148,12 @@
 				
 				// if 2 courses at the same time
 				// remove all courses with sameTime = true
-				timetable = timetable.filter((course) => {
-					if (course.sameTime) {
+				timetable = timetable.filter((lesson) => {
+					if (lesson.course.sameTime) {
 						return false;
+					} else {
+						return true;
 					}
-					return true;
 				});
 
 				// get next lesson (cours.time.start)
