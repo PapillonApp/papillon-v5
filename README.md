@@ -16,8 +16,14 @@
     <a href="https://github.com/PapillonApp/Papillon/issues">Report Bug</a>
     |
     <a href="https://github.com/PapillonApp/Papillon/issues">Request Feature</a>
+    <br/>
+    <br/>
+    
   </p>
 </p>
+
+[![](https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=flat&logo=discord&logoColor=white)](https://discord.gg/vFmCwSzvAp)
+[![](https://img.shields.io/badge/Instagram-thepapillonapp-E4405F?style=flat&logo=instagram&logoColor=white)](https://www.instagram.com/thepapillonapp/)
 
 ![Downloads](https://img.shields.io/github/downloads/PapillonApp/Papillon/total) ![Contributors](https://img.shields.io/github/contributors/PapillonApp/Papillon?color=dark-green) ![Issues](https://img.shields.io/github/issues/PapillonApp/Papillon) ![License](https://img.shields.io/github/license/PapillonApp/Papillon) 
 
@@ -39,7 +45,7 @@
 
 ## About The Project
 
-![image](https://user-images.githubusercontent.com/32978709/215358098-cb43aeb4-b37e-41d6-a28e-0c2d729681d0.png)
+![image](https://user-images.githubusercontent.com/32978709/224423590-28a7ee54-3f69-4d34-8cbb-8a5f268a025e.png)
 
 * **Features of Pronote**
     - 📆 Timetable
