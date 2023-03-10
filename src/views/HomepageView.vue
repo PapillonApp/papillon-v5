@@ -421,7 +421,7 @@
 					<div class="coursElemNext" v-for="cours in timetable" :key="cours.id" :style="`--courseColor: ${cours.course.color};`">
 						<ion-item class="nextCours"  lines="none"
 							@click="goto('timetable')" 
-							:class="{ 'cancelled' : cours.status.isCancelled }">
+							:class="{ cancelled: cours.status.isCancelled, HasStatus: cours.hasStatus }">
 							<div slot="start">
 								<IonChip>
 									{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}
