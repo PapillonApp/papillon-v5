@@ -420,7 +420,7 @@
 					<div class="coursElemNext" v-for="cours in timetable" :key="cours.id" :style="`--courseColor: ${cours.course.color};`">
 						<ion-item class="nextCours"  lines="none"
 							@click="goto('timetable')" 
-							:class="{ 'HasStatus' : cours.hasStatus }">
+							:class="{ 'cancelled' : cours.status.isCancelled }">
 							<div slot="start">
 								<IonChip>
 									{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}
@@ -458,7 +458,7 @@
 
 							</ion-label>
 						</ion-item>
-						<div class="nextStatus" v-if="cours.status.status">
+						<div class="nextStatus" v-if="cours.status.status" :class="{ 'cancelled' : cours.status.isCancelled }">
 							<span class="material-symbols-outlined mdls">info</span>
 							<p>{{ cours.status.status }}</p>
 						</div>
@@ -726,6 +726,18 @@
 		font-weight: 500;
 	}
 
+	.nextCours.cancelled {
+		opacity: 0.5;
+	}
+
+	.nextCours.cancelled ion-label {
+		opacity: 0.5;
+	}
+
+	.nextCours.cancelled h2 {
+		text-decoration: line-through;
+	}
+
 	.nextStatus {
 		width: calc(100% - 16px * 2);
 		background: var(--courseColor) !important;
@@ -755,6 +767,10 @@
 	.nextStatus p {
 		font-size: 15px;
 		font-weight: 500;
+	}
+
+	.nextStatus.cancelled {
+		background: #FF453A !important;
 	}
 
 	.homepage_divider {
