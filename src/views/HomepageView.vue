@@ -236,12 +236,16 @@
 
 							this.nextCoursTime = `${endMins} min rest.`;
 
+							
+							lesson.hasStatus = lesson.status.status != undefined;
+
 							lessons.push(lesson);
 							break;
 						}
 
 						this.nextCoursTime = "Cours terminé";
 						this.nextCoursStarted = false;
+						lesson.hasStatus = lesson.status.status != undefined;
 						lessons.push(lesson);
 						break;
 					}
