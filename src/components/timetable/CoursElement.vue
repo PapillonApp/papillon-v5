@@ -115,11 +115,8 @@
 				//check in localstorage if progress bar is enabled
 				if (localStorage.getItem("tweakProgressBar") != "true") return false;
 
-				this.classes += " progressDivEnabled ";
-
 				let now = new Date();
-				//mettre l'heur a 14H30 le 24/01/2023 (europe) pour tester le cours en cours
-				//  now = new Date(2023, 1, 25, 15, 30, 0, 0);
+
 				if (now.getUTCDate() != this.start.getUTCDate()) {
 					if (this.coursPourcentVisible) {
 						this.coursPourcent = 0;
@@ -136,8 +133,6 @@
 			},
 			updateProgressDiv() {
 				let now = new Date();
-				//mettre l'heur a 14H30 le 24/01/2023 (europe) pour tester le cours en cours
-				//now = new Date(2023, 1, 25, 15, 30, 0, 0);
 
 				// if is not today clear interval and reset progress bar to 0
 				if (now.getUTCDate() != this.start.getUTCDate()) {
@@ -155,6 +150,10 @@
 					this.end.getSeconds() &&
 					this.showPastProgress
 				) {
+					if (!this.classes.includes("progressDivEnabled")) {
+						this.classes += " progressDivEnabled ";
+					}
+
 					this.coursPourcentVisible = true;
 					this.coursPourcent = 100;
 					return false;
@@ -187,6 +186,10 @@
 
 					this.coursPourcentVisible = true;
 
+					if (!this.classes.includes("progressDivEnabled")) {
+						this.classes += " progressDivEnabled ";
+					}
+
 					setTimeout(() => {
 						this.coursPourcent = coursPourcent;
 					}, 100);
@@ -204,11 +207,11 @@
 		},
 		mounted() {
 			if (this.distance) {
-				this.classes += "distance ";
+				this.classes += " distance ";
 			}
 
 			if (this.lengthCours > 1.2) {
-				this.classes += "long ";
+				this.classes += " long ";
 			}
 
 			this.newColor = subjectColor.lightenColor(this.color, -20);
@@ -551,7 +554,7 @@
 		width: 0%;
 	}
 
-	.progressDivEnabled.true .Status {
+	.progressDivEnabled .Status {
 		background-color: #fff !important;
 	}
 </style>
