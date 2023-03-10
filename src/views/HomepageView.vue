@@ -170,15 +170,17 @@
 					}
 
 					// if less than 60 mins
-					if (mins < 60 && mins > 0) {
+					if (mins < 60 && mins >= 0) {
 						if (mins > 1) {
 							this.nextCoursTime = `dans ${mins} minutes`
+						} else if (mins == 0) {
+							this.nextCoursTime = `dans moins d'une minute`
 						} else {
 							this.nextCoursTime = `dans ${mins} minute`
 						}
 
 						this.nextCoursStarted = false;
-					} else if (mins <= 0) {
+					} else if (mins < 0) {
 						if (lessonEnd <= now) {
 							return false;
 						}
