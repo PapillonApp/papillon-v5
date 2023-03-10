@@ -275,6 +275,7 @@
 				return lessons;
 			},
 			getRecap(force) {
+				this.ttbloading = true;
 				GetRecap(force).then((recap) => {
 
 					// timetable
@@ -291,6 +292,7 @@
 
 					// grades
 					this.grades = recap.grades.last;
+					this.ttbloading = false;
 				});
 			},
 			formatHomeworks(homeworks) {
