@@ -171,7 +171,12 @@
 
 					// if less than 60 mins
 					if (mins < 60 && mins > 0) {
-						this.nextCoursTime = `dans ${mins} minutes`;
+						if (mins > 1) {
+							this.nextCoursTime = `dans ${mins} minutes`
+						} else {
+							this.nextCoursTime = `dans ${mins} minute`
+						}
+
 						this.nextCoursStarted = false;
 					} else if (mins <= 0) {
 						if (lessonEnd <= now) {
@@ -195,7 +200,20 @@
 						let hours = Math.floor(mins / 60);
 						mins = mins % 60;
 
-						this.nextCoursTime = `dans ${hours} heures et ${mins} minutes`;
+						if (mins > 1) {
+							mins = `${mins} minutes`;
+						} else {
+							mins = `${mins} minute`;
+						}
+
+						if (hours > 1) {
+							hours = `${hours} heures`;
+						} else {
+							hours = `${hours} heure`;
+						}
+
+						this.nextCoursTime = `dans ${hours} et ${mins}`;
+
 						this.nextCoursStarted = false;
 					}
 
