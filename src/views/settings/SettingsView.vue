@@ -283,7 +283,7 @@
                 <span class="material-symbols-outlined mdls" slot="start">volunteer_activism</span>
                 <IonLabel>
                     <p>Donation</p>
-                    <h2>Effectuer une donation</h2>
+                    <h2>Nous soutenir</h2>
                 </IonLabel>
             </IonItem>
             
