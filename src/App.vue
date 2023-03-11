@@ -217,8 +217,8 @@
                                 let gradeAs20 = Math.round((lastGrade.grade.value / lastGrade.grade.out_of) * 20);
 
                                 const reactions = {
-                                    0: 'Aie aie aie... 😭',
-                                    5: 'Aie aie aie... 😤',
+                                    0: 'Bon... 💀',
+                                    5: 'Aïe aïe aïe... 😤',
                                     10: 'Peut-être une prochaine fois... 🫡',
                                     12: 'Bien joué 👍',
                                     14: 'Sympa ! 👌',
