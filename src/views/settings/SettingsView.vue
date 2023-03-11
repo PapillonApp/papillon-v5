@@ -238,6 +238,7 @@
                     <h2>Se déconnecter de Papillon</h2>
                     <p>Supprime toutes les données de connexion de l'application</p>  
                 </IonLabel>
+                <span class="only-md next-md-icon material-symbols-outlined mdls" slot="end">navigate_next</span>
             </IonItem>
             <ion-nav-link router-direction="forward" :component="AdvancedView">
                 <IonItem button>
