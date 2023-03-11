@@ -203,6 +203,7 @@
                         <h2>{{ userName }}</h2>
                         <p>{{ userClass }} - {{ userSchool }}</p>
                     </IonLabel>
+                    <span class="only-md next-md-icon material-symbols-outlined mdls" slot="end">navigate_next</span>
                 </IonItem>
             </ion-nav-link>
         </IonList>
@@ -215,6 +216,7 @@
                         <h2>Options de Papillon</h2>
                         <p>Modifier le comportement de Papillon</p>
                     </IonLabel>
+                    <span class="only-md next-md-icon material-symbols-outlined mdls" slot="end">navigate_next</span>
                 </IonItem>
             </ion-nav-link>
             <ion-nav-link router-direction="forward" :component="ThemeView">
@@ -224,6 +226,7 @@
                         <h2>Personnaliser Papillon</h2>
                         <p>Ouvrir le menu de customisation de l'app</p>
                     </IonLabel>
+                    <span class="only-md next-md-icon material-symbols-outlined mdls" slot="end">navigate_next</span>
                 </IonItem>
             </ion-nav-link>
         </IonList>
@@ -243,6 +246,7 @@
                         <h2>Options avancées</h2>
                         <p>Permettent de manipuler Papillon en détail</p>
                     </IonLabel>
+                    <span class="only-md next-md-icon material-symbols-outlined mdls" slot="end">navigate_next</span>
                 </IonItem>
             </ion-nav-link>
         </IonList>
@@ -352,5 +356,9 @@
         height: 42px;
         border-radius: 50%;
         object-fit: cover;
+    }
+
+    .next-md-icon {
+        opacity: 0.5;
     }
 </style>
