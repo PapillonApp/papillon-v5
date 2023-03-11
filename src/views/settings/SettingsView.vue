@@ -203,6 +203,7 @@
                         <h2>{{ userName }}</h2>
                         <p>{{ userClass }} - {{ userSchool }}</p>
                     </IonLabel>
+                    <IonLabel slot="end"> <span class="material-symbols-outlined mdls" slot="end">navigate_next</span></IonLabel>
                 </IonItem>
             </ion-nav-link>
         </IonList>
