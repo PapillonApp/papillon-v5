@@ -242,7 +242,7 @@
 				<ion-nav-link router-direction="forward" :component="AdvancedView">
 					<IonItem button>
 						<span class="material-symbols-outlined mdls" slot="start">monitor_heart</span>
-						<IonLabel>
+						<IonLabel class="ion-text-wrap">
 							<h2>Options avancées</h2>
 							<p>Permettent de manipuler Papillon en détail</p>
 						</IonLabel>
