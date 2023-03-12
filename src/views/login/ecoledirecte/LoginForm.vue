@@ -117,6 +117,8 @@
 					}
 					else {
 						let token = rsp.token;
+						let user = rsp.data.accounts[0];
+						localStorage.UserCache = JSON.stringify(user);
 							// save token
 						localStorage.token = token;
 						localStorage.loggedIn = true;
