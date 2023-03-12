@@ -126,7 +126,7 @@ function getEDLogin() {
         try { 
             loginData = JSON.parse(atob(localStorage.getItem('loginData')));
         } catch(e) {
-            displayToast.presentError("Merci de vous reconnecter.", "danger", `Une erreur s'est produite lors de la récupération des données de connexion. Merci de vous reconnecter. (${e})`)
+            displayToast.presentError("Une erreur interne est survenue", "danger", `Une erreur s'est produite lors de la récupération des données de connexion. Merci de vous reconnecter. (${e})`)
             console.error(`[Connect to EcoleDirecte API] Error while parsing loginData: ${e}`);
             return;
         }
@@ -156,12 +156,12 @@ function getEDLogin() {
         // get token from API
         return axios.post(EDAPI + "/login.awp", body, requestOptions)
         .then(result => {
-            if(result.code === 200) {
+            if(result.data.code === 200) {
                 // save token
-                localStorage.setItem('token', result.token);
+                localStorage.setItem('token', result.data.token);
 
                 // empty localstorage cache
-                localStorage.setItem('UserCache', JSON.stringify(result.data.accounts[0]));
+                localStorage.setItem('UserCache', JSON.stringify(result.data.data.accounts[0]));
                 localStorage.setItem('TimetableCache', JSON.stringify([]));
 
                 // broadcast event to document
@@ -177,10 +177,10 @@ function getEDLogin() {
                     checkmark
                 );
 
-                return result.token;
+                return result.data.token;
             } else {
                 if(result.code === 505) {
-                    displayToast.presentToast("Merci de vous reconnecter.", "danger")
+                    displayToast.presentToast("Ñchec de la reconnexion", "danger", "Vos identifiants semblent invalides. Pour les mettre à jour, déconnectez-vous puis reconnectez-vous de papillon.\n" + result.data.message)
                 }/* else if(result.error == "Your IP address is suspended.") {
                     displayToast.presentError("Une erreur s'est produite", "danger", "L'adresse IP de nos serveurs est suspendue pour votre établissement. S'il vous plaît réessayez dans quelques heures.")
                 }*/
