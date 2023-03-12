@@ -1,6 +1,9 @@
 import { app } from '@/main.ts'
 import displayToast from '@/functions/utils/displayToast.js';
 
+import axios from 'axios';
+
+
 import { checkmark, refresh } from 'ionicons/icons';
 
 let waitingForToken = false;
@@ -147,8 +150,7 @@ function getEDLogin() {
         )
 
         // get token from API
-        return fetch(EDAPI + "/login.awp", requestOptions)
-        .then(response => response.json())
+        return axios.post(EDAPI + "/login.awp", requestOptions)
         .then(result => {
             if(result.code === 200) {
                 // save token
