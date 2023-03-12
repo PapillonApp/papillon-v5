@@ -79,7 +79,7 @@
 			async displayBetaMsg() {
 				const alert = await alertController.create({
 					header: 'Page vie scolaire',
-					message: 'Cette page est en cours de développement. Elle ne contient pas tous le contenu prévu et subira de multiples changements dans l\'avenir.',
+					message: 'Cette page est en cours de développement. Elle ne contient pas tout le contenu prévu et subira de multiples changements à l\'avenir.',
 					mode: 'md',
 					buttons: ['Je comprends']
 				});
