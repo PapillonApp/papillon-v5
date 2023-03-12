@@ -82,7 +82,7 @@
 				this.$refs.loginModal.$el.dismiss();
 			},
 			
-			login() {
+			async login() {
 				const EDAPI = "https://api.ecoledirecte.com/v3"
 
 				let username = this.$refs.user.$el.value;
@@ -90,7 +90,7 @@
 
 				var requestOptions = {
 					method: "POST",
-					headers: { "Content-Type": "application/x-www-form-urlencoded" },
+					headers: { "Content-Type": "application/x-www-form-urlencoded", "x-token": "" },
 				};
 				var body = `data={
 						"uuid": "",
@@ -99,12 +99,17 @@
 						"isReLogin": false
 					}`
 
-				displayToast.presentToast("Connexion en cours...", "light", true)
+				const loading = await loadingController.create({
+					message: 'Connexion en cours...'
+				});
+					
+				loading.present();
 
 				axios.post(EDAPI + "/login.awp", body, requestOptions)
 				.then(data => {
 					let rsp = data.data
 					if(!rsp.token) {
+						loading.dismiss()
 						if(rsp.code == 505) {
 							displayToast.presentError("Identifiants incorrects.", "danger", rsp.error)
 						} else {
