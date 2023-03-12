@@ -16,8 +16,8 @@
 default_platform(:android)
 
 begin 
-  lane :deploy do
-    desc "Build and deploy for Google Play Store (Android)"
+  lane :build do
+    desc "Build for Google Play Store (Android)"
 
     set_version()
 
@@ -39,6 +39,10 @@ begin
 
     sh("echo APK_LOCATION=#{APK_LOCATION} >> $GITHUB_ENV")
     sh("echo AAB_LOCATION=#{AAB_LOCATION} >> $GITHUB_ENV")
+  end
+
+  lane :beta do
+    build()
 
     supply(
         track: 'beta',
@@ -53,6 +57,24 @@ begin
         skip_upload_apk: true,
         json_key: ENV['PLAY_CREDENTIALS_JSON']
       )
+  end
+
+  lane :prod do
+    build()
+
+    supply(
+      track: 'release',
+      package_name: ENV['APP_PACKAGE_NAME'],
+      version_code: ENV['APP_VERSION_CODE'],
+      release_status: "draft",
+      aab: "#{AAB_LOCATION}",
+      skip_upload_images: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_screenshots: true,
+      skip_upload_apk: true,
+      json_key: ENV['PLAY_CREDENTIALS_JSON']
+    )
   end
 
   lane :test do

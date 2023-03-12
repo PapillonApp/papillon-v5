@@ -16,8 +16,10 @@
 default_platform(:ios)
 
 begin
+    desc "Push a new beta build to TestFlight"
     lane :beta do
-        desc "Push a new beta build to TestFlight"
+        setup_ci
+
         build()
 
         upload_to_testflight(
@@ -27,8 +29,10 @@ begin
         )
     end
 
+    desc "Push a new build to the AppStore"
     lane :prod do
-        desc "Push a new build to the AppStore"
+        setup_ci
+
         build()
 
         deliver(
@@ -84,10 +88,10 @@ begin
 
     lane :build do
         api_key = app_store_connect_api_key(
-            is_key_content_base64: true,
             key_id: ENV['APP_STORE_API_KEY_ID'],
             issuer_id: ENV['APP_STORE_API_KEY_ISSUER_ID'],
-            key_content: ENV['APP_STORE_API_KEY']
+            key_filepath: "./AuthKey_QV8QQ622WD.p8",
+            in_house: false
         )
 
         def ensure_temp_keychain(name)
@@ -104,10 +108,12 @@ begin
 
         ensure_temp_keychain 'login.keychain'
         
+        generate_new_certificates() # Temporary
+
         match(
             git_url: ENV['CERTIFICATE_STORE_GITHUB_URL'],
             type: "appstore", 
-            app_identifier: "xyz.getpapillon.ios", 
+            app_identifier: "plus.pronote.app", 
             api_key: api_key,
             readonly: true,
             keychain_name: "login.keychain",
@@ -124,7 +130,7 @@ begin
             readonly: true,
             type: "appstore", 
             git_url: ENV['CERTIFICATE_STORE_GITHUB_URL'],
-            app_identifier: "xyz.getpapillon.ios", 
+            app_identifier: "plus.pronote.app", 
             api_key: api_key,
             keychain_name: "login.keychain",
             keychain_password: ENV['APP_IOS_PASSWORD'],
@@ -156,21 +162,21 @@ begin
 
         sync_code_signing(
             type: "development",
-            app_identifier: "xyz.getpapillon.ios",
+            app_identifier: "plus.pronote.app",
             force_for_new_devices: true,
             readonly: false
         )
 
         sync_code_signing(
             type: "appstore",
-            app_identifier: "xyz.getpapillon.ios",
+            app_identifier: "plus.pronote.app",
             force_for_new_devices: true,
             readonly: false
         )
 
         sync_code_signing(
             type: "adhoc",
-            app_identifier: "xyz.getpapillon.ios",
+            app_identifier: "plus.pronote.app",
             force_for_new_devices: true,
             readonly: false
         )

@@ -26,10 +26,6 @@ ion-content::-webkit-scrollbar {
     display: none;
 }
 
-ion-content::part(scroll) {
-    padding-bottom: env(safe-area-inset-bottom);
-}
-
 *::-webkit-scrollbar-track {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.1);
     background-color: transparent;
@@ -443,9 +439,4 @@ ion-alert.md .btn_secondary {
 .alert-button.sc-ion-alert-md {
     border-radius: 300px;
     padding: 10px 15px !important;
-}
-
-/* ion-content */
-ion-content::part(scroll) {
-    padding-bottom: calc(env(safe-area-inset-bottom)) !important;
 }

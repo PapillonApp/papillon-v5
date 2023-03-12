@@ -7,6 +7,7 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
+		IonListHeader,
 		IonItem,
 		IonButtons,
 		IonButton,
@@ -28,6 +29,7 @@
 			IonLabel,
 			IonItem,
 			IonList,
+			IonListHeader,
 			IonRadioGroup,
 			IonRadio,
 			PapillonBackButton,
@@ -43,9 +45,54 @@
 					{ name: "OpenDyslexic (Expérimental)", font: "OpenDyslexic" },
 					{ name: "Système", font: "system-ui" },
 				],
+				availableColors: [
+					{ 
+						name: "Vert (Par défaut)",
+						color: {
+							hex: "#29947A",
+							rgb: "41, 148, 122",
+						}
+					},
+					{
+						name: "Bleu",
+						color: {
+							hex: "#29ABE0",
+							rgb: "41, 171, 224",
+						}
+					},
+					{
+						name: "Orange",
+						color: {
+							hex: "#E78113",
+							rgb: "231, 129, 19",
+						}
+					},
+					{
+						name: 'Saumon',
+						color: {
+							hex: '#DC688A',
+							rgb: '220, 104, 138',
+						}
+					},
+					{
+						name: 'Violet',
+						color: {
+							hex: '#9266CC',
+							rgb: '146, 102, 204',
+						}
+					},
+					{
+						name: 'Rouge',
+						color: {
+							hex: '#C53333',
+							rgb: '197, 51, 51',
+						}
+					},
+				],
 				customThemeModeList: localStorage.getItem('customThemeMode') == 'true',
 				currentTheme: localStorage.getItem('themeMode'),
 				currentFont: getComputedStyle(document.body).getPropertyValue('--papillon-font'),
+				currentColor: []
 			}
 		},
 		methods: {
@@ -73,6 +120,7 @@
 
 				// reset the font select
 				this.currentFont = this.availableFonts[0].font;
+				this.currentColor = this.availableColors[0].color;
 			},
 			fontChange() {
 				let font = this.$refs.fontSelect.$el.value;
@@ -84,6 +132,20 @@
 				let customizations = JSON.parse(localStorage.getItem('customizations')) || {};
 
 				customizations.font = font;
+
+				localStorage.setItem('customizations', JSON.stringify(customizations));
+			},
+			colorChange() {
+				let color = this.$refs.colorSelect.$el.value;
+				this.currentColor = color;
+
+				document.body.style.setProperty('--ion-color-primary', color.hex);
+				document.body.style.setProperty('--ion-color-primary-rgb', color.rgb);
+
+				// save it in local storage
+				let customizations = JSON.parse(localStorage.getItem('customizations')) || {};
+
+				customizations.color = color;
 
 				localStorage.setItem('customizations', JSON.stringify(customizations));
 			},
@@ -151,6 +213,19 @@
 
 			// check if custom theme mode is enabled
 			this.checkThemeMode();
+
+			// check if there are customizations
+			if(localStorage.getItem('customizations')) {
+				let customizations = JSON.parse(localStorage.getItem('customizations'));
+
+				if(!customizations.font) {
+					this.currentFont = this.availableFonts[0].font;
+				}
+
+				if(!customizations.color) {
+					this.currentColor = this.availableColors[0].color;
+				}
+			}
 		}
 	});
 </script>
@@ -199,6 +274,22 @@
 			</IonList>
 
 			<IonList :inset="true" lines="inset">
+				<ion-list-header>
+					<ion-label><p>Couleur d'accentuation</p></ion-label>
+				</ion-list-header>
+				<ion-radio-group :value="currentColor" ref="colorSelect" @ionChange="colorChange">
+					<ion-item :key="i" v-for="(color, i) in availableColors">
+						<div class="colorPreview" :style="`--color: ${color.color.hex};`" slot="start"></div>
+						<ion-label>{{ color.name }}</ion-label>
+						<ion-radio slot="end" :value="color.color"></ion-radio>
+					</ion-item>
+				</ion-radio-group>
+			</IonList>
+
+			<IonList :inset="true" lines="inset">
+				<ion-list-header>
+					<ion-label><p>Police d'écriture</p></ion-label>
+				</ion-list-header>
 				<ion-radio-group :value="currentFont" ref="fontSelect" @ionChange="fontChange">
 					<ion-item :key="i" v-for="(font, i) in availableFonts">
 						<ion-label :style="`font-family: '${font.font}';`">{{ font.name }}</ion-label>
@@ -242,5 +333,26 @@
 <style scoped>
 	.md .paddingFixMd {
 		padding-left: 15px;
+	}
+
+	.colorPreview {
+		width: 18px;
+		height: 18px;
+		border-radius: 300px;
+
+		background: var(--color);
+		position: relative;
+	}
+
+	.colorPreview:before {
+		content: '';
+		position: absolute;
+		--offset: 4px;
+		top: calc(0px - var(--offset));
+		left: calc(0px - var(--offset));
+		width: calc(100% + var(--offset));
+		height: calc(100% + var(--offset));
+		border-radius: 300px;
+		border: calc(var(--offset) / 2) solid var(--color);
 	}
 </style>

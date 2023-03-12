@@ -475,19 +475,24 @@
             if(customizations.font) {
                 document.body.style.setProperty('--papillon-font', customizations.font);
             }
+
+            if(customizations.color) {
+                document.body.style.setProperty('--ion-color-primary', customizations.color.hex);
+                document.body.style.setProperty('--ion-color-primary-rgb', customizations.color.rgb);
+            }
         }
         
         // check current version in local storage
         if(localStorage.getItem('version')) {
             if(localStorage.getItem('version') !== this.appVersion) {
-                this.showChangelog();
+                // this.showChangelog();
             }
         }
         else if(!this.loggedIn) {
             // do nothing
         }
         else {
-            this.showChangelog();
+            // this.showChangelog();
         }
 
         document.addEventListener('showChangelog', () => {
@@ -554,8 +559,6 @@
         <ion-content class="update">
             <div class="update_inner">
                 <div id="update-header">
-                    <img src="/assets/updateIcon.svg" class="updateIcon">
-
                     <h1>Quoi de neuf dans Papillon ?</h1>
                     <p>Voici les dernières nouveautés de Papillon.</p>
                 </div>
