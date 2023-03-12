@@ -14,7 +14,7 @@ function getToken() {
         case "pronote":
             return getPronoteLogin();
         case "ecoledirecte":
-            //return getEDUser(force);
+            return getEDLogin();
     }
 }
 
