@@ -717,12 +717,13 @@
 
                     <ion-item>
                         <span class="material-symbols-outlined mdls" slot="start" style="margin-right:5px">Person</span>
-                        <ion-input type="text" name="Person" ref="newCoursTeacherRef" placeholder="Professeur.e"></ion-input>
+                        <ion-input type="text" name="Person" ref="newCoursTeacherRef" placeholder="Professeur"></ion-input>
                     </ion-item>
                 </ion-list>
 
                 <ion-list inset>
                     <ion-item class="input">
+                        <span class="material-symbols-outlined mdls" slot="start" style="margin-right:15px">schedule</span>
                         <ion-label>Heure de début</ion-label>
                         <div class="timeInput" slot="end">
                             <ion-input ref="newCoursStartRef" class="timeInInput" name="Start" type="time" value="12:30"></ion-input>
@@ -730,6 +731,7 @@
                     </ion-item>
 
                     <ion-item class="input">
+                        <span class="material-symbols-outlined mdls" slot="start" style="margin-right:15px">schedule</span>
                         <ion-label>Heure de fin</ion-label>
                         <div class="timeInput" slot="end">
                             <ion-input class="timeInInput" name="End" ref="newCoursEndRef" type="time" value="13:30"></ion-input>
