@@ -105,5 +105,92 @@ function getPronoteLogin() {
     }
 }
 
+
+//ecoledirecte : get token
+
+function getEDLogin() {
+    if(!waitingForToken) {
+        // gather vars
+        const EDAPI = "https://api.ecoledirecte.com/v3"//app.config.globalProperties.$api;
+
+
+        let loginData = null;
+        try { 
+            loginData = JSON.parse(atob(localStorage.getItem('loginData')));
+        } catch(e) {
+            displayToast.presentError("Merci de vous reconnecter.", "danger", `Une erreur s'est produite lors de la récupération des données de connexion. Merci de vous reconnecter. (${e})`)
+            console.error(`[Connect to EcoleDirecte API] Error while parsing loginData: ${e}`);
+            return;
+        }
+
+        // get username and password
+        let username = loginData.username;
+        let password = loginData.password;
+
+        var requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json, text/plain, */*", "X-Token": "", "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"},
+            body: `data={
+                "uuid": "",
+                "identifiant": "${username}",
+                "motdepasse": "${password}",
+                "isReLogin": false
+            }`
+        };
+
+        waitingForToken = true;
+
+        displayToast.presentToastSmall(
+            "Reconnexion en cours...",
+            "light",
+            refresh
+        )
+
+        // get token from API
+        return fetch(EDAPI + "/login.awp", requestOptions)
+        .then(response => response.json())
+        .then(result => {
+            if(result.code === 200) {
+                // save token
+                localStorage.setItem('token', result.token);
+
+                // empty localstorage cache
+                localStorage.setItem('UserCache', JSON.stringify(result.data.accounts[0]));
+                localStorage.setItem('TimetableCache', JSON.stringify([]));
+
+                // broadcast event to document
+                document.dispatchEvent(new CustomEvent('tokenUpdated'));
+
+                // set waitingForToken to false
+                waitingForToken = false;
+
+                // display toast
+                displayToast.presentToastSmall(
+                    "Vous êtes à nouveau connecté.",
+                    "success",
+                    checkmark
+                );
+
+                return result.token;
+            } else {
+                if(result.code === 505) {
+                    displayToast.presentToast("Merci de vous reconnecter.", "danger")
+                }/* else if(result.error == "Your IP address is suspended.") {
+                    displayToast.presentError("Une erreur s'est produite", "danger", "L'adresse IP de nos serveurs est suspendue pour votre établissement. S'il vous plaît réessayez dans quelques heures.")
+                }*/
+                else {
+                    displayToast.presentError("Une erreur s'est produite.", "danger", result.error)
+                }
+                // redirect to login page
+                console.error('[Get Token]: Return to login page - ' + result);
+            }
+        })
+        .catch(error => {
+            displayToast.presentError("Impossible de joindre le serveur.", "danger", error)
+            console.error('[Get Token]: Unable to join server - ' + error);
+        });
+    }
+}
+
 // export
 export default getToken;
