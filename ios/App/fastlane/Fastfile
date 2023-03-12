@@ -107,15 +107,11 @@ begin
         end
 
         ensure_temp_keychain 'login.keychain'
-        
-        generate_new_certificates() # Temporary
 
         match(
-            git_url: ENV['CERTIFICATE_STORE_GITHUB_URL'],
             type: "appstore", 
             app_identifier: "plus.pronote.app", 
             api_key: api_key,
-            readonly: true,
             keychain_name: "login.keychain",
             keychain_password: ENV['APP_IOS_PASSWORD']
         )
@@ -124,19 +120,6 @@ begin
             use_automatic_signing: false,
             path: "./App.xcodeproj",
             code_sign_identity: "iPhone Distribution"
-        )
-
-        sync_code_signing(
-            readonly: true,
-            type: "appstore", 
-            git_url: ENV['CERTIFICATE_STORE_GITHUB_URL'],
-            app_identifier: "plus.pronote.app", 
-            api_key: api_key,
-            keychain_name: "login.keychain",
-            keychain_password: ENV['APP_IOS_PASSWORD'],
-            git_full_name: ENV['GIT_FULL_NAME'],
-            git_user_email: ENV['GIT_USER_EMAIL'],
-            platform: "ios"
         )
 
         update_project_provisioning(
