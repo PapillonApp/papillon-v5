@@ -7,9 +7,13 @@ import GetToken from '@/functions/login/GetToken.js';
 
 // main function
 function getConversations(forceReload) {
-    // as only pronote is supported for now, we can just return the pronote Conversations
-
-    return getPronoteConversations(forceReload);
+	switch(localStorage.loginService) {
+        case "pronote":    
+            // return pronote conversations
+			return getPronoteConversations(forceReload);
+		case "ecoledirecte":
+            return;
+    }
 }
 
 async function getPronoteConversations(forceReload) {

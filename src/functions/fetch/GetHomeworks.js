@@ -9,10 +9,13 @@ import subjectColor from '@/functions/utils/subjectColor.js'
 
 // main function
 async function getHomeworks(dateFrom, dateTo, forceReload) {
-    // as only pronote is supported for now, we can just return the pronote homework
-
-    // return pronote homework
-    return getPronoteHomework(dateFrom, dateTo, forceReload);
+    switch(localStorage.loginService) {
+        case "pronote":    
+            // return pronote homework
+            return getPronoteHomework(dateFrom, dateTo, forceReload);
+		case "ecoledirecte":
+            return;
+    }
 }
 
 // pronote : get homework

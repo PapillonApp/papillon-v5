@@ -7,9 +7,14 @@ import GetToken from '@/functions/login/GetToken.js';
 
 // main function
 function getRecipients(forceReload) {
-    // as only pronote is supported for now, we can just return the pronote Recipients
+	switch(localStorage.loginService) {
+        case "pronote":
+            // return pronote recipients
+			return getPronoteRecipients(forceReload);
+		case "ecoledirecte":
+            return;
+    }
 
-    return getPronoteRecipients(forceReload);
 }
 
 async function getPronoteRecipients(forceReload) {

@@ -8,10 +8,13 @@ import getNews from './GetNews';
 
 // main function
 async function getRecap(force) {
-	// as only pronote is supported for now, we can just return the pronote timetable
-	
-	// return pronote timetable
-	return getPronoteRecap(force);
+	switch(localStorage.loginService) {
+        case "pronote":    
+			// return pronote timetable
+			return getPronoteRecap(force);
+		case "ecoledirecte":
+            return;
+    }
 }
 
 // pronote : get timetable

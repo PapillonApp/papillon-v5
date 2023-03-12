@@ -7,9 +7,13 @@ import GetToken from '@/functions/login/GetToken.js';
 
 // main function
 function getPunishments(forceReload) {
-    // as only pronote is supported for now, we can just return the pronote punishments
-
-    return getPronotePunishments(forceReload);
+	switch(localStorage.loginService) {
+        case "pronote":    
+			// return pronote punishements
+			return getPronotePunishments(forceReload);
+		case "ecoledirecte":
+            return;
+    }
 }
 
 async function getPronotePunishments(forceReload) {
