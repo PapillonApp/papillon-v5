@@ -90,18 +90,18 @@
 
 				var requestOptions = {
 					method: "POST",
-					headers: { "authority": "api.ecoledirecte.com", "accept": "application/json, text/plain, */*", "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7", "content-type": "application/x-www-form-urlencoded", "origin": "https://www.ecoledirecte.com", "sec-fetch-dest": "empty", "sec-fetch-mode": "cors", "sec-fetch-site": "same-site", "referer": "https://www.ecoledirecte.com/", "X-Token": "", "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"},
-					body: `data={
+					headers: { "Content-Type": "application/x-www-form-urlencoded" },
+				};
+				var body = `data={
 						"uuid": "",
 						"identifiant": "${username}",
 						"motdepasse": "${password}",
 						"isReLogin": false
 					}`
-				};
 
 				displayToast.presentToast("Connexion en cours...", "light", true)
 
-				fetch(EDAPI + "/login.awp", requestOptions)
+				/*fetch(EDAPI + "/login.awp", requestOptions)
 					.then(response => response.text())
 					.then(result => {
 						if(!result.token) {
@@ -135,11 +135,46 @@
 								})
 
 							fetchDaysOffAndHolidays();*/
-
+								/*
 							// go to home
 							window.location.replace("/");
 						}
-					});
+					});*/
+
+				axios.post(EDAPI + "/login.awp", body, requestOptions)
+				.then(data => {
+					let rsp = data.data
+					if(!rsp.token) {
+						if(rsp.code == 505) {
+							displayToast.presentError("Identifiants incorrects.", "danger", rsp.error)
+						} else {
+							displayToast.presentError("Une erreur s'est produite.", "danger", rsp.error)
+						}
+					}
+					else {
+						let token = data.token;
+							// save token
+						localStorage.token = token;
+						localStorage.loggedIn = true;
+						localStorage.loginData = btoa(JSON.stringify({
+							username: username,
+							password: password,
+						}));
+						localStorage.loginService = "ecoledirecte";
+						localStorage.setItem("disabledDays", JSON.stringify([0]));
+						const ACAD_NAME_API = "https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-adresse-et-geolocalisation-etablissements-premier-et-second-degre&q=&facet=code_postal_uai&facet=nature_uai_libe&facet=libelle_academie&timezone=Europe%2FParis"
+						/*axios.get(ACAD_NAME_API + "&refine.numero_uai=" + url.split("/")[2].split(".")[0].toUpperCase())
+							.then(response => response.json())
+							.then(result => {
+								if(result.records.length > 0) {
+									localStorage.setItem("acadName", result.records[0].fields.libelle_academie);
+								}
+							})
+						fetchDaysOffAndHolidays();*/
+						// go to home
+						window.location.replace("/");
+					}
+				})
 			}
 		},
 		data() {
