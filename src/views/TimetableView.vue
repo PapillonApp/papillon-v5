@@ -706,24 +706,18 @@
             <ion-content>
                 <ion-list inset>
                     <ion-item>
-                        <span class="material-symbols-outlined mdls" slot="start" style="margin-right:5px">Title</span>
-                        <ion-label>
-                            <ion-input type="text" name="CourseTitle" ref="newCoursNameRef" placeholder="Nom du cours"></ion-input>
-                        </ion-label>
+                        <span class="material-symbols-outlined mdls" slot="start" style="margin-right:5px">edit</span>
+                        <ion-input type="text" name="CourseTitle" ref="newCoursNameRef" placeholder="Nom du cours"></ion-input>
                     </ion-item>
 
                     <ion-item>
                         <span class="material-symbols-outlined mdls" slot="start" style="margin-right:5px">pin_drop</span>
-                        <ion-label>
-                            <ion-input type="text" name="Place" ref="newCoursRoomRef" placeholder="Lieu"></ion-input>
-                        </ion-label>
+                        <ion-input type="text" name="Place" ref="newCoursRoomRef" placeholder="Lieu"></ion-input>
                     </ion-item>
 
                     <ion-item>
                         <span class="material-symbols-outlined mdls" slot="start" style="margin-right:5px">Person</span>
-                        <ion-label>
-                            <ion-input type="text" name="Person" ref="newCoursTeacherRef" placeholder="Professeur"></ion-input>
-                        </ion-label>
+                        <ion-input type="text" name="Person" ref="newCoursTeacherRef" placeholder="Professeur"></ion-input>
                     </ion-item>
                 </ion-list>
 
