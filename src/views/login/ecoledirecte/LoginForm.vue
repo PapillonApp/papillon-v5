@@ -110,13 +110,13 @@
 					if(!rsp.token) {
 						loading.dismiss()
 						if(rsp.code == 505) {
-							displayToast.presentError("Identifiants incorrects.", "danger", rsp.error)
+							displayToast.presentError(`${rsp.message}`, "danger", rsp.error)
 						} else {
 							displayToast.presentError("Une erreur s'est produite.", "danger", rsp.error)
 						}
 					}
 					else {
-						let token = data.token;
+						let token = rsp.token;
 							// save token
 						localStorage.token = token;
 						localStorage.loggedIn = true;
