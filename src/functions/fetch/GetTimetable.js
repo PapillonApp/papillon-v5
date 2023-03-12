@@ -244,11 +244,7 @@ function getEDTimetable(date, forceReload) {
         .catch((error) => {
             if (error.response) {
                 // check if "notfound" or "expired"
-                if (error.response.data == "notfound") {
-                    // get new token
-                    GetToken();
-                }
-                else if (error.response.data == "expired") {
+                if (error.response.data.code == 525) {
                     // get new token
                     GetToken();
                 }
