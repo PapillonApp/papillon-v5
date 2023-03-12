@@ -131,15 +131,14 @@ function getEDLogin() {
         let password = loginData.password;
 
         var requestOptions = {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json, text/plain, */*", "X-Token": "", "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"},
-            body: `data={
-                "uuid": "",
-                "identifiant": "${username}",
-                "motdepasse": "${password}",
-                "isReLogin": false
-            }`
+            headers: { "Content-Type": "application/x-www-form-urlencoded", "Accept": "application/json, text/plain, */*", "X-Token": "", "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36"},            
         };
+        let body = `data={
+            "uuid": "",
+            "identifiant": "${username}",
+            "motdepasse": "${password}",
+            "isReLogin": false
+        }`
 
         waitingForToken = true;
 
@@ -150,7 +149,7 @@ function getEDLogin() {
         )
 
         // get token from API
-        return axios.post(EDAPI + "/login.awp", requestOptions)
+        return axios.post(EDAPI + "/login.awp", body, requestOptions)
         .then(result => {
             if(result.code === 200) {
                 // save token
