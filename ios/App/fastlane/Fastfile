@@ -112,6 +112,7 @@ begin
             type: "appstore", 
             app_identifier: "plus.pronote.app", 
             api_key: api_key,
+            readonly: false,
             keychain_name: "login.keychain",
             keychain_password: ENV['APP_IOS_PASSWORD']
         )
