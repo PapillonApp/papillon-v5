@@ -162,11 +162,9 @@ async function getEDUser(force) {
     let cache = JSON.parse(localStorage.getItem('UserCache')) || [];
     if (cache && !force) {
         // get user
-        let user = JSON.parse(cache);
-
         // return user in promise
         return new Promise((resolve) => {
-            resolve(constructEDUser(user));
+            resolve(constructEDUser(cache));
         });
     }
     else {
@@ -251,6 +249,7 @@ async function getEDUser(force) {
 
 // ecoledirecte : construct user
 function constructEDUser(user) {
+    console.log(user)
     // construct student
     let student = {
         student: {
