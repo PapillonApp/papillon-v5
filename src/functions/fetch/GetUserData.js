@@ -11,6 +11,7 @@ import GetToken from '@/functions/login/GetToken.js';
 // main function
 function getUser(force) {
     // as only pronote is supported for now, we can just return the pronote user
+    // not true at this time ;)
 
     switch(localStorage.loginService) {
         case "pronote":
