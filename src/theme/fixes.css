@@ -48,3 +48,7 @@ ion-item.animated {
        display: none;
     }
 }
+
+ion-content::part(scroll) {
+    padding-bottom: calc(env(safe-area-inset-bottom) * 3) !important;
+}
