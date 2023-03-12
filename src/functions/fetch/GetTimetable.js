@@ -12,9 +12,13 @@ let dayRequest;
 // main function
 async function getTimetable(date, forceReload) {
     // as only pronote is supported for now, we can just return the pronote timetable
-    
-    // return pronote timetable
-    return getPronoteTimetable(date, forceReload);
+    switch(localStorage.loginService) {
+        case "pronote":
+            // return pronote timetable
+            return getPronoteTimetable(date, forceReload);
+        case "ecoledirecte":
+            //return getEDUser(force);
+    }
 }
 
 // pronote : get timetable

@@ -11,7 +11,13 @@ import GetToken from '@/functions/login/GetToken.js';
 // main function
 function getUser(force) {
     // as only pronote is supported for now, we can just return the pronote user
-    return getPronoteUser(force);
+
+    switch(localStorage.loginService) {
+        case "pronote":
+            return getPronoteUser(force);
+        case "ecoledirecte":
+            return getEDUser(force);
+    }
 }
 
 // pronote : get user

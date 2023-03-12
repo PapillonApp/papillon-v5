@@ -89,7 +89,6 @@
 				let password = this.$refs.pass.$el.value;
 
 				var requestOptions = {
-					method: "POST",
 					headers: { "Content-Type": "application/x-www-form-urlencoded", "x-token": "" },
 				};
 				var body = `data={

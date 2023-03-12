@@ -10,7 +10,12 @@ let waitingForToken = false;
 
 // get token
 function getToken() {
-    return getPronoteLogin();
+    switch(localStorage.loginService) {
+        case "pronote":
+            return getPronoteLogin();
+        case "ecoledirecte":
+            //return getEDUser(force);
+    }
 }
 
 // pronote : get token
