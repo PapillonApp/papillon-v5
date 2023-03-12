@@ -663,8 +663,8 @@
 
                     <div class="NoCours" v-if="$data[`${day}`].length == 0 && !$data[`${day}`].error && !$data[`${day}`].loading">
                         <span class="material-symbols-outlined mdls">upcoming</span>
-                        <h2>Pas de cours enregistrés pour cette journée</h2>
-                        <p>Réessayez un autre jour dans le calendrier ou balayez l'écran.</p>
+                        <h2>Aucun cours aujourd'hui</h2>
+                        <p>Sélectionnez un autre jour dans le calendrier ou balayez l'écran.</p>
 
                         <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                     </div>
@@ -672,20 +672,20 @@
                     <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].error == 'ERR_NETWORK' && !$data[`${day}`].loading && !connected">
                         <span class="material-symbols-outlined mdls">wifi_off</span>
                         <h2>Pas de connexion à Internet</h2>
-                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance lorsque vous êtes hors-ligne.</p>
+                        <p>Vous pouvez uniquement consulter les journées déjà chargées préalablement lorsque vous êtes hors-ligne.</p>
                     </div>
 
                     <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].error == 'ERR_NETWORK' && !$data[`${day}`].loading && connected">
                         <span class="material-symbols-outlined mdls">crisis_alert</span>
                         <h2>Serveurs indisponibles</h2>
-                        <p>Vous pouvez uniquement consulter les journées consultées à l'avance. Nos serveurs seront bientôt de nouveaux disponibles.</p>
+                        <p>Vous pouvez uniquement consulter les journées déjà chargées préalablement. Nos serveurs seront bientôt de nouveaux disponibles.</p>
                     </div>
 
                     <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].loading">
                         <IonSpinner></IonSpinner>
                         <br/>
                         <h2>Téléchargement des prochains cours...</h2>
-                        <p>Veuillez patienter pendant qu'on récupère vos cours depuis nos serveurs...</p>
+                        <p>Veuillez patienter pendant que nous récupérons vos cours depuis nos serveurs...</p>
                     </div>
                 </IonList>
             </swiper-slide>
@@ -790,7 +790,7 @@
                     <ion-item class="info-item">
                         <span class="material-symbols-outlined mdls" slot="start">face</span>
                         <ion-label>
-                            <p>Professeur</p>
+                            <p>Professeur.e</p>
                             <h2>{{selectedCourse.teachers}}</h2>
                         </ion-label>
                     </ion-item>
@@ -798,7 +798,7 @@
                     <ion-item class="info-item">
                         <span class="material-symbols-outlined mdls" slot="start">meeting_room</span>
                         <ion-label>
-                            <p>Salle de cours</p>
+                            <p>Salle</p>
                             <h2>{{selectedCourse.rooms}}</h2>
                         </ion-label>
                     </ion-item>
@@ -831,7 +831,7 @@
                     <ion-item class="info-item">
                         <span class="material-symbols-outlined mdls" slot="start">pending_actions</span>
                         <ion-label>
-                            <p>Temps de cours</p>
+                            <p>Durée du cours</p>
                             <h2>{{selectedCourse.length}}</h2>
                         </ion-label>
                     </ion-item>
