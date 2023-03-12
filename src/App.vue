@@ -475,6 +475,11 @@
             if(customizations.font) {
                 document.body.style.setProperty('--papillon-font', customizations.font);
             }
+
+            if(customizations.color) {
+                document.body.style.setProperty('--ion-color-primary', customizations.color.hex);
+                document.body.style.setProperty('--ion-color-primary-rgb', customizations.color.rgb);
+            }
         }
         
         // check current version in local storage
