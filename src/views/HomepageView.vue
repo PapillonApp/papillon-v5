@@ -390,7 +390,7 @@
 			async displayBetaMsg() {
 				const alert = await alertController.create({
 					header: 'Page d\'accueil',
-					message: 'Cette page est en cours de développement. Elle ne contient pas tous le contenu prévu et subira de multiples changements dans l\'avenir.',
+					message: 'Cette page est en cours de développement. Elle ne contient pas tout le contenu prévu et subira de multiples changements à l\'avenir.',
 					mode: 'md',
 					buttons: ['Je comprends']
 				});
@@ -587,7 +587,8 @@
 							</ion-chip>
 							<ion-chip slot="end" v-else color="medium">
 								<span class="material-symbols-outlined mdls">schedule</span>
-								<p v-if="homework.data.timeLeft > 0">{{homework.data.timeLeft}} jour(s)</p>
+								<p v-if="homework.data.timeLeft > 1">{{homework.data.timeLeft}} jours</p>
+								<p v-else-if="homework.data.timeLeft > 0">1 jour</p>
 								<p v-else-if="homework.data.timeLeft < 0">Aujourd'hui</p>
 								<p v-else>Demain</p>
 							</ion-chip>
@@ -600,7 +601,7 @@
 						</div>
 						<ion-label class="ion-text-wrap">
 							<h2>Aucune connexion internet</h2>
-							<p>Les devoirs ne peuvent pas être chargés, réessayer plus tard...</p>
+							<p>Les devoirs ne peuvent pas être chargés, réessayez plus tard...</p>
 						</ion-label>
 					</ion-item>
 
@@ -610,7 +611,7 @@
 						</div>
 						<ion-label class="ion-text-wrap">
 							<h2>Serveurs indisponibles</h2>
-							<p>Les devoirs ne peuvent pas être chargés, nos serveurs seront bientôt de nouveaux disponibles...</p>
+							<p>Les devoirs ne peuvent pas être chargés, nos serveurs seront bientôt de nouveau disponibles...</p>
 						</ion-label>
 					</ion-item>
 
@@ -620,7 +621,7 @@
 						</div>
 						<ion-label>
 							<h2>Pas de devoirs</h2>
-							<p>Vous n'avez aucun devoir à faire durant 7 jours.</p>
+							<p>Vous n'avez aucun travail à faire dans les 7 prochains jours.</p>
 						</ion-label>
 					</ion-item>
 
