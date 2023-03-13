@@ -209,8 +209,8 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
 
 
         return axios.post(URL, body, requestOptions)
-            .then((response) => {
-                if (response.data.code) {
+            .then(async (response) => {
+                if(response.data.code !== 200) {
                     if (response.data.code == 525) {
                         // get new token
                         GetToken();
@@ -228,7 +228,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                 let homeworks = response.data.data;
 
                 // construct homework
-                homeworks = constructEDHomework(homeworks);
+                homeworks = await constructEDHomework(homeworks);
 
                 // cache response
                 let cache = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
@@ -266,7 +266,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
 
 // ed : construct homework
 function constructEDHomework(hw) {
-    console.log("Construct ED Homeworks with parameter hw = " + JSON.stringify(hw))
+
     // declaring vars
     let homeworkArray = [];
 
@@ -275,11 +275,11 @@ function constructEDHomework(hw) {
     const userID = JSON.parse(localStorage.UserCache).id;
 
     // for each course in homework
-    hw.forEach((date) => {
+    Object.keys(hw).forEach((date) => {
+
         //on obtiens une date avec une liste
         //2023-03-17
         hw[date].forEach((homework) => {
-
             let URL = `https://api.ecoledirecte.com/v3/Eleves/${userID}/cahierdetexte/${date}.awp?verbe=get`;
             var requestOptions = {
                 headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": token },            
@@ -291,9 +291,7 @@ function constructEDHomework(hw) {
             .then((response) => {
                 // get homework
                 let homeworks = response.data.data;
-
                 homeworks.matieres.forEach((hws) => {
-                    
                     //foreach documents
                     hws.aFaire.documents.forEach((file) => {
                         // if no file.name, set it to "Document"
@@ -306,7 +304,6 @@ function constructEDHomework(hw) {
                             homework.files.splice(homework.files.indexOf(file), 1);
                         }*/
                     });
-
                     //homework description
                     hws.aFaire.contenu = atob(hws.aFaire.contenu)
                     let homeworkDescription = hws.aFaire.contenu;
@@ -316,13 +313,11 @@ function constructEDHomework(hw) {
                     
                     */
 
-
                     if (homeworkDescription.length > 80) {
                         homeworkDescription = homeworkDescription.substring(0, 80);
                         homeworkDescription = homeworkDescription.substring(0, homeworkDescription.lastIndexOf(" "));
                         homeworkDescription += "...";
                     }
-
 
                     // replace new lines in homework.description with <br/>
                     hws.aFaire.contenu = hws.aFaire.contenu.replace(/\n/g, "<br/>");
@@ -330,13 +325,13 @@ function constructEDHomework(hw) {
                     hws.aFaire.contenu = hws.aFaire.contenu.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
 
 
-
-
                     // construct course
+                    
                     let newHomework = {
                         data: {
                             id: hws.id,
-                            date: hws.donneLe.replace(/-/g, "/"),
+                            //date: hws.aFaire.donneLe.replace(/-/g, "/"),
+                            date: date.replace(/-/g, "/"),
                             color: subjectColor.getSubjectColor(hws.matiere, hws.color || "#12d4a6"),
                             done: hws.effectue,
                         },
@@ -347,7 +342,6 @@ function constructEDHomework(hw) {
                         },
                         files: hws.aFaire.documents,
                     };
-                    console.log(newHomework)
                     subjectColor.setSubjectColor(newHomework.homework.subject, newHomework.data.color, true);
 
                     // push course to courses
