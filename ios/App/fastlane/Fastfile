@@ -94,20 +94,6 @@ begin
             in_house: false
         )
 
-        def ensure_temp_keychain(name)
-            delete_keychain(
-                name: name
-            ) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
-            create_keychain(
-                name: name,
-                password: ENV['APP_IOS_PASSWORD'],
-                unlock: true,
-                timeout: 0
-            )
-        end
-
-        ensure_temp_keychain 'login.keychain'
-
         match(
             type: "appstore", 
             app_identifier: "plus.pronote.app", 
