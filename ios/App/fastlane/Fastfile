@@ -116,17 +116,6 @@ begin
             keychain_name: "login.keychain",
             keychain_password: ENV['APP_IOS_PASSWORD']
         )
-        
-        update_code_signing_settings(
-            use_automatic_signing: false,
-            path: "./App.xcodeproj",
-            code_sign_identity: "iPhone Distribution"
-        )
-
-        update_project_provisioning(
-            xcodeproj: "./App.xcodeproj",
-            profile: ENV['sigh_com.iak.msi_appstore_profile-path']
-        )
 
         build_app(
             configuration: "Release",
@@ -139,31 +128,5 @@ begin
         IPA_LOCATION = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
 
         sh("echo IPA_LOCATION=#{IPA_LOCATION} >> $GITHUB_ENV")
-    end
-
-    desc "Generate new certificates"
-    lane :generate_new_certificates do
-
-        sync_code_signing(
-            type: "development",
-            app_identifier: "plus.pronote.app",
-            force_for_new_devices: true,
-            readonly: false
-        )
-
-        sync_code_signing(
-            type: "appstore",
-            app_identifier: "plus.pronote.app",
-            force_for_new_devices: true,
-            readonly: false
-        )
-
-        sync_code_signing(
-            type: "adhoc",
-            app_identifier: "plus.pronote.app",
-            force_for_new_devices: true,
-            readonly: false
-        )
-
     end
 end
