@@ -303,7 +303,7 @@ function constructEDTimetable(timetable) {
                 isOuting: false, //course.is_outing,
                 //isTest: course.is_test,
                 isCustom: false,
-                status: null
+                status: course.isAnnule ? "Cours annulé" : null
             }
         };
 
