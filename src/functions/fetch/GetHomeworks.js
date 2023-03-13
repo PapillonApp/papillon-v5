@@ -210,6 +210,20 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
 
         return axios.post(URL, body, requestOptions)
             .then((response) => {
+                if (response.data.code) {
+                    if (response.data.code == 525) {
+                        // get new token
+                        GetToken();
+                    }
+                    else {
+                        return new Promise((reject) => {
+                            reject({
+                                error: response.data.code
+                            });
+                        });
+                    }
+                }
+
                 // get homework
                 let homeworks = response.data.data;
 
@@ -252,6 +266,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
 
 // ed : construct homework
 function constructEDHomework(hw) {
+    console.log("Construct ED Homeworks with parameter hw = " + JSON.stringify(hw))
     // declaring vars
     let homeworkArray = [];
 
@@ -332,7 +347,7 @@ function constructEDHomework(hw) {
                         },
                         files: hws.aFaire.documents,
                     };
-
+                    console.log(newHomework)
                     subjectColor.setSubjectColor(newHomework.homework.subject, newHomework.data.color, true);
 
                     // push course to courses
