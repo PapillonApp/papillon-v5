@@ -45,20 +45,6 @@ jobs:
             echo "TYPE=unknown" >> $GITHUB_OUTPUT
           fi
           
-      - name: Update version number (package.json)
-        run: "echo 'Disabled because not needed'" # |
-          # ver="${{ steps.version-number.outputs.VERSION }}"
-          # git config --global user.name 'github-actions[bot]'
-          # git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          # if [ '$(expr length "$ver")' == '5' ]; then
-          #   npm version "$ver" --no-git-tag-version
-          #   echo "GH_RELEASE=true" >> $GITHUB_ENV
-          # else
-          #   npm version "$ver" --no-git-tag-version
-          #   echo "GH_RELEASE=false" >> $GITHUB_ENV
-          # fi
-          # git commit -am "Automatic update"
-          # git push
     outputs:
       VERSION_CODE: ${{ steps.commit-count.outputs.COUNT }}
       VERSION_NUMBER: ${{ steps.version-number.outputs.VERSION }}
@@ -264,7 +250,7 @@ jobs:
           echo "APP_STORE_API_KEY_ISSUER_ID=${{ secrets.APP_STORE_API_KEY_ISSUER_ID }}" >> $GITHUB_ENV
           echo "APP_STORE_API_KEY=${{ secrets.APP_STORE_API_KEY }}" >> $GITHUB_ENV
           echo "CERTIFICATE_STORE_GITHUB_URL=${{ secrets.CERTIFICATE_STORE_GITHUB_URL }}" >> $GITHUB_ENV
-          echo "MATCH_PASSWORD=${{ secrets.MATCH_CERTIFICATE_STORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "MATCH_PASSWORD=${{ secrets.MATCH_PASSWORD }}" >> $GITHUB_ENV
           echo "APP_IOS_PASSWORD=${{ secrets.APP_IOS_PASSWORD }}" >> $GITHUB_ENV
           echo "GIT_USER_TOKEN=${{ secrets.GIT_USER_TOKEN }}" >> $GITHUB_ENV
           echo "GIT_USER_EMAIL=${{ secrets.GIT_USER_EMAIL }}" >> $GITHUB_ENV
