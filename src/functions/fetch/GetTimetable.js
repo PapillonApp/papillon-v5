@@ -189,7 +189,7 @@ function getEDTimetable(date, forceReload) {
     // get token
     const token = localStorage.getItem('token');
     // get date as YYYY-MM-DD
-    const dayString = "2023-03-13" //dayRequest.toISOString().split('T')[0];
+    const dayString = dayRequest.toISOString().split('T')[0];
 
     const userID = JSON.parse(localStorage.UserCache).id;
 
@@ -285,8 +285,8 @@ function constructEDTimetable(timetable) {
             },
             data: {
                 subject: course.matiere,
-                teachers: course.prof,
-                rooms: course.salle,
+                teachers: course.prof.split(),
+                rooms: course.salle.split(),
                 groupNames: course.groupe,
                 memo: null, //course.memo,
                 hasMemo: false,
