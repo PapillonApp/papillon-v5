@@ -205,12 +205,12 @@ function getEDTimetable(date, forceReload) {
         // return cached timetable in promise
         return new Promise((resolve) => {
             let timetable = JSON.parse(cacheSearch[0].timetable);
-            console.log(timetable)
             resolve(constructEDTimetable(timetable));
         });
     }
     else {
         // get timetable from API
+
         var requestOptions = {
             headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": token },            
         };
@@ -221,11 +221,13 @@ function getEDTimetable(date, forceReload) {
         }`
         return axios.post(URL, body, requestOptions)
         .then((response) => {
+
             // get timetable
             let timetable = response.data.data;
 
             // construct timetable
             timetable = constructEDTimetable(timetable);
+            console.log(timetable)
 
             // cache response
             let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
@@ -269,6 +271,7 @@ function constructEDTimetable(timetable) {
 
     // for each course in timetable
     timetable.forEach((course) => {
+        console.log(subjectColor.getSubjectColor(course.matiere, course.color))
         // construct course
         let newCourse = {
             course: {
@@ -304,9 +307,9 @@ function constructEDTimetable(timetable) {
             }
         };
 
-        if (course.subject.name != "") {
+        if (course.matiere != "") {
             subjectColor.setSubjectColor(newCourse.data.subject, newCourse.course.color, true);
-        }        
+        }
 
         if (course.memo != null) {
             newCourse.data.hasMemo = true;
