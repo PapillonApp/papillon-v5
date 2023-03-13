@@ -621,7 +621,7 @@
 						</div>
 						<ion-label>
 							<h2>Pas de devoirs</h2>
-							<p>Vous n'avez aucun travail à faire dans les 7 prochains jours.</p>
+							<p>Vous n'avez aucun travail à faire pour les 7 prochains jours.</p>
 						</ion-label>
 					</ion-item>
 
