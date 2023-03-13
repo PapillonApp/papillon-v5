@@ -176,6 +176,9 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
     const dayRequest = new Date(dateFrom);
     const dayRequestTo = new Date(dateTo);
 
+    let newDayRequest = dayRequest.toLocaleDateString("fr").replace("/", "-").replace("/", "-").replace("/", "-")
+    console.log(newDayRequest)
+
     // get token
     const token = localStorage.getItem('token');
     const userID = JSON.parse(localStorage.UserCache).id;
@@ -185,7 +188,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
     const dayStringTo = dayRequestTo.toISOString().split('T')[0];
 
     // construct url (date is a TEST date)
-    let URL = `${EDAPI}/Eleves/${userID}/cahierdetexte.awp?verbe=get`;
+    let URL = `${EDAPI}/Eleves/${userID}/cahierdetexte/${newDayRequest}.awp?verbe=get`;
 
     // check if homework is cached
     let cacheSearch = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
@@ -226,6 +229,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
 
                 // get homework
                 let homeworks = response.data.data;
+                console.log(homeworks)
 
                 // construct homework
                 homeworks = await constructEDHomework(homeworks);
@@ -235,6 +239,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                 let cacheElement = {
                     dateFrom: dayString,
                     dateTo: dayStringTo,
+                    newDayRequest: newDayRequest,
                     token: token,
                     homework: JSON.stringify(response.data.data)
                 };
@@ -276,96 +281,66 @@ function constructEDHomework(hw) {
 
     // for each course in homework
     Object.keys(hw).forEach((date) => {
-
         //on obtiens une date avec une liste
         //2023-03-17
         hw[date].forEach((homework) => {
-            let URL = `https://api.ecoledirecte.com/v3/Eleves/${userID}/cahierdetexte/${date}.awp?verbe=get`;
-            var requestOptions = {
-                headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": token },            
-            };
-            let body = `data={}`
-
-
-            axios.post(URL, body, requestOptions)
-            .then((response) => {
-                // get homework
-                let homeworks = response.data.data;
-                homeworks.matieres.forEach((hws) => {
-                    //foreach documents
-                    hws.aFaire.documents.forEach((file) => {
-                        // if no file.name, set it to "Document"
-                        if (!file.libelle) {
-                            file.name = "Document";
-                        }
-                        // if file.url is not a link
-                        /*if (!file.url.startsWith("http")) {
-                            // remove file
-                            homework.files.splice(homework.files.indexOf(file), 1);
-                        }*/
-                    });
-                    //homework description
-                    hws.aFaire.contenu = atob(hws.aFaire.contenu)
-                    let homeworkDescription = hws.aFaire.contenu;
-                    /*
-                        Traitement des balises HTML (<strong>, <u>)
-                    
-                    
-                    */
-
-                    if (homeworkDescription.length > 80) {
-                        homeworkDescription = homeworkDescription.substring(0, 80);
-                        homeworkDescription = homeworkDescription.substring(0, homeworkDescription.lastIndexOf(" "));
-                        homeworkDescription += "...";
-                    }
-
-                    // replace new lines in homework.description with <br/>
-                    hws.aFaire.contenu = hws.aFaire.contenu.replace(/\n/g, "<br/>");
-                    // parse links in homework.description
-                    hws.aFaire.contenu = hws.aFaire.contenu.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
-
-
-                    // construct course
-                    
-                    let newHomework = {
-                        data: {
-                            id: hws.id,
-                            //date: hws.aFaire.donneLe.replace(/-/g, "/"),
-                            date: date.replace(/-/g, "/"),
-                            color: subjectColor.getSubjectColor(hws.matiere, hws.color || "#12d4a6"),
-                            done: hws.effectue,
-                        },
-                        homework: {
-                            subject: hws.matiere,
-                            content: hws.description,
-                            shortContent: homeworkDescription,
-                        },
-                        files: hws.aFaire.documents,
-                    };
-                    subjectColor.setSubjectColor(newHomework.homework.subject, newHomework.data.color, true);
-
-                    // push course to courses
-                    homeworkArray.push(newHomework);
-
-                })
-            })
-            .catch((error) => {
-                if (error.response) {
-                    if (error.response.data.code == 525) {
-                        // get new token
-                        GetToken();
-                    }
+            // get homework
+            let hws = homework;
+            //foreach documents
+            hws.aFaire.documents.forEach((file) => {
+                // if no file.name, set it to "Document"
+                if (!file.libelle) {
+                    file.name = "Document";
                 }
-
-                if(error.code) {
-                    // return empty timetable in promise
-                    return new Promise((reject) => {
-                        reject({
-                            error: error.code
-                        });
-                    });
-                }
+                // if file.url is not a link
+                /*if (!file.url.startsWith("http")) {
+                    // remove file
+                    homework.files.splice(homework.files.indexOf(file), 1);
+                }*/
             });
+            //homework description
+            hws.aFaire.contenu = atob(hws.aFaire.contenu)
+            let homeworkDescription = hws.aFaire.contenu;
+            /*
+                Traitement des balises HTML (<strong>, <u>)
+            
+            
+            */
+
+            if (homeworkDescription.length > 80) {
+                homeworkDescription = homeworkDescription.substring(0, 80);
+                homeworkDescription = homeworkDescription.substring(0, homeworkDescription.lastIndexOf(" "));
+                homeworkDescription += "...";
+            }
+
+            // replace new lines in homework.description with <br/>
+            hws.aFaire.contenu = hws.aFaire.contenu.replace(/\n/g, "<br/>");
+            // parse links in homework.description
+            hws.aFaire.contenu = hws.aFaire.contenu.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+
+
+            // construct course
+            
+            let newHomework = {
+                data: {
+                    id: hws.id,
+                    //date: hws.aFaire.donneLe.replace(/-/g, "/"),
+                    date: date.replace(/-/g, "/"),
+                    color: subjectColor.getSubjectColor(hws.matiere, hws.color || "#12d4a6"),
+                    done: hws.effectue,
+                },
+                homework: {
+                    subject: hws.matiere,
+                    content: hws.description,
+                    shortContent: homeworkDescription,
+                },
+                files: hws.aFaire.documents,
+            };
+            subjectColor.setSubjectColor(newHomework.homework.subject, newHomework.data.color, true);
+
+            // push course to courses
+            homeworkArray.push(newHomework);
+
         })
     });
 
