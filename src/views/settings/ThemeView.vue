@@ -92,7 +92,7 @@
 				customThemeModeList: localStorage.getItem('customThemeMode') == 'true',
 				currentTheme: localStorage.getItem('themeMode'),
 				currentFont: getComputedStyle(document.body).getPropertyValue('--papillon-font'),
-				currentColor: []
+				currentColor: null,
 			}
 		},
 		methods: {
@@ -136,8 +136,10 @@
 				localStorage.setItem('customizations', JSON.stringify(customizations));
 			},
 			colorChange() {
-				let color = this.$refs.colorSelect.$el.value;
-				this.currentColor = color;
+				let colorName = this.$refs.colorSelect.$el.value;
+				this.currentColor = colorName;
+
+				let color = this.availableColors.find(color => color.name == colorName).color;
 
 				document.body.style.setProperty('--ion-color-primary', color.hex);
 				document.body.style.setProperty('--ion-color-primary-rgb', color.rgb);
@@ -192,6 +194,18 @@
 					this.customThemeModeList = false;
 					customThemeMode.$el.checked = false;
 				}
+			},
+			checkColor() {
+				let colorHex = getComputedStyle(document.body).getPropertyValue('--ion-color-primary');
+
+				for (let i = 0; i < this.availableColors.length; i++) {
+					const elt = this.availableColors[i];
+					if (elt.color.hex == colorHex) {
+						return elt.name;
+					}
+				}
+
+				return null;
 			}
 		},
 		mounted() {		
@@ -202,6 +216,10 @@
 			// fontSelect
 			// get --papillon-font from css
 			this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font').replace(/"/g, ''); 
+
+			// colorSelect
+			// get --ion-color-primary from css
+			this.currentColor = this.checkColor();
 
 			// get tweakProgressBar ref
 			let tweakProgressBar = this.$refs.tweakProgressBar;
@@ -223,7 +241,7 @@
 				}
 
 				if(!customizations.color) {
-					this.currentColor = this.availableColors[0].color;
+					this.currentColor = this.availableColors[0].name;
 				}
 			}
 		}
@@ -277,11 +295,11 @@
 				<ion-list-header>
 					<ion-label><p>Couleur d'accentuation</p></ion-label>
 				</ion-list-header>
-				<ion-radio-group :value="currentColor" ref="colorSelect" @ionChange="colorChange">
+				<ion-radio-group :allow-empty-selection="false" :value="currentColor" ref="colorSelect" @ionChange="colorChange">
 					<ion-item :key="i" v-for="(color, i) in availableColors">
 						<div class="colorPreview" :style="`--color: ${color.color.hex};`" slot="start"></div>
 						<ion-label>{{ color.name }}</ion-label>
-						<ion-radio slot="end" :value="color.color"></ion-radio>
+						<ion-radio slot="end" :value="color.name"></ion-radio>
 					</ion-item>
 				</ion-radio-group>
 			</IonList>
@@ -290,7 +308,7 @@
 				<ion-list-header>
 					<ion-label><p>Police d'écriture</p></ion-label>
 				</ion-list-header>
-				<ion-radio-group :value="currentFont" ref="fontSelect" @ionChange="fontChange">
+				<ion-radio-group :allow-empty-selection="false" :value="currentFont" ref="fontSelect" @ionChange="fontChange">
 					<ion-item :key="i" v-for="(font, i) in availableFonts">
 						<ion-label :style="`font-family: '${font.font}';`">{{ font.name }}</ion-label>
 						<ion-radio slot="end" :value="font.font"></ion-radio>
