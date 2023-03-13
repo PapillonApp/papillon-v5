@@ -131,7 +131,6 @@ function getEDRecap(force) {
 		
 		// timetable
 		getTimetable(new Date(), force).then((response) => {
-			console.log(response)
 			timetable = response;
 			requestsDone++;
 		});
