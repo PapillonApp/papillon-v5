@@ -118,6 +118,10 @@
 				let now = new Date();
 
 				if (now.getUTCDate() != this.start.getUTCDate()) {
+					if (this.classes.includes("progressDivEnabled")) {
+						this.classes = this.classes.replace("progressDivEnabled", "");
+					}
+
 					if (this.coursPourcentVisible) {
 						this.coursPourcent = 0;
 						this.coursPourcentVisible = false;
@@ -163,6 +167,10 @@
 					this.coursPourcentVisible = true;
 					this.coursPourcent = 100;
 					return false;
+				} else {
+					if (this.classes.includes("progressDivEnabled")) {
+						this.classes = this.classes.replace("progressDivEnabled", "");
+					}
 				}
 
 				// now is between start and end

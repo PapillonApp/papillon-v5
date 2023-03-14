@@ -2,7 +2,14 @@
 Ce guide permettra de mieux comprendre quelles sont les issues de chaque fichier ici.
 
 ## A quoi servent ces fichiers ?
-Ce sont eux qui s'occupent de récupérer les données depuis l'API et les uniformiser dans un format traitable peu importe l'API ou le service derrière.
+Ce sont eux qui s'occupent de récupérer les données depuis les API et les uniformiser dans un format traitable peu importe l'API ou le service derrière.
+N.B.: Chaque service scolaire doit être traité en dehors de l'application. Ex: l'application ne se connecte pas directement à Pronote, mais à une API qui se connecte à Pronote, il en va de même pour tous les autres services ajoutés et ce pour des raisons légales. Si cette condition n'est pas respectée, les demandes de modifications de l'application seront refusées. *Les modules ne sont disponibles que sur l'organisation GitHub de PapillonApp, un module extérieur ne saurait être accepté.*
+
+### Liste des modules disponible ou en cours de développement
+- [x] Pronote (Papillon-PRN-Core)
+- [ ] EcoleDirecte (Papillon-ED-Core)
+- [ ] La-Vie-Scolaire (Papillon-LVS-Core)
+- [ ] Appscol (Papillon-APS-Core)
 
 ## Comment fonctionnent-ils
 Ils sont *en théorie* sensés détecter le service utilisé et rendre les données correspondantes.
@@ -50,3 +57,5 @@ interface Timetable {
     }
 }
 ```
+
+> **Note :** Ce fichier n'est pas encore fini, il est donc possible qu'il y ait des changements.
