@@ -455,7 +455,7 @@
 								</IonChip>
 							</div>
 							<ion-label :style="`--courseColor: ${cours.course.color};`">
-								<h2><span class="courseColor"></span> {{ cours.data.subject }}</h2>
+								<h2><span class="courseColor"></span>{{ cours.data.subject }}</h2>
 
 								<div class="progression" v-if="nextCoursStarted">
 									<p class="startProg">{{ nextCoursTime }}</p>
