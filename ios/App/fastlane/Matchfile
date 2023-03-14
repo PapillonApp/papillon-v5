@@ -4,3 +4,4 @@ APPLE_ID = ENV["APPLE_ID"]
 git_url(CERTIFICATE_STORE_GITHUB_URL)
 username(APPLE_ID)
 storage_mode("git")
+app_identifier("plus.pronote.app")
