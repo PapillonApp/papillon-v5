@@ -154,6 +154,9 @@ begin
 			teamid: ENV["sigh_plus.pronote.app_appstore_team-id"]
 		)
 
+		increment_version_number(version_number: version, xcodeproj: "./App.xcodeproj")
+		increment_build_number(build_number: build_number, xcodeproj: "./App.xcodeproj")
+
 		build_app(
 			configuration: "Release",
 			output_name: "Papillon.ipa",
