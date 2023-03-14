@@ -6,10 +6,10 @@ Ce sont eux qui s'occupent de récupérer les données depuis les API et les uni
 N.B.: Chaque service scolaire doit être traité en dehors de l'application. Ex: l'application ne se connecte pas directement à Pronote, mais à une API qui se connecte à Pronote, il en va de même pour tous les autres services ajoutés et ce pour des raisons légales. Si cette condition n'est pas respectée, les demandes de modifications de l'application seront refusées. *Les modules ne sont disponibles que sur l'organisation GitHub de PapillonApp, un module extérieur ne saurait être accepté.*
 
 ### Liste des modules disponible ou en cours de développement
-- [x] Pronote (Papillon-PRN-Core)
-- [ ] EcoleDirecte (Papillon-ED-Core)
-- [ ] La-Vie-Scolaire (Papillon-LVS-Core)
-- [ ] Appscol (Papillon-APS-Core)
+- [x] **Pronote** (*Papillon-PRN-Core*)
+- [ ] **EcoleDirecte** (*Papillon-ED-Core*)
+- [ ] **La-Vie-Scolaire** (*Papillon-LVS-Core*)
+- [ ] **Appscol** (*Papillon-APS-Core*)
 Si vous souhaitez développer un des modules ci-dessous, merci de contacter l'équipe de développement (@lucas-luchack) afin de pouvoir en obtenir l'accès.
 
 ## Comment fonctionnent-ils
