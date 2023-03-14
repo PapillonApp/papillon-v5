@@ -272,6 +272,10 @@
                 }
 
                 len = `${hours} h ${minutes} min`;
+
+                if(minutes == "00") {
+                    len = `${hours} h`;
+                }
             }
 
             let status = cours.status.status;
