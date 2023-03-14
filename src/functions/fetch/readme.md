@@ -10,6 +10,7 @@ N.B.: Chaque service scolaire doit être traité en dehors de l'application. Ex:
 - [ ] EcoleDirecte (Papillon-ED-Core)
 - [ ] La-Vie-Scolaire (Papillon-LVS-Core)
 - [ ] Appscol (Papillon-APS-Core)
+Si vous souhaitez développer un des modules ci-dessous, merci de contacter l'équipe de développement (@lucas-luchack) afin de pouvoir en obtenir l'accès.
 
 ## Comment fonctionnent-ils
 Ils sont *en théorie* sensés détecter le service utilisé et rendre les données correspondantes.
