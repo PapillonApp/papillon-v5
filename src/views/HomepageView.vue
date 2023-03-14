@@ -97,12 +97,12 @@
 				let list = [
 					"Temps calme",
 					"Pas de cours, on révise ?",
-					"C'est la sieste ? (ou pas)",
+					"C'est la sieste (ou pas)",
 					"Je suis sûr qu'il te reste des devoirs...",
 					"Il n'y a jamais vraiment rien à faire !",
 					"Il est temps de commencer ce joli DM !",
 					"Il fait beau dehors ?",
-					"Ca tombe bien, ce livre ne se finira pas tout seul !",
+					"Ça tombe bien, ce livre ne se finira pas tout seul !",
 					"Flûte, le cours de maths est fini",
 					"Après l'effort, le réconfort ;)",
 					"Alors, ça se la coule douce ?",
@@ -556,7 +556,7 @@
 								<h2>{{ grade.grade.value }}<small>/{{ grade.grade.out_of }}</small></h2>
 							</ion-label>
 							<ion-label v-else>
-								<h2>{{ grade.info.significantReason }}<small>/{{ grade.grade.out_of }}</small></h2>
+								<h2>{{ grade.info.significantReason }}</h2>
 							</ion-label>
 						</div>
 					</ion-item>
