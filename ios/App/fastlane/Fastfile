@@ -154,8 +154,8 @@ begin
 			teamid: ENV["sigh_plus.pronote.app_appstore_team-id"]
 		)
 
-		increment_version_number(version_number: version, xcodeproj: "./App.xcodeproj")
-		increment_build_number(build_number: build_number, xcodeproj: "./App.xcodeproj")
+		increment_version_number(version_number: ENV['APP_VERSION_NUMBER'], xcodeproj: "./App.xcodeproj")
+		increment_build_number(build_number: ENV['APP_VERSION_CODE'], xcodeproj: "./App.xcodeproj")
 
 		build_app(
 			configuration: "Release",
