@@ -1,5 +1,6 @@
 // modules
 import axios from 'axios';
+import * as moment from "moment";
 
 // vars
 import { app } from '@/main.ts'
@@ -173,10 +174,10 @@ function constructPronoteHomework(hw) {
 function getEDHomework(dateFrom, dateTo, forceReload) {
     // gather vars
     const EDAPI = "https://api.ecoledirecte.com/v3"//app.config.globalProperties.$api;
-    const dayRequest = new Date(dateFrom);
-    const dayRequestTo = new Date(dateTo);
+    const dayRequest = new moment(dateFrom);
+    const dayRequestTo = new moment(dateTo);
 
-    let newDayRequest = dayRequest.toLocaleDateString("fr").replace("/", "-").replace("/", "-").replace("/", "-")
+    let newDayRequest = dayRequest.format("YYYY-MM-DD").replace("/", "-").replace("/", "-").replace("/", "-")
     console.log(newDayRequest)
 
     // get token
@@ -189,7 +190,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
 
     // construct url (date is a TEST date)
     let URL = `${EDAPI}/Eleves/${userID}/cahierdetexte/${newDayRequest}.awp?verbe=get`;
-
+    console.log(URL)
     // check if homework is cached
     let cacheSearch = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
     cacheSearch = cacheSearch.filter((element) => {
@@ -208,7 +209,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
         var requestOptions = {
             headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": token },            
         };
-        let body = `data={}`
+        let body = ``
 
 
         return axios.post(URL, body, requestOptions)
