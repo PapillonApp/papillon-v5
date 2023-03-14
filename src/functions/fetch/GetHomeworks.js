@@ -209,13 +209,17 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
         var requestOptions = {
             headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": token },            
         };
-        let body = ``
+        let body = `data={}`
 
 
         return axios.post(URL, body, requestOptions)
             .then(async (response) => {
                 if(response.data.code !== 200) {
                     if (response.data.code == 525) {
+                        // get new token
+                        GetToken();
+                    }
+                    else if (response.data.code == 520) {
                         // get new token
                         GetToken();
                     }
@@ -321,12 +325,12 @@ function constructEDHomework(hw) {
 
 
             // construct course
-            
+            console.log(hws)
             let newHomework = {
                 data: {
                     id: hws.id,
                     //date: hws.aFaire.donneLe.replace(/-/g, "/"),
-                    date: date.replace(/-/g, "/"),
+                    date: hws.date.replace(/-/g, "/"),
                     color: subjectColor.getSubjectColor(hws.matiere, hws.color || "#12d4a6"),
                     done: hws.effectue,
                 },
@@ -337,6 +341,7 @@ function constructEDHomework(hw) {
                 },
                 files: hws.aFaire.documents,
             };
+            console.log("after newhomework")
             subjectColor.setSubjectColor(newHomework.homework.subject, newHomework.data.color, true);
 
             // push course to courses
