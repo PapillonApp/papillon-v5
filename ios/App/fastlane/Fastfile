@@ -22,6 +22,13 @@ begin
 
 		build()
 
+		api_key = app_store_connect_api_key(
+			key_id: ENV['APP_STORE_API_KEY_ID'],
+			issuer_id: ENV['APP_STORE_API_KEY_ISSUER_ID'],
+			key_filepath: "./AuthKey_QV8QQ622WD.p8",
+			in_house: false
+		)
+
 		upload_to_testflight(
 			api_key: api_key,
 			ipa: IPA_LOCATION,
@@ -34,6 +41,13 @@ begin
 		setup_ci
 
 		build()
+
+		api_key = app_store_connect_api_key(
+			key_id: ENV['APP_STORE_API_KEY_ID'],
+			issuer_id: ENV['APP_STORE_API_KEY_ISSUER_ID'],
+			key_filepath: "./AuthKey_QV8QQ622WD.p8",
+			in_house: false
+		)
 
 		deliver(
 			build_number: ENV['APP_VERSION_CODE'],
