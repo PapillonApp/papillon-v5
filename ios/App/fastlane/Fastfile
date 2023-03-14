@@ -112,7 +112,7 @@ begin
 		update_code_signing_settings(
 			path: "./App.xcodeproj",
 			use_automatic_signing: false,
-			code_sign_identity: "Apple Development",
+			code_sign_identity: "Apple Distribution: Alessio Di Paolo (LGP8G8MNJA)",
 			team_id: "LGP8G8MNJA"
 		)
 
@@ -123,6 +123,18 @@ begin
 			readonly: false,
 			keychain_name: "login.keychain",
 			keychain_password: ENV['APP_IOS_PASSWORD']
+		)
+
+		update_project_provisioning(
+			xcodeproj: "./App.xcodeproj",
+			target_filter: "App",
+			profile: ENV["sigh_xyz.pronote.plus_appstore_profile-path"],
+			build_configuration: "Release"
+		)
+	
+		update_project_team(
+			path: "./App.xcodeproj",
+			teamid: "LGP8G8MNJA"
 		)
 
 		build_app(
