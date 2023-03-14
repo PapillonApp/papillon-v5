@@ -275,11 +275,25 @@ jobs:
           bundle exec fastlane ${{ needs.initialize.outputs.DEPLOY_TYPE }} 
         working-directory: ios/app/fastlane
 
-      - name: Upload Artifact
+      - name: Upload IPA Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: iOS App - ${{ needs.initialize.outputs.VERSION_NUMBER }}
+          name: iOS App - ${{ needs.initialize.outputs.VERSION_NUMBER }} - IPA
           path: ${{ env.IPA_LOCATION }}
+          retention-days: 3
+
+      - name: Upload DSYM Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: iOS App - ${{ needs.initialize.outputs.VERSION_NUMBER }} - DSYM
+          path: ${{ env.DSYM_LOCATION }}
+          retention-days: 3
+
+      - name: Upload XCODE ARCHIVE Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: iOS App - ${{ needs.initialize.outputs.VERSION_NUMBER }} - XCODE ARCHIVE
+          path: ${{ env.XCODEBUILD_ARCHIVE }}
           retention-days: 3
   
 

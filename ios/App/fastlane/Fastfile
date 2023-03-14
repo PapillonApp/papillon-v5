@@ -31,6 +31,8 @@ begin
 
 		upload_to_testflight(
 			api_key: api_key,
+			build_number: ENV['APP_VERSION_CODE'],
+			app_version: ENV['APP_VERSION_NUMBER'],
 			ipa: IPA_LOCATION,
 			skip_waiting_for_build_processing: true
 		)
@@ -50,6 +52,7 @@ begin
 		)
 
 		deliver(
+			api_key: api_key,
 			build_number: ENV['APP_VERSION_CODE'],
 			app_version: ENV['APP_VERSION_NUMBER'],
 			ipa: IPA_LOCATION,
@@ -160,7 +163,11 @@ begin
 		) 
 
 		IPA_LOCATION = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
+		DSYM_LOCATION = "#{lane_context[SharedValues::DSYM_OUTPUT_PATH]}"
+		XCODEBUILD_ARCHIVE = "#{lane_context[SharedValues::XCODEBUILD_ARCHIVE]}"
 
 		sh("echo IPA_LOCATION=#{IPA_LOCATION} >> $GITHUB_ENV")
+		sh("echo DSYM_LOCATION=#{DSYM_LOCATION} >> $GITHUB_ENV")
+		sh("echo XCODEBUILD_ARCHIVE=#{XCODEBUILD_ARCHIVE} >> $GITHUB_ENV")
 	end
 end
