@@ -128,13 +128,13 @@ begin
 		update_project_provisioning(
 			xcodeproj: "./App.xcodeproj",
 			target_filter: "App",
-			profile: ENV["sigh_xyz.pronote.plus_appstore_profile-path"],
+			profile: ENV["sigh_plus.pronote.app_appstore_profile-path"],
 			build_configuration: "Release"
 		)
 	
 		update_project_team(
 			path: "./App.xcodeproj",
-			teamid: "LGP8G8MNJA"
+			teamid: ENV["sigh_plus.pronote.app_appstore_team-id"]
 		)
 
 		build_app(
