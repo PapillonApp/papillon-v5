@@ -139,6 +139,12 @@
 					this.coursPourcent = 0;
 					this.coursPourcentVisible = false;
 					clearInterval(this.intervalUpdateProgressDiv);
+
+					// Remove class
+					if (this.classes.includes("progressDivEnabled")) {
+						this.classes = this.classes.replace("progressDivEnabled", "");
+					}
+					
 					return false;
 				}
 
@@ -215,7 +221,6 @@
 			}
 
 			this.newColor = subjectColor.lightenColor(this.color, -20);
-			return false;
 		},
 		beforeUnmount() {
 			if (this.intervalUpdateProgressDiv != null)
@@ -554,7 +559,12 @@
 		width: 0%;
 	}
 
-	.progressDivEnabled .Status {
+	.dark .progressDivEnabled .Status {
 		background-color: #fff !important;
+	}
+
+	.light .progressDivEnabled .Status {
+		background-color: #fff !important;
+		filter: brightness(1) !important;
 	}
 </style>
