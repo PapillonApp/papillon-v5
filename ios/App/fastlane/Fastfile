@@ -16,122 +16,122 @@
 default_platform(:ios)
 
 begin
-    desc "Push a new beta build to TestFlight"
-    lane :beta do
-        setup_ci
+	desc "Push a new beta build to TestFlight"
+	lane :beta do
+		setup_ci
 
-        build()
+		build()
 
-        upload_to_testflight(
-            api_key: api_key,
-            ipa: IPA_LOCATION,
-            skip_waiting_for_build_processing: true
-        )
-    end
+		upload_to_testflight(
+			api_key: api_key,
+			ipa: IPA_LOCATION,
+			skip_waiting_for_build_processing: true
+		)
+	end
 
-    desc "Push a new build to the AppStore"
-    lane :prod do
-        setup_ci
+	desc "Push a new build to the AppStore"
+	lane :prod do
+		setup_ci
 
-        build()
+		build()
 
-        deliver(
-            build_number: ENV['APP_VERSION_CODE'],
-            app_version: ENV['APP_VERSION_NUMBER'],
-            ipa: IPA_LOCATION,
-            submit_for_review: true,
-            automatic_release: true,
-            force: true, # Skip HTML report verification
-            skip_metadata: true,
-            skip_screenshots: true
-        )
-    end
+		deliver(
+			build_number: ENV['APP_VERSION_CODE'],
+			app_version: ENV['APP_VERSION_NUMBER'],
+			ipa: IPA_LOCATION,
+			submit_for_review: true,
+			automatic_release: true,
+			force: true, # Skip HTML report verification
+			skip_metadata: true,
+			skip_screenshots: true
+		)
+	end
 
-    lane :test do
-        desc "Run tests"
-        
-        update_code_signing_settings(
-            path: "./App.xcodeproj",
-            use_automatic_signing: false,
-        )
+	lane :test do
+		desc "Run tests"
+		
+		update_code_signing_settings(
+			path: "./App.xcodeproj",
+			use_automatic_signing: false,
+		)
 
-        build_app(
-            configuration: "Release",
-            output_name: "Papillon.ipa",
-            output_directory: ".",
-            workspace: "./App.xcworkspace",
-            scheme: "App",
-            skip_codesigning: true,
-            skip_build_archive: true,
-            skip_package_ipa: true,
-        ) 
+		build_app(
+			configuration: "Release",
+			output_name: "Papillon.ipa",
+			output_directory: ".",
+			workspace: "./App.xcworkspace",
+			scheme: "App",
+			skip_codesigning: true,
+			skip_build_archive: true,
+			skip_package_ipa: true,
+		) 
 
-        scan(
-            workspace: "./App.xcworkspace",
-            scheme: "App",
-            output_types: "junit",
-            output_directory: "./test-results",
-            code_coverage: true
-        )
+		scan(
+			workspace: "./App.xcworkspace",
+			scheme: "App",
+			output_types: "junit",
+			output_directory: "./test-results",
+			code_coverage: true
+		)
 
-        IPA_LOCATION = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
-        SCAN_DERIVED_DATA_PATH = "#{lane_context[SharedValues::SCAN_DERIVED_DATA_PATH]}"
-        SCAN_GENERATED_PLIST_FILES = "#{lane_context[SharedValues::SCAN_GENERATED_PLIST_FILES]}"
-        SCAN_GENERATED_PLIST_FILES.each do |file|
-            puts "file : #{file}"
-        end
-        SCAN_GENERATED_XCRESULT_PATH = "#{lane_context[SharedValues::SCAN_GENERATED_XCRESULT_PATH]}"
-        
-        sh("echo IPA_LOCATION=#{IPA_LOCATION} >> $GITHUB_ENV")
+		IPA_LOCATION = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
+		SCAN_DERIVED_DATA_PATH = "#{lane_context[SharedValues::SCAN_DERIVED_DATA_PATH]}"
+		SCAN_GENERATED_PLIST_FILES = "#{lane_context[SharedValues::SCAN_GENERATED_PLIST_FILES]}"
+		SCAN_GENERATED_PLIST_FILES.each do |file|
+			puts "file : #{file}"
+		end
+		SCAN_GENERATED_XCRESULT_PATH = "#{lane_context[SharedValues::SCAN_GENERATED_XCRESULT_PATH]}"
+		
+		sh("echo IPA_LOCATION=#{IPA_LOCATION} >> $GITHUB_ENV")
 
-    end
+	end
 
-    lane :build do
-        api_key = app_store_connect_api_key(
-            key_id: ENV['APP_STORE_API_KEY_ID'],
-            issuer_id: ENV['APP_STORE_API_KEY_ISSUER_ID'],
-            key_filepath: "./AuthKey_QV8QQ622WD.p8",
-            in_house: false
-        )
+	lane :build do
+		api_key = app_store_connect_api_key(
+			key_id: ENV['APP_STORE_API_KEY_ID'],
+			issuer_id: ENV['APP_STORE_API_KEY_ISSUER_ID'],
+			key_filepath: "./AuthKey_QV8QQ622WD.p8",
+			in_house: false
+		)
 
-        def ensure_temp_keychain(name)
-            delete_keychain(
-                name: name
-            ) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
-            create_keychain(
-                name: name,
-                password: ENV['APP_IOS_PASSWORD'],
-                unlock: true,
-                timeout: 0
-            )
-        end
+		def ensure_temp_keychain(name)
+			delete_keychain(
+				name: name
+			) if File.exist? File.expand_path("~/Library/Keychains/#{name}-db")
+			create_keychain(
+				name: name,
+				password: ENV['APP_IOS_PASSWORD'],
+				unlock: true,
+				timeout: 0
+			)
+		end
 
-        update_code_signing_settings(
-            path: "./App.xcodeproj",
-            use_automatic_signing: false,
-            code_sign_identity: "iPhone Distribution"
-            team_id: ENV["APPLE_DEVELOPER_TEAM_ID"]
-        )
+		update_code_signing_settings(
+			path: "./App.xcodeproj",
+			use_automatic_signing: false,
+			code_sign_identity: "iPhone Distribution",
+			team_id: ENV["APPLE_DEVELOPER_TEAM_ID"]
+		)
 
-        match(
-            type: "appstore", 
-            app_identifier: "plus.pronote.app", 
-            api_key: api_key,
-            readonly: true,
-            keychain_name: "login.keychain",
-            keychain_password: ENV['APP_IOS_PASSWORD']
-        )
+		match(
+			type: "appstore", 
+			app_identifier: "plus.pronote.app", 
+			api_key: api_key,
+			readonly: true,
+			keychain_name: "login.keychain",
+			keychain_password: ENV['APP_IOS_PASSWORD']
+		)
 
-        build_app(
-            configuration: "Release",
-            output_name: "Papillon.ipa",
-            output_directory: ".",
-            workspace: "./App.xcworkspace",
-            scheme: "App"
-        ) 
+		build_app(
+			configuration: "Release",
+			output_name: "Papillon.ipa",
+			output_directory: ".",
+			workspace: "./App.xcworkspace",
+			scheme: "App"
+		) 
 
-        IPA_LOCATION = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
+		IPA_LOCATION = "#{lane_context[SharedValues::IPA_OUTPUT_PATH]}"
 
-        sh("echo IPA_LOCATION=#{IPA_LOCATION} >> $GITHUB_ENV")
-    end
+		sh("echo IPA_LOCATION=#{IPA_LOCATION} >> $GITHUB_ENV")
+	end
 end
