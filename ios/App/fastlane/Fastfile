@@ -101,10 +101,13 @@ begin
 			create_keychain(
 				name: name,
 				password: ENV['APP_IOS_PASSWORD'],
+				default_keychain: true,
 				unlock: true,
 				timeout: 0
 			)
 		end
+
+		ensure_temp_keychain 'login.keychain'
 
 		update_code_signing_settings(
 			path: "./App.xcodeproj",
