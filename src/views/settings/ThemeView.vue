@@ -92,7 +92,6 @@
 				customThemeModeList: localStorage.getItem('customThemeMode') == 'true',
 				currentTheme: localStorage.getItem('themeMode'),
 				currentFont: getComputedStyle(document.body).getPropertyValue('--papillon-font'),
-				currentColor: null,
 			}
 		},
 		methods: {
@@ -196,16 +195,15 @@
 				}
 			},
 			checkColor() {
+				let colorSelect = this.$refs.colorSelect;
 				let colorHex = getComputedStyle(document.body).getPropertyValue('--ion-color-primary');
 
 				for (let i = 0; i < this.availableColors.length; i++) {
 					const elt = this.availableColors[i];
 					if (elt.color.hex == colorHex) {
-						return elt.name;
+						colorSelect.$el.value = elt.name;
 					}
 				}
-
-				return null;
 			}
 		},
 		mounted() {		
@@ -217,10 +215,6 @@
 			// get --papillon-font from css
 			this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font').replace(/"/g, ''); 
 
-			// colorSelect
-			// get --ion-color-primary from css
-			this.currentColor = this.checkColor();
-
 			// get tweakProgressBar ref
 			let tweakProgressBar = this.$refs.tweakProgressBar;
 			tweakProgressBar.$el.checked = localStorage.getItem('tweakProgressBar') == 'true';
@@ -231,6 +225,7 @@
 
 			// check if custom theme mode is enabled
 			this.checkThemeMode();
+			this.checkColor();
 
 			// check if there are customizations
 			if(localStorage.getItem('customizations')) {
