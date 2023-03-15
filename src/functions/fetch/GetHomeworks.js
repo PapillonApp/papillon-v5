@@ -62,6 +62,11 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
                     token: token,
                     homework: JSON.stringify(response.data)
                 };
+                // Remove old cache
+                cache = cache.filter((element) => {
+                    return element.dateFrom != dayString && element.dateTo != dayStringTo;
+                });
+                // Add new cache
                 cache.push(cacheElement);
                 localStorage.setItem('HomeworkCache', JSON.stringify(cache));
 
