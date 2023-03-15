@@ -28,16 +28,12 @@ function hslToHex(h: number, s: number, l: number) {
 	return `#${f(0)}${f(8)}${f(4)}`;
 }
 
-let hue = getComputedStyle(document.body).getPropertyValue('--ion-color-primary-hue');
-
 function setStatusBarStyle() {
-	const DarkColor = hslToHex(parseInt(hue), 10, 12);
-
 	if (themeMode === 'dark' || (isDarkMode && themeMode !== 'light')) {
-		StatusBar.setBackgroundColor({color: DarkColor});
+		StatusBar.setBackgroundColor({color: "#111112"});
 		StatusBar.setStyle({style: Style.Dark})
 	} else {
-		StatusBar.setBackgroundColor({color: "#ffffff"});
+		StatusBar.setBackgroundColor({color: "#f9f9f9"});
 		StatusBar.setStyle({style: Style.Light})
 	}
 }
