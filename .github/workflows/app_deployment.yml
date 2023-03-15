@@ -346,12 +346,10 @@ jobs:
           echo "Code de version : ${{ needs.initialize.outputs.VERSION_CODE }}" >> $GITHUB_STEP_SUMMARY
           if [ "${{ needs.initialize.outputs.DEPLOY_TYPE }}" == "beta" ]; then
             echo "Déployé sur TestFlight" >> $GITHUB_STEP_SUMMARY
-          else:
+          else
             echo "Déployé sur l'AppStore" >> $GITHUB_STEP_SUMMARY
           fi
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "Fin de rapport de déploiement" >> $GITHUB_STEP_SUMMARY
           echo "(c) 2023 - PapillonApp" >> $GITHUB_STEP_SUMMARY
-          
-
