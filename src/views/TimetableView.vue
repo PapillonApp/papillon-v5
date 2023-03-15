@@ -168,8 +168,6 @@
                 if(i == 1) {
                     this.$rn = selectedRN;
                     this.rnButtonString = this.createDateString(this.$rn);
-
-                    this.isChangingDate = true;
                     this.rnCalendarString = this.$rn.toISOString().split('T')[0];
                 }
 
