@@ -630,7 +630,7 @@
 
         <div id="noTouchZone"></div>
       
-        <swiper class="swiper" ref="swiper" :modules="[Virtual, EffectCoverflow]" virtual :initialSlide="baseIndex" :speed="200" :spaceBetween="10" :preventClicks="true" effect="coverflow">
+        <swiper class="swiper" ref="swiper" :modules="[Virtual, EffectCoverflow]" virtual :initialSlide="baseIndex" :speed="400" :spaceBetween="0" :preventClicks="true" effect="coverflow">
             <swiper-slide
             v-for="(slideContent, index) in slides"
             :key="index"
