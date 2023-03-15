@@ -303,8 +303,10 @@ export default defineComponent({
         // get homeworks data
         this.getHomeworks();
 
-        // force token update
-        this.getHomeworks(true);
+        // force token update if connected to internet
+        if(this.connected) {
+            this.getHomeworks(true);
+        }
 
         // on rnChanged, get new homeworks data
         document.addEventListener('rnChanged', () => {
