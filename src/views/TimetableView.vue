@@ -15,8 +15,10 @@
 
   import { LocalNotifications } from '@capacitor/local-notifications';
 
+  import { Virtual, EffectCoverflow } from 'swiper'
   import { Swiper, SwiperSlide } from 'swiper/vue';
   import 'swiper/css';
+  import 'swiper/css/effect-cube';
 
   import CoursElement from '@/components/timetable/CoursElement.vue';
 
@@ -49,6 +51,7 @@
     },
     setup() {
         return {
+            baseIndex: 250,
             minDate: require('@/functions/utils/datetimePicker.js').minCalendarDate(),
             maxDate: require('@/functions/utils/datetimePicker.js').maxCalendarDate(),
             isDateAvailable: require('@/functions/utils/datetimePicker.js').isDateAvailable,
@@ -57,6 +60,9 @@
             todayOutline,
             todaySharp,
             presentingElement: null,
+            Virtual,
+            EffectCoverflow,
+            ey: []
         }
     },
     methods: {
@@ -67,14 +73,22 @@
             return day_string + ". " + dateObject.getDate();
         },
         rnInputChanged() {
-            // get new date from rnInput
-            let newDate = new Date(this.$refs.rnInput.$el.value);
+            if(!this.isChangingDate) {
+                // get new date from rnInput
+                let newDate = new Date(this.$refs.rnInput.$el.value);
 
-            // update rn
-            this.$rn = newDate;
+                // update rn
+                this.$rn = newDate;
 
-            // emit event
-            document.dispatchEvent(new CustomEvent('rnChanged', { detail: newDate }));
+                // reset swiper
+                this.$refs.swiper.$el.swiper.slideTo(this.baseIndex, 0, false);
+
+                // emit event
+                document.dispatchEvent(new CustomEvent('rnChanged', { detail: newDate }));
+            }
+            else {
+                this.isChangingDate = false;
+            }
         },
         confirmRnInput() {
             this.changernPickerModalOpen(false);
@@ -123,65 +137,52 @@
             return timetable;
         },
         resetSwiper() {
-            this.$refs.swiper.$el.swiper.slideTo(1, 0);
+            // this.$refs.swiper.$el.swiper.slideTo(1, 0);
 
-            this.timetable.error = "STILL_LOADING";
-            this.yesterday.error = "STILL_LOADING";
-            this.tomorrow.error = "STILL_LOADING";
+            this.day1.error = "STILL_LOADING";
+            this.day0.error = "STILL_LOADING";
+            this.day2.error = "STILL_LOADING";
         },
-        async getTimetables(force) {
-            // get timetable for rn
-            GetTimetable(this.$rn, force).then((timetable) => {
-                if(timetable.error) {
-                    if(timetable.error == "ERR_BAD_REQUEST") {
-                        this.timetable.loading = true;
+        async getTimetables(force, goTo) {
+            for (let i = 0; i < 3; i++) {
+                let index = this.$refs.swiper.$el.swiper.realIndex + (i - 1);
+
+                // get index diff
+                let indexDiff = this.baseIndex - index;
+
+                // get rn
+                let selectedRN = new Date();
+
+                if(goTo) {
+                    selectedRN = new Date(this.$rn);
+                }
+
+                selectedRN.setDate(selectedRN.getDate() - indexDiff);
+
+                // get timetable for rn
+                GetTimetable(selectedRN, force).then((timetable) => {
+                    if(timetable.error) {
+                        if(timetable.error == "ERR_BAD_REQUEST") {
+                            if(this.days[index]) {
+                                this.days[index].loading = true;
+                            }
+                        }
+                        else {
+                            this.days[index] = [];
+                            if(this.days[index]) {
+                                this.days[index].error = timetable.error;
+                            }
+                        }
                     }
                     else {
-                        this.timetable = [];
-                        this.timetable.error = timetable.error;
+                        this.days[index] = this.editTimetable(timetable, selectedRN);
+                        this.loadedrnButtonString = this.createDateString(this.$rn);
+                        if(this.days[index]) {
+                            this.days[index].loading = false;
+                        }
                     }
-                }
-                else {
-                    this.timetable = this.editTimetable(timetable, this.$rn);
-                    this.loadedrnButtonString = this.createDateString(this.$rn);
-                    this.timetable.loading = false;
-                }
-            });
-
-            // get timetable for yesterday
-            let yesterdayRN = new Date(this.$rn) - 86400000;
-            GetTimetable(yesterdayRN, force).then((timetable) => {
-                if(timetable.error) {
-                    this.yesterday = [];
-                    this.yesterday.error = timetable.error;
-
-                    if(timetable.error == "ERR_BAD_REQUEST") {
-                        this.yesterday.loading = true;
-                    }
-                }
-                else {
-                    this.yesterday = this.editTimetable(timetable, yesterdayRN);
-                    this.yesterday.loading = false;
-                }
-            });
-
-            // get timetable for tomorrow
-            let tomorrowRN = new Date(this.$rn);
-            tomorrowRN.setDate(tomorrowRN.getDate() + 1);
-            GetTimetable(tomorrowRN, force).then((timetable) => {
-                if(timetable.error) {
-                    this.tomorrow = [];
-                    this.tomorrow.error = timetable.error;
-                }
-                else {
-                    this.tomorrow = this.editTimetable(timetable, tomorrowRN);
-                    this.tomorrow.loading = false;
-
-                    if(timetable.error == "ERR_BAD_REQUEST") {
-                        this.tomorrow.loading = true;
-                    }
-                }
-            });
+                });
+            }
 
             // set connection status
             this.connected = await Network.getStatus()
@@ -191,9 +192,9 @@
             // get new timetable data
             this.getTimetables(true);
 
-            // stop refresh when this.timetable is updated
+            // stop refresh when this.day1 is updated
             this.$watch('timetable', () => {
-                if(this.timetable.error != "STILL_LOADING" && this.timetable.error != "ERR_BAD_REQUEST") {
+                if(this.day1.error != "STILL_LOADING" && this.day1.error != "ERR_BAD_REQUEST") {
                     setTimeout(() => {
                         event.target.complete();
                     }, 200);
@@ -508,16 +509,22 @@
         },
     },
     data() {
+        const slides = Array.from({ length: this.baseIndex * 2 }).map(
+            (el, index) => `Slide ${index}`
+        );
+
         return {
+            slides,
+            currentIndex: this.baseIndex,
             rnButtonString: this.createDateString(this.$rn),
             loadedrnButtonString: this.createDateString(this.$rn),
             rnCalendarString: this.$rn.toISOString().split('T')[0],
-            timetable: [],
-            yesterday: [],
-            tomorrow: [],
+            day0: [],
+            day1: [],
+            day2: [],
+            days: [],
             connected: false,
             shouldResetSwiper: false,
-            days: ['yesterday', 'timetable', 'tomorrow'],
             selectedCourse: {
                 name: '',
                 teacher: '',
@@ -530,6 +537,7 @@
             },
             newCoursModalOpen: false,
             rnPickerModalOpen: false,
+            isChangingDate: false,
         }
     },
     mounted() {
@@ -539,15 +547,11 @@
         // on rnChanged, update rnButtonString
         document.addEventListener('rnChanged', (e) => {
             this.rnButtonString = this.createDateString(e.detail);
+            this.getTimetables(false, e.detail);
         });
 
         // get timetable data
         this.getTimetables();
-
-        // on rnChanged, get new timetable data
-        document.addEventListener('rnChanged', () => {
-            this.getTimetables();
-        });
 
         // on token changed, get new timetable data
         document.addEventListener('tokenUpdated', () => {
@@ -557,40 +561,33 @@
         // detect swiper slide change
         let swiper = this.$refs.swiper.$el.swiper;
 
+        swiper.on('slidePrevTransitionEnd', () => {
+            // update rn
+            this.$rn = new Date(this.$rn.setDate(this.$rn.getDate() - 1));
+            this.rnButtonString = this.createDateString(this.$rn);
+
+            this.isChangingDate = true;
+            this.rnCalendarString = this.$rn.toISOString().split('T')[0];
+        });
+
+        swiper.on('slideNextTransitionEnd', () => {
+            // update rn
+            this.$rn = new Date(this.$rn.setDate(this.$rn.getDate() + 1));
+            this.rnButtonString = this.createDateString(this.$rn);
+
+            this.isChangingDate = true;
+            this.rnCalendarString = this.$rn.toISOString().split('T')[0];
+        });
+
         swiper.on('slideChangeTransitionEnd', () => {
-            setTimeout(() => {
-                // get new rn
-                // check if swiper is on yesterday
-                if(swiper.activeIndex == 0) {
-                    let newRn = new Date(this.$rn);
-                    newRn.setDate(newRn.getDate() - 1);
+            // reset swiper
+            this.resetSwiper()
+            // emit event
+            this.getTimetables();
+        });
 
-                    this.$rn = newRn;
-                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
-
-                    // reset swiper
-                    this.resetSwiper()
-
-                    // emit event
-                    document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
-                }
-
-                // check if swiper is on tomorrow
-                if(swiper.activeIndex == 2) {
-                    // add 1 day to rn
-                    let newRn = new Date(this.$rn);
-                    newRn.setDate(newRn.getDate() + 1);
-
-                    this.$rn = newRn;
-                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
-
-                    // reset swiper
-                    this.resetSwiper()
-
-                    // emit event
-                    document.dispatchEvent(new CustomEvent('rnChanged', { detail: this.$rn }));
-                }
-            }, 0);
+        swiper.on('activeIndexChange', () => {
+            this.currentIndex = swiper.activeIndex;
         });
 
         App.addListener('backButton', () => {
@@ -627,7 +624,7 @@
         </IonToolbar>
       </IonHeader>
       
-      <ion-content :fullscreen="true">
+      <ion-content :fullscreen="true" class="content">
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
@@ -642,10 +639,14 @@
 
         <div id="noTouchZone"></div>
       
-        <swiper :initialSlide="1" ref="swiper" :speed="300" :spaceBetween="10" :preventClicks="true" :effect="'fade'">
-            <swiper-slide v-for="(day, i) in days" :key="i">
-                <IonList>
-                    <CoursElement v-for="cours in $data[`${day}`]" :key="cours.id"
+        <swiper class="swiper" ref="swiper" :modules="[Virtual, EffectCoverflow]" virtual :initialSlide="baseIndex" :speed="200" :spaceBetween="10" :preventClicks="true" effect="coverflow">
+            <swiper-slide
+            v-for="(slideContent, index) in slides"
+            :key="index"
+            :virtualIndex="index"
+            >
+            <IonList>
+                    <CoursElement v-for="cours in days[`${index}`]" :key="cours.id"
                         :subject="cours.data.subject"
                         :teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
                         :rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
@@ -665,31 +666,31 @@
                         @open="openCoursModal(cours)"
                     />
 
-                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && !$data[`${day}`].error && !$data[`${day}`].loading">
-                        <span class="material-symbols-outlined mdls">upcoming</span>
-                        <h2>Aucun cours aujourd'hui</h2>
-                        <p>Sélectionnez un autre jour dans le calendrier ou balayez l'écran.</p>
+                    <div v-if="days[`${index}`]">
+                        <div class="NoCours" v-if="days[`${index}`].length == 0 && !days[`${index}`].error && !days[`${index}`].loading">
+                            <span class="material-symbols-outlined mdls">upcoming</span>
+                            <h2>Aucun cours aujourd'hui</h2>
+                            <p>Sélectionnez un autre jour dans le calendrier ou balayez l'écran.</p>
 
-                        <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                        </div>
+
+                        <div class="NoCours" v-if="days[`${index}`].length == 0 && days[`${index}`].error == 'ERR_NETWORK' && !days[`${index}`].loading && !connected">
+                            <span class="material-symbols-outlined mdls">wifi_off</span>
+                            <h2>Pas de connexion à Internet</h2>
+                            <p>Vous pouvez uniquement consulter les journées déjà chargées préalablement lorsque vous êtes hors-ligne.</p>
+                        </div>
+
+                        <div class="NoCours" v-if="days[`${index}`].length == 0 && days[`${index}`].error == 'ERR_NETWORK' && !days[`${index}`].loading && connected">
+                            <span class="material-symbols-outlined mdls">crisis_alert</span>
+                            <h2>Serveurs indisponibles</h2>
+                            <p>Vous pouvez uniquement consulter les journées déjà chargées préalablement. Nos serveurs seront bientôt de nouveaux disponibles.</p>
+                        </div>
                     </div>
-
-                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].error == 'ERR_NETWORK' && !$data[`${day}`].loading && !connected">
-                        <span class="material-symbols-outlined mdls">wifi_off</span>
-                        <h2>Pas de connexion à Internet</h2>
-                        <p>Vous pouvez uniquement consulter les journées déjà chargées préalablement lorsque vous êtes hors-ligne.</p>
-                    </div>
-
-                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].error == 'ERR_NETWORK' && !$data[`${day}`].loading && connected">
-                        <span class="material-symbols-outlined mdls">crisis_alert</span>
-                        <h2>Serveurs indisponibles</h2>
-                        <p>Vous pouvez uniquement consulter les journées déjà chargées préalablement. Nos serveurs seront bientôt de nouveaux disponibles.</p>
-                    </div>
-
-                    <div class="NoCours" v-if="$data[`${day}`].length == 0 && $data[`${day}`].loading">
-                        <IonSpinner></IonSpinner>
-                        <br/>
-                        <h2>Téléchargement des prochains cours...</h2>
-                        <p>Veuillez patienter pendant que nous récupérons vos cours depuis nos serveurs...</p>
+                    <div v-else>
+                        <div class="loadingSpin">
+                            <IonSpinner></IonSpinner>
+                        </div>
                     </div>
                 </IonList>
             </swiper-slide>
@@ -876,8 +877,18 @@
 </template>
   
 <style scoped>
-    .swiper-slide {
-        min-height: calc(86vh - 56px);
+    .content {
+        overflow: hidden;
+    }
+
+    .loadingSpin {
+        width: 100%;
+        min-height: 40vh;
+        height: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .changeDayButton {
@@ -958,5 +969,11 @@
 
     .md .newCoursModal ion-list {
         padding: 0 15px;
+    }
+
+    .swiper {
+        height: calc(100vh - 54px - env(safe-area-inset-top));
+        
+        overflow: visible;
     }
 </style>

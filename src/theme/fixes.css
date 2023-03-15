@@ -52,3 +52,13 @@ ion-item.animated {
 ion-content::part(scroll) {
     padding-bottom: calc(env(safe-area-inset-bottom) * 3) !important;
 }
+
+.swiper-slide, .swiper-slide-shadow{
+    background: var(--ion-item-background) !important;
+}
+
+.swiper-slide {
+    border-radius: 10px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
