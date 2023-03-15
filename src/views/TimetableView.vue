@@ -1,6 +1,6 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput, IonProgressBar } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput, IonProgressBar, IonChip, alertController } from '@ionic/vue';
 
   import { Share } from '@capacitor/share';
 
@@ -48,7 +48,8 @@
         IonSpinner,
         IonFab,
         IonInput,
-        IonProgressBar
+        IonProgressBar,
+        IonChip,
     },
     setup() {
         return {
@@ -211,11 +212,7 @@
 
             // stop refresh when this.day1 is updated
             this.$watch('timetable', () => {
-                if(this.day1.error != "STILL_LOADING" && this.day1.error != "ERR_BAD_REQUEST") {
-                    setTimeout(() => {
-                        event.target.complete();
-                    }, 200);
-                }
+                event.target.complete();
             });
         },
         getStringToAsciiArray(string) {
@@ -524,6 +521,16 @@
                 });
             });
         },
+        async displayBetaMsg() {
+				const alert = await alertController.create({
+					header: 'Emploi du temps',
+					message: 'Cette page subit actuellement des grands changements. Son comportement pourrait être inhabituel et des bugs peuvent survenir.',
+					mode: 'md',
+					buttons: ['Je comprends']
+				});
+
+				await alert.present();
+		}
     },
     data() {
         const slides = Array.from({ length: this.baseIndex * 2 }).map(
@@ -582,6 +589,8 @@
         swiper.on('slideChangeTransitionEnd', () => {
             // reset swiper
             this.resetSwiper()
+            // isChangingDate
+            this.isChangingDate = true;
             // emit event
             this.getTimetables();
         });
@@ -611,7 +620,7 @@
             <ion-menu-button color="dark" mode="md"></ion-menu-button>
           </ion-buttons>
 
-          <ion-title mode="md">Ma journée</ion-title>
+          <ion-title mode="md">Ma journée<ion-chip class="beta-chip" color="warning" @click="displayBetaMsg()">BETA</ion-chip></ion-title>
 
           <ion-buttons slot="end">
             <ion-button mode="md" id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
