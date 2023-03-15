@@ -65,6 +65,10 @@ begin
 				add_id_info_uses_idfa: false,
 				add_id_info_serves_ads: false,
 				export_compliance_uses_encryption: false,
+				export_compliance_platform: 'ios',
+				export_compliance_compliance_required: false,
+				export_compliance_encryption_updated: false,
+				export_compliance_is_exempt: false,
 			}
 		)
 	end
