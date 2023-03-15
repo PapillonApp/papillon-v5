@@ -477,8 +477,8 @@
             }
 
             if(customizations.color) {
-                document.body.style.setProperty('--ion-color-primary', customizations.color.hex);
-                document.body.style.setProperty('--ion-color-primary-rgb', customizations.color.rgb);
+                document.body.style.setProperty('--ion-color-primary', customizations.color.color.hex);
+                document.body.style.setProperty('--ion-color-primary-rgb', customizations.color.color.rgb);
             }
         }
         

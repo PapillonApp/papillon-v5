@@ -35,7 +35,7 @@
 			PapillonBackButton,
 			IonToggle
 		},
-		data() {
+		setup() {
 			return {
 				availableFonts: [
 					{ name: "Hind (Par défaut)", font: "Hind" },
@@ -89,9 +89,30 @@
 						}
 					},
 				],
+			}
+		},
+		data() {
+			let defaultFont = this.availableFonts[0].font;
+			let defaultColor = this.availableColors[0];
+
+			if(localStorage.getItem('customizations')) {
+				let customizations = JSON.parse(localStorage.getItem('customizations'));
+
+				if(customizations.font) {
+					defaultFont = customizations.font;
+				}
+
+				if(customizations.color) {
+					defaultColor = customizations.color;
+				}
+			}
+
+
+			return {
 				customThemeModeList: localStorage.getItem('customThemeMode') == 'true',
 				currentTheme: localStorage.getItem('themeMode'),
-				currentFont: getComputedStyle(document.body).getPropertyValue('--papillon-font'),
+				currentFont: defaultFont,
+				currentColor: defaultColor,
 			}
 		},
 		methods: {
@@ -119,7 +140,7 @@
 
 				// reset the font select
 				this.currentFont = this.availableFonts[0].font;
-				this.currentColor = this.availableColors[0].color;
+				this.currentColor = this.availableColors[0];
 			},
 			fontChange() {
 				let font = this.$refs.fontSelect.$el.value;
@@ -135,13 +156,12 @@
 				localStorage.setItem('customizations', JSON.stringify(customizations));
 			},
 			colorChange() {
-				let colorName = this.$refs.colorSelect.$el.value;
-				this.currentColor = colorName;
+				let colorHex = this.$refs.colorSelect.$el.value;
 
-				let color = this.availableColors.find(color => color.name == colorName).color;
+				let color = this.availableColors.find((color) => color.color.hex == colorHex);
 
-				document.body.style.setProperty('--ion-color-primary', color.hex);
-				document.body.style.setProperty('--ion-color-primary-rgb', color.rgb);
+				document.body.style.setProperty('--ion-color-primary', color.color.hex);
+				document.body.style.setProperty('--ion-color-primary-rgb', color.color.rgb);
 
 				// save it in local storage
 				let customizations = JSON.parse(localStorage.getItem('customizations')) || {};
@@ -231,12 +251,14 @@
 			if(localStorage.getItem('customizations')) {
 				let customizations = JSON.parse(localStorage.getItem('customizations'));
 
-				if(!customizations.font) {
-					this.currentFont = this.availableFonts[0].font;
+				if(customizations.font) {
+					this.currentFont = customizations.font;
+					
+					this.$refs.fontSelect.$el.value = customizations.font;
 				}
 
-				if(!customizations.color) {
-					this.currentColor = this.availableColors[0].name;
+				if(customizations.color) {
+					this.currentColor = customizations.color;
 				}
 			}
 		}
@@ -286,20 +308,20 @@
 				</ion-radio-group>
 			</IonList>
 
-			<IonList :inset="true" lines="inset">
+			<IonList :inset="true" lines="inset" v-if="availableColors">
 				<ion-list-header>
 					<ion-label><p>Couleur d'accentuation</p></ion-label>
 				</ion-list-header>
-				<ion-radio-group :allow-empty-selection="false" :value="currentColor" ref="colorSelect" @ionChange="colorChange">
+				<ion-radio-group :allow-empty-selection="false" :value="currentColor.color.hex" ref="colorSelect" @ionChange="colorChange">
 					<ion-item :key="i" v-for="(color, i) in availableColors">
 						<div class="colorPreview" :style="`--color: ${color.color.hex};`" slot="start"></div>
 						<ion-label>{{ color.name }}</ion-label>
-						<ion-radio slot="end" :value="color.name"></ion-radio>
+						<ion-radio slot="end" :value="color.color.hex"></ion-radio>
 					</ion-item>
 				</ion-radio-group>
 			</IonList>
 
-			<IonList :inset="true" lines="inset">
+			<IonList :inset="true" lines="inset" v-if="availableFonts">
 				<ion-list-header>
 					<ion-label><p>Police d'écriture</p></ion-label>
 				</ion-list-header>
