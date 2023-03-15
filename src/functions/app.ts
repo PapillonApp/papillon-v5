@@ -61,11 +61,9 @@ function setStyle() {
 import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
 
 function setNavigationBarStyle() {
-	const DarkColor = hslToHex(parseInt(hue), 5, 7);
-
 	if (themeMode === 'dark' || (isDarkMode && themeMode !== 'light')) {
 		NavigationBar.setColor({
-				color: DarkColor,
+				color: "#111112",
 				darkButtons: false
 		});
 	} else {
@@ -77,8 +75,6 @@ function setNavigationBarStyle() {
 }
 
 function updateStatus() {
-	hue = getComputedStyle(document.body).getPropertyValue('--ion-color-primary-hue');
-
 	if (Capacitor.getPlatform() !== 'web') {
 		checkDarkMode();
 
