@@ -569,6 +569,8 @@
 
 	.dark .progressDivEnabled .Status {
 		background-color: #fff !important;
+		color: #000000 !important;
+		opacity: 0.7 !important;
 	}
 
 	.light .progressDivEnabled .Status {
