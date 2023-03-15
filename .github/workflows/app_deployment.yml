@@ -322,7 +322,11 @@ jobs:
           draft: true
           generateReleaseNotes: true
           makeLatest: true
-          body: Release de version ${{ needs.initialize.outputs.VERSION_NUMBER }}
+          body: |
+            **Release de version ${{ needs.initialize.outputs.VERSION_NUMBER }}**
+            - [Android] Version **${{ needs.initialize.outputs.VERSION_NUMBER }}**
+            - [iOS] Version **${{ needs.initialize.outputs.IOS_VERSION }}**
+            - Build  **${{ needs.initialize.outputs.VERSION_CODE }}**
 
       - name: Deploy summary
         run: |
