@@ -159,6 +159,15 @@
 
                 selectedRN.setDate(selectedRN.getDate() - indexDiff);
 
+                // if i is 1
+                if(i == 1) {
+                    this.$rn = selectedRN;
+                    this.rnButtonString = this.createDateString(this.$rn);
+
+                    this.isChangingDate = true;
+                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
+                }
+
                 // get timetable for rn
                 GetTimetable(selectedRN, force).then((timetable) => {
                     if(timetable.error) {
@@ -182,15 +191,6 @@
                         }
                     }
                 });
-
-                // if i is 1
-                if(i == 1) {
-                    this.$rn = selectedRN;
-                    this.rnButtonString = this.createDateString(this.$rn);
-
-                    this.isChangingDate = true;
-                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
-                }
             }
 
             // set connection status
