@@ -117,7 +117,7 @@
 
 				let now = new Date();
 
-				if (now.getUTCDate() != this.start.getUTCDate()) {
+				if (`${now.getUTCDate()}-${now.getMonth()}` != `${this.start.getUTCDate()}-${this.start.getMonth()}`) {
 					if (this.classes.includes("progressDivEnabled")) {
 						this.classes = this.classes.replace("progressDivEnabled", "");
 					}
@@ -139,7 +139,7 @@
 				let now = new Date();
 
 				// if is not today clear interval and reset progress bar to 0
-				if (now.getUTCDate() != this.start.getUTCDate()) {
+				if (`${now.getUTCDate()}-${now.getMonth()}` != `${this.start.getUTCDate()}-${this.start.getMonth()}`) {
 					this.coursPourcent = 0;
 					this.coursPourcentVisible = false;
 					clearInterval(this.intervalUpdateProgressDiv);
