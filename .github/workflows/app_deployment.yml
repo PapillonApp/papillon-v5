@@ -27,6 +27,8 @@ jobs:
         run: |
           ver="$(git describe --tags --dirty)"
           echo "VERSION=${ver}" >> $GITHUB_OUTPUT
+          ios_ver="$(echo $ver | cut -d'-' -f1)"
+          echo "IOS_VERSION=${ios_ver}" >> $GITHUB_OUTPUT
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -48,6 +50,7 @@ jobs:
     outputs:
       VERSION_CODE: ${{ steps.commit-count.outputs.COUNT }}
       VERSION_NUMBER: ${{ steps.version-number.outputs.VERSION }}
+      IOS_VERSION: ${{ steps.version-number.outputs.IOS_VERSION }}
       DEPLOY_TYPE: ${{ steps.deploy-type.outputs.TYPE }}
 
 
@@ -260,6 +263,7 @@ jobs:
           echo "APPLE_DEVELOPER_TEAM_ID=${{ secrets.APPLE_DEVELOPER_TEAM_ID }}" >> $GITHUB_ENV
           echo "APP_VERSION_CODE=${{ needs.initialize.outputs.VERSION_CODE  }}" >> $GITHUB_ENV
           echo "APP_VERSION_NUMBER=${{ needs.initialize.outputs.VERSION_NUMBER }}" >> $GITHUB_ENV
+          echo "APP_IOS_VERSION_NUMBER=${{ needs.initialize.outputs.IOS_VERSION }}" >> $GITHUB_ENV
 
       - name: Download bundle dependencies
         run: |

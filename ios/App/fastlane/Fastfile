@@ -32,7 +32,7 @@ begin
 		upload_to_testflight(
 			api_key: api_key,
 			build_number: ENV['APP_VERSION_CODE'],
-			app_version: ENV['APP_VERSION_NUMBER'],
+			app_version: ENV['APP_IOS_VERSION_NUMBER'],
 			ipa: IPA_LOCATION,
 			skip_waiting_for_build_processing: true
 		)
@@ -54,7 +54,7 @@ begin
 		deliver(
 			api_key: api_key,
 			build_number: ENV['APP_VERSION_CODE'],
-			app_version: ENV['APP_VERSION_NUMBER'],
+			app_version: ENV['APP_IOS_VERSION_NUMBER'],
 			ipa: IPA_LOCATION,
 			submit_for_review: true,
 			automatic_release: true,
@@ -154,7 +154,7 @@ begin
 			teamid: ENV["sigh_plus.pronote.app_appstore_team-id"]
 		)
 
-		increment_version_number(version_number: ENV['APP_VERSION_NUMBER'], xcodeproj: "./App.xcodeproj")
+		increment_version_number(version_number: ENV['APP_IOS_VERSION_NUMBER'], xcodeproj: "./App.xcodeproj")
 		increment_build_number(build_number: ENV['APP_VERSION_CODE'], xcodeproj: "./App.xcodeproj")
 
 		build_app(
