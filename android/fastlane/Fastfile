@@ -63,7 +63,7 @@ begin
     build()
 
     supply(
-      track: 'release',
+      track: 'production',
       package_name: ENV['APP_PACKAGE_NAME'],
       version_code: ENV['APP_VERSION_CODE'],
       release_status: "draft",
