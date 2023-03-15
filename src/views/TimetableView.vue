@@ -145,7 +145,7 @@
             this.day0.error = "STILL_LOADING";
             this.day2.error = "STILL_LOADING";
         },
-        async getTimetables(force, goTo) {
+        async getTimetables(force, goTo, event) {
             let startloading = setTimeout(() => {
                 this.isLoading = true;
             }, 500);
@@ -177,6 +177,10 @@
                     if(i == 2) {
                         clearTimeout(startloading);
                         this.isLoading = false;
+
+                        if(event) {
+                            event.detail.complete();
+                        }
                     }
                     
                     if(timetable.error) {
@@ -208,12 +212,7 @@
         },
         handleRefresh(event) {
             // get new timetable data
-            this.getTimetables(true);
-
-            // stop refresh when this.day1 is updated
-            this.$watch('timetable', () => {
-                event.target.complete();
-            });
+            this.getTimetables(true, false, event);
         },
         getStringToAsciiArray(string) {
             let charCodeArr = [];
