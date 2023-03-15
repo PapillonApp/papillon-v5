@@ -182,6 +182,15 @@
                         }
                     }
                 });
+
+                // if i is 1
+                if(i == 1) {
+                    this.$rn = selectedRN;
+                    this.rnButtonString = this.createDateString(this.$rn);
+
+                    this.isChangingDate = true;
+                    this.rnCalendarString = this.$rn.toISOString().split('T')[0];
+                }
             }
 
             // set connection status
@@ -560,24 +569,6 @@
 
         // detect swiper slide change
         let swiper = this.$refs.swiper.$el.swiper;
-
-        swiper.on('slidePrevTransitionEnd', () => {
-            // update rn
-            this.$rn = new Date(this.$rn.setDate(this.$rn.getDate() - 1));
-            this.rnButtonString = this.createDateString(this.$rn);
-
-            this.isChangingDate = true;
-            this.rnCalendarString = this.$rn.toISOString().split('T')[0];
-        });
-
-        swiper.on('slideNextTransitionEnd', () => {
-            // update rn
-            this.$rn = new Date(this.$rn.setDate(this.$rn.getDate() + 1));
-            this.rnButtonString = this.createDateString(this.$rn);
-
-            this.isChangingDate = true;
-            this.rnCalendarString = this.$rn.toISOString().split('T')[0];
-        });
 
         swiper.on('slideChangeTransitionEnd', () => {
             // reset swiper
