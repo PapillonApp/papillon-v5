@@ -526,8 +526,6 @@
 				</div>
 			</IonList>
 
-			<br /> <br />
-
 			<IonModal ref="gradeModal" :keep-contents-mounted="true" :initial-breakpoint="0.5"
 				:breakpoints="[0, 0.5, 0.9]" :handle="true" :canDismiss="true">
 				<IonHeader>
