@@ -158,7 +158,9 @@ export default defineComponent({
         },
         async openLink(url) {
             await Browser.open({
-                url: url
+                url: url,
+				toolbarColor: '#1e1e1e',
+				presentationStyle: 'popover',
             });
         },
         changernPickerModalOpen(state) {
@@ -300,6 +302,9 @@ export default defineComponent({
 
         // get homeworks data
         this.getHomeworks();
+
+        // force token update
+        this.getHomeworks(true);
 
         // on rnChanged, get new homeworks data
         document.addEventListener('rnChanged', () => {

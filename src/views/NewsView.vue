@@ -46,7 +46,9 @@
             },
             async openLink(url) {
                 await Browser.open({
-                    url: url
+                    url: url,
+					toolbarColor: '#1e1e1e',
+					presentationStyle: 'popover',
                 });
             },
             getNewsRefresh() {

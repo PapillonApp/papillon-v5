@@ -1,6 +1,6 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput, IonProgressBar } from '@ionic/vue';
 
   import { Share } from '@capacitor/share';
 
@@ -47,7 +47,8 @@
         IonLabel,
         IonSpinner,
         IonFab,
-        IonInput
+        IonInput,
+        IonProgressBar
     },
     setup() {
         return {
@@ -144,6 +145,10 @@
             this.day2.error = "STILL_LOADING";
         },
         async getTimetables(force, goTo) {
+            let startloading = setTimeout(() => {
+                this.isLoading = true;
+            }, 500);
+
             for (let i = 0; i < 3; i++) {
                 let index = this.$refs.swiper.$el.swiper.realIndex + (i - 1);
 
@@ -170,6 +175,11 @@
 
                 // get timetable for rn
                 GetTimetable(selectedRN, force).then((timetable) => {
+                    if(i == 2) {
+                        clearTimeout(startloading);
+                        this.isLoading = false;
+                    }
+                    
                     if(timetable.error) {
                         if(timetable.error == "ERR_BAD_REQUEST") {
                             if(this.days[index]) {
@@ -547,6 +557,7 @@
             newCoursModalOpen: false,
             rnPickerModalOpen: false,
             isChangingDate: false,
+            isLoading: true,
         }
     },
     mounted() {
@@ -612,6 +623,8 @@
             </ion-button>
           </ion-buttons>
 
+          <ion-progress-bar type="indeterminate" v-if="isLoading"></ion-progress-bar>
+
         </IonToolbar>
       </IonHeader>
       
@@ -630,7 +643,7 @@
 
         <div id="noTouchZone"></div>
       
-        <swiper class="swiper" ref="swiper" :modules="[Virtual, EffectCoverflow]" virtual :initialSlide="baseIndex" :speed="400" :spaceBetween="0" :preventClicks="true" effect="coverflow">
+        <swiper class="swiper" ref="swiper" :modules="[Virtual, EffectCoverflow]" virtual :initialSlide="baseIndex" :speed="200" :spaceBetween="0" :preventClicks="true" effect="coverflow">
             <swiper-slide
             v-for="(slideContent, index) in slides"
             :key="index"

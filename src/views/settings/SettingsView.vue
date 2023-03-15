@@ -120,7 +120,9 @@
 			},
 			async openURL(url) {
 				await Browser.open({
-					url: url
+					url: url,
+					toolbarColor: '#1e1e1e',
+					presentationStyle: 'popover',
 				});
 			},
 			getContributorsList(){
@@ -305,7 +307,7 @@
 						<h2>Contribuer au projet Papillon</h2>
 					</IonLabel>
 				</IonItem>
-				<IonItem button @click="openURL('https://getpapillon.xyz/privacy.pdf')">
+				<IonItem button @click="openURL('https://docs.getpapillon.xyz/documents/politique-de-confidentialite-et-mentions-legales')">
 					<span class="material-symbols-outlined mdls" slot="start">shield</span>
 					<IonLabel>
 						<p>Document officiel</p>
