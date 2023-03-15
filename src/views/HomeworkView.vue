@@ -303,6 +303,9 @@ export default defineComponent({
         // get homeworks data
         this.getHomeworks();
 
+        // force token update
+        this.getHomeworks(true);
+
         // on rnChanged, get new homeworks data
         document.addEventListener('rnChanged', () => {
             this.getHomeworks();
