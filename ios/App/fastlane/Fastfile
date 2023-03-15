@@ -59,7 +59,8 @@ begin
 			automatic_release: true,
 			force: true, # Skip HTML report verification
 			skip_metadata: true,
-			skip_screenshots: true
+			skip_screenshots: true,
+			precheck_include_in_app_purchases: false
 		)
 	end
 
