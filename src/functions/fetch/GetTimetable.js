@@ -227,7 +227,6 @@ function getEDTimetable(date, forceReload) {
 
             // construct timetable
             timetable = constructEDTimetable(timetable);
-            console.log(timetable)
 
             // cache response
             let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
@@ -239,7 +238,6 @@ function getEDTimetable(date, forceReload) {
             cache.push(cacheElement);
             localStorage.setItem('TimetableCache', JSON.stringify(cache));
 
-            console.log(timetable)
             // return timetable
             return timetable;
         })
