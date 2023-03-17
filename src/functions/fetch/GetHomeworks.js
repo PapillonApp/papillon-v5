@@ -178,7 +178,6 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
     const dayRequestTo = new moment(dateTo);
 
     let newDayRequest = dayRequest.format("YYYY-MM-DD").replace("/", "-").replace("/", "-").replace("/", "-")
-    console.log(newDayRequest)
 
     // get token
     const token = localStorage.getItem('token');
@@ -189,8 +188,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
     const dayStringTo = dayRequestTo.toISOString().split('T')[0];
 
     // construct url (date is a TEST date)
-    let URL = `${EDAPI}/Eleves/${userID}/cahierdetexte/${newDayRequest}.awp?verbe=get`;
-    console.log(URL)
+    let URL = `${EDAPI}/Eleves/${userID}/cahierdetexte.awp?verbe=get`;
     // check if homework is cached
     let cacheSearch = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
     cacheSearch = cacheSearch.filter((element) => {
@@ -211,33 +209,63 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
         };
         let body = `data={}`
 
+        console.log("[REQUEST] [HOMEWORK] Requesting homeworks...")
 
         return axios.post(URL, body, requestOptions)
             .then(async (response) => {
-                if(response.data.code !== 200) {
-                    if (response.data.code == 525) {
-                        // get new token
-                        GetToken();
-                    }
-                    else if (response.data.code == 520) {
+                if (response.data.data.code) {
+                    if (response.data.data.code == 525) {
                         // get new token
                         GetToken();
                     }
                     else {
                         return new Promise((reject) => {
                             reject({
-                                error: response.data.code
+                                error: response.data.data.code
                             });
                         });
                     }
                 }
 
                 // get homework
-                let homeworks = response.data.data;
-                console.log(homeworks)
+                let homeworksdate = response.data.data;
+
+                var all_homeworks = [];
+                
+                console.log("[REQUEST] [HOMEWORK] Requesting content homeworks...")
+
+                Object.keys(homeworksdate).forEach(date => {
+
+                    let URL2 = `${EDAPI}/Eleves/${userID}/cahierdetexte/${date}.awp?verbe=get`;
+
+                    axios.post(URL2, body, requestOptions).then(response2 => {
+                        if (response.data.data.code) {
+                            if (response.data.data.code == 525) {
+                                // get new token
+                                GetToken();
+                            }
+                            else {
+                                return new Promise((reject) => {
+                                    reject({
+                                        error: response.data.data.code
+                                    });
+                                });
+                            }
+                        }
+
+                        let homework = response2.data.data;
+                        let hw_object = {};
+                        hw_object[date] = homework.matieres
+                        all_homeworks.push(hw_object)
+                        console.log(`[${date}] ${JSON.stringify(homework.matieres)}`)
+
+
+                    })
+                })
 
                 // construct homework
-                homeworks = await constructEDHomework(homeworks);
+                all_homeworks = await constructEDHomework(all_homeworks);
+
 
                 // cache response
                 let cache = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
@@ -246,36 +274,22 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                     dateTo: dayStringTo,
                     newDayRequest: newDayRequest,
                     token: token,
-                    homework: JSON.stringify(response.data.data)
+                    homework: JSON.stringify(all_homeworks)
                 };
                 cache.push(cacheElement);
                 localStorage.setItem('HomeworkCache', JSON.stringify(cache));
 
                 // return homeworks
-                return homeworks;
+                return all_homeworks;
             })
-            .catch((error) => {
-                if (error.response) {
-                    if (error.response.data.code == 525) {
-                        // get new token
-                        GetToken();
-                    }
-                }
-
-                if(error.code) {
-                    // return empty timetable in promise
-                    return new Promise((reject) => {
-                        reject({
-                            error: error.code
-                        });
-                    });
-                }
-            });
     }
 }
 
 // ed : construct homework
 function constructEDHomework(hw) {
+
+    console.log("Building homeworks...")
+    console.log(hw)
 
     // declaring vars
     let homeworkArray = [];
