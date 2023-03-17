@@ -607,6 +607,8 @@
 
         background-size: cover;
         background-position: center;
+
+        min-height: 120px;
     }
 
     .ios .userItem {

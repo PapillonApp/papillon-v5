@@ -1,6 +1,6 @@
 <script>
 	import { defineComponent } from 'vue';
-	import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonListHeader, IonLabel, IonItem, actionSheetController, IonNavLink, IonChip, IonSkeletonText, IonSpinner } from '@ionic/vue';
+	import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonListHeader, IonLabel, IonItem, actionSheetController, IonNavLink, IonChip, IonSkeletonText, IonSpinner, IonAvatar } from '@ionic/vue';
 
 	import { Browser } from '@capacitor/browser';
 
@@ -31,7 +31,7 @@
 			IonPage,
 			IonChip,
 			IonSkeletonText,
-			IonSpinner
+			IonAvatar
 		},
 		setup() {
 			return { 
@@ -44,6 +44,7 @@
 		data() {
 			return {
 				contributors: [],
+				contributorsLoading: true,
 				userAvatar: '',
 				ThemeView: ThemeView,
 				OptionsView: OptionsView,
@@ -127,7 +128,10 @@
 			},
 			getContributorsList(){
 				getContributors(5).then((contributors) => {
-					this.contributors = contributors;
+					setTimeout(() => {
+						this.contributors = contributors;
+						this.contributorsLoading = false;
+					}, 1000);
 				});
 			},
 			showChangelog() {
@@ -260,7 +264,7 @@
 					</IonLabel>
 				</IonListHeader>
 
-				<div v-if="contributors != null">
+				<div v-if="contributors != null && !contributorsLoading">
 					<IonItem v-for="(contributor, i) in contributors" :key="i" button @click="openURL(contributor.html_url)">
 						<img :src="contributor.avatar_url" slot="start" class="avatar" />
 						<IonLabel>
@@ -272,13 +276,13 @@
 
 				<div v-else>
 					<IonItem v-for="n in 5" :key="n">
-						<div slot="start" class="avatar" style="margin-left: 5px;">
-							<IonSpinner></IonSpinner>
-						</div>
+						<ion-avatar slot="start" class="avatar">
+							<IonSkeletonText :animated="true" :style="{width: '100%', height: '100%'}"></IonSkeletonText>
+						</ion-avatar>
 
 						<IonLabel>
-							<IonSkeletonText :animated="true" :style="{width: randomTitleWidth[n] + '%'}"></IonSkeletonText>
-							<IonSkeletonText :animated="true" :style="{width: randomTextWidth[n] + '%'}"></IonSkeletonText>
+							<IonSkeletonText :animated="true" :style="{width: randomTitleWidth[n] + '%', height: '12px'}"></IonSkeletonText>
+							<IonSkeletonText :animated="true" :style="{width: randomTextWidth[n] + '%', 'margin-top': '10px'}"></IonSkeletonText>
 						</IonLabel>
 					</IonItem>
 				</div>
