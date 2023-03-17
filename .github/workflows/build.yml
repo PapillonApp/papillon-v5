@@ -3,8 +3,6 @@ name: Build
 on:
   push:
     branches:
-      - master
-      - beta-releases
       - development
   pull_request:
     branches:
