@@ -76,6 +76,17 @@ export default defineComponent({
             this.$refs.rnPickerModal.$el.present();
         },
         editHomeworks(homeworks) {
+            console.log(homeworks);
+
+            // for each homework
+            for (let i = 0; i < homeworks.length; i++) {
+                // set homework to edit
+                let homework = homeworks[i];
+
+                // remove <br/> tags from homework.homework.content
+                homeworks[i].homework.shortContent = homework.homework.shortContent.replace(/[<]br[^>]*[>]/gi,"");
+            }
+
             // set homeworks to edit
             return homeworks;
         },
@@ -104,7 +115,7 @@ export default defineComponent({
                     this.homeworks.error = homeworks.error;
                 } else {
 
-                    this.homeworks = homeworks;
+                    this.homeworks = this.editHomeworks(homeworks);
 
                     this.loadedrnButtonString = this.createDateString(this.$rn);
                     this.homeworks.loading = false;
@@ -120,7 +131,7 @@ export default defineComponent({
             // get homeworks for yesterday
             let yesterdayRN = new Date(this.$rn) - 86400000;
             GetHomeworks(yesterdayRN, yesterdayRN, force).then((homeworks) => {
-                this.yesterday = homeworks;
+                this.yesterday = this.editHomeworks(homeworks);
                 this.yesterday.loading = false;
             });
 
@@ -128,7 +139,7 @@ export default defineComponent({
             let tomorrowRN = new Date(this.$rn);
             tomorrowRN.setDate(tomorrowRN.getDate() + 1);
             GetHomeworks(tomorrowRN, tomorrowRN, force).then((homeworks) => {
-                this.tomorrow = homeworks;
+                this.tomorrow = this.editHomeworks(homeworks);
                 this.tomorrow.loading = false;
             });
 
