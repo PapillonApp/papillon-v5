@@ -17,6 +17,7 @@
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
+	import hapticsController from '@/functions/utils/hapticsController.js';
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	export default defineComponent({
@@ -40,7 +41,14 @@
 			}
 		},
 		methods: {
+			tickClick() {
+				hapticsController.impact({
+					style: 'light'
+				});
+			},
 			changeTick(option) {
+				this.tickClick();
+
 				let el = this.$refs[option];
 				let elChecked = el.$el.checked;
 

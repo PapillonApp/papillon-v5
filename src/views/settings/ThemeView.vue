@@ -18,6 +18,7 @@
 	} from '@ionic/vue';
 
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
+	import hapticsController from '@/functions/utils/hapticsController.js';
 
 	export default defineComponent({
 		name: 'FolderPage',
@@ -117,6 +118,10 @@
 		},
 		methods: {
 			changeTick(option) {
+				hapticsController.impact({
+					style: 'light'
+				});
+
 				let el = this.$refs[option];
 				let elChecked = el.$el.checked;
 
@@ -143,6 +148,10 @@
 				this.currentColor = this.availableColors[0];
 			},
 			fontChange() {
+				hapticsController.impact({
+					style: 'light'
+				});
+
 				let font = this.$refs.fontSelect.$el.value;
 				this.currentFont = font;
 
@@ -156,6 +165,10 @@
 				localStorage.setItem('customizations', JSON.stringify(customizations));
 			},
 			colorChange() {
+				hapticsController.impact({
+					style: 'light'
+				});
+				
 				let colorHex = this.$refs.colorSelect.$el.value;
 
 				let color = this.availableColors.find((color) => color.color.hex == colorHex);
