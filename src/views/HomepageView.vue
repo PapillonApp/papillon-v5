@@ -74,7 +74,7 @@
 				updateTime: null,
 				firstName: '',
 				homeworks: [],
-				hwLoading: false,
+				hwLoading: true,
 				blockChangeDone: false,
 				editMode: false,
 				noCoursesEmoji: this.randomEmoji(),
@@ -83,6 +83,7 @@
 				userName: "",
 				avatar: "",
 				grades: [],
+				gradesLoading: true,
 			}
 		},
 		methods: {
@@ -276,11 +277,14 @@
 			},
 			getRecap(force) {
 				this.ttbloading = true;
-				GetRecap(force).then((recap) => {
+				this.hwLoading = true;
+				this.gradesLoading = true;
 
+				GetRecap(force).then((recap) => {
 					// timetable
 					const timetable = recap.timetable;
 					this.timetable = this.editTimetable(timetable);
+					this.ttbloading = false;
 
 					this.updateTime = setInterval(() => {
 						this.timetable = this.editTimetable(timetable);
@@ -289,10 +293,11 @@
 					// homeworks
 					const homeworks = recap.homeworks;
 					this.homeworks = this.formatHomeworks(homeworks);
+					this.hwLoading = false;
 
 					// grades
 					this.grades = recap.grades.last;
-					this.ttbloading = false;
+					this.gradesLoading = false;
 				});
 			},
 			formatHomeworks(homeworks) {
@@ -545,21 +550,43 @@
 						<ion-button @click="goto('grades')">Voir tout</ion-button>
 					</ion-list-header>
 
-					<ion-item v-for="grade in grades" :key="grade.id">
-						<ion-label :style="`--courseColor: ${grade.subject.color};`">
-							<p><span class="courseColor"></span> {{ grade.subject.name }}</p>
-							<h2>{{ grade.info.description }}</h2>
-						</ion-label>
+					<div v-if="!gradesLoading">
+						<ion-item v-for="grade in grades" :key="grade.id">
+							<ion-label :style="`--courseColor: ${grade.subject.color};`">
+								<p><span class="courseColor"></span> {{ grade.subject.name }}</p>
+								<h2>{{ grade.info.description }}</h2>
+							</ion-label>
 
-						<div slot="end">
-							<ion-label v-if="grade.info.significant">
-								<h2>{{ grade.grade.value }}<small>/{{ grade.grade.out_of }}</small></h2>
-							</ion-label>
-							<ion-label v-else>
-								<h2>{{ grade.info.significantReason }}</h2>
-							</ion-label>
+							<div slot="end">
+								<ion-label v-if="grade.info.significant">
+									<h2>{{ grade.grade.value }}<small>/{{ grade.grade.out_of }}</small></h2>
+								</ion-label>
+								<ion-label v-else>
+									<h2>{{ grade.info.significantReason }}</h2>
+								</ion-label>
+							</div>
+						</ion-item>
+					</div>
+					
+					<div v-if="gradesLoading">
+						<div v-for="i in 2" :key="i">
+							<div class="homepage_divider">
+								<p><ion-skeleton-text :animated="true" style="width: 100px;"></ion-skeleton-text></p>
+								<div class="divider"></div>
+							</div>
+							<ion-item lines="none" v-for="n in 1" :key="n">
+								<ion-label>
+										<p><span class="courseColor"></span><ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text></p>
+										<h2><ion-skeleton-text :animated="true" style="width: 60%;"></ion-skeleton-text></h2>
+									</ion-label>
+
+									<ion-chip slot="end" color="medium">
+										<span class="material-symbols-outlined mdls">schedule</span>
+										<p style="padding-left: 5px;"><ion-skeleton-text :animated="true" style="width: 40px;"></ion-skeleton-text></p>
+									</ion-chip>
+							</ion-item>
 						</div>
-					</ion-item>
+					</div>
 				</ion-list>
 
 				<ion-list id="comp-hw" ref="comp-hw" lines="none" inset="true">
@@ -570,7 +597,7 @@
 						<ion-button @click="goto('homework')">Voir tout</ion-button>
 					</ion-list-header>
 
-					<ion-item-group class="hw_group" v-for="(day, i) in homeworks" :key="i">
+					<div v-if="!hwloading"><ion-item-group class="hw_group" v-for="(day, i) in homeworks" :key="i">
 						<div class="homepage_divider">
 							<p>{{ new Date(day.date).toLocaleString('fr-FR', { weekday: 'long' }) }}</p>
 							<div class="divider"></div>
@@ -593,7 +620,7 @@
 								<p v-else>Demain</p>
 							</ion-chip>
 						</ion-item></router-link>
-					</ion-item-group>
+					</ion-item-group></div>
 
 					<ion-item v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0 && !connected" lines="none">
 						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
@@ -631,7 +658,7 @@
 								<p><ion-skeleton-text :animated="true" style="width: 100px;"></ion-skeleton-text></p>
 								<div class="divider"></div>
 							</div>
-							<ion-item lines="none" v-for="n in 3" :key="n">
+							<ion-item lines="none" v-for="n in 2" :key="n">
 								<ion-label>
 										<p><span class="courseColor"></span><ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text></p>
 										<h2><ion-skeleton-text :animated="true" style="width: 60%;"></ion-skeleton-text></h2>
