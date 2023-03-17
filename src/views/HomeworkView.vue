@@ -40,6 +40,14 @@ export default defineComponent({
         IonCheckbox,
         IonRippleEffect
     },
+    props() {
+        return {
+            hw : {
+                type: String,
+                required: false
+            }
+        }
+    },
     setup() {
         return {            
             minDate: require('@/functions/utils/datetimePicker.js').minCalendarDate(),
@@ -76,8 +84,6 @@ export default defineComponent({
             this.$refs.rnPickerModal.$el.present();
         },
         editHomeworks(homeworks) {
-            console.log(homeworks);
-
             // for each homework
             for (let i = 0; i < homeworks.length; i++) {
                 // set homework to edit
@@ -367,6 +373,22 @@ export default defineComponent({
                 }
             }, 200);
         });
+
+        // if hw prop is set
+        if(this.$route.params.hw) {
+            let encoded = this.$route.params.hw;
+
+            // decode url
+            let decoded = decodeURIComponent(encoded);
+
+            // parse json
+            let parsed = JSON.parse(decoded);
+
+            // open hw
+            setTimeout(() => {
+                this.openHomework(parsed);
+            }, 200);
+        }
     }
 });
 </script>

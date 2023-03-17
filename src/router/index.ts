@@ -17,7 +17,8 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import ('../views/TimetableView.vue')
   },
   {
-    path: '/homework',
+    path: '/homework/:hw?',
+    props: true,
     name: 'Homework',
     component: () => import ('../views/HomeworkView.vue')
   },

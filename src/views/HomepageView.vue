@@ -575,7 +575,7 @@
 							<p>{{ new Date(day.date).toLocaleString('fr-FR', { weekday: 'long' }) }}</p>
 							<div class="divider"></div>
 						</div>
-						<ion-item v-for="homework in day.homeworks" :key="homework.id">
+						<router-link v-for="homework in day.homeworks" :key="homework.id" :to="'/homework/' + encodeURIComponent(JSON.stringify(homework))"><ion-item button>
 							<ion-label :style="`--courseColor: ${homework.data.color};`">
 								<p><span class="courseColor"></span> {{ homework.homework.subject }}</p>
 								<h2>{{ homework.homework.content }}</h2>
@@ -592,7 +592,7 @@
 								<p v-else-if="homework.data.timeLeft < 0">Aujourd'hui</p>
 								<p v-else>Demain</p>
 							</ion-chip>
-						</ion-item>
+						</ion-item></router-link>
 					</ion-item-group>
 
 					<ion-item v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0 && !connected" lines="none">
@@ -906,5 +906,9 @@
 	.CoursInfo.room {
 		opacity: 100%;
 		font-weight: 600;
+	}
+
+	.hw_group a {
+		text-decoration: none !important;
 	}
 </style>
