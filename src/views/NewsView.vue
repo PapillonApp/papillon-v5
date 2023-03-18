@@ -57,8 +57,8 @@
                 })
             },
             searchNews() {
-                let search1 = this.$refs.searchBarIos.$el.value;
-                let search2 = this.$refs.searchBarMd.$el.value;
+                let search1 = this.$refs.searchBar.$el.value;
+                let search2 = this.$refs.searchBar.$el.value;
                 let news = this.fullNews;
 
                 if (search1 == "" && search2 == "") {
@@ -117,7 +117,7 @@
           <ion-title mode="md">Actualités</ion-title>
         </IonToolbar>
         <IonToolbar>
-            <ion-searchbar ref="searchBarMd" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></ion-searchbar>
+            <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></ion-searchbar>
         </IonToolbar>
       </IonHeader>
       
