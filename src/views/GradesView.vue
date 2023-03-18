@@ -5,6 +5,7 @@
 		IonContent,
 		IonToolbar,
 		IonTitle,
+		IonText,
 		IonMenuButton,
 		IonPage,
 		IonButtons,
@@ -49,7 +50,8 @@
 			IonSegment,
 			IonSegmentButton,
 			IonSpinner,
-			IonSelect
+			IonSelect,
+			IonText
 		},
 		data() {
 			let gradesDisplay = localStorage.getItem('gradesDisplay') || 'grid';
@@ -130,6 +132,35 @@
 							this.$refs.segment.$el.value = this.base_period.id;
 						});
 				}
+			},
+			getClosestGradeEmoji(subjectName) {
+				let gradeEmojiList = {
+					'numerique': '💻',
+					'moral': '⚖️',
+					'sport': '🏀',
+					'econo': '📈',
+					'francais': '📚',
+					'anglais': '🇬🇧',
+					'allemand': '🇩🇪',
+					'espagnol': '🇪🇸',
+					'latin': '🇮🇹',
+					'histoire': '📜',
+					'llc': '🌍',
+					'scientifique': '🔬',
+					'arts': '🎨',
+					'philosophie': '🤔',
+					'math': '📐',
+					'phys': '🧪',
+					'accomp': '👨‍🏫',
+					'default': '📝'
+				}
+
+				// get emoji with key in subject name
+				let closest = Object.keys(gradeEmojiList).reduce((a, b) => {
+					return subjectName.toLowerCase().includes(a) ? a : b
+				});
+
+				return gradeEmojiList[closest];
 			},
 			openAverageModal(subject) {
 				this.selectedMark = {
@@ -483,6 +514,8 @@
 
 				<ion-list lines="none" class="gradesList" v-if="display == 'list'">
 					<ion-item class="gradeItem" v-for="(mark, i) in subject.marks" v-bind:key="i" @click="openGradeModal(mark, subject.color)" button detail="false">
+						<ion-text slot="start" class="emoji">{{ getClosestGradeEmoji(subject.name) }}</ion-text>
+
 						<ion-label>
 							<h2>{{ mark.info.description }}</h2>
 							<p>{{ new Date(mark.info.date).toLocaleString('fr-FR', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>
