@@ -718,6 +718,10 @@
 </template>
 
 <style scoped>
+	.emoji {
+		font-size: 1.3rem;
+	}
+
 	.subject {
 		overflow: hidden;
 		border-radius: 10px !important;
