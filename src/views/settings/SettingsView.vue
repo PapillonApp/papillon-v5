@@ -366,9 +366,6 @@
 
 	.next-md-icon {
 		opacity: 0.5;
-		background-color: transparent !important;
-		margin-right: 0px !important;
-		padding: 0px !important;
 	}
 
 	ion-item .mdls[slot=start] {
