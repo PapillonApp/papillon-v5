@@ -367,4 +367,17 @@
 	.next-md-icon {
 		opacity: 0.5;
 	}
+
+	ion-item .mdls {
+		width: auto;
+		padding: 7px;
+		background-color: #00000022;
+		border-radius: 300px;
+
+		margin-right: 20px;
+	}
+
+	.dark ion-item .mdls {
+		background-color: #ffffff22;
+	}
 </style>

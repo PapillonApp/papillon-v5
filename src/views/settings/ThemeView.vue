@@ -404,4 +404,17 @@
 		border-radius: 300px;
 		border: calc(var(--offset) / 2) solid var(--color);
 	}
+
+	ion-item .mdls {
+		width: auto;
+		padding: 7px;
+		background-color: #00000022;
+		border-radius: 300px;
+
+		margin-right: 20px;
+	}
+
+	.dark ion-item .mdls {
+		background-color: #ffffff22;
+	}
 </style>
