@@ -394,7 +394,6 @@ function constructPronoteGrades(grades) {
 
 	// order all subjects by first mark date
 	markArray.sort((a, b) => {
-		console.log(a, b);
 		return new Date(a.marks[0].date) - new Date(b.marks[0].date);
 	});
 
