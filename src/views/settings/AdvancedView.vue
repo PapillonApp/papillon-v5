@@ -267,7 +267,7 @@
 	ion-item .mdls[slot=start] {
 		width: auto;
 		padding: 7px;
-		background-color: #00000022;
+		background-color: #00000012;
 		border-radius: 300px;
 
 		margin-right: 20px;
