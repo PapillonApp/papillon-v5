@@ -3,6 +3,8 @@
 
     import Values from 'values.js'
 
+    import { Browser } from '@capacitor/browser';
+
     const { BackgroundFetch } = require("@transistorsoft/capacitor-background-fetch");
 
     import { Capacitor } from '@capacitor/core';
@@ -70,6 +72,7 @@
         return {
             loggedIn: localStorage.loggedIn,
             dataLoading: true,
+            connectedToServer: 'pause',
             userData: {
                 student: {
                     name: '',
@@ -160,6 +163,13 @@
         }
     },
     methods: {
+        async openURL(url: string) {
+			await Browser.open({
+					url: url,
+					toolbarColor: '#1e1e1e',
+					presentationStyle: 'popover',
+			});
+		},
         checkAndroidShortcuts() {
             AndroidShortcuts.isDynamicSupported().then((result) => {
                 if (result) {
@@ -406,6 +416,26 @@
             this.getUserData();
         }
 
+        let lastRefesh = new Date();
+
+        document.addEventListener('connectionState', (e: any) => {
+            let state = e.detail;
+            this.connectedToServer = state;
+
+            lastRefesh = new Date();
+        });
+
+        // check if lastRefesh is older than 5 minutes
+        setInterval(() => {
+            let now = new Date();
+            let diff = now.getTime() - lastRefesh.getTime();
+            let minutes = Math.floor((diff/1000)/60);
+
+            if(minutes >= 5) {
+                this.connectedToServer = "paused";
+            }
+        }, 1000);
+
         document.addEventListener('tokenUpdated', () => {
             this.getUserData();
         });
@@ -438,15 +468,18 @@
         // check internet connection
         window.addEventListener('online', () => {
             this.presentToast('Vous êtes de nouveau connecté.','Certaines informations nécessiteront peut-être un rafraîchissement.', 'success', globeOutline)
+            document.dispatchEvent(new CustomEvent('connectionState', { detail: 'paused' }));
         });
 
         window.addEventListener('offline', () => {
             this.presentToast('Vous n\'êtes plus connecté à Internet.', 'Vous n\'aurez accès qu\'aux informations déjà téléchargées.', 'danger', globeOutline)
+            document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
         });
 
         // check if online
         if(!navigator.onLine) {
             this.presentToast('Vous n\'êtes pas connecté à Internet.', 'Vous n\'aurez accès qu\'aux informations déjà téléchargées.', 'danger', globeOutline)
+            document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
         }
 
         this.askNotifPerms();
@@ -529,7 +562,7 @@
                 </div>
             </div>
         </ion-header>
-        <ion-content mode="md">
+        <ion-content mode="md" class="menuContent">
           <ion-list id="inbox-list"> 
             <router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
                 <ion-item button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
@@ -537,6 +570,30 @@
                     <ion-label>{{ p.title }}</ion-label>
                 </ion-item>
             </router-link>
+          </ion-list>
+
+          <ion-list id="bottomActionsList"> 
+            <ion-item @click="openURL('https://docs.getpapillon.xyz')" button mode="md" lines="none" :detail="false">
+                <span class="material-symbols-outlined mdls" slot="start">support</span>
+                <ion-label>Aide de Papillon</ion-label>
+            </ion-item>
+            <ion-item button mode="md" lines="none" :detail="false">
+                <span class="material-symbols-outlined mdls" slot="start">dns</span>
+                <ion-label>Connexion au serveur</ion-label>
+
+                <ion-chip slot="end" color="success" v-if="connectedToServer == 'connected'">
+                    <ion-label>Connecté</ion-label>
+                </ion-chip>
+                <ion-chip slot="end" color="warning" v-else-if="connectedToServer == 'connecting'">
+                    <ion-label>Reconnexion</ion-label>
+                </ion-chip>
+                <ion-chip slot="end" color="danger" v-else-if="connectedToServer == 'disconnected'">
+                    <ion-label>Déconnecté</ion-label>
+                </ion-chip>
+                <ion-chip slot="end" color="medium" v-else>
+                    <ion-label>En pause</ion-label>
+                </ion-chip>
+            </ion-item>
           </ion-list>
         </ion-content>
       </ion-menu>
@@ -748,6 +805,12 @@
         isolation: isolate;
     }
 
+    ion-menu ion-item ion-chip {
+        margin: 0;
+        margin-right: -10px;
+        margin-left: 5px;
+    }
+
     ion-menu ion-item {
         color: var(--ion-color-step-500);
         margin-bottom: 2px;
@@ -877,5 +940,24 @@
 
     .update ion-list {
         margin-bottom: 30px;
+    }
+
+    .menuContent {
+        overflow: hidden !important;
+    }
+
+    #bottomActionsList {
+        width: 100%;
+        background: var(--ion-background-color);
+
+        position: fixed;
+        padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+        padding-top: 10px;
+
+        bottom: 0;
+        left: 0;
+
+        padding-left: 10px;
+        padding-right: 10px;
     }
 </style>

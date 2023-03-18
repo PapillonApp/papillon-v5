@@ -54,6 +54,8 @@ function getPronoteLogin() {
             refresh
         )
 
+        document.dispatchEvent(new CustomEvent('connectionState', { detail: 'connecting' }));
+
         // get token from API
         return fetch(API + "/generatetoken", requestOptions)
         .then(response => response.json())
@@ -68,6 +70,7 @@ function getPronoteLogin() {
 
                 // broadcast event to document
                 document.dispatchEvent(new CustomEvent('tokenUpdated'));
+                document.dispatchEvent(new CustomEvent('connectionState', { detail: 'connected' }));
 
                 // set waitingForToken to false
                 waitingForToken = false;
@@ -91,6 +94,8 @@ function getPronoteLogin() {
                 }
                 // redirect to login page
                 console.error('[Get Token]: Return to login page - ' + result);
+
+                document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
             }
         })
         .catch(error => {

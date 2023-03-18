@@ -64,6 +64,8 @@ function getPronoteTimetable(date, forceReload) {
             cache.push(cacheElement);
             localStorage.setItem('TimetableCache', JSON.stringify(cache));
 
+            document.dispatchEvent(new CustomEvent('connectionState', { detail: 'connected' }));
+
             // return timetable
             return timetable;
         })
@@ -73,10 +75,14 @@ function getPronoteTimetable(date, forceReload) {
                 if (error.response.data == "notfound") {
                     // get new token
                     GetToken();
+
+                    document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
                 }
                 else if (error.response.data == "expired") {
                     // get new token
                     GetToken();
+
+                    document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
                 }
             }
 
