@@ -243,16 +243,16 @@ ion-item .mdls[slot="start"] {
     font-weight: 600 !important;
 }
 
-.ios .NoCours {
+.NoCours {
     padding: 18px 32px;
     align-items: center;
 }
 
-.ios .NoCours * {
+.NoCours * {
     text-align: center;
 }
 
-.ios .NoCours .button {
+.NoCours .button {
     margin-left: 0;
 }
 
