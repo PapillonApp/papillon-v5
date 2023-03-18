@@ -144,6 +144,7 @@
 					'allemand': '🇩🇪',
 					'espagnol': '🇪🇸',
 					'latin': '🇮🇹',
+					'italien': '🇮🇹',
 					'histoire': '📜',
 					'llc': '🌍',
 					'scientifique': '🔬',
@@ -152,6 +153,9 @@
 					'math': '📐',
 					'phys': '🧪',
 					'accomp': '👨‍🏫',
+					'tech': '🔧',
+					'musique': '🎼',
+					'vie': '🌱',
 					'default': '📝'
 				}
 
