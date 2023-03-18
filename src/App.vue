@@ -579,7 +579,7 @@
             </ion-item>
             <ion-item button mode="md" lines="none" :detail="false">
                 <span class="material-symbols-outlined mdls" slot="start">dns</span>
-                <ion-label>Connexion au serveur</ion-label>
+                <ion-label>Serveur</ion-label>
 
                 <ion-chip slot="end" color="success" v-if="connectedToServer == 'connected'">
                     <ion-label>Connecté</ion-label>
