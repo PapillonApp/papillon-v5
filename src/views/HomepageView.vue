@@ -729,7 +729,7 @@
 		margin-top: -40px;
 		z-index: 99999;
 
-		padding: 0px 14px;
+		padding: 0px 15px;
 	}
 
 	.nextCours {
