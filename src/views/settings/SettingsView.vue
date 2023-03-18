@@ -228,7 +228,7 @@
 					<IonItem button>
 						<span class="material-symbols-outlined mdls" slot="start">palette</span>
 						<IonLabel class="ion-text-wrap">
-							<h2>Personnaliser Papillon</h2>
+							<h2>Apparence de Papillon</h2>
 							<p>Ouvrir le menu de customisation de l'app</p>
 						</IonLabel>
 						<span class="only-md next-md-icon material-symbols-outlined mdls" slot="end">navigate_next</span>
@@ -368,7 +368,7 @@
 		opacity: 0.5;
 	}
 
-	ion-item .mdls {
+	ion-item .mdls[slot=start] {
 		width: auto;
 		padding: 7px;
 		background-color: #00000022;
@@ -377,7 +377,7 @@
 		margin-right: 20px;
 	}
 
-	.dark ion-item .mdls {
+	.dark ion-item .mdls[slot=start] {
 		background-color: #ffffff22;
 	}
 </style>

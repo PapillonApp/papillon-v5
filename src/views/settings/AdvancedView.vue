@@ -264,7 +264,7 @@
 		padding-left: 15px;
 	}
 
-	ion-item .mdls {
+	ion-item .mdls[slot=start] {
 		width: auto;
 		padding: 7px;
 		background-color: #00000022;
@@ -273,7 +273,7 @@
 		margin-right: 20px;
 	}
 
-	.dark ion-item .mdls {
+	.dark ion-item .mdls[slot=start] {
 		background-color: #ffffff22;
 	}
 </style>

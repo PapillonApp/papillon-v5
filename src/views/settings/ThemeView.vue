@@ -89,7 +89,7 @@
 							hex: '#C53333',
 							rgb: '197, 51, 51',
 						}
-					},
+					}
 				],
 			}
 		},
@@ -287,7 +287,7 @@
 					<PapillonBackButton></PapillonBackButton>
 				</ion-buttons>
 
-				<ion-title mode="md">Personnaliser Papillon</ion-title>
+				<ion-title mode="md">Apparence de Papillon</ion-title>
 
 				<ion-buttons slot="end">
 					<IonButton @click="reset()">Réinitialiser</IonButton>
@@ -322,15 +322,15 @@
 				</ion-radio-group>
 			</IonList>
 
-			<IonList :inset="true" lines="inset" v-if="availableColors">
+			<IonList :inset="true" lines="none" v-if="availableColors">
 				<ion-list-header>
 					<ion-label><p>Couleur d'accentuation</p></ion-label>
 				</ion-list-header>
-				<ion-radio-group :allow-empty-selection="false" :value="currentColor.color.hex" ref="colorSelect" @ionChange="colorChange">
+				<ion-radio-group mode="md" :allow-empty-selection="false" :value="currentColor.color.hex" ref="colorSelect" @ionChange="colorChange" id="colorSelect">
 					<ion-item :key="i" v-for="(color, i) in availableColors">
-						<div class="colorPreview" :style="`--color: ${color.color.hex};`" slot="start"></div>
-						<ion-label>{{ color.name }}</ion-label>
-						<ion-radio slot="end" :value="color.color.hex"></ion-radio>
+						<div class="preRadio">
+							<ion-radio mode="md" class="radioColorPreview" :style="`--color: ${color.color.hex};`" :value="color.color.hex"></ion-radio>
+						</div>
 					</ion-item>
 				</ion-radio-group>
 			</IonList>
@@ -416,5 +416,36 @@
 
 	.dark ion-item .mdls {
 		background-color: #ffffff22;
+	}
+
+	#colorSelect {
+		display: flex;
+		justify-content: space-between;
+
+		width: calc(100% - 15px * 2);
+		margin: 5px 15px;
+
+		margin-top: 0px;
+	}
+
+	#colorSelect ion-item {
+		width: 48px;
+		--inner-padding-end: 0;
+	}
+
+	.preRadio {
+		width: 100%;
+		height: 100%;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	#colorSelect ion-item::part(native) {
+		--background: transparent;
+		border-radius: 300px;
+
+		padding: 0;
 	}
 </style>
