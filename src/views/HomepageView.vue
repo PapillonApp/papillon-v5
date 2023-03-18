@@ -574,23 +574,18 @@
 					</div>
 					
 					<div v-if="gradesLoading">
-						<div v-for="i in 2" :key="i">
-							<div class="homepage_divider">
-								<p><ion-skeleton-text :animated="true" style="width: 100px;"></ion-skeleton-text></p>
-								<div class="divider"></div>
-							</div>
-							<ion-item lines="none" v-for="n in 1" :key="n">
-								<ion-label>
-										<p><span class="courseColor"></span><ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text></p>
-										<h2><ion-skeleton-text :animated="true" style="width: 60%;"></ion-skeleton-text></h2>
-									</ion-label>
+						<ion-item v-for="grade in 3" :key="grade">
+							<ion-label>
+								<p><span class="courseColor"></span><ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text></p>
+								<h2><ion-skeleton-text :animated="true" style="width: 60%;"></ion-skeleton-text></h2>
+							</ion-label>
 
-									<ion-chip slot="end" color="medium">
-										<span class="material-symbols-outlined mdls">schedule</span>
-										<p style="padding-left: 5px;"><ion-skeleton-text :animated="true" style="width: 40px;"></ion-skeleton-text></p>
-									</ion-chip>
-							</ion-item>
-						</div>
+							<div slot="end">
+								<ion-label>
+									<h2><ion-skeleton-text :animated="true" style="width: 40px;"></ion-skeleton-text></h2>
+								</ion-label>
+							</div>
+						</ion-item>
 					</div>
 				</ion-list>
 
