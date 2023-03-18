@@ -18,7 +18,8 @@
 		IonSegmentButton,
 		IonModal,
 		IonSearchbar,
-		IonSpinner
+		IonSpinner,
+		IonSelect
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -47,10 +48,14 @@
 			IonSkeletonText,
 			IonSegment,
 			IonSegmentButton,
-			IonSpinner
+			IonSpinner,
+			IonSelect
 		},
 		data() {
+			let gradesDisplay = localStorage.getItem('gradesDisplay') || 'grid';
+
 			return {
+				display: gradesDisplay,
 				grades: [],
 				fullGrades: [],
 				averages: [],
@@ -157,6 +162,12 @@
 				});
 
 				return grades;
+			},
+			changeDisplay(e) {
+				let val = e.detail.value;
+				this.display = val;
+
+				localStorage.setItem('gradesDisplay', val);
 			},
 			setExcludedJoinSubject(subjectName) {
 				let excludedGroupSubjects = localStorage.getItem('excludedGroupSubjects');
@@ -363,7 +374,14 @@
 
 				<ion-title mode="md">Notes</ion-title>
 
-				<ion-spinner slot="end" v-if="isLoading"></ion-spinner>
+				<ion-buttons class="endBtns" slot="end">
+					<ion-spinner v-if="isLoading"></ion-spinner>
+
+					<ion-select @ionChange="changeDisplay($event)" interface="popover" placeholder="Affichage" :value="display">
+						<ion-select-option value="grid">Vue grille</ion-select-option>
+						<ion-select-option value="list">Vue liste</ion-select-option>
+					</ion-select>
+				</ion-buttons>
 			</IonToolbar>
 			<IonToolbar>
 				<ion-segment v-if="periods.length > 0 && changePeriodSelection" id="segment" :value="current_period.id"
@@ -418,8 +436,7 @@
 					<p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
 				</div>
 
-				<div class="grades">
-
+				<div class="grades" v-if="display == 'grid'">
 					<ion-card class="grade" v-for="(mark, i) in subject.marks" v-bind:key="i" @click="openGradeModal(mark, subject.color)">
 						<div class="myGrade">
 							<p class="name">{{ mark.info.description }}</p>
@@ -462,8 +479,25 @@
 						</div>
 
 					</ion-card>
-
 				</div>
+
+				<ion-list lines="none" class="gradesList" v-if="display == 'list'">
+					<ion-item class="gradeItem" v-for="(mark, i) in subject.marks" v-bind:key="i" @click="openGradeModal(mark, subject.color)" button detail="false">
+						<ion-label>
+							<h2>{{ mark.info.description }}</h2>
+							<p>{{ new Date(mark.info.date).toLocaleString('fr-FR', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>
+							<h4>Coeff. : {{mark.grade.coefficient}}</h4>
+						</ion-label>
+
+						<ion-label slot="end" class="markLabel">
+							<h2 v-if="mark.info.significant && !mark.grade.updated_value">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></h2>
+							<h2 v-else-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.updated_value}}<small>/{{mark.grade.updated_out_of}}</small></h2>
+							
+							<!-- si absent -->
+							<h2 v-if="!mark.info.significant">{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></h2>
+						</ion-label>
+					</ion-item>
+				</ion-list>
 			</ion-card>
 
 			<div v-if="!isLoading">
@@ -647,6 +681,13 @@
 </template>
 
 <style scoped>
+	.subject {
+		overflow: hidden;
+		border-radius: 10px !important;
+
+		--ion-item-background: transparent;
+	}
+
 	.subject-name {
 		display: flex;
 		justify-content: space-between;
@@ -822,7 +863,7 @@
 	}
 
 	ion-spinner {
-		margin-right: 20px;
+		margin-right: 0px;
 	}
 
 	.markToolbar {
@@ -840,5 +881,18 @@
 
 	.markToolbar p {
 		margin-bottom: 2px !important;
+	}
+
+	ion-buttons.endBtns {
+		margin-right: 10px;
+	}
+
+	.gradeItem:last-child::part(native) {
+		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: 10px;
+	}
+
+	.gradeItem .markLabel h2 {
+		font-weight: 500 !important;
 	}
 </style>

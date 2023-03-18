@@ -209,6 +209,11 @@ function constructPronoteGrades(grades) {
 
 	let markArray = [];
 
+	// order marks by date
+	marks.sort((a, b) => {
+		return new Date(b.date) - new Date(a.date);
+	});
+
 	// for each mark, add it to the corresponding subject in the array
 	marks.forEach(mark => {
 		// check if subject exists
@@ -387,15 +392,10 @@ function constructPronoteGrades(grades) {
 		}
 	}
 
-	// order all subjects by date
-	markArray.forEach(subject => {
-		subject.marks.sort((a, b) => {
-			return new Date(b.info.date) - new Date(a.info.date);
-		});
-	});
-
+	// order all subjects by first mark date
 	markArray.sort((a, b) => {
-		return a.name.localeCompare(b.name);
+		console.log(a, b);
+		return new Date(a.marks[0].date) - new Date(b.marks[0].date);
 	});
 
 
