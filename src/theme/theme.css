@@ -41,7 +41,7 @@ ion-content::-webkit-scrollbar {
 }
 
 :root {
-    --papillon-font: 'Hind';
+    --papillon-font: 'Golos Text';
     --ion-box-shadow: 0 1px 2px #00000005, 0 2px 6px #00000005;
 }
 
@@ -54,11 +54,6 @@ h1, h2, h3 {
 }
 
 ion-title, h2, h3 {
-    font-weight: 600 !important;
-}
-
-.ios ion-title.md {
-    font-size: 18px;
     font-weight: 600 !important;
 }
 
@@ -119,6 +114,7 @@ body.dark #rnPickerModalButton {
     letter-spacing: normal;
 
     margin-right: 3px;
+    font-family: var(--papillon-font);
 }
 
 #rnPickerModalButton.ios {
@@ -212,19 +208,34 @@ ion-item .mdls[slot="start"] {
     border-radius: 300px;
 }
 
+.NoCours h1 {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 42px;
+    line-height: 50px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
 .NoCours h2 {
-    font-size: 28px;
-    line-height: 26px;
-    font-weight: 400 !important;
-    margin-bottom: 5px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 22px;
+    text-align: center;
+    margin-bottom: 8px;
 }
 
 .NoCours p {
-    font-size: 16px;
-    line-height: 16px;
+    font-style: normal;
     font-weight: 400;
-    margin-top: 10px;
+    font-size: 16px;
+    line-height: 18px;
+    text-align: center;
     opacity: 50%;
+    font-family: var(--papillon-font) !important;
 }
 
 .NoCours .button {
@@ -289,9 +300,25 @@ ion-toast::part(message) {
     font-size: 15px;
 }
 
-ion-header ion-toolbar ion-title.md {
-    font-size: 20px;
+ion-header {
+    --ion-toolbar-border-color: transparent !important;
+    box-shadow: 0px 1px 2px #00000010;
+}
+
+ion-header ion-toolbar ion-title {
+    font-size: 17px;
+    font-weight: 500 !important;
+}
+
+ion-header ion-toolbar ion-title ion-chip {
+    margin-left: 10px;
     font-weight: 600;
+    font-size: 14px;
+    margin-top: 1px !important;
+}
+
+.ios ion-header ion-toolbar ion-title {
+    margin-top: -1px;
 }
 
 .toast-small {

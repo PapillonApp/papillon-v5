@@ -47,7 +47,6 @@
 			IonSkeletonText,
 			IonSegment,
 			IonSegmentButton,
-			IonSearchbar,
 			IonSpinner
 		},
 		data() {
@@ -366,9 +365,13 @@
 
 				<ion-spinner slot="end" v-if="isLoading"></ion-spinner>
 			</IonToolbar>
-			<IonToolbar class="only-md">
-				<IonSearchbar ref="searchBarMd" placeholder="Chercher une matière..." @ionChange="searchGrades()">
-				</IonSearchbar>
+			<IonToolbar>
+				<ion-segment v-if="periods.length > 0 && changePeriodSelection" id="segment" :value="current_period.id"
+				ref="segment" @ionChange="segChange()">
+					<ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.id" :id="period.id">
+						<ion-label>{{period.name}}</ion-label>
+					</ion-segment-button>
+				</ion-segment>
 			</IonToolbar>
 		</IonHeader>
 
@@ -377,24 +380,7 @@
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
 
-			<IonHeader collapse="condense">
-				<IonToolbar>
-					<ion-title size="large">Notes</ion-title>
-				</IonToolbar>
-				<IonToolbar>
-					<IonSearchbar ref="searchBarIos" placeholder="Chercher une matière..." @ionChange="searchGrades()">
-					</IonSearchbar>
-				</IonToolbar>
-			</IonHeader>
-
 			<div id="noTouchZone"></div>
-
-			<ion-segment v-if="periods.length > 0 && changePeriodSelection" id="segment" :value="current_period.id"
-				ref="segment" @ionChange="segChange()">
-				<ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.id" :id="period.id">
-					<ion-label>{{period.name}}</ion-label>
-				</ion-segment-button>
-			</ion-segment>
 
 			<div v-if="isLoading">
 				<ion-card class="subject" v-for="i in 6" v-bind:key="i">
@@ -824,6 +810,8 @@
 	.ios #segment {
 		width: calc(100vw - 24px);
 		margin: 0 12px;
+
+		margin-top: -12px;
 	}
 
 	.md .grade {

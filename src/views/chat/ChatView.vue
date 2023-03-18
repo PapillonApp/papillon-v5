@@ -203,7 +203,7 @@
 
 <template>
 	<ion-page ref="page">
-		<IonHeader class="AppHeader" translucent collapse="fade">
+		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
 
 				<ion-buttons slot="start">
@@ -219,12 +219,6 @@
 			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
-
-			<IonHeader collapse="condense">
-				<IonToolbar>
-					<ion-title size="large">Conversations</ion-title>
-				</IonToolbar>
-			</IonHeader>
 
 			<IonFab slot="fixed" vertical="bottom" horizontal="end" class="newCoursBtnFab">
 				<ion-button @click="startNewChat()" size="large" shape="round" class="newCoursBtn" mode="md">

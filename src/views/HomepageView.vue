@@ -431,29 +431,26 @@
 
 <template>
 	<ion-page ref="page">
-		<IonHeader class="AppHeader" collapse="fade">
+		<IonHeader class="AppHeader">
 			<IonToolbar>
-
 				<ion-buttons slot="start">
-					<ion-menu-button color="dark" mode="md"></ion-menu-button>
+					<ion-menu-button mode="md"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Vue d'ensemble <ion-chip class="beta-chip" color="warning" @click="displayBetaMsg()">BETA</ion-chip></ion-title>
+				<ion-title mode="md">Vue d'ensemble</ion-title>
+			</IonToolbar>
+
+			<IonToolbar class="nextToolbar">
+				
 			</IonToolbar>
 		</IonHeader>
 
-		<ion-content :fullscreen="true">
-			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
-				<ion-refresher-content></ion-refresher-content>
-			</ion-refresher>
-
-			<div id="components" ref="components">
-				<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
-					<ion-ripple-effect></ion-ripple-effect>
+		<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
 					<div class="coursElemNext" v-for="cours in timetable" :key="cours.id" :style="`--courseColor: ${cours.course.color};`">
 						<ion-item class="nextCours"  lines="none"
 							@click="goto('timetable')" 
 							:class="{ cancelled: cours.status.isCancelled, HasStatus: cours.hasStatus }">
+							<ion-ripple-effect></ion-ripple-effect>
 							<div slot="start">
 								<IonChip>
 									{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}
@@ -541,6 +538,14 @@
 						</ion-label>
 					</ion-item>
 				</ion-list>
+
+		<ion-content :fullscreen="true">
+			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+				<ion-refresher-content></ion-refresher-content>
+			</ion-refresher>
+
+			<div id="components" ref="components">
+				
 
 				<ion-list id="comp-grades" ref="comp-grades" lines="none" inset="true" class="hw_group">
 					<ion-list-header>
@@ -707,9 +712,41 @@
 		font-family: var(--papillon-font);
 	}
 
+	.nextToolbar {
+		height: 40px;
+		overflow: visible;
+	}
+
+	.nextToolbar .toolbar-container {
+		overflow: visible;
+	}
+
 	.nextCourse {
-		border-radius: 12px !important;
-		overflow: hidden;
+		overflow: visible;
+		background: none;
+		padding: 0;
+
+		margin-top: -40px;
+		z-index: 99999;
+
+		padding: 0px 14px;
+	}
+
+	.nextCours {
+		margin-top: 0 !important;
+		margin-bottom: 10px !important;
+		border-radius: 10px;
+
+		box-shadow: 
+			0px 0px 1px #00000020,
+			0px 1px 5px #00000010
+		;
+
+		border-top: 0.5px solid #00000010;
+	}
+
+	.dark .nextCours::part(native) {
+		background-color: var(--ion-color-step-100) !important;
 	}
 
 	.ios .nextCours.HasStatus::part(native) {
@@ -720,17 +757,10 @@
 		border-radius: 12px 12px 0 0 !important;
 	}
 
-	.ios .nextCours {
-		padding: 5px 16px;
-		margin-top: 14px;
-	}
-
 	.ios .nextCours::part(native) {
-		background: var(--ion-plain-background-color);
+		background: var(--ion-inset-background);
 		border-radius: 12px !important;
 		padding: 5px 15px;
-
-		box-shadow: var(--ion-box-shadow) !important;
 	}
 
 	.md .nextCours {

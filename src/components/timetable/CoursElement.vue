@@ -383,6 +383,8 @@
 	}
 
 	.CoursStart {
+		font-feature-settings: 'tnum' on, 'lnum' on;
+
 		font-size: 0.9em;
 		font-weight: 400;
 
@@ -394,8 +396,8 @@
 	}
 
 	.CoursName {
-		font-size: 1.2em;
-		font-weight: 600 !important;
+		font-size: 18px;
+		font-weight: 500 !important;
 		margin-top: 1px;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -438,9 +440,13 @@
 	}
 
 	.CoursInfoContainer .separator {
-		width: 1px;
-		height: 100%;
-		background: var(--ion-color-step-200);
+		width: 2px;
+		height: 90%;
+		background: #00000010;
+	}
+
+	.dark .CoursInfoContainer .separator {
+		background: #ffffff10;
 	}
 
 	.cours .material-symbols-outlined {
@@ -463,6 +469,19 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		margin-bottom: 3px;
+
+		color: var(--backgroundColor);
+		filter: brightness(0.4);
+	}
+
+	.dark .CoursInfo {
+		color: #fff;
+		filter: brightness(1);
+	}
+
+	.CoursInfo p {
+		font-family: var(--papillon-font) !important;
+		font-size: 16px;
 	}
 
 	.CoursInfo span {
@@ -471,7 +490,7 @@
 
 	.CoursInfo.room {
 		opacity: 100%;
-		font-weight: 600;
+		font-weight: 500;
 	}
 
 	.Status {
@@ -529,7 +548,7 @@
 		height: 100%;
 
 		padding: 0px 0px;
-		padding-left: 3px;
+		padding-left: 5px;
 
 		width: 60px;
 	}
@@ -542,16 +561,19 @@
 	.CoursTime .start {
 		margin-bottom: 3px;
 
-		font-size: 1.2em;
-		font-weight: 600;
+		font-size: 1.1em;
+		font-weight: 500;
 
 		font-family: var(--papillon-font);
+		font-feature-settings: 'tnum' on, 'lnum' on !important;
 	}
 
 	.CoursTime .end {
 		opacity: 0.7;
-		font-size: 0.9em;
+		font-size: 0.85em;
 		font-weight: 400;
+		font-family: var(--papillon-font);
+		font-feature-settings: 'tnum' on, 'lnum' on !important;
 	}
 
 	.progressDiv {

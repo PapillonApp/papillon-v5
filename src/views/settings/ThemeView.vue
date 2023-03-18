@@ -39,7 +39,8 @@
 		setup() {
 			return {
 				availableFonts: [
-					{ name: "Hind (Par défaut)", font: "Hind" },
+					{ name: "Golos Text (Par défaut)", font: "Golos Text" },
+					{ name: "Hind", font: "Hind" },
 					{ name: "Asap", font: "Asap" },
 					{ name: "Merriweather", font: "Merriweather" },
 					{ name: "Sofia Sans", font: "Sofia Sans" },

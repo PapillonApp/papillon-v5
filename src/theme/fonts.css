@@ -142,3 +142,32 @@
     font-weight: 700;
     font-style: normal;
 }
+
+/* Golos Text */
+@font-face {
+    font-family: 'Golos Text';
+    src: url('/public/fonts/GolosText/GolosText-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Golos Text';
+    src: url('/public/fonts/GolosText/GolosText-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Golos Text';
+    src: url('/public/fonts/GolosText/GolosText-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Golos Text';
+    src: url('/public/fonts/GolosText/GolosText-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}

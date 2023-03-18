@@ -188,7 +188,7 @@
 
 <template>
 	<ion-page ref="page">
-		<IonHeader class="AppHeader" collapse="fade" translucent>
+		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
 				<ion-buttons slot="start"  mode="md">
 					<ion-menu-button color="dark" mode="md"></ion-menu-button>

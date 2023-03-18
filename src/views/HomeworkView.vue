@@ -395,7 +395,7 @@ export default defineComponent({
 
 <template>
     <ion-page ref="page">
-        <IonHeader class="AppHeader" collapse="fade" translucent>
+        <IonHeader class="AppHeader" translucent>
             <IonToolbar>
 
                 <ion-buttons slot="start">
@@ -461,10 +461,10 @@ export default defineComponent({
                         </div>
 
                         <div class="NoCours" v-if="!$data[`${day}`].loading && !$data[`${day}`].error && $data[`${day}`].length == 0">
-                            <span class="material-symbols-outlined mdls">auto_stories</span>
-                            <h2>Pas de devoirs à faire pour cette journée</h2>
-                            <p>Réesayez un autre jour dans le calendrier ou balayez l'écran.</p>
-                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                            <h1>🤟</h1>
+                            <h2>Vous n'avez pas de devoirs pour cette journée</h2>
+                            <p>Essayez de consulter un autre jour dans le calendrier ou balayez l'écran.</p>
+                            <ion-button mode="md" fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                         </div>
 
                         <div v-if="$data[`${day}`].loading && !$data[`${day}`].error && $data[`${day}`].length == 0" class="NoCours">
@@ -626,7 +626,7 @@ export default defineComponent({
     }
 
     .hwSubject {
-        font-weight: 600;
+        font-weight: 500;
         font-family: var(--papillon-font);
         font-size: 18px;
         margin-bottom: 8px;

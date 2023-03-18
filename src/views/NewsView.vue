@@ -107,7 +107,7 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader" collapse="fade" translucent>
+      <IonHeader class="AppHeader" translucent>
         <IonToolbar>
 
           <ion-buttons slot="start">
@@ -116,7 +116,7 @@
 
           <ion-title mode="md">Actualités</ion-title>
         </IonToolbar>
-        <IonToolbar class="only-md">
+        <IonToolbar>
             <ion-searchbar ref="searchBarMd" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></ion-searchbar>
         </IonToolbar>
       </IonHeader>
@@ -125,15 +125,6 @@
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
-
-        <IonHeader collapse="condense">
-            <IonToolbar>
-                <ion-title size="large">Actualités</ion-title>
-            </IonToolbar>
-            <IonToolbar>
-                <IonSearchbar ref="searchBarIos" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></IonSearchbar>
-            </IonToolbar>
-        </IonHeader>
 
         <div class="NoCours" v-if="news.length == 0 && isLoading">
             <IonSpinner></IonSpinner>

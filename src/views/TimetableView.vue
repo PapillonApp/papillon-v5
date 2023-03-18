@@ -49,7 +49,6 @@
         IonFab,
         IonInput,
         IonProgressBar,
-        IonChip,
     },
     setup() {
         return {
@@ -612,14 +611,14 @@
 
 <template>
     <ion-page ref="page">
-      <IonHeader class="AppHeader" collapse="fade" translucent>
+      <IonHeader class="AppHeader">
         <IonToolbar>
 
           <ion-buttons slot="start">
             <ion-menu-button color="dark" mode="md"></ion-menu-button>
           </ion-buttons>
 
-          <ion-title mode="md">Ma journée<ion-chip class="beta-chip" color="warning" @click="displayBetaMsg()">BETA</ion-chip></ion-title>
+          <ion-title mode="md">Ma journée</ion-title>
 
           <ion-buttons slot="end">
             <ion-button mode="md" id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
@@ -649,8 +648,8 @@
 
         <div id="noTouchZone"></div>
       
-        <swiper class="swiper" ref="swiper" :modules="[Virtual, EffectCoverflow]" virtual :initialSlide="baseIndex" :speed="200" :spaceBetween="0" :preventClicks="true" effect="coverflow">
-            <swiper-slide
+        <swiper class="swiper" ref="swiper" :modules="[Virtual, EffectCoverflow]" virtual :initialSlide="baseIndex" :speed="200" :spaceBetween="10" :preventClicks="true" effect="coverflow">
+            <swiper-slide class="slide"
             v-for="(slideContent, index) in slides"
             :key="index"
             :virtualIndex="index"
@@ -678,21 +677,21 @@
 
                     <div v-if="days[`${index}`]">
                         <div class="NoCours" v-if="days[`${index}`].length == 0 && !days[`${index}`].error && !days[`${index}`].loading">
-                            <span class="material-symbols-outlined mdls">upcoming</span>
+                            <h1>😌</h1>
                             <h2>Aucun cours aujourd'hui</h2>
-                            <p>Sélectionnez un autre jour dans le calendrier ou balayez l'écran.</p>
+                            <p>Sélectionnez un autre jour dans le calendrier ou balayez l’écran pour changer de journée.</p>
 
-                            <ion-button fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                            <ion-button mode="md" fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
                         </div>
 
                         <div class="NoCours" v-if="days[`${index}`].length == 0 && days[`${index}`].error == 'ERR_NETWORK' && !days[`${index}`].loading && !connected">
-                            <span class="material-symbols-outlined mdls">wifi_off</span>
+                            <h1>🌏</h1>
                             <h2>Pas de connexion à Internet</h2>
                             <p>Vous pouvez uniquement consulter les journées déjà chargées préalablement lorsque vous êtes hors-ligne.</p>
                         </div>
 
                         <div class="NoCours" v-if="days[`${index}`].length == 0 && days[`${index}`].error == 'ERR_NETWORK' && !days[`${index}`].loading && connected">
-                            <span class="material-symbols-outlined mdls">crisis_alert</span>
+                            <h1>🛠️</h1>
                             <h2>Serveurs indisponibles</h2>
                             <p>Vous pouvez uniquement consulter les journées déjà chargées préalablement. Nos serveurs seront bientôt de nouveaux disponibles.</p>
                         </div>
@@ -888,7 +887,22 @@
   
 <style scoped>
     .content {
+        overflow: hidden !important;
+        height: calc(100vh - (54px + env(safe-area-inset-top)));
+        padding-bottom: 0px !important;
+    }
+
+    .content::part(scroll) {
+        padding-bottom: 0px !important;
+    }
+
+    .swiper {
+        height: calc(100vh - (54px + env(safe-area-inset-top)));
+        
         overflow: hidden;
+        padding-top: 8px !important;
+
+        margin-bottom: 0;
     }
 
     .loadingSpin {
@@ -979,11 +993,5 @@
 
     .md .newCoursModal ion-list {
         padding: 0 15px;
-    }
-
-    .swiper {
-        height: calc(100vh - 54px - env(safe-area-inset-top));
-        
-        overflow: visible;
     }
 </style>
