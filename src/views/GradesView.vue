@@ -418,8 +418,8 @@
 					</ion-select>
 				</ion-buttons>
 			</IonToolbar>
-			<IonToolbar>
-				<ion-segment v-if="periods.length > 0 && changePeriodSelection" id="segment" :value="current_period.id"
+			<IonToolbar v-if="changePeriodSelection">
+				<ion-segment v-if="periods.length > 0" id="segment" :value="current_period.id"
 				ref="segment" @ionChange="segChange()">
 					<ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.id" :id="period.id">
 						<ion-label>{{period.name}}</ion-label>
@@ -718,6 +718,10 @@
 </template>
 
 <style scoped>
+	.emoji {
+		font-size: 1.3rem;
+	}
+
 	.subject {
 		overflow: hidden;
 		border-radius: 10px !important;
