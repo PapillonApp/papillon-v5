@@ -727,6 +727,10 @@
 		padding: 0px 15px;
 	}
 
+	.md .nextCourse {
+		padding: 0px 0px;
+	}
+
 	.nextCours {
 		margin-top: 0 !important;
 		margin-bottom: 10px !important;
