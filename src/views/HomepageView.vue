@@ -486,7 +486,7 @@
 				StatusBar.setStyle({style: Style.Dark})
 			}
 			else {
-				this.toolbarColor = 'light';
+				this.toolbarColor = '';
 			}
 			
 			document.addEventListener('settingsUpdated', () => {
@@ -494,7 +494,7 @@
 					this.toolbarColor = 'primary';
 				}
 				else {
-					this.toolbarColor = 'light';
+					this.toolbarColor = '';
 				}
 			});
 		}
