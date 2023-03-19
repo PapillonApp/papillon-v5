@@ -1,10 +1,6 @@
 // modules
-import axios from 'axios';
 
 // vars
-import { app } from '@/main.ts'
-import GetToken from '@/functions/login/GetToken.js';
-
 import getTimetable from './GetTimetable';
 import getHomeworks from './GetHomeworks';
 import getGrades from './GetGrades';
@@ -21,7 +17,7 @@ async function getRecap(force) {
 // pronote : get timetable
 function getPronoteRecap(force) {
 	// promise
-	return new Promise((resolve, reject) => {
+	return new Promise((resolve) => {
 		// vars
 		let timetable = []
 		let homeworks = []
@@ -110,4 +106,4 @@ function getPronoteRecap(force) {
 }
 
 // export
-export default getPronoteRecap
+export default getRecap

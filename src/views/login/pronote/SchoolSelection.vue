@@ -13,7 +13,6 @@
 	import { fetchDaysOffAndHolidays } from '@/functions/utils/datetimePicker.js';
 
 	import { Geolocation } from '@capacitor/geolocation';
-	import { Dialog } from '@capacitor/dialog';
 
 	export default defineComponent({
 		name: 'FolderPage',
