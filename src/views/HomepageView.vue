@@ -25,6 +25,8 @@
 
 	import { NotificationBadge } from 'capacitor-notification-badge';
 
+	import { StatusBar, Style } from '@capacitor/status-bar';
+
 	import { Network } from '@capacitor/network';
 
 	import UserView from './settings/UserView.vue';
@@ -66,6 +68,7 @@
 		data() {
 			return {
 				connected: false,
+				fakeTime: 200,
 				timetable: [],
 				ttbLoading: false,
 				nextCoursTime: "",
@@ -91,6 +94,7 @@
 				internetConnection: true,
 				allLoaded: false,
 				showLoading: true,
+				toolbarColor: "",
 			}
 		},
 		methods: {
@@ -295,7 +299,9 @@
 					setTimeout(() => {
 						this.allLoaded = true;
 						this.showLoading = false;
-					}, 200);
+					}, this.fakeTime);
+
+					this.fakeTime = 0;
 
 					// timetable
 					const timetable = recap.timetable;
@@ -473,6 +479,24 @@
 			if(!navigator.onLine) {
 				this.internetConnection = false;
 			}
+
+			// check toolbar color
+			if(localStorage.getItem('fillToolbar') == 'true') {
+				this.toolbarColor = 'primary';
+				StatusBar.setStyle({style: Style.Dark})
+			}
+			else {
+				this.toolbarColor = 'light';
+			}
+			
+			document.addEventListener('settingsUpdated', () => {
+				if(localStorage.getItem('fillToolbar') == 'true') {
+					this.toolbarColor = 'primary';
+				}
+				else {
+					this.toolbarColor = 'light';
+				}
+			});
 		}
 	});
 </script>
@@ -480,7 +504,7 @@
 <template>
 	<ion-page ref="page">
 		<IonHeader class="AppHeader">
-			<IonToolbar>
+			<IonToolbar class="toolbar" :color="toolbarColor">
 				<ion-buttons slot="start">
 					<ion-menu-button mode="md"></ion-menu-button>
 				</ion-buttons>
@@ -496,7 +520,7 @@
 				</ion-buttons>
 			</IonToolbar>
 
-			<IonToolbar class="nextToolbar">
+			<IonToolbar class="nextToolbar toolbar" :color="toolbarColor">
 				
 			</IonToolbar>
 		</IonHeader>
@@ -644,7 +668,7 @@
 
 				<Transition name="ElemAnim">
 					<ion-list v-if="allLoaded && !hwloading" id="comp-hw" ref="comp-hw" lines="none" inset="true">
-							<ion-list-header>
+							<ion-list-header v-if="allLoaded && !hwloading">
 								<ion-label>
 									<h2 style="font-size: 20px;">Travail à faire</h2>
 								</ion-label>
@@ -1001,6 +1025,11 @@
 		height: 34px;
 		width: 34px;
 
-		border: 1px solid var(--ion-color-step-150);
+		border: 1px solid #00000020;
+	}
+
+	.toolbar[color=primary] {
+		--ion-text-color: #fff !important;
+		color: #fff !important;
 	}
 </style>

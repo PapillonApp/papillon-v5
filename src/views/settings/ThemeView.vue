@@ -257,6 +257,10 @@
 			let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
 			tweakProgressBarShowPast.$el.checked = localStorage.getItem('tweakProgressBarShowPast') != 'false'; // default true
 
+			// get fillToolbar ref
+			let fillToolbar = this.$refs.fillToolbar;
+			fillToolbar.$el.checked = localStorage.getItem('fillToolbar') == 'true';
+
 			// check if custom theme mode is enabled
 			this.checkThemeMode();
 			this.checkColor();
@@ -335,6 +339,17 @@
 				</ion-radio-group>
 			</IonList>
 
+			<IonList :inset="true" lines="inset">
+				<IonItem>
+					<span class="material-symbols-outlined mdls" slot="start">home</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Utiliser la couleur sur la page d'accueil</h2>
+						<p>Votre couleur d'accentuation s'applique sur l'accueil.</p>
+					</IonLabel>
+					<IonToggle slot="end" ref="fillToolbar" @ionChange="changeTick('fillToolbar')"></IonToggle>
+				</IonItem>
+			</IonList>
+
 			<IonList :inset="true" lines="inset" v-if="availableFonts">
 				<ion-list-header>
 					<ion-label><p>Police d'écriture</p></ion-label>
@@ -351,7 +366,7 @@
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">invert_colors</span>
 					<IonLabel class="ion-text-wrap">
-						<h2>Utiliser les couleurs de votre service scolaire</h2>
+						<h2>Utiliser la couleur d'accentuation sur la page</h2>
 						<p>Permet d'utiliser les couleurs de votre service scolaire pour identifier les matières.</p>
 					</IonLabel>
 					<IonToggle slot="end" ref="useScolColors" @ionChange="changeTick('useScolColors')"></IonToggle>

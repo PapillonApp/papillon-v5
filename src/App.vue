@@ -78,6 +78,7 @@
             isMenuOpened: false as boolean,
             dataLoading: true,
             connectedToServer: 'pause',
+            changeStatusTimeout: true as any,
             userData: {
                 student: {
                     name: '',
@@ -349,6 +350,19 @@
             setTimeout(() => {
                 menu?.toggle();
             }, 100);
+
+            console.log(url)
+
+            if(url == "/home") {
+                if(localStorage.getItem('fillToolbar') == 'true') {
+                    StatusBar.setStyle({style: Style.Dark})
+
+                    this.changeStatusTimeout = false;
+                    setTimeout(() => {
+                        this.changeStatusTimeout = true;
+                    }, 520);
+                }
+            }
         },
         async askNotifPerms() {
             await LocalNotifications.requestPermissions();
@@ -392,7 +406,9 @@
                     StatusBar.setStyle({style: Style.Dark})
                 }
                 else {
-                    StatusBar.setStyle({style: Style.Light})
+                    if(this.changeStatusTimeout ) {
+                        StatusBar.setStyle({style: Style.Light})
+                    }
                 }
 
                 setTimeout(() => {
