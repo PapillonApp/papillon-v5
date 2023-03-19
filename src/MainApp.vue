@@ -1,7 +1,7 @@
 <template>
     <ion-page>
         <!-- main navigation (contains router and menu) -->
-        <ion-nav ref="nav" :root="component"></ion-nav>
+        <ion-nav ref="nav" :root="component" :swipeGesture="true"></ion-nav>
     </ion-page>
 </template>
   

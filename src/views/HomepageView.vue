@@ -91,6 +91,7 @@
 		},
 		methods: {
 			goto(url) {
+				document.dispatchEvent(new CustomEvent('navTransitionEnable'));
 				this.$router.push(url);
 			},
 			randomEmoji() {

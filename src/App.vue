@@ -73,6 +73,7 @@
     },
     data() {
         return {
+            showTransition: this.transition as any,
             loggedIn: localStorage.loggedIn,
             isMenuOpened: false as boolean,
             dataLoading: true,
@@ -561,6 +562,16 @@
         document.addEventListener('showChangelog', () => {
             this.showChangelog();
         })
+
+        document.addEventListener('navTransitionEnable', (e: any) => {
+            this.showTransition = undefined;
+
+            setTimeout(() => {
+                this.showTransition = this.transition;
+            }, 150);
+
+            console.log('navTransitionEnable', e.detail);
+        });
     }
   });
 </script>
@@ -627,7 +638,7 @@
           </ion-list>
         </ion-content>
       </ion-menu>
-      <ion-router-outlet ref="outlet" :animated="true" :animation="transition" id="main-content" v-slot="{ Component }">
+      <ion-router-outlet ref="outlet" :animated="true" :animation="showTransition" id="main-content" v-slot="{ Component }">
         <keep-alive>
             <component :is="Component" />
         </keep-alive>
