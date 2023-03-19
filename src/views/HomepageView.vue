@@ -59,7 +59,6 @@
 			IonSpinner,
 			IonRefresher,
 			IonChip,
-			IonRippleEffect,
 			IonItemGroup,
 			IonRefresherContent,
 			IonSkeletonText
@@ -477,10 +476,9 @@
 
 		<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
 					<div class="coursElemNext" v-for="cours in timetable" :key="cours.id" :style="`--courseColor: ${cours.course.color};`">
-						<ion-item class="nextCours"  lines="none"
+						<ion-item class="nextCours" button :detail="false" mode="md" lines="none"
 							@click="goto('timetable')" 
 							:class="{ cancelled: cours.status.isCancelled, HasStatus: cours.hasStatus }">
-							<ion-ripple-effect></ion-ripple-effect>
 							<div slot="start">
 								<IonChip>
 									{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}
@@ -525,7 +523,7 @@
 					</div>
 
 					<ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0 && !connected" style="margin-top: 12px;"
-						class="nextCours" lines="none">
+						class="nextCours" button :detail="false" mode="md" lines="none">
 						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
 							<span class="material-symbols-outlined mdls">wifi_off</span>
 						</div>
@@ -536,7 +534,7 @@
 					</ion-item>
 
 					<ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0 && connected" style="margin-top: 12px;"
-						class="nextCours" lines="none">
+						class="nextCours" button :detail="false" mode="md" lines="none">
 						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
 							<span class="material-symbols-outlined mdls">crisis_alert</span>
 						</div>
@@ -546,7 +544,7 @@
 						</ion-label>
 					</ion-item>
 
-					<ion-item class="nextCours" v-if="!ttbLoading && timetable.length == 0" style="margin-top: 12px;"
+					<ion-item class="nextCours" button :detail="false" mode="md" v-if="!ttbLoading && timetable.length == 0" style="margin-top: 12px;"
 						@click="goto('timetable')">
 						<div slot="start" class="emoji">
 							{{ noCoursesEmoji }}
@@ -557,7 +555,7 @@
 						</ion-label>
 					</ion-item>
 
-					<ion-item v-if="ttbLoading && timetable.length == 0" class="nextCours" lines="none">
+					<ion-item v-if="ttbLoading && timetable.length == 0" class="nextCours" button :detail="false" mode="md" lines="none">
 						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
 							<IonSpinner></IonSpinner>
 						</div>
@@ -753,54 +751,32 @@
 
 		margin-top: -40px;
 		z-index: 99999;
-
-		padding: 0px 15px;
-	}
-
-	.md .nextCourse {
-		padding: 0px 0px;
 	}
 
 	.nextCours {
 		margin-top: 0 !important;
 		margin-bottom: 10px !important;
 		border-radius: 10px;
+		overflow: hidden !important;
 
 		box-shadow: 
 			0px 0px 1px #00000020,
 			0px 1px 5px #00000010
 		;
-
 		border-top: 0.5px solid #00000010;
+
+		margin: 0px 15px;
+
+		--ion-item-background: #fff;
 	}
 
-	.dark .nextCours::part(native) {
-		background-color: var(--ion-color-step-100) !important;
+	.dark .nextCours {
+		--ion-item-background: var(--ion-color-step-100) !important;
 	}
 
-	.ios .nextCours.HasStatus::part(native) {
-		border-radius: 12px 12px 0 0 !important;
-	}
-
-	.md .nextCours.HasStatus::part(native) {
-		border-radius: 12px 12px 0 0 !important;
-	}
-
-	.ios .nextCours::part(native) {
-		background: var(--ion-inset-background);
-		border-radius: 12px !important;
-		padding: 5px 15px;
-	}
-
-	.md .nextCours {
-		margin: 5px 16px;
-		margin-top: 5px;
-	}
-
-	.md .nextCours::part(native) {
-		background: var(--ion-inset-background);
-		border-radius: 8px;
-		padding: 3px 10px;
+	.nextCours::part(native) {
+		border-radius: 10px;
+		overflow: hidden !important;
 	}
 
 	.courseColor {
