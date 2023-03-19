@@ -914,11 +914,6 @@
 		margin-right: 10px;
 	}
 
-	.gradeItem:last-child::part(native) {
-		border-bottom-left-radius: 10px;
-		border-bottom-right-radius: 10px;
-	}
-
 	.gradeItem .markLabel h2 {
 		font-weight: 500 !important;
 	}
