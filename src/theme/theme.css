@@ -504,7 +504,7 @@ ion-alert.md .btn_secondary {
 
 .ElemAnim-enter-from, .ElemAnim-leave-to {
     opacity: 0;
-    transform: translateY(200px) scale(0.9);
+    transform: translateY(200px) scale(0.7);
 
     margin: 5px 16px;
 }
