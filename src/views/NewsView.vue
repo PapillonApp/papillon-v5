@@ -173,7 +173,7 @@
             </IonItem>
         </IonList>
 
-        <IonModal :is-open="newsOpen" :presenting-element="presentingElement" :canDismiss="true" ref="modal">
+        <IonModal :is-open="newsOpen" :presenting-element="presentingElement" :canDismiss="true" @ionModalDidDismiss="closeNews()" ref="modal">
             <IonHeader translucent>
                 <IonToolbar>
                     <IonTitle>{{ openedNews.title }}</IonTitle>
