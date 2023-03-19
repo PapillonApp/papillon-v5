@@ -26,6 +26,8 @@
 	import { NotificationBadge } from 'capacitor-notification-badge';
 
 	import { Network } from '@capacitor/network';
+
+	import UserView from './settings/UserView.vue';
 	
 	import timetableEdit from '@/functions/utils/timetableEdit.js';
 	import subjectColor from '@/functions/utils/subjectColor.js';
@@ -84,6 +86,7 @@
 				avatar: "",
 				grades: [],
 				gradesLoading: true,
+				UserView: UserView,
 			}
 		},
 		methods: {
@@ -401,6 +404,23 @@
 				});
 
 				await alert.present();
+			},
+			async getAvatar() {
+				if(localStorage.getItem('customAvatar')) {
+					this.avatar = localStorage.getItem('customAvatar');
+				}
+				else if(localStorage.getItem('avatarCache')) {
+					this.avatar = localStorage.getItem('avatarCache');
+				}
+
+				document.addEventListener('userDataUpdated', () => {
+					if(localStorage.getItem('customAvatar')) {
+						this.avatar = localStorage.getItem('customAvatar');
+					}
+					else if(localStorage.getItem('avatarCache')) {
+						this.avatar = localStorage.getItem('avatarCache');
+					}
+				});
 			}
 		},
 		async mounted() {
@@ -416,6 +436,7 @@
 
 			// get data
 			this.getRecap();
+			this.getAvatar();
 
 			document.addEventListener('tokenUpdated', () => {
 				this.getRecap();
@@ -438,6 +459,14 @@
 				</ion-buttons>
 
 				<ion-title mode="md">Vue d'ensemble</ion-title>
+
+				<ion-buttons slot="end">
+					<ion-nav-link router-direction="forward" :component="UserView">
+						<ion-avatar class="userAvatar">
+							<img :src="avatar"/>
+						</ion-avatar>
+					</ion-nav-link>
+				</ion-buttons>
 			</IonToolbar>
 
 			<IonToolbar class="nextToolbar">
@@ -763,7 +792,7 @@
 	}
 
 	.md .nextCours {
-		padding: 5px 16px;
+		margin: 5px 16px;
 		margin-top: 5px;
 	}
 
@@ -966,5 +995,16 @@
 
 	.hw_group a {
 		text-decoration: none !important;
+	}
+
+	ion-buttons[slot=end] {
+		margin-right: 12px !important;
+	}
+
+	.userAvatar {
+		height: 34px;
+		width: 34px;
+
+		border: 1px solid var(--ion-color-step-150);
 	}
 </style>
