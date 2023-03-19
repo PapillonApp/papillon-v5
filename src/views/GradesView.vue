@@ -46,7 +46,6 @@
 			IonList,
 			IonModal,
 			IonListHeader,
-			IonSkeletonText,
 			IonSegment,
 			IonSegmentButton,
 			IonSpinner,
@@ -435,107 +434,84 @@
 
 			<div id="noTouchZone"></div>
 
-			<div v-if="isLoading">
-				<ion-card class="subject" v-for="i in 6" v-bind:key="i">
-					<div class="subject-name" style="padding: 15px 15px">
-						<ion-skeleton-text :animated="true" style="width: 50%;"></ion-skeleton-text>
-						<ion-skeleton-text class="avg" :animated="true" style="width: 20%;"></ion-skeleton-text>
+			<transition-group name="ElemAnim" tag="div">
+				<ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index"
+					:style="`--backgroundTheme: ${ subject.color };`">
+					<div class="subject-name" @click="openAverageModal(subject)">
+						<h3>
+							{{subject.name}}
+							<span class="material-symbols-outlined mdls" v-if="subject.grouped">join_inner</span>
+						</h3>
+						<p class="avg" v-if="subject.significant">{{subject.average.toFixed(2)}}<small>/20</small></p>
+						<p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
 					</div>
-					<div class="grades">
-						<ion-card class="grade" v-for="i in 3" v-bind:key="i">
-							<div class="myGrade" style="width: 135px;">
-								<ion-skeleton-text :animated="true" style="width: 50%;"></ion-skeleton-text>
-								<br />
-								<ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text>
-							</div>
-							<div class="grades">
-								<ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
 
-								<ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+					<div class="grades" v-if="display == 'grid'">
+						<ion-card class="grade" v-for="(mark, i) in subject.marks" v-bind:key="i" @click="openGradeModal(mark, subject.color)">
+							<div class="myGrade">
+								<p class="name">{{ mark.info.description }}</p>
+								<p class="coef">Coeff. : {{mark.grade.coefficient}}</p>
 
-								<ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+								<p class="grd main" v-if="mark.info.significant && !mark.grade.updated_value">
+									{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
+								<p class="grd main" v-else-if="mark.grade.updated_value && mark.info.significant">
+									{{mark.grade.updated_value}}<small>/{{mark.grade.updated_out_of}}</small></p>
+								<p class="coef" v-if="mark.grade.updated_value && mark.info.significant">
+									{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
+
+								<!-- si absent -->
+								<p class="grd main" v-if="!mark.info.significant">
+									{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></p>
+								<p class="coef" v-if="mark.grade.updated_value && !mark.info.significant"><br /></p>
 							</div>
+							<div class="averages" v-if="mark.info.significantAverage">
+								<div class="average">
+									<p class="grd">{{mark.grade.min}}<small>/{{mark.grade.out_of}}</small></p>
+									<p>Min.</p>
+								</div>
+
+								<div class="average class">
+									<p class="grd">{{mark.grade.average}}<small>/{{mark.grade.out_of}}</small></p>
+									<p>Classe</p>
+								</div>
+
+								<div class="average">
+									<p class="grd">{{mark.grade.max}}<small>/{{mark.grade.out_of}}</small></p>
+									<p>Max.</p>
+								</div>
+							</div>
+
+							<div class="averages" v-if="!mark.info.significantAverage">
+								<div class="average unique">
+									<p class="grd">{{ mark.info.significantReason }}</p>
+									<p>Classe</p>
+								</div>
+							</div>
+
 						</ion-card>
 					</div>
+
+					<ion-list lines="none" class="gradesList" v-if="display == 'list'">
+						<ion-item class="gradeItem" v-for="(mark, i) in subject.marks" v-bind:key="i" @click="openGradeModal(mark, subject.color)" button detail="false">
+							<ion-text slot="start" class="emoji">{{ getClosestGradeEmoji(subject.name) }}</ion-text>
+
+							<ion-label>
+								<h2>{{ mark.info.description }}</h2>
+								<p>{{ new Date(mark.info.date).toLocaleString('fr-FR', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>
+								<h4>Coeff. : {{mark.grade.coefficient}}</h4>
+							</ion-label>
+
+							<ion-label slot="end" class="markLabel">
+								<h2 v-if="mark.info.significant && !mark.grade.updated_value">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></h2>
+								<h2 v-else-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.updated_value}}<small>/{{mark.grade.updated_out_of}}</small></h2>
+								
+								<!-- si absent -->
+								<h2 v-if="!mark.info.significant">{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></h2>
+							</ion-label>
+						</ion-item>
+					</ion-list>
 				</ion-card>
-			</div>
-
-			<ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index"
-				:style="`--backgroundTheme: ${ subject.color };`">
-				<div class="subject-name" @click="openAverageModal(subject)">
-					<h3>
-						{{subject.name}}
-						<span class="material-symbols-outlined mdls" v-if="subject.grouped">join_inner</span>
-					</h3>
-					<p class="avg" v-if="subject.significant">{{subject.average.toFixed(2)}}<small>/20</small></p>
-					<p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
-				</div>
-
-				<div class="grades" v-if="display == 'grid'">
-					<ion-card class="grade" v-for="(mark, i) in subject.marks" v-bind:key="i" @click="openGradeModal(mark, subject.color)">
-						<div class="myGrade">
-							<p class="name">{{ mark.info.description }}</p>
-							<p class="coef">Coeff. : {{mark.grade.coefficient}}</p>
-
-							<p class="grd main" v-if="mark.info.significant && !mark.grade.updated_value">
-								{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
-							<p class="grd main" v-else-if="mark.grade.updated_value && mark.info.significant">
-								{{mark.grade.updated_value}}<small>/{{mark.grade.updated_out_of}}</small></p>
-							<p class="coef" v-if="mark.grade.updated_value && mark.info.significant">
-								{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
-
-							<!-- si absent -->
-							<p class="grd main" v-if="!mark.info.significant">
-								{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></p>
-							<p class="coef" v-if="mark.grade.updated_value && !mark.info.significant"><br /></p>
-						</div>
-						<div class="averages" v-if="mark.info.significantAverage">
-							<div class="average">
-								<p class="grd">{{mark.grade.min}}<small>/{{mark.grade.out_of}}</small></p>
-								<p>Min.</p>
-							</div>
-
-							<div class="average class">
-								<p class="grd">{{mark.grade.average}}<small>/{{mark.grade.out_of}}</small></p>
-								<p>Classe</p>
-							</div>
-
-							<div class="average">
-								<p class="grd">{{mark.grade.max}}<small>/{{mark.grade.out_of}}</small></p>
-								<p>Max.</p>
-							</div>
-						</div>
-
-						<div class="averages" v-if="!mark.info.significantAverage">
-							<div class="average unique">
-								<p class="grd">{{ mark.info.significantReason }}</p>
-								<p>Classe</p>
-							</div>
-						</div>
-
-					</ion-card>
-				</div>
-
-				<ion-list lines="none" class="gradesList" v-if="display == 'list'">
-					<ion-item class="gradeItem" v-for="(mark, i) in subject.marks" v-bind:key="i" @click="openGradeModal(mark, subject.color)" button detail="false">
-						<ion-text slot="start" class="emoji">{{ getClosestGradeEmoji(subject.name) }}</ion-text>
-
-						<ion-label>
-							<h2>{{ mark.info.description }}</h2>
-							<p>{{ new Date(mark.info.date).toLocaleString('fr-FR', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>
-							<h4>Coeff. : {{mark.grade.coefficient}}</h4>
-						</ion-label>
-
-						<ion-label slot="end" class="markLabel">
-							<h2 v-if="mark.info.significant && !mark.grade.updated_value">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></h2>
-							<h2 v-else-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.updated_value}}<small>/{{mark.grade.updated_out_of}}</small></h2>
-							
-							<!-- si absent -->
-							<h2 v-if="!mark.info.significant">{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></h2>
-						</ion-label>
-					</ion-item>
-				</ion-list>
-			</ion-card>
+			</transition-group>
 
 			<div v-if="!isLoading">
 				<div class="NoCours" v-if="this.grades.length == 0">
