@@ -290,7 +290,9 @@
 
 				GetRecap(force).then((recap) => {
 					// loaded
-					this.allLoaded = true;
+					setTimeout(() => {
+						this.allLoaded = true;
+					}, 200);
 
 					// timetable
 					const timetable = recap.timetable;
@@ -594,16 +596,18 @@
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
 
-			<div class="NoCours" v-if="!internetConnection">
-                <h1>🌏</h1>
-                <h2>Pas de connexion à Internet</h2>
-                <p>Vous pouvez uniquement consulter les journées déjà chargées préalablement lorsque vous êtes hors-ligne.</p>
-            </div>
-			<div class="NoCours" v-else-if="!allLoaded">
-                <ion-spinner></ion-spinner>
-                <h2>Chargement de vos données</h2>
-                <p>Nous sommes en train de récupérer vos données depuis votre service scolaire.</p>
-            </div>
+			<Transition name="NoCoursAnim">
+				<div class="NoCours" v-if="!internetConnection">
+					<h1>🌏</h1>
+					<h2>Pas de connexion à Internet</h2>
+					<p>Vous pouvez uniquement consulter les journées déjà chargées préalablement lorsque vous êtes hors-ligne.</p>
+				</div>
+				<div class="NoCours" v-else-if="!allLoaded">
+					<ion-spinner></ion-spinner>
+					<h2>Chargement de vos données</h2>
+					<p>Nous sommes en train de récupérer vos données depuis votre service scolaire.</p>
+				</div>
+			</Transition>
 
 			<div v-if="allLoaded">
 				<div id="components" ref="components">
