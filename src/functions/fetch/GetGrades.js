@@ -234,6 +234,7 @@ function constructPronoteGrades(grades) {
 
 		// add mark to subject
 		let newMark = {
+			id: mark.id,
 			info: {
 				subject: subjectName,
 				date: mark.date,

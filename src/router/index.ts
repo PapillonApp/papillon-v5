@@ -25,7 +25,13 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/grades',
     name: 'Grades',
-    component: () => import ('../views/GradesView.vue')
+    component: () => import ('../views/grades/GradesView.vue')
+  },
+  {
+    path: '/grades/:markID',
+    props: true,
+    name: 'Mark',
+    component: () => import ('../views/grades/MarkView.vue')
   },
   {
     path: '/schoollife',
