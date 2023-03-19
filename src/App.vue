@@ -347,8 +347,6 @@
                 menu?.toggle();
             }, 100);
 
-            console.log(url)
-
             if(url == "/home") {
                 if(localStorage.getItem('fillToolbar') == 'true') {
                     StatusBar.setStyle({style: Style.Dark})
@@ -617,7 +615,7 @@
         </ion-header>
         <ion-content mode="md" class="menuContent">
           <ion-list id="inbox-list"> 
-            <router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
+            <router-link router-direction="forward" @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
                 <ion-item button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
                     <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
                     <ion-label>{{ p.title }}</ion-label>

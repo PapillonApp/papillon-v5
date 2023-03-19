@@ -1047,4 +1047,11 @@
 		--ion-text-color: #fff !important;
 		color: #fff !important;
 	}
+
+	.NoCoursAnim-enter-from, .NoCoursAnim-leave-to {
+		height: 0px;
+		margin-top: -37px;
+		opacity: 0;
+		transform: scale(0.9) translateY(-30px);
+	}
 </style>
