@@ -24,6 +24,14 @@
             IonSpinner,
             IonSearchbar
         },
+        props() {
+            return {
+                urlNews: {
+                    type: Object,
+                    default: []
+                }
+            }
+        },
         data() {
             return { 
                 news: [],
@@ -100,7 +108,21 @@
                 this.getNewsRefresh();
             });
 
-            return false;
+            // if urlNews prop is set
+            if(this.$route.params.urlNews) {
+                let encoded = this.$route.params.urlNews;
+
+                // decode url
+                let decoded = decodeURIComponent(encoded);
+
+                // parse json
+                let parsed = JSON.parse(decoded);
+
+                // open urlNews
+                setTimeout(() => {
+                    this.openNews(parsed);
+                }, 200);
+            }
         }
     });
 </script>

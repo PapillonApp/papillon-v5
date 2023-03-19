@@ -568,7 +568,7 @@
 
             setTimeout(() => {
                 this.showTransition = this.transition;
-            }, 150);
+            }, 200);
 
             console.log('navTransitionEnable', e.detail);
         });

@@ -86,6 +86,8 @@
 				grades: [],
 				gradesLoading: true,
 				UserView: UserView,
+				news: [],
+				newsLoading: true,
 			}
 		},
 		methods: {
@@ -301,6 +303,10 @@
 					// grades
 					this.grades = recap.grades.last;
 					this.gradesLoading = false;
+
+					// news
+					this.news = recap.news;
+					this.newsLoading = false;
 				});
 			},
 			formatHomeworks(homeworks) {
@@ -700,6 +706,47 @@
 						</div>
 					</div>
 				</ion-list>
+
+				<ion-list id="comp-news" ref="comp-news" lines="none" inset="true">
+					<ion-list-header>
+						<ion-label>
+							<h2 style="font-size: 20px;">Actualités</h2>
+						</ion-label>
+						<ion-button @click="goto('news')">Voir tout</ion-button>
+					</ion-list-header>
+
+					<router-link v-for="(info, i) in news.slice(0, 5)" :key="i" :to="'/news/' + encodeURIComponent(JSON.stringify(info))">
+						<ion-item button>
+							<span slot="start" class="material-symbols-outlined mdls emoji">feed</span>
+								
+							<ion-label>
+								<h2>{{ info.title }}</h2>
+								<p>{{ info.content }}</p>
+							</ion-label>
+						</ion-item>
+					</router-link>
+
+					<div v-if="newsLoading && news.length == 0">
+						<ion-item v-for="i in 5" :key="i" button>
+							<span slot="start" class="material-symbols-outlined mdls emoji">feed</span>
+									
+							<ion-label>
+								<h2><ion-skeleton-text :animated="true" style="width: 35%;"></ion-skeleton-text></h2>
+								<p><ion-skeleton-text :animated="true" style="width: 100%;"></ion-skeleton-text></p>
+							</ion-label>
+						</ion-item>
+					</div>
+
+					<ion-item v-if="news.length == 0 && !newsLoading" lines="none">
+						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
+							<span class="material-symbols-outlined mdls">newspaper</span>
+						</div>
+						<ion-label>
+							<h2>Aucune nouvelle actualité</h2>
+							<p>Votre établissement n'a pas encore publié d'actualités.</p>
+						</ion-label>
+					</ion-item>
+				</ion-list>
 			</div>
 			
 
@@ -970,7 +1017,7 @@
 		font-weight: 600;
 	}
 
-	.hw_group a {
+	a {
 		text-decoration: none !important;
 	}
 
