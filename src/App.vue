@@ -1,8 +1,6 @@
 <script lang="ts">
     import { IonApp, IonContent, IonButton, IonButtons, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText, alertController, IonModal, IonThumbnail, IonAvatar } from '@ionic/vue';
 
-    import Values from 'values.js'
-
     import { StatusBar, Style } from '@capacitor/status-bar';
 
     import { Browser } from '@capacitor/browser';
@@ -15,8 +13,6 @@
 
     import { defineComponent, ref } from 'vue';
     import { useRoute } from 'vue-router';
-
-    const subjectColor = require('@/functions/utils/subjectColor.js');
 
     const { changelog } = require('/src/update') 
 
@@ -172,7 +168,7 @@
         setMenuOpened(state: any) {
             this.isMenuOpened = state;
 
-            this.menuOpened(state, false);
+            this.menuOpened(state);
         },
         async openURL(url: string) {
 			await Browser.open({
@@ -287,7 +283,7 @@
                     console.log(e);
                     await BackgroundFetch.finish(taskId);
                 }
-            }, (error: any) => {
+            }, () => {
                 console.log('[js] RNBackgroundFetch failed to start');
             });
         },
@@ -393,7 +389,7 @@
 
             return animation;
         },
-        async menuOpened(isOpen: boolean, event: any) {
+        async menuOpened(isOpen: boolean) {
             if(isOpen) {
                 StatusBar.setStyle({style: Style.Dark})
             }

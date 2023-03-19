@@ -15,7 +15,6 @@
 		IonSpinner,
 		IonRefresher,
 		IonChip,
-		IonRippleEffect,
 		IonItemGroup,
 		IonButtons,
 		IonRefresherContent,
@@ -33,12 +32,6 @@
 	
 	import timetableEdit from '@/functions/utils/timetableEdit.js';
 	import subjectColor from '@/functions/utils/subjectColor.js';
-
-	// timetable
-	import GetTimetable from '@/functions/fetch/GetTimetable.js';
-
-	// homeworks
-	import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
 
 	// recap
 	import GetRecap from "@/functions/fetch/GetRecap.js";
@@ -400,7 +393,6 @@
 					return day.date == tomorrowDate.toDateString();
 				});
 
-				/*
 				// for each homework, check if it's done
 				let undone = 0;
 				if (tomorrow) {
@@ -414,7 +406,7 @@
 
 						}
 					});
-				} */
+				}
 			},
 			async handleRefresh(event) {
 				this.homeworks = [];

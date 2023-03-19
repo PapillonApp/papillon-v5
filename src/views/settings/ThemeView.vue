@@ -1,7 +1,6 @@
 <script>
 	import {
-		defineComponent,
-		ref,
+		defineComponent
 	} from 'vue';
 	import {
 		IonHeader,

@@ -15,19 +15,6 @@ function checkDarkMode() {
 	themeMode = localStorage.getItem('themeMode');
 }
 
-// hsl to hex
-function hslToHex(h: number, s: number, l: number) {
-	s /= 100;
-	l /= 100;
-	const a = s * Math.min(l, 1 - l);
-	const f = (n: number) => {
-		const k = (n + h / 30) % 12;
-		const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-		return Math.round(255 * color).toString(16).padStart(2, '0');
-	};
-	return `#${f(0)}${f(8)}${f(4)}`;
-}
-
 function setStatusBarStyle() {
 	if (themeMode === 'dark' || (isDarkMode && themeMode !== 'light')) {
 		StatusBar.setBackgroundColor({color: "#111112"});
@@ -103,6 +90,8 @@ setInterval(updateStatus, 100);
 import { AndroidShortcuts } from 'capacitor-android-shortcuts';
 import axios from 'axios';
 
+
+// FIXME: This code is not working
 async function getToBase64(filepath: string) {
 	const response = await axios.get(filepath, { responseType: 'blob' });
 	const filereader = new FileReader();

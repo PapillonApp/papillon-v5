@@ -18,7 +18,6 @@
 		IonSegment,
 		IonSegmentButton,
 		IonModal,
-		IonSearchbar,
 		IonSpinner,
 		IonSelect,
 		IonNavLink
