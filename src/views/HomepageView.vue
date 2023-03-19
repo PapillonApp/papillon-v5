@@ -90,6 +90,7 @@
 				newsLoading: true,
 				internetConnection: true,
 				allLoaded: false,
+				showLoading: true,
 			}
 		},
 		methods: {
@@ -287,11 +288,13 @@
 				this.hwLoading = true;
 				this.gradesLoading = true;
 				this.newsLoading = true;
+				this.allLoaded = false;
 
 				GetRecap(force).then((recap) => {
 					// loaded
 					setTimeout(() => {
 						this.allLoaded = true;
+						this.showLoading = false;
 					}, 200);
 
 					// timetable
@@ -602,7 +605,7 @@
 					<h2>Pas de connexion à Internet</h2>
 					<p>Vous pouvez uniquement consulter les journées déjà chargées préalablement lorsque vous êtes hors-ligne.</p>
 				</div>
-				<div class="NoCours" v-else-if="!allLoaded">
+				<div class="NoCours" v-else-if="!allLoaded && showLoading">
 					<ion-spinner></ion-spinner>
 					<h2>Chargement de vos données</h2>
 					<p>Nous sommes en train de récupérer vos données depuis votre service scolaire.</p>
@@ -611,7 +614,7 @@
 
 			<div id="components" ref="components">
 				<Transition name="ElemAnim">
-					<ion-list v-if="allLoaded" id="comp-grades" ref="comp-grades" lines="none" inset="true" class="hw_group">
+					<ion-list v-if="allLoaded && !gradesLoading" id="comp-grades" ref="comp-grades" lines="none" inset="true" class="hw_group">
 							<ion-list-header>
 								<ion-label>
 									<h2 style="font-size: 20px;">Dernières notes</h2>
@@ -636,26 +639,11 @@
 									</div>
 								</ion-item>
 							</div>
-							
-							<div v-if="gradesLoading">
-								<ion-item v-for="grade in 3" :key="grade">
-									<ion-label>
-										<p><span class="courseColor"></span><ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text></p>
-										<h2><ion-skeleton-text :animated="true" style="width: 60%;"></ion-skeleton-text></h2>
-									</ion-label>
-
-									<div slot="end">
-										<ion-label>
-											<h2><ion-skeleton-text :animated="true" style="width: 40px;"></ion-skeleton-text></h2>
-										</ion-label>
-									</div>
-								</ion-item>
-							</div>
 					</ion-list>
 				</Transition>
 
 				<Transition name="ElemAnim">
-					<ion-list v-if="allLoaded" id="comp-hw" ref="comp-hw" lines="none" inset="true">
+					<ion-list v-if="allLoaded && !hwloading" id="comp-hw" ref="comp-hw" lines="none" inset="true">
 							<ion-list-header>
 								<ion-label>
 									<h2 style="font-size: 20px;">Travail à faire</h2>
@@ -688,26 +676,6 @@
 								</ion-item></router-link>
 							</ion-item-group></div>
 
-							<ion-item v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0 && !connected" lines="none">
-								<div slot="start" style="margin-left: 5px; margin-right: 20px;">
-									<span class="material-symbols-outlined mdls">wifi_off</span>
-								</div>
-								<ion-label class="ion-text-wrap">
-									<h2>Aucune connexion internet</h2>
-									<p>Les devoirs ne peuvent pas être chargés, réessayez plus tard...</p>
-								</ion-label>
-							</ion-item>
-
-							<ion-item v-if="homeworks.error == 'ERR_NETWORK' && homeworks.length == 0 && connected" lines="none">
-								<div slot="start" style="margin-left: 5px; margin-right: 20px;">
-									<span class="material-symbols-outlined mdls">crisis_alert</span>
-								</div>
-								<ion-label class="ion-text-wrap">
-									<h2>Serveurs indisponibles</h2>
-									<p>Les devoirs ne peuvent pas être chargés, nos serveurs seront bientôt de nouveau disponibles...</p>
-								</ion-label>
-							</ion-item>
-
 							<ion-item v-if="homeworks.length == 0 && !hwLoading" lines="none">
 								<div slot="start" style="margin-left: 5px; margin-right: 20px;">
 									<span class="material-symbols-outlined mdls">done_all</span>
@@ -717,31 +685,11 @@
 									<p>Vous n'avez aucun travail à faire pour les 7 prochains jours.</p>
 								</ion-label>
 							</ion-item>
-
-							<div v-if="hwLoading">
-								<div v-for="i in 2" :key="i">
-									<div class="homepage_divider">
-										<p><ion-skeleton-text :animated="true" style="width: 100px;"></ion-skeleton-text></p>
-										<div class="divider"></div>
-									</div>
-									<ion-item lines="none" v-for="n in 2" :key="n">
-										<ion-label>
-												<p><span class="courseColor"></span><ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text></p>
-												<h2><ion-skeleton-text :animated="true" style="width: 60%;"></ion-skeleton-text></h2>
-											</ion-label>
-
-											<ion-chip slot="end" color="medium">
-												<span class="material-symbols-outlined mdls">schedule</span>
-												<p style="padding-left: 5px;"><ion-skeleton-text :animated="true" style="width: 40px;"></ion-skeleton-text></p>
-											</ion-chip>
-									</ion-item>
-								</div>
-							</div>
 					</ion-list>
 				</Transition>
 
 				<Transition name="ElemAnim">
-					<ion-list v-if="allLoaded" id="comp-news" ref="comp-news" lines="none" inset="true">
+					<ion-list v-if="allLoaded && !newsLoading" id="comp-news" ref="comp-news" lines="none" inset="true">
 							<ion-list-header>
 								<ion-label>
 									<h2 style="font-size: 20px;">Actualités</h2>
@@ -759,17 +707,6 @@
 									</ion-label>
 								</ion-item>
 							</router-link>
-
-							<div v-if="newsLoading && news.length == 0">
-								<ion-item v-for="i in 5" :key="i" button>
-									<span slot="start" class="material-symbols-outlined mdls emoji">feed</span>
-											
-									<ion-label>
-										<h2><ion-skeleton-text :animated="true" style="width: 35%;"></ion-skeleton-text></h2>
-										<p><ion-skeleton-text :animated="true" style="width: 100%;"></ion-skeleton-text></p>
-									</ion-label>
-								</ion-item>
-							</div>
 
 							<ion-item v-if="news.length == 0 && !newsLoading" lines="none">
 								<div slot="start" style="margin-left: 5px; margin-right: 20px;">
