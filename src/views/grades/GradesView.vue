@@ -56,7 +56,7 @@
 			IonNavLink
 		},
 		data() {
-			let gradesDisplay = localStorage.getItem('gradesDisplay') || 'grid';
+			let gradesDisplay = localStorage.getItem('gradesDisplay') || 'list';
 
 			return {
 				MarkView: MarkView,
