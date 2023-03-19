@@ -1,7 +1,9 @@
 <script lang="ts">
-    import { IonApp, IonContent, IonButton, IonButtons, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText, alertController, IonModal, IonThumbnail } from '@ionic/vue';
+    import { IonApp, IonContent, IonButton, IonButtons, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText, alertController, IonModal, IonThumbnail, IonAvatar } from '@ionic/vue';
 
     import Values from 'values.js'
+
+    import { StatusBar, Style } from '@capacitor/status-bar';
 
     import { Browser } from '@capacitor/browser';
 
@@ -66,11 +68,13 @@
         IonModal,
         IonThumbnail,
         IonButtons,
-        IonButton
+        IonButton,
+        IonAvatar
     },
     data() {
         return {
             loggedIn: localStorage.loggedIn,
+            isMenuOpened: false as boolean,
             dataLoading: true,
             connectedToServer: 'pause',
             userData: {
@@ -163,6 +167,9 @@
         }
     },
     methods: {
+        setMenuOpened(state: any) {
+            this.isMenuOpened = state;
+        },
         async openURL(url: string) {
 			await Browser.open({
 					url: url,
@@ -371,6 +378,27 @@
 
             return animation;
         },
+        async menuOpened(isOpen: boolean, event: any) {
+            if(isOpen) {
+                StatusBar.setStyle({style: Style.Dark})
+            }
+            else {
+                const dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+                if(dark) {
+                    StatusBar.setStyle({style: Style.Dark})
+                }
+                else {
+                    StatusBar.setStyle({style: Style.Light})
+                }
+
+                setTimeout(() => {
+                    if(this.isMenuOpened == true) {
+                        StatusBar.setStyle({style: Style.Dark})
+                    }
+                }, 500);
+            }
+        },
         async displayDevMsg() {
 			const alert = await alertController.create({
 				header: 'Version de développement',
@@ -542,7 +570,7 @@
     </div>
 
     <ion-split-pane content-id="main-content">
-      <ion-menu type="overlay" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
+      <ion-menu @ionWillOpen="menuOpened(true, $event)" @ionWillClose="menuOpened(false, $event)" @ionDidOpen="setMenuOpened(true)" @ionDidClose="setMenuOpened(false)" type="overlay" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
         <ion-header collapse="fade">
             <div class="userItem" :style="`background-image: url('${avatar}');`">
                 <div class="userItem_content">
