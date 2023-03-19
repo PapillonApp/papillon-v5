@@ -219,6 +219,10 @@ ion-item .mdls[slot="start"] {
     margin-bottom: 10px;
 }
 
+.NoCours ion-spinner {
+    margin-bottom: 15px;
+}
+
 .NoCours h2 {
     font-style: normal;
     font-weight: 600;
