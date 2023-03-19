@@ -461,7 +461,7 @@
 				<ion-title mode="md">Vue d'ensemble</ion-title>
 
 				<ion-buttons slot="end">
-					<ion-nav-link router-direction="forward" :component="UserView">
+					<ion-nav-link v-if="avatar" router-direction="forward" :component="UserView">
 						<ion-avatar class="userAvatar">
 							<img :src="avatar"/>
 						</ion-avatar>
