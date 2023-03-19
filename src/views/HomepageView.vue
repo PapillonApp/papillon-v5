@@ -288,7 +288,6 @@
 				return lessons;
 			},
 			getRecap(force) {
-				this.ttbloading = true;
 				this.hwLoading = true;
 				this.gradesLoading = true;
 				this.newsLoading = true;
@@ -402,7 +401,6 @@
 				} */
 			},
 			async handleRefresh(event) {
-				this.timetable = [];
 				this.homeworks = [];
 				this.grades = [];
 
@@ -530,7 +528,7 @@
 						<ion-item class="nextCours" button :detail="false" mode="md" lines="none"
 							@click="goto('timetable')" 
 							:class="{ cancelled: cours.status.isCancelled, HasStatus: cours.hasStatus }">
-							<div slot="start">
+							<div slot="start" class="timeChip">
 								<IonChip>
 									{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}
 								</IonChip>
@@ -829,6 +827,14 @@
 		background-color: var(--courseColor);
 		display: inline-block;
 		margin-right: 5px;
+	}
+
+	.nextCours .timeChip {
+		margin-right: 15px;
+	}
+
+	.nextCours .timeChip ion-chip {
+		font-weight: 500;
 	}
 
 	.nextCours .progression {
