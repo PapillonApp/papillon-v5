@@ -169,6 +169,8 @@
     methods: {
         setMenuOpened(state: any) {
             this.isMenuOpened = state;
+
+            this.menuOpened(state, false);
         },
         async openURL(url: string) {
 			await Browser.open({
