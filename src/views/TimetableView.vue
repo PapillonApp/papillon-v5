@@ -705,7 +705,7 @@
             </swiper-slide>
         </swiper>
 
-        <IonModal ref="newCoursModal" class="newCoursModal" :is-open="newCoursModalOpen" :presenting-element="presentingElement">
+        <IonModal :canDismiss="true" @didDismiss="setNewCoursModalOpen(false)" ref="newCoursModal" class="newCoursModal" :is-open="newCoursModalOpen" :presenting-element="presentingElement">
             <IonHeader>
                 <IonToolbar>
                     <ion-buttons slot="start">
