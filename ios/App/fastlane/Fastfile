@@ -13,6 +13,10 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+require 'spaceship'
+
+Spaceship::ConnectAPI::App.const_set('ESSENTIAL_INCLUDES', 'appStoreVersions')
+
 default_platform(:ios)
 
 begin
