@@ -108,12 +108,6 @@ function getPronoteRecap(force) {
 
 }
 
-
-
-
-
-
-
 // ed : get timetable
 function getEDRecap(force) {
 	// promise
@@ -202,13 +196,7 @@ function getEDRecap(force) {
 		});
 
 	});
-
 }
-
-
-
-
-
 
 // export
 export default getRecap
