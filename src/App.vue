@@ -97,49 +97,159 @@
 	setup() {
 		const selectedIndex = ref(0);
 		// defines the tabs shown in the menu
-		const appPages = [
-			{
-				title: 'Accueil',
-				url: '/home',
-				icon: "home",
-			},
-			{
+		// defines the tabs shown in the menu
+        const appPages = [
+            {
+                title: 'Accueil',
+                url: '/home',
+                icon: "home",
+                disabled: false
+            }
+        ];
+        
+        // hides some tabs when they are not anabled
+        if(localStorage.getItem("loginService") === "pronote") {
+            appPages.push({
 				title: 'Emploi du temps',
 				url: '/timetable',
-				icon: "calendar_month"
+				icon: "calendar_month",
+                disabled: false,
 			},
 			{
 				title: 'Travail à faire',
 				url: '/homework',
 				icon: "auto_stories",
+                disabled: false,
 			},
 			{
 				title: 'Notes',
 				url: '/grades',
 				icon: "insights",
+                disabled: false,
 			},
 			{
 				title: 'Vie scolaire',
 				url: '/schoollife',
 				icon: "gavel",
+                disabled: false,
 			},
 			{
 				title: 'Actualités',
 				url: '/news',
 				icon: "newspaper",
+                disabled: false,
 			},
 			{
 				title: 'Conversations',
 				url: '/conversations',
 				icon: "forum",
+                disabled: false,
 			},
 			{
 				title: 'Paramètres',
 				url: '/settings',
 				icon: "settings",
-			},
-		];
+                disabled: false,
+			},)
+            if(localStorage.getItem('viescolaireEnabled') !== 'true') {
+                // remove school life tab
+                appPages.splice(4, 1);
+
+                appPages.push({
+                    title: 'Paramètres',
+                    url: '/settings',
+                    icon: "settings",
+                    disabled: false
+                })
+            }
+        }
 		
+        // adaptation des menus pour ED
+        if(localStorage.getItem("loginService") === "ecoledirecte") {
+            let usercache = JSON.parse(localStorage.getItem("UserCache")!)
+            usercache.modules.forEach((module1: any) => {
+                switch(module1.code) {
+                    case "VIE_SCOLAIRE":
+                        if(module1.enable) {
+                            appPages.push({
+                                title: 'Vie scolaire',
+                                url: '/schoollife',
+                                icon: "gavel",
+                                disabled: false
+                            })
+                        }
+                        break;
+                    case "VIE_DE_LA_CLASSE":
+                        if(module1.enable) {
+                            appPages.push({
+                                title: 'Vie de la classe (non dispo.)',
+                                url: '/classlife',
+                                icon: "forum",
+                                disabled: true
+                            })
+                        }
+                        break;
+                    case "NOTES":
+                        if(module1.enable) {
+                            appPages.push({
+                                title: 'Notes',
+                                url: '/grades',
+                                icon: "insights",
+                                disabled: false
+                            })
+                        }
+                        break;
+                    case "CLOUD":
+                        if(module1.enable) {
+                            appPages.push({
+                                title: 'Cloud (non dispo.)',
+                                url: '/cloud',
+                                icon: "cloud",
+                                disabled: true
+                            })
+                        }
+                        break;
+                    case "MESSAGERIE":
+                        if(module1.enable) {
+                            appPages.push({
+                                title: 'Messagerie (non dispo.)',
+                                url: '/mails',
+                                icon: "mail",
+                                disabled: true
+                            })
+                        }
+                        break;
+                    case "EDT":
+                        if(module1.enable) {
+                            appPages.push({
+                                title: 'Emploi du temps',
+                                url: '/timetable',
+                                icon: "calendar_month",
+                                disabled: false
+                            })
+                        }
+                        break;
+                    //documents élèves
+                    case "CAHIER_DE_TEXTES":
+                        if(module1.enable) {
+                            appPages.push({
+                                title: 'Travail à faire',
+                                url: '/homework',
+                                icon: "auto_stories",
+                                disabled: false
+                            })
+                        }
+                        break;
+                }
+            })
+            appPages.push({
+                title: 'Paramètres',
+                url: '/settings',
+                icon: "settings",
+                disabled: false
+            })
+        }
+
 		// hides some tabs when they are not anabled
 		if(localStorage.getItem('viescolaireEnabled') !== 'true') {
 			// remove school life tab
@@ -538,6 +648,7 @@
 					title: 'Vie scolaire',
 					url: '/schoollife',
 					icon: "gavel",
+                    disabled: false,
 				});
 			}
 		});
