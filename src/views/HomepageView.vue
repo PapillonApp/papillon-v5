@@ -66,7 +66,6 @@
 				ttbLoading: false,
 				nextCoursTime: "",
 				nextCoursStarted: false,
-				nextCoursIsStarting: false,
 				nextCoursCompletion: 0,
 				percentage: 0,
 				updateTime: null,
@@ -172,41 +171,27 @@
 					let mins = Math.floor((lessonStart - now) / 1000 / 60);
 					let gap = -((Math.floor((lessonEnd - lessonStart) / 1000 / 60)) / 2);
 
-					// get seconds before next lesson
-					let secs = Math.floor((lessonStart - now) / 1000);
-					// remove minutes from seconds
-					secs = secs - (mins * 60);
-					// add 0 if seconds is less than 10
-					if (secs < 10) {
-						secs = `0${secs}`;
-					}
-
 					if (lessons.length != 0) {
 						return false;
 					}
 
 					// if less than 60 mins
 					if (mins < 60 && mins >= 0) {
-						this.nextCoursTime = `dans ${mins}:${secs}`
-						this.nextCoursStarted = true;
-						this.nextCoursIsStarting = true;
+						if (mins > 1) {
+							this.nextCoursTime = `dans ${mins} minutes`
+						} else if (mins == 0) {
+							this.nextCoursTime = `dans moins d'une minute`
+						} else {
+							this.nextCoursTime = `dans ${mins} minute`
+						}
 
-						// get 1 hour before lesson starts
-						let startMins = lessonStart - 1000 * 60 * 60;
-							
-						// get percentage between current time and 1 hour before lesson starts
-						let lessonTime = lessonStart - startMins;
-						let lessonTimeDone = now - startMins;
-						let percentage = Math.floor((lessonTimeDone / lessonTime) * 100);
-
-						this.nextCoursCompletion = percentage;
+						this.nextCoursStarted = false;
 					} else if (mins < 0) {
 						if (lessonEnd <= now) {
 							return false;
 						}
 
 						this.nextCoursStarted = true;
-						this.nextCoursIsStarting = false;
 
 						// get percentage of lesson done
 						let lessonTime = lessonEnd - lessonStart;
@@ -238,7 +223,6 @@
 						this.nextCoursTime = `dans ${hours} et ${mins}`;
 
 						this.nextCoursStarted = false;
-						this.nextCoursIsStarting = false;
 					}
 
 					if (mins < gap) {
@@ -318,7 +302,7 @@
 
 					this.updateTime = setInterval(() => {
 						this.timetable = this.editTimetable(timetable);
-					}, 200);
+					}, 600);
 
 					// homeworks
 					const homeworks = recap.homeworks;
@@ -551,12 +535,11 @@
 								<div class="progress" :style="`width: ${nextCoursCompletion}%`"></div>
 							</div>
 
-							<p class="endProg" v-if="nextCoursIsStarting">{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</p>
-							<p class="endProg" v-else>{{ cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</p>
-						</div>
-						<div v-else>
-							<p>{{ nextCoursTime }}</p>
-						</div>
+									<p class="endProg">{{ cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</p>
+								</div>
+								<div v-else>
+									<p>{{ nextCoursTime }}</p>
+								</div>
 
 						<div class="CoursInfoContainer">
 							<div class="CoursInfo room">
