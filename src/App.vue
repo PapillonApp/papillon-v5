@@ -46,291 +46,168 @@
 				}
 			}
 
-	export default defineComponent({
-	name: 'App',
-	components: {
-		IonApp, 
-		IonContent, 
-		IonItem, 
-		IonLabel, 
-		IonList, 
-		IonMenu, 
-		IonMenuToggle,
-		IonRouterOutlet, 
-		IonSplitPane,
-		IonHeader,
-		IonToolbar,
-		IonSkeletonText,
-		IonModal,
-		IonThumbnail,
-		IonButtons,
-		IonButton,
-		IonAvatar
-	},
-	data() {
-		return {
-			showTransition: this.transition as any,
-			loggedIn: localStorage.loggedIn,
-			isMenuOpened: false as boolean,
-			dataLoading: true,
-			connectedToServer: 'pause',
-			changeStatusTimeout: true as any,
-			userData: {
-				student: {
-					name: '',
-					avatar: '',
-					ine: '',
-					contact: {
-						email: '',
-						phone: ''
-					}
-				},
-				class: {
-					name: '',
-					school: ''
-				}
-			},
-			avatar: '',
-			presentingElement: undefined as any,
-		}
-	},
-	setup() {
-		const selectedIndex = ref(0);
-		// defines the tabs shown in the menu
-		// defines the tabs shown in the menu
+    export default defineComponent({
+    name: 'App',
+    components: {
+        IonApp, 
+        IonContent, 
+        IonItem, 
+        IonLabel, 
+        IonList, 
+        IonMenu, 
+        IonMenuToggle,
+        IonRouterOutlet, 
+        IonSplitPane,
+        IonHeader,
+        IonToolbar,
+        IonSkeletonText,
+        IonModal,
+        IonThumbnail,
+        IonButtons,
+        IonButton
+    },
+    data() {
+        return {
+            loggedIn: localStorage.loggedIn,
+            dataLoading: true,
+            userData: {
+                student: {
+                    name: '',
+                    avatar: '',
+                    ine: '',
+                    contact: {
+                        email: '',
+                        phone: ''
+                    }
+                },
+                class: {
+                    name: '',
+                    school: ''
+                }
+            },
+            avatar: '',
+            presentingElement: undefined as any,
+			isMenuOpened: false,
+			changeStatusTimeout: false,
+			connectedToServer: "",
+			showTransition: undefined as any
+        }
+    },
+    setup() {
+        const selectedIndex = ref(0);
+        // defines the tabs shown in the menu
         const appPages = [
             {
                 title: 'Accueil',
                 url: '/home',
                 icon: "home",
-                disabled: false
-            }
-        ];
-        
-        // hides some tabs when they are not anabled
-        if(localStorage.getItem("loginService") === "pronote") {
-            appPages.push({
-				title: 'Emploi du temps',
-				url: '/timetable',
-				icon: "calendar_month",
-                disabled: false,
-			},
-			{
-				title: 'Travail à faire',
-				url: '/homework',
-				icon: "auto_stories",
-                disabled: false,
-			},
-			{
-				title: 'Notes',
-				url: '/grades',
-				icon: "insights",
-                disabled: false,
-			},
-			{
-				title: 'Vie scolaire',
-				url: '/schoollife',
-				icon: "gavel",
-                disabled: false,
-			},
-			{
-				title: 'Actualités',
-				url: '/news',
-				icon: "newspaper",
-                disabled: false,
-			},
-			{
-				title: 'Conversations',
-				url: '/conversations',
-				icon: "forum",
-                disabled: false,
-			},
-			{
-				title: 'Paramètres',
-				url: '/settings',
-				icon: "settings",
-                disabled: false,
-			},)
-            if(localStorage.getItem('viescolaireEnabled') !== 'true') {
-                // remove school life tab
-                appPages.splice(4, 1);
-
-                appPages.push({
-                    title: 'Paramètres',
-                    url: '/settings',
-                    icon: "settings",
-                    disabled: false
-                })
-            }
-        }
-		
-        // adaptation des menus pour ED
-        if(localStorage.getItem("loginService") === "ecoledirecte") {
-            let usercache = JSON.parse(localStorage.getItem("UserCache")!)
-            usercache.modules.forEach((module1: any) => {
-                switch(module1.code) {
-                    case "VIE_SCOLAIRE":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Vie scolaire',
-                                url: '/schoollife',
-                                icon: "gavel",
-                                disabled: false
-                            })
-                        }
-                        break;
-                    case "VIE_DE_LA_CLASSE":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Vie de la classe (non dispo.)',
-                                url: '/classlife',
-                                icon: "forum",
-                                disabled: true
-                            })
-                        }
-                        break;
-                    case "NOTES":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Notes',
-                                url: '/grades',
-                                icon: "insights",
-                                disabled: false
-                            })
-                        }
-                        break;
-                    case "CLOUD":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Cloud (non dispo.)',
-                                url: '/cloud',
-                                icon: "cloud",
-                                disabled: true
-                            })
-                        }
-                        break;
-                    case "MESSAGERIE":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Messagerie (non dispo.)',
-                                url: '/mails',
-                                icon: "mail",
-                                disabled: true
-                            })
-                        }
-                        break;
-                    case "EDT":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Emploi du temps',
-                                url: '/timetable',
-                                icon: "calendar_month",
-                                disabled: false
-                            })
-                        }
-                        break;
-                    //documents élèves
-                    case "CAHIER_DE_TEXTES":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Travail à faire',
-                                url: '/homework',
-                                icon: "auto_stories",
-                                disabled: false
-                            })
-                        }
-                        break;
-                }
-            })
-            appPages.push({
+            },
+            {
+                title: 'Emploi du temps',
+                url: '/timetable',
+                icon: "calendar_month"
+            },
+            {
+                title: 'Travail à faire',
+                url: '/homework',
+                icon: "auto_stories",
+            },
+            {
+                title: 'Notes',
+                url: '/grades',
+                icon: "insights",
+            },
+            {
+                title: 'Vie scolaire',
+                url: '/schoollife',
+                icon: "gavel",
+            },
+            {
+                title: 'Actualités',
+                url: '/news',
+                icon: "newspaper",
+            },
+            {
+                title: 'Conversations',
+                url: '/conversations',
+                icon: "forum",
+            },
+            {
                 title: 'Paramètres',
                 url: '/settings',
                 icon: "settings",
-                disabled: false
-            })
+            },
+        ];
+        
+        // hides some tabs when they are not anabled
+        if(localStorage.getItem('viescolaireEnabled') !== 'true') {
+            // remove school life tab
+            appPages.splice(4, 1);
         }
-
-		// hides some tabs when they are not anabled
-		if(localStorage.getItem('viescolaireEnabled') !== 'true') {
-			// remove school life tab
-			appPages.splice(4, 1);
-		}
-		
-		// weird ionic stuff
-		const path = window.location.pathname.split('folder/')[1];
-		if (path !== undefined) {
-			selectedIndex.value = appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
-		}
-		
-		const route = useRoute();
-		
-		return { 
-			selectedIndex,
-			appCanal: canal,
-			appVersion: version,
-			appUpdates: changelog,
-			appPages,
-			labels : [],
-			isSelected: (url: string) => url === route.path ? 'selected' : ''
-		}
-	},
-	methods: {
-		setMenuOpened(state: any) {
-			this.isMenuOpened = state;
-
-			this.menuOpened(state);
-		},
-		async openURL(url: string) {
-			await Browser.open({
-					url: url,
-					toolbarColor: '#1e1e1e',
-					presentationStyle: 'popover',
-			});
-		},
-		checkAndroidShortcuts() {
-			AndroidShortcuts.isDynamicSupported().then((result) => {
-				if (result) {
-					AndroidShortcuts.addListener('shortcut', (response: any) => {
-						switch (response.data) {
-							case "timetable":
-								this.$router.push('/timetable');
-								break;
-							case "homework":
-								this.$router.push('/homework');
-								break;
-							case "grades":
-								this.$router.push('/grades');
-								break;
-							default:
-								break;
-						}
-					});
-				}
-			})
-		},
-		async notify(title: string, body: string) {
-			LocalNotifications.schedule({
-				notifications: [
-					{
-						title: title,
-						body: body,
-						id: this.randomID(),
-						schedule: { at: new Date(Date.now() + 1000) },
-					}
-				]
-			});
-		},
-		randomID() {
-			return Math.floor(Math.random() * 100000 + 1000);
-		},
-		async backgroundFetchEvent(taskId: any) {
-			GetToken.default().then(async (token: any) => {
-				if(token) {
-					GetRecap.default().then(async (recap: any) => {
-						if(recap) {
-							// grades
-							const lastGrades = JSON.parse(localStorage.getItem('lastGrades') || '[]');
-							const recapGrades = recap.grades.last;
+        
+        // weird ionic stuff
+        const path = window.location.pathname.split('folder/')[1];
+        if (path !== undefined) {
+            selectedIndex.value = appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
+        }
+        
+        const route = useRoute();
+        
+        return { 
+            selectedIndex,
+            appCanal: canal,
+            appVersion: version,
+            appUpdates: changelog,
+            appPages,
+            labels : [],
+            isSelected: (url: string) => url === route.path ? 'selected' : ''
+        }
+    },
+    methods: {
+        checkAndroidShortcuts() {
+            AndroidShortcuts.isDynamicSupported().then((result) => {
+                if (result) {
+                    AndroidShortcuts.addListener('shortcut', (response: any) => {
+                        switch (response.data) {
+                            case "timetable":
+                                this.$router.push('/timetable');
+                                break;
+                            case "homework":
+                                this.$router.push('/homework');
+                                break;
+                            case "grades":
+                                this.$router.push('/grades');
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+                }
+            })
+        },
+        async notify(title: string, body: string) {
+            LocalNotifications.schedule({
+                notifications: [
+                    {
+                        title: title,
+                        body: body,
+                        id: this.randomID(),
+                        schedule: { at: new Date(Date.now() + 1000) },
+                    }
+                ]
+            });
+        },
+        randomID() {
+            return Math.floor(Math.random() * 100000 + 1000);
+        },
+        async backgroundFetchEvent(taskId: any) {
+            GetToken.default().then(async (token: any) => {
+                if(token) {
+                    GetRecap.default().then(async (recap: any) => {
+                        if(recap) {
+                            // grades
+                            const lastGrades = JSON.parse(localStorage.getItem('lastGrades') || '[]');
+                            const recapGrades = recap.grades.last;
 
 							if(lastGrades.length === 0) {
 								localStorage.setItem('lastGrades', JSON.stringify(recapGrades));
@@ -532,6 +409,16 @@
 
 			await alert.present();
 		},
+		async displayDevMessage() {
+			const alert = await alertController.create({
+				header: 'Fonctionnalité non disponible',
+				message: "Cette fonctionnalité n'est pas disponible pour le moment. Elle le sera prochainement.",
+				mode: 'md',
+				buttons: ['Je comprends']
+			});
+
+			await alert.present();
+		},
 		showChangelog() {
 			// update version
 			localStorage.setItem('version', this.appVersion);
@@ -635,23 +522,22 @@
 
 		this.askNotifPerms();
 
-		// on settingsUpdated event, setup the app
-		document.addEventListener('settingsUpdated', () => {
-			// if viescolaireEnabled is set to false, remove school life tab
-			if(localStorage.getItem('viescolaireEnabled') !== 'true') {
-				// remove school life tab
-				this.appPages.splice(3, 1);
-			}
-			else {
-				// add school life tab
-				this.appPages.splice(3, 0, {
-					title: 'Vie scolaire',
-					url: '/schoollife',
-					icon: "gavel",
-                    disabled: false,
-				});
-			}
-		});
+        // on settingsUpdated event, setup the app
+        document.addEventListener('settingsUpdated', () => {
+            // if viescolaireEnabled is set to false, remove school life tab
+            if(localStorage.getItem('viescolaireEnabled') !== 'true') {
+                // remove school life tab
+                this.appPages.splice(3, 1);
+            }
+            else {
+                // add school life tab
+                this.appPages.splice(3, 0, {
+                    title: 'Vie scolaire',
+                    url: '/schoollife',
+                    icon: "gavel",
+                });
+            }
+        });
 
 		// apply customizations
 		if(localStorage.getItem('customizations')) {
@@ -704,7 +590,7 @@
 	</div>
 
 	<ion-split-pane content-id="main-content">
-		<ion-menu @ionWillOpen="menuOpened(true)" @ionWillClose="menuOpened(false)" @ionDidOpen="setMenuOpened(true)" @ionDidClose="setMenuOpened(false)" type="overlay" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
+		<ion-menu @ionWillOpen="menuOpened(true)" @ionWillClose="menuOpened(false)" @ionDidOpen="menuOpened(true)" @ionDidClose="menuOpened(false)" type="overlay" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
 			<ion-header collapse="fade">
 				<div class="userItem" :style="`background-image: url('${avatar}');`">
 					<div class="userItem_content">
@@ -713,58 +599,34 @@
 						</div>
 						<img v-else class="avatar" :src="avatar" ref="avatar"/>
 
-						<div class="userData" v-if="dataLoading">
-							<h3><ion-skeleton-text :animated="true" style="width: 40%;margin-bottom: 5px;height: 18px;"></ion-skeleton-text></h3>
-							<p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
-						</div>
-						<div class="userData" v-else>
-							<h3>{{userData.student.name}}</h3>
-							<p v-if="userData.class.school.trim() != ''">{{userData.class.name}} — {{userData.class.school}}</p>
-						</div>
-					</div>
-				</div>
-			</ion-header>
-			<ion-content mode="md" class="menuContent">
-				<ion-list id="inbox-list"> 
-					<router-link router-direction="forward" @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
-						<ion-item button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
-							<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
-							<ion-label>{{ p.title }}</ion-label>
-						</ion-item>
-					</router-link>
-				</ion-list>
-
-				<ion-list id="bottomActionsList"> 
-					<ion-item @click="openURL('https://docs.getpapillon.xyz')" button mode="md" lines="none" :detail="false">
-						<span class="material-symbols-outlined mdls" slot="start">support</span>
-						<ion-label>Aide de Papillon</ion-label>
-					</ion-item>
-					<ion-item button mode="md" lines="none" :detail="false">
-						<span class="material-symbols-outlined mdls" slot="start">dns</span>
-						<ion-label>Serveur</ion-label>
-
-						<ion-chip slot="end" color="success" v-if="connectedToServer == 'connected'">
-							<ion-label>Connecté</ion-label>
-						</ion-chip>
-						<ion-chip slot="end" color="warning" v-else-if="connectedToServer == 'connecting'">
-							<ion-label>Reconnexion</ion-label>
-						</ion-chip>
-						<ion-chip slot="end" color="danger" v-else-if="connectedToServer == 'disconnected'">
-							<ion-label>Déconnecté</ion-label>
-						</ion-chip>
-						<ion-chip slot="end" color="medium" v-else>
-							<ion-label>En pause</ion-label>
-						</ion-chip>
-					</ion-item>
-				</ion-list>
-			</ion-content>
-		</ion-menu>
-		<ion-router-outlet ref="outlet" :animated="true" :animation="showTransition" id="main-content" v-slot="{ Component }">
-			<keep-alive>
-				<component :is="Component" />
-			</keep-alive>
-		</ion-router-outlet>
-	</ion-split-pane>
+                    <div class="userData" v-if="dataLoading">
+                        <h3><ion-skeleton-text :animated="true" style="width: 40%;margin-bottom: 5px;height: 18px;"></ion-skeleton-text></h3>
+                        <p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
+                    </div>
+                    <div class="userData" v-else>
+                        <h3>{{userData.student.name}}</h3>
+                        <p v-if="userData.class.school.trim() != ''">{{userData.class.name}} — {{userData.class.school}}</p>
+                    </div>
+                </div>
+            </div>
+        </ion-header>
+        <ion-content mode="md">
+          <ion-list id="inbox-list"> 
+            <router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
+                <ion-item button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
+                    <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
+                    <ion-label>{{ p.title }}</ion-label>
+                </ion-item>
+            </router-link>
+          </ion-list>
+        </ion-content>
+      </ion-menu>
+      <ion-router-outlet ref="outlet" :animated="true" :animation="transition" id="main-content" v-slot="{ Component }">
+        <keep-alive>
+            <component :is="Component" />
+        </keep-alive>
+    </ion-router-outlet>
+    </ion-split-pane>
 
 	<ion-modal ref="changelogModal">
 		<ion-header>
