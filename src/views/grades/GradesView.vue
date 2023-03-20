@@ -56,7 +56,7 @@
 			IonNavLink
 		},
 		data() {
-			let gradesDisplay = localStorage.getItem('gradesDisplay') || 'list';
+			let gradesDisplay = localStorage.getItem('gradesDisplay') || 'Vue liste';
 
 			return {
 				MarkView: MarkView,
@@ -203,8 +203,8 @@
 			},
 			changeDisplay(e) {
 				let val = e.detail.value;
-				this.display = val;
 
+				this.display = val;
 				localStorage.setItem('gradesDisplay', val);
 			},
 			setExcludedJoinSubject(subjectName) {
@@ -415,9 +415,9 @@
 				<ion-buttons class="endBtns" slot="end">
 					<ion-spinner v-if="isLoading"></ion-spinner>
 
-					<ion-select @ionChange="changeDisplay($event)" interface="popover" placeholder="Affichage" :value="display">
-						<ion-select-option value="grid">Vue grille</ion-select-option>
-						<ion-select-option value="list">Vue liste</ion-select-option>
+					<ion-select ref="displaySel" @ionChange="changeDisplay($event)" interface="popover" placeholder="Affichage" :value="display">
+						<ion-select-option value="Vue grille">Vue grille</ion-select-option>
+						<ion-select-option value="Vue liste">Vue liste</ion-select-option>
 					</ion-select>
 				</ion-buttons>
 			</IonToolbar>
@@ -450,7 +450,7 @@
 						<p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
 					</div>
 
-					<div class="grades" v-if="display == 'grid'">
+					<div class="grades" v-if="display == 'Vue grille'">
 						<IonNavLink v-for="(mark, i) in subject.marks" :key="i" router-direction="forward" :component="MarkView" :componentProps="{markID: mark.id}">
 							<ion-card class="grade">
 								<div class="myGrade">
@@ -497,7 +497,7 @@
 						</IonNavLink>
 					</div>
 
-					<ion-list lines="none" class="gradesList" v-if="display == 'list'">
+					<ion-list lines="none" class="gradesList" v-if="display == 'Vue liste'">
 						<IonNavLink v-for="(mark, i) in subject.marks" :key="i" router-direction="forward" :component="MarkView" :componentProps="{markID: mark.id}">
 							<ion-item class="gradeItem" button detail="false">
 								<ion-text slot="start" class="emoji">{{ getClosestGradeEmoji(subject.name) }}</ion-text>

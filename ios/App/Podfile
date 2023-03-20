@@ -32,7 +32,6 @@ def capacitor_pods
   pod 'HugotomaziCapacitorNavigationBar', :path => '../../node_modules/@hugotomazi/capacitor-navigation-bar'
   pod 'TransistorsoftCapacitorBackgroundFetch', :path => '../../node_modules/@transistorsoft/capacitor-background-fetch'
   pod 'CapacitorNotificationBadge', :path => '../../node_modules/capacitor-notification-badge'
-  pod 'CapacitorPluginIosWebviewConfigurator', :path => '../../node_modules/capacitor-plugin-ios-webview-configurator'
 end
 
 target 'App' do
