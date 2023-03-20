@@ -297,26 +297,13 @@ ion-item .mdls[slot="start"] {
 }
 
 /* toasts */
-
-.md ion-toast {
+.ios ion-toast {
     --border-radius: 8px !important;
-    --box-shadow: 0 2px 6px #00000015 !important;
-
-    font-size: 15px;
-    font-weight: 400;
-}
-
-.ios ion-toast:not(.toast-small) {
-    --border-radius: 8px !important;
-    --box-shadow: 0 2px 6px #00000015 !important;
-
-    font-size: 15px;
-    font-weight: 400;
 }
 
 ion-toast::part(header) {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     font-family: var(--papillon-font) !important;
 }
 
