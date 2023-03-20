@@ -706,7 +706,11 @@
         <ion-content mode="md">
           <ion-list id="inbox-list"> 
             <router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
-                <ion-item button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
+                <ion-item v-if="!p.disabled" button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
+                    <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
+                    <ion-label>{{ p.title }}</ion-label>
+                </ion-item>
+                <ion-item @click="displayDevMessage()" v-if="p.disabled" button mode="md" lines="none" :detail="false" :class="{ selected: selectedIndex === i }" disabled>
                     <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
                     <ion-label>{{ p.title }}</ion-label>
                 </ion-item>
