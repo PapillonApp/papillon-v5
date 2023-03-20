@@ -4,26 +4,33 @@
             {
                 "icon": "bug_report",
                 "name": "Améliorations et corrections de bugs",
-                "description": "Nous avons corrigé quelques bugs et amélioré l'expérience utilisateur de Papillon."
+                "description": "Nous avons (encore) corrigé quelques bugs et amélioré l'expérience utilisateur de Papillon."
             },
             {
                 "icon": "home",
-                "name": "Écran d'accueil amélioré",
-                "description": "Vous l'avez demandé, le voici ! L'écran d'accueil de Papillon a été entièrement revu pour vous offrir une expérience plus fluide et plus agréable."
+                "name": "Changements d'écran d'accueil",
+                "description": "On a revu le design de l'écran d'accueil, n'est-il pas plus agréable ?"
             },
             {
-                "icon": "auto_stories",
-                "name": "Travail à faire",
-                "description": "L'affichage des devoirs est maintenant encore plus agréable !"
+                "icon": "grade",
+                "name": "Notes",
+                "description": "Un nouveau mode d'affichage des notes a été ajouté, vous pouvez désormais choisir entre une liste ou une grille."
             },
             {
-                "icon": "sentiment_satisfied",
-                "name": "Dernière ligne droite",
-                "description": "On a jamais été aussi proche de la sortie officielle ! C'est l'heure de reporter les derniers bugs et de finir les dernières fonctionnalités !"
+                "icon": "bolt",
+                "name": "Performance",
+                "description": "Nous avons amélioré la performance de l'application, notamment en réduisant le temps de chargement des pages."
+            },
+            {
+                "icon": "auto_awesome",
+                "name": "Animations",
+                "description": "Il y a désormais pleins d'animations dans l'application, vous allez adorer !"
+            },
+            {
+                "icon": "settings",
+                "name": "Personnalisation",
+                "description": "Vous pouvez désormais choisir la couleur du thème de Papillon et une nouvelle police a été ajoutée."
             }
-        ],
-        "fixes": [
-            
         ]
     }
 }
