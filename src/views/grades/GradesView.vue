@@ -861,32 +861,25 @@
 		gap: 5px;
 	}
 
-	.ios .grade {
+	.grade {
 		border: 1px solid var(--ion-color-step-50);
 		border-radius: 8px;
 	}
 
-	.ios .myGrade {
+	.myGrade {
 		border: none;
 		background: linear-gradient(90deg, #00000055 0%, #00000055 100%), var(--backgroundTheme);
 	}
 
-	.ios .myGrade * {
+	.myGrade * {
 		color: #fff !important;
 	}
 
-	.ios #segment {
+	#segment {
 		width: calc(100vw - 24px);
 		margin: 0 12px;
 
 		margin-top: -12px;
-	}
-
-	.md .grade {
-		border: 1px solid var(--ion-color-step-150);
-		--background: none;
-		box-shadow: none;
-		border-radius: 8px;
 	}
 
 	ion-spinner {
