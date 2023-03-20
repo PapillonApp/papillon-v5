@@ -20,7 +20,7 @@ function setStatusBarStyle() {
 		StatusBar.setBackgroundColor({color: "#111112"});
 		StatusBar.setStyle({style: Style.Dark})
 	} else {
-		StatusBar.setBackgroundColor({color: "#f9f9f9"});
+		StatusBar.setBackgroundColor({color: "#ffffff"});
 		StatusBar.setStyle({style: Style.Light})
 	}
 }
