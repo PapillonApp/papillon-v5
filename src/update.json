@@ -3,8 +3,8 @@
         "features": [
             {
                 "icon": "bug_report",
-                "name": "Améliorations et corrections de bugs",
-                "description": "Nous avons (encore) corrigé quelques bugs et amélioré l'expérience utilisateur de Papillon."
+                "name": "Corrections de bugs",
+                "description": "De nombreux bugs ont été corrigés et l'expérience utilisateur est améliorée."
             },
             {
                 "icon": "home",
@@ -19,7 +19,7 @@
             {
                 "icon": "bolt",
                 "name": "Performance",
-                "description": "Nous avons amélioré la performance de l'application, notamment en réduisant le temps de chargement des pages."
+                "description": "Le temps de chargement des pages à été drastiquement réduit."
             },
             {
                 "icon": "auto_awesome",

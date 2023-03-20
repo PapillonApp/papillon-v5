@@ -959,7 +959,7 @@
     }
 
     #update-header h1 {
-        font-size: 28px;
+        font-size: 24px;
         letter-spacing: -0.2px;
         margin-bottom: 5px;
         color: var(--ion-color-primary);
