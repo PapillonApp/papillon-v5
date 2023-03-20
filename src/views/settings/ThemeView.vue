@@ -365,7 +365,7 @@
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">invert_colors</span>
 					<IonLabel class="ion-text-wrap">
-						<h2>Utiliser la couleur d'accentuation sur la page</h2>
+						<h2>Utiliser les couleurs de l'établissement</h2>
 						<p>Permet d'utiliser les couleurs de votre service scolaire pour identifier les matières.</p>
 					</IonLabel>
 					<IonToggle slot="end" ref="useScolColors" @ionChange="changeTick('useScolColors')"></IonToggle>
