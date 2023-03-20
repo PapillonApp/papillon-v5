@@ -608,7 +608,7 @@
 	</div>
 
 	<ion-split-pane content-id="main-content">
-		<ion-menu @ionWillOpen="menuOpened(true, $event)" @ionWillClose="menuOpened(false, $event)" @ionDidOpen="setMenuOpened(true)" @ionDidClose="setMenuOpened(false)" type="overlay" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
+		<ion-menu @ionWillOpen="menuOpened(true)" @ionWillClose="menuOpened(false)" @ionDidOpen="setMenuOpened(true)" @ionDidClose="setMenuOpened(false)" type="overlay" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
 			<ion-header collapse="fade">
 				<div class="userItem" :style="`background-image: url('${avatar}');`">
 					<div class="userItem_content">
