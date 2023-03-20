@@ -307,6 +307,10 @@ ion-toast::part(header) {
     font-family: var(--papillon-font) !important;
 }
 
+.ion-page {
+    padding-bottom: var(--papillon-safe-area-bottom, 0) !important;
+}
+
 ion-toast::part(message) {
     font-size: 15px;
 }
@@ -441,6 +445,10 @@ ion-content {
 ion-fab .mdls {
     width: auto;
     margin-left: -3.5px;
+}
+
+.md ion-fab {
+    padding-bottom: var(--papillon-safe-area-bottom, 0) !important;
 }
 
 /* beta chip */

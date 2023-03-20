@@ -740,7 +740,7 @@
 		backdrop-filter: blur(10px);
 		-webkit-backdrop-filter: blur(20px);
 
-		padding-top: calc(env(safe-area-inset-top) + 10px) !important;
+		padding-top: calc(var(--papillon-safe-area-top) + 10px) !important;
 	}
 
 	.userItem .avatar {
@@ -979,7 +979,7 @@
 	}
 
 	.update::part(scroll) {
-		padding-bottom: calc(env(safe-area-inset-bottom) + 100px) !important;
+		padding-bottom: calc(var(--papillon-safe-area-bottom) + 100px) !important;
 	}
 
 	.endButton {
@@ -1002,7 +1002,7 @@
 		background: var(--ion-background-color);
 
 		position: fixed;
-		padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+		padding-bottom: calc(var(--papillon-safe-area-bottom) + 20px) !important;
 		padding-top: 10px;
 
 		bottom: 0;
