@@ -19,6 +19,9 @@ SafeArea.getSafeAreaInsets().then((result) => {
 	document.documentElement.style.setProperty('--papillon-safe-area-left', insets.left + 'px');
 
 	document.documentElement.style.setProperty('--ion-safe-area-top', insets.top + 'px');
+	document.documentElement.style.setProperty('--ion-safe-area-right', insets.right + 'px');
+	document.documentElement.style.setProperty('--ion-safe-area-bottom', insets.bottom + 'px');
+	document.documentElement.style.setProperty('--ion-safe-area-left', insets.left + 'px');
 });
 
 // Status bar
