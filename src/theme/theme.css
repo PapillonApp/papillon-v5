@@ -320,10 +320,6 @@ ion-toast::part(header) {
     font-family: var(--papillon-font) !important;
 }
 
-.ion-page {
-    padding-bottom: var(--papillon-safe-area-bottom, 0) !important;
-}
-
 ion-toast::part(message) {
     font-size: 15px;
 }
