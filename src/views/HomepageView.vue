@@ -1041,4 +1041,19 @@
 		opacity: 0;
 		transform: scale(0.9) translateY(-30px);
 	}
+
+	@media screen and (min-width: 1150px) {
+		#components {
+			display: grid;
+			/* make 2 columns */
+			grid-template-columns: repeat(2, 1fr);
+
+			gap: 16px;
+			padding: 16px;
+		}
+
+		#components ion-list {
+			margin: 0;
+		}
+	}
 </style>
