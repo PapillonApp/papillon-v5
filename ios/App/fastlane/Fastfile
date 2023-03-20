@@ -59,7 +59,7 @@ begin
 			api_key: api_key,
 			app_version: ENV['APP_IOS_VERSION_NUMBER'],
 			ipa: IPA_LOCATION,
-			submit_for_review: true,
+			submit_for_review: false,
 			automatic_release: true,
 			force: true, # Skip HTML report verification
 			skip_metadata: true,
