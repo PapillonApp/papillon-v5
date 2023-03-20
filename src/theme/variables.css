@@ -85,12 +85,12 @@ http://ionicframework.com/docs/theming/ */
     --ion-color-medium-shade: #86888f;
     --ion-color-medium-tint: #a2a4ab;
 
-    --ion-color-light: hsl(var(--ion-color-primary-hue), 10%, 15%);
-    --ion-color-light-rgb: 34,36,40;
+    --ion-color-light: #29292c;
+    --ion-color-light-rgb: 41,41,44;
     --ion-color-light-contrast: #ffffff;
     --ion-color-light-contrast-rgb: 255,255,255;
-    --ion-color-light-shade: hsl(var(--ion-color-primary-hue), 10%, 10%);
-    --ion-color-light-tint: hsl(var(--ion-color-primary-hue), 10%, 15%);
+    --ion-color-light-shade: #29292c;
+    --ion-color-light-tint: #29292c;
   
     --ion-text-color-transparent: #ffffff50;
     --ion-text-color-transparent-rgb: 255,255,255,0.31;

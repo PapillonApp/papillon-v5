@@ -303,11 +303,6 @@
 		margin-right: 5px;
 	}
 
-	.ios .newCoursBtnFab {
-		bottom: 32px;
-		right: 18px;
-	}
-
 	.newCoursBtn {
 		width: 56px;
 		height: 56px;
