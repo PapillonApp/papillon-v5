@@ -49,67 +49,71 @@ const isDateAvailable = (dateString) => {
 }
 
 function fetchDaysOffAndHolidays() {
-	try {
-		// Get holidays and days off
-		const DAYS_API_BASE = "https://calendrier.api.gouv.fr/jours-feries/metropole.json";
-		const HOLIDAY_API_BASE = "https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-calendrier-scolaire&lang=fr&exclude.population=Enseignants"
-
-		let currentYear = new Date().getFullYear();
-		let currentMonth = new Date().getMonth();
-		let academie = localStorage.getItem("acadName");
-		let currentSchoolYear = currentMonth >= 8 ? currentYear + "-" + (currentYear + 1) : (currentYear - 1) + "-" + currentYear;
-
-		// Fetch days off
-		fetch(DAYS_API_BASE)
-			.then(response => response.json())
-			.then(result => {
-				let daysOff = [];
-
-				for (const [key, value] of Object.entries(result)) {
-					let date = new Date(key);
-
-					// Check if date is in current school year
-					let dateYear = date.getFullYear();
-					if (dateYear != currentSchoolYear.split("-")[0] && dateYear != currentSchoolYear.split("-")[1]) {
-						continue;
+	return new Promise((resolve, reject) => {
+		try {
+			// Get holidays and days off
+			const DAYS_API_BASE = "https://calendrier.api.gouv.fr/jours-feries/metropole.json";
+			const HOLIDAY_API_BASE = "https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-calendrier-scolaire&lang=fr&exclude.population=Enseignants"
+	
+			let currentYear = new Date().getFullYear();
+			let currentMonth = new Date().getMonth();
+			let academie = localStorage.getItem("acadName");
+			let currentSchoolYear = currentMonth >= 8 ? currentYear + "-" + (currentYear + 1) : (currentYear - 1) + "-" + currentYear;
+	
+			// Fetch days off
+			fetch(DAYS_API_BASE)
+				.then(response => response.json())
+				.then(result => {
+					let daysOff = [];
+	
+					for (const [key, value] of Object.entries(result)) {
+						let date = new Date(key);
+	
+						// Check if date is in current school year
+						let dateYear = date.getFullYear();
+						if (dateYear != currentSchoolYear.split("-")[0] && dateYear != currentSchoolYear.split("-")[1]) {
+							continue;
+						}
+	
+						let name = value;
+						let dayOffObject = {
+							date: date,
+							name: name,
+						}
+						daysOff.push(dayOffObject);
 					}
-
-					let name = value;
-					let dayOffObject = {
-						date: date,
-						name: name,
-					}
-					daysOff.push(dayOffObject);
-				}
-
-				localStorage.setItem("daysOff", JSON.stringify(daysOff));
-			})
-			.catch(error => console.error("[Fetch Days off]: " + error));
-
-		// Fetch holidays
-		let holidays = [];
-		fetch(HOLIDAY_API_BASE + "&refine.location=" + academie + "&refine.annee_scolaire=" + currentSchoolYear)
-			.then(response => response.json())
-			.then(data => {
-				data.records.forEach(record => {
-					let endDate = record.fields.end_date;
-					let startDate = record.fields.start_date;
-					let name = record.fields.description;
-					let holiday = {
-						endDate: endDate,
-						startDate: startDate,
-						name: name,
-					};
-					holidays.push(holiday);
-				});
-		
-				localStorage.setItem("holidays", JSON.stringify(holidays));
-			})
-			.catch(error => console.error("[Fetch Holidays]: " + error));
-	} catch (error) {
-		console.error("[datetimePicker Fetching]: " + error);
-		displayToast.presentToast("Erreur lors de la récupération des jours fériés et des vacances scolaires", "danger")
-	}
+	
+					localStorage.setItem("daysOff", JSON.stringify(daysOff));
+				})
+				.catch(error => console.error("[Fetch Days off]: " + error));
+	
+			// Fetch holidays
+			let holidays = [];
+			fetch(HOLIDAY_API_BASE + "&refine.location=" + academie + "&refine.annee_scolaire=" + currentSchoolYear)
+				.then(response => response.json())
+				.then(data => {
+					data.records.forEach(record => {
+						let endDate = record.fields.end_date;
+						let startDate = record.fields.start_date;
+						let name = record.fields.description;
+						let holiday = {
+							endDate: endDate,
+							startDate: startDate,
+							name: name,
+						};
+						holidays.push(holiday);
+					});
+			
+					localStorage.setItem("holidays", JSON.stringify(holidays));
+					resolve()
+				})
+				.catch(error => console.error("[Fetch Holidays]: " + error));
+		} catch (error) {
+			console.error("[datetimePicker Fetching]: " + error);
+			displayToast.presentToast("Erreur lors de la récupération des jours fériés et des vacances scolaires", "danger")
+			reject()
+		}
+	})
 }
 
 function maxCalendarDate() {
