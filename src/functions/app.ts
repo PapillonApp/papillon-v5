@@ -77,10 +77,7 @@ updateStatus();
 
 // on prefers color scheme change
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-	if (Capacitor.getPlatform() !== 'web') {
-		checkDarkMode();
-		setStatusBarStyle();
-	}
+	updateStatus();
 });
 
 // constantly set style
