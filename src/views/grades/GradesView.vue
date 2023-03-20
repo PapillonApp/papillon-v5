@@ -99,18 +99,18 @@
 				this.base_period = actualPeriod;
 
 				// if first period contains "Trimestre", add all trimesters
-				if (actualPeriod.name.toLowerCase().includes("Trimestre")) {
+				if (actualPeriod.name.toLowerCase().includes("trimestre")) {
 					for (let i = 0; i < allPeriods.length; i++) {
-						if (allPeriods[i].name.toLowerCase().includes("Trimestre")) {
+						if (allPeriods[i].name.toLowerCase().includes("trimestre")) {
 							this.periods.push(allPeriods[i]);
 						}
 					}
 				}
 
 				// if first period contains "Semestre", add all semesters
-				if (actualPeriod.name.toLowerCase().includes("Semestre")) {
+				if (actualPeriod.name.toLowerCase().includes("semestre")) {
 					for (let i = 0; i < allPeriods.length; i++) {
-						if (allPeriods[i].name.toLowerCase().includes("Semestre")) {
+						if (allPeriods[i].name.toLowerCase().includes("semestre")) {
 							this.periods.push(allPeriods[i]);
 						}
 					}
@@ -861,25 +861,32 @@
 		gap: 5px;
 	}
 
-	.grade {
+	.ios .grade {
 		border: 1px solid var(--ion-color-step-50);
 		border-radius: 8px;
 	}
 
-	.myGrade {
+	.ios .myGrade {
 		border: none;
 		background: linear-gradient(90deg, #00000055 0%, #00000055 100%), var(--backgroundTheme);
 	}
 
-	.myGrade * {
+	.ios .myGrade * {
 		color: #fff !important;
 	}
 
-	#segment {
+	.ios #segment {
 		width: calc(100vw - 24px);
 		margin: 0 12px;
 
 		margin-top: -12px;
+	}
+
+	.md .grade {
+		border: 1px solid var(--ion-color-step-150);
+		--background: none;
+		box-shadow: none;
+		border-radius: 8px;
 	}
 
 	ion-spinner {
