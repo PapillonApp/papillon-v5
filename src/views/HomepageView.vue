@@ -891,10 +891,6 @@
 		border-radius: 12px 12px 0 0 !important;
 	}
 
-	.nextCours.cancelled h2 {
-		text-decoration: line-through;
-	}
-
 	.nextStatus {
 		width: calc(100% - 15px * 2);
 		background: var(--courseColor) !important;
