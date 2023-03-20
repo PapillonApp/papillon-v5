@@ -99,18 +99,18 @@
 				this.base_period = actualPeriod;
 
 				// if first period contains "Trimestre", add all trimesters
-				if (actualPeriod.name.includes("Trimestre")) {
+				if (actualPeriod.name.toLowerCase().includes("Trimestre")) {
 					for (let i = 0; i < allPeriods.length; i++) {
-						if (allPeriods[i].name.includes("Trimestre")) {
+						if (allPeriods[i].name.toLowerCase().includes("Trimestre")) {
 							this.periods.push(allPeriods[i]);
 						}
 					}
 				}
 
 				// if first period contains "Semestre", add all semesters
-				if (actualPeriod.name.includes("Semestre")) {
+				if (actualPeriod.name.toLowerCase().includes("Semestre")) {
 					for (let i = 0; i < allPeriods.length; i++) {
-						if (allPeriods[i].name.includes("Semestre")) {
+						if (allPeriods[i].name.toLowerCase().includes("Semestre")) {
 							this.periods.push(allPeriods[i]);
 						}
 					}
