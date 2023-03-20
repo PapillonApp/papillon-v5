@@ -348,13 +348,7 @@
 			}, 100);
 
 			if(url == "/home") {
-				if(localStorage.getItem('fillToolbar') == 'true') {
-					if (Capacitor.getPlatform() === 'android') {
-						// get --ion-color-primary
-						let color = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-primary');
-						StatusBar.setBackgroundColor({color: color});
-					}
-					
+				if(localStorage.getItem('fillToolbar') == 'true') {	
 					StatusBar.setStyle({style: Style.Dark})
 
 					this.changeStatusTimeout = false;
@@ -397,15 +391,6 @@
 		},
 		async menuOpened(isOpen: boolean) {
 			const dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-			if (Capacitor.getPlatform() === 'android') {
-				if(dark) {
-					StatusBar.setBackgroundColor({color: "#111112"});
-				}
-				else {
-					StatusBar.setBackgroundColor({color: "#ffffff"});
-				}
-			}
 
 			if(isOpen) {
 				StatusBar.setStyle({style: Style.Dark})
