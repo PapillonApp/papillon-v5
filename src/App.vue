@@ -559,7 +559,7 @@
         // check current version in local storage
         if(localStorage.getItem('version')) {
             if(localStorage.getItem('version') !== this.appVersion) {
-                // this.showChangelog();
+                this.showChangelog();
             }
         }
         else if(!this.loggedIn) {

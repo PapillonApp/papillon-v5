@@ -14,7 +14,6 @@
 # update_fastlane
 
 require 'spaceship'
-
 Spaceship::ConnectAPI::App.const_set('ESSENTIAL_INCLUDES', 'appStoreVersions')
 
 default_platform(:ios)
@@ -33,12 +32,15 @@ begin
 			in_house: false
 		)
 
-		upload_to_testflight(
+		pilot(
 			api_key: api_key,
 			build_number: ENV['APP_VERSION_CODE'],
 			app_version: ENV['APP_IOS_VERSION_NUMBER'],
 			ipa: IPA_LOCATION,
-			skip_waiting_for_build_processing: true
+			skip_waiting_for_build_processing: true,
+			changelog: "Prenez le temps de tout tester, et n'hésitez pas à nous faire remonter les bugs que vous trouverez !",
+			distribute_external: true,
+			groups: ['86df2d8b-d690-49df-b623-326705effd25', '86ecfec6-6abb-49f6-ab7a-0b4380757aed']
 		)
 	end
 
@@ -59,7 +61,7 @@ begin
 			api_key: api_key,
 			app_version: ENV['APP_IOS_VERSION_NUMBER'],
 			ipa: IPA_LOCATION,
-			submit_for_review: true,
+			submit_for_review: false,
 			automatic_release: true,
 			force: true, # Skip HTML report verification
 			skip_metadata: true,
