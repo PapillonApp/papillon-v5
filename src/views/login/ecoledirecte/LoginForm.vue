@@ -109,7 +109,7 @@
 						let token = rsp.token;
 						let user = rsp.data.accounts[0];
 						localStorage.UserCache = JSON.stringify(user);
-							// save token
+						// save token
 						localStorage.token = token;
 						localStorage.loggedIn = true;
 						localStorage.loginData = btoa(JSON.stringify({
@@ -160,6 +160,14 @@
 	</ion-header>
 			<ion-content>
 				<div class="loginPage">
+
+					<div class="alphaMessage">
+						<span class="material-symbols-outlined mdls icon">sms_failed</span>
+						<div class="alphaText">
+							<h2>EcoleDirecte est instable</h2>
+							<p class="description">L'utilisation d'EcoleDirecte avec Papillon est encore extrêmement instable. L'équipe de Papillon ne serait être tenue responsable de tout dysfonctionnement, de plus, le développement de cette interface est complexe du au fait de la non disponibilité d'un compte EcoleDirecte par un des membres de l'équipe.</p>
+						</div>
+					</div>
 					
 					<div class="loginIntro">
 						<img src="assets/welcome/ecoledirecte_logo.png" alt="Pronote Logo" class="logo"/>
@@ -238,6 +246,46 @@
 		font-size: 15px;
 		opacity: 0.5;
 		margin-top: 10px;
+	}
+
+	/* Alpha warning */
+	.alphaMessage {
+		background: var(--ion-color-danger);
+		margin: 20px;
+		border-radius: 10px;
+
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		padding: 20px;
+		gap: 20px;
+	}
+
+	.alphaMessage * {
+		margin: 0;
+	}
+
+	.alphaMessage .icon {
+		height: 44px;
+		width: 44px;
+		font-size: 30px;
+		overflow: visible !important;
+	}
+
+	.alphaMessage .alphaText {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
+	.alphaMessage .alphaText h2 {
+		font-size: 18px;
+	}
+
+	.alphaMessage .alphaText .description {
+		font-size: 15px;
+		opacity: 0.7;
 	}
 
 	.loginInput {
