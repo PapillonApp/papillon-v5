@@ -456,10 +456,6 @@ ion-fab .mdls {
     margin-left: -3.5px;
 }
 
-.md ion-fab {
-    padding-bottom: var(--papillon-safe-area-bottom, 0) !important;
-}
-
 /* beta chip */
 .beta-chip {
     margin-top: 0px;
