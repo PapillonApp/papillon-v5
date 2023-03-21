@@ -1,6 +1,6 @@
 <script>
 	import { defineComponent } from 'vue';
-	import { IonItem, IonList, IonIcon, IonBackButton, IonSearchbar, IonModal, IonListHeader, IonSpinner, loadingController, IonInput, 
+	import { IonItem, IonList, IonIcon, IonBackButton, IonSearchbar, IonListHeader, IonSpinner, loadingController, IonInput, 
 	IonButton, actionSheetController, alertController } from '@ionic/vue';
 
 	import axios from 'axios';
@@ -23,7 +23,6 @@
 			IonList,
 //			IonIcon,
 //			IonSearchbar,
-			IonModal,
 //			IonListHeader,
 			IonSpinner,
 			IonInput,
@@ -48,9 +47,8 @@
 			}
 		},
 		mounted() {
-			//this.getENTs();
-			//this.GetLocation();
-			this.displayLogin()
+			//Nothing here
+			
 		},
 		methods: {
 			decodeEntities(encodedString) {
@@ -72,14 +70,6 @@
 					var num = parseInt(numStr, 10);
 					return String.fromCharCode(num);
 				});
-			},
-			
-			displayLogin() {
-
-				this.$refs.loginModal.$el.present()
-			},
-			dismiss() {
-				this.$refs.loginModal.$el.dismiss();
 			},
 			
 			async login() {
@@ -168,15 +158,6 @@
 		</ion-toolbar>
 		
 	</ion-header>
-	<ion-modal ref="loginModal" trigger="open-loginModal" :swipeToClose="true">
-			<ion-header>
-				<ion-toolbar>
-					<ion-title>Se connecter</ion-title>
-					<ion-buttons slot="end">
-					<ion-button @click="dismiss()">Fermer</ion-button>
-					</ion-buttons>
-				</ion-toolbar>
-			</ion-header>
 			<ion-content>
 				<div class="loginPage">
 					
@@ -210,7 +191,6 @@
 
 				</div>
 			</ion-content>
-		</ion-modal> 
 </template>
   
 <style scoped>
