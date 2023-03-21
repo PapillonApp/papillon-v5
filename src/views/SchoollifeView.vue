@@ -17,6 +17,8 @@
 	import GetPunishments from '@/functions/fetch/GetPunishments.js';
 	import GetDelays from '@/functions/fetch/GetDelays.js';
 
+	import getEDSchoollife from '@/functions/fetch/getEDSchoollife.js'
+
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
@@ -36,30 +38,47 @@
 		methods: {
 			getDatas(force) {
 				try {
-					GetAbsences(force).then((res) => {
-						this.absences = res;
-						this.absError = false;
-					})
-					.catch((err) => {
-						console.error("[School Life View]: Get absences - " + err);
-						this.absError = true;
-					});
+					switch(localStorage.loginService) {
+						case 'pronote':
+							GetAbsences(force).then((res) => {
+								this.absences = res;
+								this.absError = false;
+							})
+							.catch((err) => {
+								console.error("[School Life View]: Get absences - " + err);
+								this.absError = true;
+							});
 
-					GetPunishments(force).then((res) => {
-						this.punishments = res;
-					})
-					.catch((err) => {
-						console.error("[School Life View]: Get punishments - " + err);
-						this.punishmentsError = true;
-					});
+							GetPunishments(force).then((res) => {
+								this.punishments = res;
+							})
+							.catch((err) => {
+								console.error("[School Life View]: Get punishments - " + err);
+								this.punishmentsError = true;
+							});
 
-					GetDelays(force).then((res) => {
-						this.delays = res;
-					})
-					.catch((err) => {
-						console.error("[School Life View]: Get delays - " + err);
-						this.delaysError = true;
-					});
+							GetDelays(force).then((res) => {
+								this.delays = res;
+							})
+							.catch((err) => {
+								console.error("[School Life View]: Get delays - " + err);
+								this.delaysError = true;
+							});
+						break;
+
+						case 'ecoledirecte':
+							getEDSchoollife(force).then((res) => {
+								this.delays = res.delays || [];
+								this.punishments = res.punishments || [];
+								this.absences = res.absences || [];
+							})
+							.catch((err) => {
+								console.error("[School Life View]: Get ed schoollife - " + err);
+								this.delaysError = true;
+							});
+						break;
+					}
+					
 				}
 				catch (err) {
 					console.error("[School Life View]: " + err);

@@ -1,13 +1,21 @@
 import { app } from '@/main.ts'
 import displayToast from '@/functions/utils/displayToast.js';
 
+import axios from 'axios';
+
+
 import { checkmark, refresh } from 'ionicons/icons';
 
 let waitingForToken = false;
 
 // get token
 function getToken() {
-    return getPronoteLogin();
+    switch(localStorage.loginService) {
+        case "pronote":
+            return getPronoteLogin();
+        case "ecoledirecte":
+            return getEDLogin();
+    }
 }
 
 // pronote : get token
@@ -96,6 +104,91 @@ function getPronoteLogin() {
                 console.error('[Get Token]: Return to login page - ' + result);
 
                 document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
+            }
+        })
+        .catch(error => {
+            displayToast.presentError("Impossible de joindre le serveur.", "danger", error)
+            console.error('[Get Token]: Unable to join server - ' + error);
+        });
+    }
+}
+
+
+//ecoledirecte : get token
+
+function getEDLogin() {
+    if(!waitingForToken) {
+        // gather vars
+        const EDAPI = "https://api.ecoledirecte.com/v3"//app.config.globalProperties.$api;
+
+
+        let loginData = null;
+        try { 
+            loginData = JSON.parse(atob(localStorage.getItem('loginData')));
+        } catch(e) {
+            displayToast.presentError("Une erreur interne est survenue", "danger", `Une erreur s'est produite lors de la récupération des données de connexion. Merci de vous reconnecter. (${e})`)
+            console.error(`[Connect to EcoleDirecte API] Error while parsing loginData: ${e}`);
+            return;
+        }
+
+        // get username and password
+        let username = loginData.username;
+        let password = loginData.password;
+
+        var requestOptions = {
+            headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": ""},            
+        };
+        let body = `data={
+            "uuid": "",
+            "identifiant": "${username}",
+            "motdepasse": "${password}",
+            "isReLogin": false
+        }`
+
+        waitingForToken = true;
+
+        displayToast.presentToastSmall(
+            "Reconnexion en cours...",
+            "light",
+            refresh
+        )
+
+        // get token from API
+        return axios.post(EDAPI + "/login.awp", body, requestOptions)
+        .then(result => {
+            if(result.data.code === 200) {
+                // save token
+                localStorage.setItem('token', result.data.token);
+
+                // empty localstorage cache
+                localStorage.setItem('UserCache', JSON.stringify(result.data.data.accounts[0]));
+                localStorage.setItem('TimetableCache', JSON.stringify([]));
+
+                // broadcast event to document
+                document.dispatchEvent(new CustomEvent('tokenUpdated'));
+
+                // set waitingForToken to false
+                waitingForToken = false;
+
+                // display toast
+                displayToast.presentToastSmall(
+                    "Vous êtes à nouveau connecté.",
+                    "success",
+                    checkmark
+                );
+
+                return result.data.token;
+            } else {
+                if(result.code === 505) {
+                    displayToast.presentToast("Ñchec de la reconnexion", "danger", "Vos identifiants semblent invalides. Pour les mettre à jour, déconnectez-vous puis reconnectez-vous de papillon.\n" + result.data.message)
+                }/* else if(result.error == "Your IP address is suspended.") {
+                    displayToast.presentError("Une erreur s'est produite", "danger", "L'adresse IP de nos serveurs est suspendue pour votre établissement. S'il vous plaît réessayez dans quelques heures.")
+                }*/
+                else {
+                    displayToast.presentError("Une erreur s'est produite.", "danger", result.error)
+                }
+                // redirect to login page
+                console.error('[Get Token]: Return to login page - ' + result);
             }
         })
         .catch(error => {

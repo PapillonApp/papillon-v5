@@ -7,10 +7,14 @@ import GetToken from '@/functions/login/GetToken.js';
 
 // main function
 async function getNews(forceReload) {
-    // as only pronote is supported for now, we can just return the pronote timetable
+    switch(localStorage.loginService) {
+        case "pronote":    
+			// return pronote news
+			return getPronoteNews(forceReload);
+		case "ecoledirecte":
+            return;
+    }
     
-    // return pronote timetable
-    return getPronoteNews(forceReload);
 }
 
 // pronote : get timetable

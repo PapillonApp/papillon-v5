@@ -9,6 +9,8 @@
 
     import SchoolSelection from './pronote/SchoolSelection.vue';
 
+    import EDLoginForm from './ecoledirecte/LoginForm.vue'
+
     import { StatusBar, Style } from '@capacitor/status-bar';
 
     export default defineComponent({
@@ -99,6 +101,7 @@
         data() {
             return {
                 SchoolSelection: SchoolSelection,
+                EDLoginForm: EDLoginForm,
                 appVersion: version,
                 appPlatform: Capacitor.getPlatform(),
             }
@@ -142,15 +145,17 @@
                 </ion-item>
             </ion-nav-link>
 
-            <ion-item button detail="true" disabled>
-                <ion-avatar slot="start">
-                    <img alt="Logo" src="/assets/welcome/ecoledirecte_logo.png" />
-                </ion-avatar>
-                <ion-label>
-                    <h2>EcoleDirecte</h2>
-                    <p>Utilisez vos identifiants EcoleDirecte pour vous connecter</p>
-                </ion-label>
-            </ion-item>
+            <ion-nav-link router-direction="forward" :component="EDLoginForm">
+                <ion-item button detail="true">
+                    <ion-avatar slot="start">
+                        <img alt="Logo" src="/assets/welcome/ecoledirecte_logo.png"/>
+                    </ion-avatar>
+                    <ion-label>
+                        <h2>EcoleDirecte</h2>
+                        <p>Utilisez vos identifiants EcoleDirecte pour vous connecter</p>
+                    </ion-label>
+                </ion-item>
+            </ion-nav-link>
 
             <ion-item button detail="true" disabled>
                 <ion-avatar slot="start">

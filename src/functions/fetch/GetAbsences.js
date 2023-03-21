@@ -7,9 +7,13 @@ import GetToken from '@/functions/login/GetToken.js';
 
 // main function
 function getAbsences(forceReload) {
-    // as only pronote is supported for now, we can just return the pronote absences
-
-    return getPronoteAbsences(forceReload);
+	switch(localStorage.loginService) {
+        case "pronote":    
+            // return pronote absences
+			return getPronoteAbsences(forceReload);
+		case "ecoledirecte":
+            return;
+    }
 }
 
 async function getPronoteAbsences(forceReload) {

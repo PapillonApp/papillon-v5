@@ -7,9 +7,14 @@ import GetToken from '@/functions/login/GetToken.js';
 
 // main function
 function getDelays(forceReload) {
-    // as only pronote is supported for now, we can just return the pronote delays
-
-    return getPronoteDelays(forceReload);
+	switch(localStorage.loginService) {
+        case "pronote":    
+            // return pronote delays
+			return getPronoteDelays(forceReload);
+		case "ecoledirecte":
+            return;
+    }
+    
 }
 
 async function getPronoteDelays(forceReload) {
