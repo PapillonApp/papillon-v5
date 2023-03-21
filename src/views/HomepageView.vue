@@ -798,7 +798,7 @@
 		;
 		border-top: 0.5px solid #00000010;
 
-		margin: 0px 15px;
+		margin: 0px 16px;
 
 		--ion-item-background: #fff;
 	}
@@ -875,14 +875,14 @@
 	}
 
 	.nextStatus {
-		width: calc(100% - 15px * 2);
+		width: calc(100% - 16px * 2);
 		background: var(--courseColor) !important;
 
 		display: flex;
 		align-items: center;
 		gap: 12px;
 
-		margin: 0px 15px;
+		margin: 0px 16px;
 		padding: 8px 24px;
 
 		margin-top: -11px;
