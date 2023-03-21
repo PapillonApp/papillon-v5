@@ -4,32 +4,27 @@
             {
                 "icon": "bug_report",
                 "name": "Corrections de bugs",
-                "description": "De nombreux bugs ont été corrigés et l'expérience utilisateur est améliorée."
+                "description": "Encore plus de bugs ont été corrigés !"
             },
             {
                 "icon": "home",
-                "name": "Changements d'écran d'accueil",
-                "description": "On a revu le design de l'écran d'accueil, n'est-il pas plus agréable ?"
+                "name": "Widgets de l'écran d'accueil cliquables !",
+                "description": "Vous pouvez maintenant ouvrir un contenu directement depuis l'écran d'acceuil."
             },
             {
-                "icon": "grade",
-                "name": "Notes",
-                "description": "Un nouveau mode d'affichage des notes a été ajouté, vous pouvez désormais choisir entre une liste ou une grille."
+                "icon": "auto_stories",
+                "name": "Travail à faire",
+                "description": "L'onglet devoirs a été complètement réécrit, il est désormais bien plus rapide et plus efficace."
             },
             {
                 "icon": "bolt",
                 "name": "Performance",
-                "description": "Le temps de chargement des pages à été drastiquement réduit."
+                "description": "La navigation dans l'application est encore plus fluide qu'avant."
             },
             {
-                "icon": "auto_awesome",
-                "name": "Animations",
-                "description": "Il y a désormais pleins d'animations dans l'application, vous allez adorer !"
-            },
-            {
-                "icon": "settings",
-                "name": "Personnalisation",
-                "description": "Vous pouvez désormais choisir la couleur du thème de Papillon et une nouvelle police a été ajoutée."
+                "icon": "forum",
+                "name": "Conversations",
+                "description": "L'expérience des conversations a été améliorée, avec une nouvelle interface et des nouvelles actions."
             }
         ]
     }
