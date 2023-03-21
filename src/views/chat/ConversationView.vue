@@ -54,10 +54,14 @@
                 // remove multiple spaces
                 msg = msg.replace(/\s\s+/g, ' ');
 
+                // shorten msg
                 let shortMsg = msg.substring(0, 150);
                 if (msg.length > 150) {
                     shortMsg += '...';
                 }
+
+                // remove line breaks
+                shortMsg = shortMsg.replace(/\n/g, ' ');
 
                 const result = await ActionSheet.showActions({
                     title: 'Actions du message',
