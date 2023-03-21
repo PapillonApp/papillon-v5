@@ -50,7 +50,9 @@
                 });
             },
             getNewsRefresh() {
+                this.isLoading = true;
                 GetNews(true).then((data) => {
+                    this.isLoading = false;
                     this.news = data;
                 })
             },
@@ -122,20 +124,21 @@
             <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
 
-        <div class="NoCours" v-if="news.length == 0 && isLoading">
-            <IonSpinner></IonSpinner>
-            <br/>
-            <h2>Téléchargement des actualités...</h2>
-            <p>Veuillez patienter pendant qu'on récupère les actualités depuis nos serveurs...</p>
-        </div>
+        <Transition name="NoCoursAnim">
+            <div class="NoCours" v-if="news.length == 0 && isLoading">
+                <IonSpinner></IonSpinner>
+                <br/>
+                <h2>Téléchargement des actualités...</h2>
+                <p>Veuillez patienter pendant qu'on récupère les actualités depuis nos serveurs...</p>
+            </div>
+            <div class="NoCours" v-else-if="news.length == 0 && !isLoading">
+                <span class="material-symbols-outlined mdls">feed</span>
+                <h2>Aucune actualité n'a été trouvée.</h2>
+                <p>Revenez plus tard ou essayer de rafraîchir.</p>
+            </div>
+        </Transition>
 
-        <div class="NoCours" v-if="news.length == 0 && !isLoading">
-            <span class="material-symbols-outlined mdls">feed</span>
-            <h2>Aucune actualité n'a été trouvée.</h2>
-            <p>Revenez plus tard ou essayer de rafraîchir.</p>
-        </div>
-
-        <IonList>
+        <IonList v-if="news.length !== 0">
             <IonNavLink v-for="(news, i) in news" v-bind:key="i" router-direction="forward" :component="InfoView" :componentProps="{urlNews: encodeURIComponent(JSON.stringify(news))}">
                 <IonItem button>
                     <span v-if="!news.isSurvey" class="material-symbols-outlined mdls" slot="start">feed</span>
