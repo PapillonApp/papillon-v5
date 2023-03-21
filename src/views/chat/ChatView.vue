@@ -226,18 +226,19 @@
 				</ion-button>
 			</IonFab>
 
-			<div class="NoCours" v-if="this.conversations.length == 0 && !isLoading">
-				<span class="material-symbols-outlined mdls">forum</span>
-				<h2>Aucune conversation n'a été trouvée.</h2>
-				<p>Essayez d'envoyer un message à quelqu'un dans votre établissement.</p>
-			</div>
-
-			<div class="NoCours" v-if="this.conversations.length == 0 && isLoading">
-				<IonSpinner></IonSpinner>
-				<br/>
-				<h2>Téléchargement des conversations...</h2>
-				<p>Veuillez patienter pendant qu'on récupère les conversations depuis nos serveurs...</p>
-			</div>
+			<Transition name="NoCoursAnim">
+				<div class="NoCours" v-if="this.conversations.length == 0 && !isLoading">
+					<span class="material-symbols-outlined mdls">forum</span>
+					<h2>Aucune conversation n'a été trouvée.</h2>
+					<p>Essayez d'envoyer un message à quelqu'un dans votre établissement.</p>
+				</div>
+				<div class="NoCours" v-else-if="this.conversations.length == 0 && isLoading">
+					<IonSpinner></IonSpinner>
+					<br/>
+					<h2>Téléchargement des conversations...</h2>
+					<p>Veuillez patienter pendant qu'on récupère les conversations depuis nos serveurs...</p>
+				</div>
+			</Transition>
 
 			<IonList>
 				<IonNavLink v-for="(chat, i) in conversations" :key="i" router-direction="forward" :component="ConversationView" :componentProps="{conversation: chat}">		

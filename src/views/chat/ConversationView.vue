@@ -156,6 +156,7 @@
 <style scoped>
     .content::part(scroll) {
         margin-bottom: calc(0px - env(safe-area-inset-bottom));
+        overflow: hidden;
     }
 
     /* chatbox */
@@ -163,13 +164,15 @@
         position: sticky;
         bottom: 0px;
 
-        height: 70px;
+        height: calc(70px + var(--ion-safe-area-bottom));
         display: flex;
         align-items: center;
         justify-content: center;
         
         background-color: var(--ion-background-color);
         border-top: 1px solid var(--ion-color-step-100);
+
+        padding-bottom: var(--ion-safe-area-bottom);
     }
 
     .md .chatbox {
@@ -201,10 +204,11 @@
 
     /* chatUI */
     .chatUI {
-        height: calc(100% - 60px);
+        height: calc(100% - 60px - var(--ion-safe-area-bottom));
         width: 100%;
         padding: 0px 16px;
         overflow-y: scroll;
+        padding-bottom: 20px;
     }
 
     .message {
