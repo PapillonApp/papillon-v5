@@ -50,10 +50,15 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import ('../views/chat/ConversationView.vue')
   },
   {
-    path: '/news/:urlNews?',
-    props: true,
+    path: '/news',
     name: 'News',
-    component: () => import ('../views/NewsView.vue')
+    component: () => import ('../views/news/NewsView.vue')
+  },
+  {
+    path: '/news/info/:urlNews',
+    props: true,
+    name: 'Info',
+    component: () => import ('../views/news/InfoView.vue')
   },
   {
     path: '/settings',

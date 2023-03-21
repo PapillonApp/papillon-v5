@@ -19,7 +19,8 @@
 		IonButtons,
 		IonRefresherContent,
 		IonSkeletonText,
-		alertController
+		alertController,
+		IonNavLink
 	} from '@ionic/vue';
 
 	import { NotificationBadge } from 'capacitor-notification-badge';
@@ -29,6 +30,7 @@
 	import { Network } from '@capacitor/network';
 
 	import UserView from './settings/UserView.vue';
+	import InfoView from './news/InfoView.vue';
 	
 	import timetableEdit from '@/functions/utils/timetableEdit.js';
 	import subjectColor from '@/functions/utils/subjectColor.js';
@@ -56,7 +58,8 @@
 			IonChip,
 			IonItemGroup,
 			IonRefresherContent,
-			IonSkeletonText
+			IonSkeletonText,
+			IonNavLink
 		},
 		data() {
 			return {
@@ -88,6 +91,7 @@
 				allLoaded: false,
 				showLoading: true,
 				toolbarColor: "",
+				InfoView: InfoView,
 			}
 		},
 		methods: {
@@ -711,7 +715,7 @@
 								<ion-button @click="goto('news')">Voir tout</ion-button>
 							</ion-list-header>
 
-							<router-link v-for="(info, i) in news.slice(0, 5)" :key="i" :to="'/news/' + encodeURIComponent(JSON.stringify(info))">
+							<IonNavLink v-for="(info, i) in news.slice(0, 5)" :key="i" router-direction="forward" :component="InfoView" :componentProps="{urlNews: encodeURIComponent(JSON.stringify(info))}">
 								<ion-item button>
 									<span slot="start" class="material-symbols-outlined mdls emoji">feed</span>
 										
@@ -720,7 +724,7 @@
 										<p>{{ info.content }}</p>
 									</ion-label>
 								</ion-item>
-							</router-link>
+							</IonNavLink>
 
 							<ion-item v-if="news.length == 0 && !newsLoading" lines="none">
 								<div slot="start" style="margin-left: 5px; margin-right: 20px;">

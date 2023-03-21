@@ -1,10 +1,11 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonLabel, IonItem, IonModal, IonSpinner, IonSearchbar } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonLabel, IonItem, IonModal, IonSpinner, IonSearchbar, IonNavLink } from '@ionic/vue';
     
     import { Browser } from '@capacitor/browser';
 
     import GetNews from '@/functions/fetch/GetNews.js';
+    import InfoView from './InfoView.vue';
 
     export default defineComponent({
         name: 'FolderPage',
@@ -16,13 +17,12 @@
             IonMenuButton,
             IonPage,
             IonButtons,
-            IonButton,
             IonItem,
             IonLabel,
-            IonModal,
             IonList,
             IonSpinner,
-            IonSearchbar
+            IonSearchbar,
+            IonNavLink
         },
         props() {
             return {
@@ -34,24 +34,14 @@
         },
         data() {
             return { 
+                InfoView: InfoView,
                 news: [],
                 fullNews: [],
-                openedNews: [],
                 presentingElement: null,
                 isLoading: false,
-                newsOpen: false,
             }
         },
         methods: {
-            openNews(news) {
-                this.openedNews = news;
-                
-                // open modal with ref
-                this.newsOpen = true;
-            },
-            closeNews() {
-                this.newsOpen = false;
-            },
             async openLink(url) {
                 await Browser.open({
                     url: url,
@@ -107,22 +97,6 @@
             document.addEventListener('tokenUpdated', () => {
                 this.getNewsRefresh();
             });
-
-            // if urlNews prop is set
-            if(this.$route.params.urlNews) {
-                let encoded = this.$route.params.urlNews;
-
-                // decode url
-                let decoded = decodeURIComponent(encoded);
-
-                // parse json
-                let parsed = JSON.parse(decoded);
-
-                // open urlNews
-                setTimeout(() => {
-                    this.openNews(parsed);
-                }, 200);
-            }
         }
     });
 </script>
@@ -162,52 +136,18 @@
         </div>
 
         <IonList>
-            <IonItem button v-for="(news, i) in news" v-bind:key="i" @click="openNews(news)">
-                <span v-if="!news.isSurvey" class="material-symbols-outlined mdls" slot="start">feed</span>
-                <span v-if="news.isSurvey" class="material-symbols-outlined mdls" slot="start">contact_support</span>
-                    <IonLabel>
-                        <h2>{{ news.title }}</h2>
-                        <p>{{ news.author }} - {{ news.category }}</p>
-                        <small>{{ news.dateString }}</small>
-                    </IonLabel>
-            </IonItem>
-        </IonList>
-
-        <IonModal :is-open="newsOpen" :presenting-element="presentingElement" :canDismiss="true" @ionModalDidDismiss="closeNews()" ref="modal">
-            <IonHeader translucent>
-                <IonToolbar>
-                    <IonTitle>{{ openedNews.title }}</IonTitle>
-                    <IonButtons slot="end">
-                        <IonButton @click="closeNews()">Fermer</IonButton>
-                    </IonButtons>
-                </IonToolbar>
-            </IonHeader>
-            <IonContent class="newsModalContent ion-padding">
-                <h1>{{ openedNews.title }}</h1>
-                <small>de {{ openedNews.author }} - {{ openedNews.dateString }}</small>
-                <div v-if="openedNews.isSurvey">
-                    <IonItem class="survey-warning" lines="none">
-                        <span class="material-symbols-outlined mdls" slot="start">error</span>
+            <IonNavLink v-for="(news, i) in news" v-bind:key="i" router-direction="forward" :component="InfoView" :componentProps="{urlNews: encodeURIComponent(JSON.stringify(news))}">
+                <IonItem button>
+                    <span v-if="!news.isSurvey" class="material-symbols-outlined mdls" slot="start">feed</span>
+                    <span v-if="news.isSurvey" class="material-symbols-outlined mdls" slot="start">contact_support</span>
                         <IonLabel>
-                            <h2>Impossible de répondre</h2>
-                            <p>Vous ne pouvez pas répondre à un sondage depuis Papillon, merci de vous rentre sur votre service scolaire pour répondre.</p>
+                            <h2>{{ news.title }}</h2>
+                            <p>{{ news.author }} - {{ news.category }}</p>
+                            <small>{{ news.dateString }}</small>
                         </IonLabel>
-                    </IonItem>
-                </div>
-                <hr v-else />
-                <div class="newsModalContentContent" v-html="openedNews.htmlContent"></div>
-
-                <div class="chips" v-if="openedNews.attachments.length !== 0">
-                    <ion-chip v-for="(attachment, i) in openedNews.attachments" :key="i" @click="openLink(attachment.url, attachment.name)" color="dark" :outline="true">
-                        <span v-if="attachment.type == 1" class="material-symbols-outlined mdls">description</span>
-
-                        <span v-if="attachment.type == 0" class="material-symbols-outlined mdls">link</span>
-
-                        <p>{{attachment.name}}</p>
-                    </ion-chip>
-                </div>
-            </IonContent>
-        </IonModal>
+                </IonItem>
+            </IonNavLink>
+        </IonList>
       </ion-content>
     </ion-page>
 </template>
