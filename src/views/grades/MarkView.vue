@@ -79,7 +79,7 @@
 				let count = 0;
 
 				for (let i = 0; i < grades.length; i++) {
-					if(grades[i].info.significant === false) continue;
+					if(grades[i].info.significant === false && grades[i].info.significantZero === false) continue;
 
 					let val = parseFloat(grades[i].grade.value);
 

@@ -32,6 +32,7 @@
 	import UserView from './settings/UserView.vue';
 	import InfoView from './news/InfoView.vue';
 	import MarkView from './grades/MarkView.vue';
+	import HomeworkItemView from './homework/HomeworkItemView.vue';
 	
 	import timetableEdit from '@/functions/utils/timetableEdit.js';
 	import subjectColor from '@/functions/utils/subjectColor.js';
@@ -94,6 +95,7 @@
 				toolbarColor: "",
 				InfoView: InfoView,
 				MarkView: MarkView,
+				HomeworkItemView: HomeworkItemView,
 			}
 		},
 		methods: {
@@ -678,7 +680,9 @@
 									<p>{{ new Date(day.date).toLocaleString('fr-FR', { weekday: 'long' }) }}</p>
 									<div class="divider"></div>
 								</div>
-								<router-link v-for="homework in day.homeworks" :key="homework.id" :to="'/homework/' + encodeURIComponent(JSON.stringify(homework))"><ion-item button>
+
+								<IonNavLink v-for="homework in day.homeworks" :key="homework.id" router-direction="forward" :component="HomeworkItemView" :componentProps="{urlHw: encodeURIComponent(JSON.stringify(homework))}">
+								<ion-item button>
 									<ion-label :style="`--courseColor: ${homework.data.color};`">
 										<p><span class="courseColor"></span> {{ homework.homework.subject }}</p>
 										<h2>{{ homework.homework.content }}</h2>
@@ -695,7 +699,7 @@
 										<p v-else-if="homework.data.timeLeft < 0">Aujourd'hui</p>
 										<p v-else>Demain</p>
 									</ion-chip>
-								</ion-item></router-link>
+								</ion-item></IonNavLink>
 							</ion-item-group></div>
 
 							<ion-item v-if="homeworks.length == 0 && !hwLoading" lines="none">

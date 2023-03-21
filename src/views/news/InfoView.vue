@@ -70,8 +70,6 @@
                 // parse json
                 let parsed = JSON.parse(decoded);
 
-                console.log(parsed);
-
                 // open urlNews
                 this.openedNews = parsed;
             }
@@ -118,17 +116,18 @@
 
                 <div class="content" v-html="openedNews.htmlContent"></div>
 
-                <IonList inset>
-                    <IonItem v-for="attachment in openedNews.attachments" :key="attachment.id" @click="openLink(attachment.url)">
-                        <span v-if="attachment.type == 1" class="material-symbols-outlined mdls" slot="start">description</span>
-                        <span v-else-if="attachment.type == 0" class="material-symbols-outlined mdls" slot="start">link</span>
-
-                        <IonLabel>
-                            <h2>{{ attachment.name }}</h2>
-                            <p>{{ attachment.url }}</p>
-                        </IonLabel>
-                    </IonItem>
-                </IonList>
+				<div v-if="openedNews.attachments">
+					<IonList inset v-if="openedNews.attachments.length !== 0">
+						<IonItem v-for="attachment in openedNews.attachments" :key="attachment.id" @click="openLink(attachment.url)">
+							<span v-if="attachment.type == 1" class="material-symbols-outlined mdls" slot="start">description</span>
+							<span v-else-if="attachment.type == 0" class="material-symbols-outlined mdls" slot="start">link</span>
+							<IonLabel>
+								<h2>{{ attachment.name }}</h2>
+								<p>{{ attachment.url }}</p>
+							</IonLabel>
+						</IonItem>
+					</IonList>
+				</div>
 
             </div>
 		</ion-content>
