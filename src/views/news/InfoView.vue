@@ -106,6 +106,16 @@
                     </IonItem>
                 </IonList>
 
+				<IonList v-if="openedNews.isSurvey" inset>
+					<IonItem color="danger">
+						<span class="material-symbols-outlined mdls" slot="start">contact_support</span>
+						<IonLabel class="ion-text-wrap">
+							<h2>Cette news contient un sondage.</h2>
+							<p>Papillon ne permet pas de répondre aux sondages.</p>
+						</IonLabel>
+					</IonItem>
+				</IonList>
+
                 <div class="content" v-html="openedNews.htmlContent"></div>
 
                 <IonList inset>
