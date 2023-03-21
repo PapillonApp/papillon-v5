@@ -50,7 +50,7 @@ ion-item.animated {
 }
 
 ion-content::part(scroll) {
-    padding-bottom: calc(env(safe-area-inset-bottom) * 3) !important;
+    padding-bottom: var(--ion-safe-area-bottom) !important;
 }
 
 .swiper-slide, .swiper-slide-shadow{
@@ -61,4 +61,9 @@ ion-content::part(scroll) {
     border-radius: 10px;
     overflow: hidden;
     overflow-y: scroll;
+}
+
+.newCoursBtnFab {
+    bottom: calc(20px + var(--ion-safe-area-bottom) * 0.8) !important;
+    right: 16px;
 }

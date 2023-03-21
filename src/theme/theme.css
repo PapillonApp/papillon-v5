@@ -210,6 +210,7 @@ ion-item .mdls[slot="start"] {
     height: 0px !important;
     opacity: 0;
     transform: scale(0.9) translateY(-30px);
+    margin-top: -36px;
 }
 
 .NoCours * {
@@ -297,26 +298,21 @@ ion-item .mdls[slot="start"] {
 }
 
 /* toasts */
-
-.md ion-toast {
+.ios ion-toast {
     --border-radius: 8px !important;
-    --box-shadow: 0 2px 6px #00000015 !important;
-
-    font-size: 15px;
-    font-weight: 400;
-}
-
-.ios ion-toast:not(.toast-small) {
-    --border-radius: 8px !important;
-    --box-shadow: 0 2px 6px #00000015 !important;
-
-    font-size: 15px;
-    font-weight: 400;
+    --box-shadow: 
+        0px 1px 2px #00000010,
+        0px 2px 4px #00000015,    
+    !important;
+    box-shadow: 
+        0px 1px 2px #00000010,
+        0px 2px 4px #00000015,    
+    !important;
 }
 
 ion-toast::part(header) {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 500;
     font-family: var(--papillon-font) !important;
 }
 
@@ -327,6 +323,14 @@ ion-toast::part(message) {
 ion-header {
     --ion-toolbar-border-color: transparent !important;
     box-shadow: 0px 1px 2px #00000010;
+}
+
+ion-header ion-toolbar:first-child {
+    padding-top: var(--papillon-safe-area-top, 0) !important;
+}
+
+ion-modal ion-header ion-toolbar:first-child {
+    padding-top: 8px !important;
 }
 
 .dark .ios ion-header {
@@ -452,6 +456,10 @@ ion-fab .mdls {
     margin-left: -3.5px;
 }
 
+.md ion-fab {
+    padding-bottom: var(--papillon-safe-area-bottom, 0) !important;
+}
+
 /* beta chip */
 .beta-chip {
     margin-top: 0px;
@@ -510,4 +518,9 @@ ion-alert.md .btn_secondary {
     transform: translateY(200px) scale(0.7);
 
     margin: 5px 16px;
+}
+
+/* links */
+a.inherit {
+    color: inherit;
 }

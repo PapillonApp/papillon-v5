@@ -226,18 +226,19 @@
 				</ion-button>
 			</IonFab>
 
-			<div class="NoCours" v-if="this.conversations.length == 0 && !isLoading">
-				<span class="material-symbols-outlined mdls">forum</span>
-				<h2>Aucune conversation n'a été trouvée.</h2>
-				<p>Essayez d'envoyer un message à quelqu'un dans votre établissement.</p>
-			</div>
-
-			<div class="NoCours" v-if="this.conversations.length == 0 && isLoading">
-				<IonSpinner></IonSpinner>
-				<br/>
-				<h2>Téléchargement des conversations...</h2>
-				<p>Veuillez patienter pendant qu'on récupère les conversations depuis nos serveurs...</p>
-			</div>
+			<Transition name="NoCoursAnim">
+				<div class="NoCours" v-if="this.conversations.length == 0 && !isLoading">
+					<span class="material-symbols-outlined mdls">forum</span>
+					<h2>Aucune conversation n'a été trouvée.</h2>
+					<p>Essayez d'envoyer un message à quelqu'un dans votre établissement.</p>
+				</div>
+				<div class="NoCours" v-else-if="this.conversations.length == 0 && isLoading">
+					<IonSpinner></IonSpinner>
+					<br/>
+					<h2>Téléchargement des conversations...</h2>
+					<p>Veuillez patienter pendant qu'on récupère les conversations depuis nos serveurs...</p>
+				</div>
+			</Transition>
 
 			<IonList>
 				<IonNavLink v-for="(chat, i) in conversations" :key="i" router-direction="forward" :component="ConversationView" :componentProps="{conversation: chat}">		
@@ -245,7 +246,7 @@
 							<span class="material-symbols-outlined mdls" slot="start">forum</span>
 							<ion-label>
 								<h2>{{ chat.subject }}</h2>
-								<p>{{ chat.messages[chat.messages.length - 1].content }}</p>
+								<p>{{ chat.messages[chat.messages.length - 1].content.replace("<br/>", " ") }}</p>
 								<small>{{ chat.creator }}</small>
 							</ion-label>
 						</IonItem>
@@ -301,11 +302,6 @@
 <style scoped>
 	ion-chip span {
 		margin-right: 5px;
-	}
-
-	.ios .newCoursBtnFab {
-		bottom: 32px;
-		right: 18px;
 	}
 
 	.newCoursBtn {

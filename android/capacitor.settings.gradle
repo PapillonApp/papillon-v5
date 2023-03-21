@@ -14,6 +14,9 @@ project(':capacitor-app').projectDir = new File('../node_modules/@capacitor/app/
 include ':capacitor-browser'
 project(':capacitor-browser').projectDir = new File('../node_modules/@capacitor/browser/android')
 
+include ':capacitor-clipboard'
+project(':capacitor-clipboard').projectDir = new File('../node_modules/@capacitor/clipboard/android')
+
 include ':capacitor-device'
 project(':capacitor-device').projectDir = new File('../node_modules/@capacitor/device/android')
 
@@ -67,3 +70,6 @@ project(':capacitor-android-shortcuts').projectDir = new File('../node_modules/c
 
 include ':capacitor-notification-badge'
 project(':capacitor-notification-badge').projectDir = new File('../node_modules/capacitor-notification-badge/android')
+
+include ':capacitor-plugin-safe-area'
+project(':capacitor-plugin-safe-area').projectDir = new File('../node_modules/capacitor-plugin-safe-area/android')

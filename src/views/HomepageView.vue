@@ -19,7 +19,8 @@
 		IonButtons,
 		IonRefresherContent,
 		IonSkeletonText,
-		alertController
+		alertController,
+		IonNavLink
 	} from '@ionic/vue';
 
 	import { NotificationBadge } from 'capacitor-notification-badge';
@@ -29,6 +30,8 @@
 	import { Network } from '@capacitor/network';
 
 	import UserView from './settings/UserView.vue';
+	import InfoView from './news/InfoView.vue';
+	import MarkView from './grades/MarkView.vue';
 	
 	import timetableEdit from '@/functions/utils/timetableEdit.js';
 	import subjectColor from '@/functions/utils/subjectColor.js';
@@ -56,7 +59,8 @@
 			IonChip,
 			IonItemGroup,
 			IonRefresherContent,
-			IonSkeletonText
+			IonSkeletonText,
+			IonNavLink
 		},
 		data() {
 			return {
@@ -88,6 +92,8 @@
 				allLoaded: false,
 				showLoading: true,
 				toolbarColor: "",
+				InfoView: InfoView,
+				MarkView: MarkView,
 			}
 		},
 		methods: {
@@ -637,21 +643,23 @@
 							</ion-list-header>
 
 							<div v-if="!gradesLoading">
-								<ion-item v-for="grade in grades" :key="grade.id">
-									<ion-label :style="`--courseColor: ${grade.subject.color};`">
-										<p><span class="courseColor"></span> {{ grade.subject.name }}</p>
-										<h2>{{ grade.info.description }}</h2>
-									</ion-label>
+								<IonNavLink v-for="grade in grades" :key="grade.id" router-direction="forward" :component="MarkView" :componentProps="{markID: grade.id}">
+									<ion-item button>
+										<ion-label :style="`--courseColor: ${grade.subject.color};`">
+											<p><span class="courseColor"></span> {{ grade.subject.name }}</p>
+											<h2>{{ grade.info.description }}</h2>
+										</ion-label>
 
-									<div slot="end">
-										<ion-label v-if="grade.info.significant">
-											<h2>{{ grade.grade.value }}<small>/{{ grade.grade.out_of }}</small></h2>
-										</ion-label>
-										<ion-label v-else>
-											<h2>{{ grade.info.significantReason }}</h2>
-										</ion-label>
-									</div>
-								</ion-item>
+										<div slot="end">
+											<ion-label v-if="grade.info.significant">
+												<h2>{{ grade.grade.value }}<small>/{{ grade.grade.out_of }}</small></h2>
+											</ion-label>
+											<ion-label v-else>
+												<h2>{{ grade.info.significantReason }}</h2>
+											</ion-label>
+										</div>
+									</ion-item>
+								</IonNavLink>
 							</div>
 					</ion-list>
 				</Transition>
@@ -711,7 +719,7 @@
 								<ion-button @click="goto('news')">Voir tout</ion-button>
 							</ion-list-header>
 
-							<router-link v-for="(info, i) in news.slice(0, 5)" :key="i" :to="'/news/' + encodeURIComponent(JSON.stringify(info))">
+							<IonNavLink v-for="(info, i) in news.slice(0, 5)" :key="i" router-direction="forward" :component="InfoView" :componentProps="{urlNews: encodeURIComponent(JSON.stringify(info))}">
 								<ion-item button>
 									<span slot="start" class="material-symbols-outlined mdls emoji">feed</span>
 										
@@ -720,7 +728,7 @@
 										<p>{{ info.content }}</p>
 									</ion-label>
 								</ion-item>
-							</router-link>
+							</IonNavLink>
 
 							<ion-item v-if="news.length == 0 && !newsLoading" lines="none">
 								<div slot="start" style="margin-left: 5px; margin-right: 20px;">
@@ -798,7 +806,7 @@
 		;
 		border-top: 0.5px solid #00000010;
 
-		margin: 0px 15px;
+		margin: 0px 16px;
 
 		--ion-item-background: #fff;
 	}
@@ -875,14 +883,14 @@
 	}
 
 	.nextStatus {
-		width: calc(100% - 15px * 2);
+		width: calc(100% - 16px * 2);
 		background: var(--courseColor) !important;
 
 		display: flex;
 		align-items: center;
 		gap: 12px;
 
-		margin: 0px 15px;
+		margin: 0px 16px;
 		padding: 8px 24px;
 
 		margin-top: -11px;

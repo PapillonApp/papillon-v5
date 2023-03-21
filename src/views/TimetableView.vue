@@ -927,11 +927,6 @@
         font-size: 16px !important;
     }
 
-    .ios .newCoursBtnFab {
-        bottom: 32px;
-        right: 18px;
-    }
-
     .newCoursBtn {
         width: 56px;
         height: 56px;

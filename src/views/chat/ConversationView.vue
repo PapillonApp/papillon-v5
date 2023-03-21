@@ -10,6 +10,9 @@
         IonSkeletonText,
 	} from '@ionic/vue';
 
+    import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
+    import { Clipboard } from '@capacitor/clipboard';
+
     import GetConversations from '@/functions/fetch/GetConversations.js';
 
     import ChatView from './ChatView.vue';
@@ -40,6 +43,46 @@
 			}
 		},
 		methods: {
+            async openMessage() {
+                let msg = event.target.innerText;
+
+                // if msg is an url, stop here
+                if (msg.match(/^(https?:\/\/[^\s]+)/g)) {
+                    return false;
+                }
+
+                // remove multiple spaces
+                msg = msg.replace(/\s\s+/g, ' ');
+
+                // shorten msg
+                let shortMsg = msg.substring(0, 150);
+                if (msg.length > 150) {
+                    shortMsg += '...';
+                }
+
+                // remove line breaks
+                shortMsg = shortMsg.replace(/\n/g, ' ');
+
+                const result = await ActionSheet.showActions({
+                    title: 'Actions du message',
+                    message: shortMsg,
+                    options: [
+                        {
+                            title: 'Copier le texte',
+                        },
+                        {
+                            title: 'Annuler',
+                            style: ActionSheetButtonStyle.Cancel,
+                        },
+                    ],
+                });
+
+                if (result.index === 0) {
+                    Clipboard.write({
+                        string: msg,
+                    });
+                }
+            },
             handleRefresh(event) {
                 GetConversations(true).then((res) => {
                     if(event) {
@@ -101,6 +144,21 @@
                 return new Date(a.date) - new Date(b.date);
             });
 
+            // for each message
+            this.messages.forEach((mess) => {
+                // parse urls
+                let urlRegex = /(https?:\/\/[^\s]+)/g;
+                // check if there's already a <a> tag
+                if(mess.content.match(/<a/g)) {
+                    mess.content = mess.content.replace(/<a/g, '<a target="_blank"');
+                } else {
+                    mess.content = mess.content.replace(urlRegex, '<a target="_blank" @click.stop class="inherit" href="$1">$1</a>');
+                }
+
+                // parse line breaks
+                mess.content = mess.content.replace(/\n/g, '<br/>');
+            });
+
             document.addEventListener('tokenUpdated', () => {
                 this.handleRefresh();
             });
@@ -136,13 +194,13 @@
         <div class="chatUI">
 
             <div v-for="(mess, i) in messages" :key="i">
-                <div class="message" v-if="mess.author !== 'Moi'">
+                <div @click="openMessage($event)" class="message theirs" v-if="mess.author !== 'Moi'">
                     <p class="author">{{mess.author}}</p>
-                    <div class="bubble">{{mess.content}}</div>
+                    <div class="bubble" v-html="mess.content"></div>
                 </div>
-                <div class="message me" v-else>
+                <div @click="openMessage($event)" class="message me" v-else>
                     <p class="author">{{mess.author}}</p>
-                    <div class="bubble">{{mess.content}}</div>
+                    <div class="bubble" v-html="mess.content"></div>
                 </div>
             </div>
 
@@ -156,6 +214,7 @@
 <style scoped>
     .content::part(scroll) {
         margin-bottom: calc(0px - env(safe-area-inset-bottom));
+        overflow: hidden;
     }
 
     /* chatbox */
@@ -163,13 +222,15 @@
         position: sticky;
         bottom: 0px;
 
-        height: 70px;
+        height: calc(70px + var(--ion-safe-area-bottom));
         display: flex;
         align-items: center;
         justify-content: center;
         
         background-color: var(--ion-background-color);
         border-top: 1px solid var(--ion-color-step-100);
+
+        padding-bottom: var(--ion-safe-area-bottom);
     }
 
     .md .chatbox {
@@ -184,7 +245,7 @@
         width: calc(100% - 12px * 2);
 
         border: none;
-        background-color: var(--ion-color-step-50);
+        background-color: var(--ion-color-step-100);
 
         border-radius: 50px;
         padding: 12px 20px;
@@ -201,10 +262,11 @@
 
     /* chatUI */
     .chatUI {
-        height: calc(100% - 60px);
+        height: calc(100% - 60px - var(--ion-safe-area-bottom));
         width: 100%;
         padding: 0px 16px;
         overflow-y: scroll;
+        padding-bottom: 20px;
     }
 
     .message {
@@ -219,21 +281,82 @@
         margin-bottom: 5px;
     }
 
-    .message .bubble {
-        background-color: var(--ion-color-step-50);
-        border-radius: 10px;
-        padding: 10px 15px;
-        max-width: 80%;
-        width: fit-content;
-        font-family: var(--papillon-font), sans-serif;
-    }
-
     .message.me {
         align-items: flex-end;
     }
 
+    .message .bubble {
+        --gradient: 
+            linear-gradient(to bottom, rgba(var(--ion-color-primary-rgb), 0.8) 0%, rgba(var(--ion-color-primary-rgb), 1) 90%), #fff;
+        
+        background: var(--ion-color-step-100);
+
+        border-radius: 15px;
+
+        padding: 8px 12px;
+        max-width: 80%;
+        width: fit-content;
+
+        position: relative;
+    }
+    
+
     .message.me .bubble {
-        border: 1px solid var(--ion-color-step-100);
-        background-color: transparent !important;
+        color: #fff;
+        background: var(--gradient);
+        background-attachment: fixed;
+    }
+
+    .message.me .bubble:before {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        bottom: 0;
+        right: -8px;
+        height: 20px;
+        width: 20px;
+        background: rgba(var(--ion-color-primary-rgb), 1);
+        background-attachment: fixed;
+        border-bottom-left-radius: 15px;
+    }
+
+    .message.me .bubble:after {
+        content: "";
+        position: absolute;
+        z-index: 1;
+        bottom: 0;
+        right: -10px;
+        width: 10px;
+        height: 20px;
+        background: var(--ion-background-color);
+        border-bottom-left-radius: 10px;
+    }
+
+    .message.theirs .bubble:before {
+        content: "";
+        position: absolute;
+        z-index: 0;
+        bottom: 0;
+        left: -7px;
+        height: 20px;
+        width: 20px;
+        background: var(--ion-color-step-100);
+        border-bottom-right-radius: 15px;
+    }   
+
+    .message.theirs .bubble:after {
+        content: "";
+        position: absolute;
+        z-index: 1;
+        bottom: 0;
+        left: -10px;
+        width: 10px;
+        height: 20px;
+        background: var(--ion-background-color);
+        border-bottom-right-radius: 10px;
+    }
+
+    .message.me .bubble a {
+        color: #fff !important;
     }
 </style>

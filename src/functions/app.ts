@@ -2,10 +2,27 @@
 // import { app } from '@/main.ts'
 import { Capacitor } from '@capacitor/core';
 import { App } from '@capacitor/app';
+import { SafeArea } from 'capacitor-plugin-safe-area';
 
 // Variables
 let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
 let themeMode = localStorage.getItem('themeMode');
+
+// safe area
+SafeArea.getSafeAreaInsets().then((result) => {
+	const insets = result.insets;
+
+	// set safe area
+	document.documentElement.style.setProperty('--papillon-safe-area-top', insets.top + 'px');
+	document.documentElement.style.setProperty('--papillon-safe-area-right', insets.right + 'px');
+	document.documentElement.style.setProperty('--papillon-safe-area-bottom', insets.bottom + 'px');
+	document.documentElement.style.setProperty('--papillon-safe-area-left', insets.left + 'px');
+
+	document.documentElement.style.setProperty('--ion-safe-area-top', insets.top + 'px');
+	document.documentElement.style.setProperty('--ion-safe-area-right', insets.right + 'px');
+	document.documentElement.style.setProperty('--ion-safe-area-bottom', insets.bottom + 'px');
+	document.documentElement.style.setProperty('--ion-safe-area-left', insets.left + 'px');
+});
 
 // Status bar
 import { StatusBar, Style } from '@capacitor/status-bar';
@@ -16,11 +33,11 @@ function checkDarkMode() {
 }
 
 function setStatusBarStyle() {
+	StatusBar.setOverlaysWebView({overlay: true});
+
 	if (themeMode === 'dark' || (isDarkMode && themeMode !== 'light')) {
-		StatusBar.setBackgroundColor({color: "#111112"});
 		StatusBar.setStyle({style: Style.Dark})
 	} else {
-		StatusBar.setBackgroundColor({color: "#ffffff"});
 		StatusBar.setStyle({style: Style.Light})
 	}
 }

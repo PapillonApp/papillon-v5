@@ -68,6 +68,7 @@ async function presentToastFull(header, msg, color, icon, error = false, btn_con
 		position: "bottom",
 		color: color,
 		icon: icon,
+		mode: "md",
 		buttons: [...btn]
 	});
 
@@ -90,6 +91,7 @@ async function presentToastSmall(header, color, icon) {
 		header: header,
 		duration: 2000,
 		position: "top",
+		mode: "md",
 		color: color,
 		icon: icon,
 		cssClass: "toast-small"
