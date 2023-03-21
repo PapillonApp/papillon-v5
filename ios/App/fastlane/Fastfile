@@ -63,7 +63,7 @@ begin
 			ipa: IPA_LOCATION,
 			submit_for_review: false,
 			automatic_release: true,
-			force: true, # Skip HTML report verification
+			force: true,
 			skip_metadata: true,
 			skip_screenshots: true,
 			precheck_include_in_app_purchases: false,
