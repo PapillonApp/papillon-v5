@@ -31,6 +31,7 @@
 
 	import UserView from './settings/UserView.vue';
 	import InfoView from './news/InfoView.vue';
+	import MarkView from './grades/MarkView.vue';
 	
 	import timetableEdit from '@/functions/utils/timetableEdit.js';
 	import subjectColor from '@/functions/utils/subjectColor.js';
@@ -92,6 +93,7 @@
 				showLoading: true,
 				toolbarColor: "",
 				InfoView: InfoView,
+				MarkView: MarkView,
 			}
 		},
 		methods: {
@@ -641,21 +643,23 @@
 							</ion-list-header>
 
 							<div v-if="!gradesLoading">
-								<ion-item v-for="grade in grades" :key="grade.id">
-									<ion-label :style="`--courseColor: ${grade.subject.color};`">
-										<p><span class="courseColor"></span> {{ grade.subject.name }}</p>
-										<h2>{{ grade.info.description }}</h2>
-									</ion-label>
+								<IonNavLink v-for="grade in grades" :key="grade.id" router-direction="forward" :component="MarkView" :componentProps="{markID: grade.id}">
+									<ion-item button>
+										<ion-label :style="`--courseColor: ${grade.subject.color};`">
+											<p><span class="courseColor"></span> {{ grade.subject.name }}</p>
+											<h2>{{ grade.info.description }}</h2>
+										</ion-label>
 
-									<div slot="end">
-										<ion-label v-if="grade.info.significant">
-											<h2>{{ grade.grade.value }}<small>/{{ grade.grade.out_of }}</small></h2>
-										</ion-label>
-										<ion-label v-else>
-											<h2>{{ grade.info.significantReason }}</h2>
-										</ion-label>
-									</div>
-								</ion-item>
+										<div slot="end">
+											<ion-label v-if="grade.info.significant">
+												<h2>{{ grade.grade.value }}<small>/{{ grade.grade.out_of }}</small></h2>
+											</ion-label>
+											<ion-label v-else>
+												<h2>{{ grade.info.significantReason }}</h2>
+											</ion-label>
+										</div>
+									</ion-item>
+								</IonNavLink>
 							</div>
 					</ion-list>
 				</Transition>
