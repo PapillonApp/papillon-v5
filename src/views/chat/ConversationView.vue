@@ -140,8 +140,9 @@
                 return new Date(a.date) - new Date(b.date);
             });
 
-            // for each message, parse urls
+            // for each message
             this.messages.forEach((mess) => {
+                // parse urls
                 let urlRegex = /(https?:\/\/[^\s]+)/g;
                 // check if there's already a <a> tag
                 if(mess.content.match(/<a/g)) {
@@ -149,6 +150,9 @@
                 } else {
                     mess.content = mess.content.replace(urlRegex, '<a target="_blank" @click.stop class="inherit" href="$1">$1</a>');
                 }
+
+                // parse line breaks
+                mess.content = mess.content.replace(/\n/g, '<br/>');
             });
 
             document.addEventListener('tokenUpdated', () => {
@@ -188,7 +192,7 @@
             <div v-for="(mess, i) in messages" :key="i">
                 <div @click="openMessage($event)" class="message theirs" v-if="mess.author !== 'Moi'">
                     <p class="author">{{mess.author}}</p>
-                    <div class="bubble">{{mess.content}}</div>
+                    <div class="bubble" v-html="mess.content"></div>
                 </div>
                 <div @click="openMessage($event)" class="message me" v-else>
                     <p class="author">{{mess.author}}</p>
