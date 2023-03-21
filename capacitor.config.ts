@@ -8,8 +8,11 @@ const config: CapacitorConfig = {
   bundledWebRuntime: false,
   loggingBehavior: 'debug',
   plugins: {
-    "SplashScreen": {
-      "launchAutoHide": false,
+    SplashScreen: {
+      launchAutoHide: false,
+    },
+    CapacitorHttp: {
+      enabled: true,
     },
     LocalNotifications: {
       smallIcon: "ic_stat_notify",
