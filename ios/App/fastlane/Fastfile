@@ -38,7 +38,6 @@ begin
 			app_version: ENV['APP_IOS_VERSION_NUMBER'],
 			ipa: IPA_LOCATION,
 			skip_waiting_for_build_processing: false,
-			uses_non_exempt_encryption: true,
 			changelog: "Prenez le temps de tout tester, et n'hésitez pas à nous faire remonter les bugs que vous trouverez !",
 			distribute_external: true,
 			groups: ['86df2d8b-d690-49df-b623-326705effd25', '86ecfec6-6abb-49f6-ab7a-0b4380757aed']
