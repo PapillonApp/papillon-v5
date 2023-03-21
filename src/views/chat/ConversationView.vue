@@ -348,7 +348,7 @@
         left: -10px;
         width: 10px;
         height: 20px;
-        background: white;
+        background: var(--ion-background-color);
         border-bottom-right-radius: 10px;
     }
 

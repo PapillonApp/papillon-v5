@@ -246,7 +246,7 @@
 							<span class="material-symbols-outlined mdls" slot="start">forum</span>
 							<ion-label>
 								<h2>{{ chat.subject }}</h2>
-								<p>{{ chat.messages[chat.messages.length - 1].content }}</p>
+								<p>{{ chat.messages[chat.messages.length - 1].content.replace("<br/>", " ") }}</p>
 								<small>{{ chat.creator }}</small>
 							</ion-label>
 						</IonItem>
