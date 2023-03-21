@@ -329,7 +329,7 @@ ion-header ion-toolbar:first-child {
     padding-top: var(--papillon-safe-area-top, 0) !important;
 }
 
-ion-modal ion-header ion-toolbar:first-child {
+ion-modal.modal-sheet ion-header ion-toolbar:first-child {
     padding-top: 8px !important;
 }
 
