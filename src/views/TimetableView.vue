@@ -1,6 +1,6 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput, IonProgressBar, alertController } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonFabList, IonFabButton, IonInput, IonProgressBar, alertController, IonIcon } from '@ionic/vue';
 
   import { Share } from '@capacitor/share';
 
@@ -23,6 +23,7 @@
   import CoursElement from '@/components/timetable/CoursElement.vue';
 
   import GetTimetable from '@/functions/fetch/GetTimetable.js';
+  import ExportIcal from '@/functions/tools/ExportIcal.js';
 
   export default defineComponent({
     name: 'FolderPage',
@@ -47,8 +48,9 @@
         IonLabel,
         IonSpinner,
         IonFab,
+        IonFabButton,
         IonInput,
-        IonProgressBar,
+        IonProgressBar
     },
     setup() {
         return {
@@ -67,6 +69,10 @@
         }
     },
     methods: {
+        exportInIcal() {
+            console.log("exporting in ical");
+            ExportIcal(this.$rn);
+        },
         createDateString(date) {
             let dateObject = new Date(date);
             let day_string = dateObject.toLocaleString('default', { weekday: 'long' }).slice(0, 3);
@@ -638,11 +644,23 @@
             <ion-refresher-content></ion-refresher-content>
         </ion-refresher>
 
-        <IonFab slot="fixed" vertical="bottom" horizontal="end" class="newCoursBtnFab">
-            <ion-button @click="setNewCoursModalOpen(true)" size="large" shape="round" class="newCoursBtn" mode="md">
-                <span class="material-symbols-outlined mdls" slot="icon-only">add</span>
-            </ion-button>
-        </IonFab>
+        <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+            <ion-fab-button id="click-trigger">
+                <span class="material-symbols-outlined mdls">expand_less</span>
+            </ion-fab-button>
+            <ion-popover mode="md" trigger="click-trigger" trigger-action="click">
+                <ion-list>
+                    <ion-item @click="setNewCoursModalOpen(true)" :button="true" :detail="false">
+                        <span slot="start" class="material-symbols-outlined mdls">add</span>
+                        Créer un cours
+                    </ion-item>
+                    <ion-item lines="none" @click="exportInIcal()" :button="true" :detail="false">
+                        <span slot="start" class="material-symbols-outlined mdls">calendar_add_on</span>
+                        Ajouter au calendrier
+                    </ion-item>
+                </ion-list>
+            </ion-popover>
+        </ion-fab>
 
         
 
@@ -989,4 +1007,14 @@
     .md .newCoursModal ion-list {
         padding: 0 15px;
     }
+
+    ion-fab-button.fab-button-in-list {
+        width: 200px;
+        height: 42px;
+    }
+
+    ion-fab-list {
+        margin-left: -100px;
+    }
+
 </style>

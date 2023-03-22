@@ -67,3 +67,49 @@ ion-content::part(scroll) {
     bottom: calc(20px + var(--ion-safe-area-bottom) * 0.8) !important;
     right: 16px;
 }
+
+ion-fab {
+    bottom: calc(16px + var(--ion-safe-area-bottom));
+    right: 16px;
+}
+
+.fabButton {
+    display: flex;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 20px;
+
+    margin-right: 7px;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.fabButton p {
+    text-align: right;
+    margin: 0;
+
+    color: #fff;
+    background: #222;
+
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.fabButton .icon {
+    min-width: 42px;
+    height: 42px;
+    background: #222;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 50%;
+}
+
+.fabButton span {
+    color: #fff !important;
+}

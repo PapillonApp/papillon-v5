@@ -329,7 +329,7 @@ ion-header ion-toolbar:first-child {
     padding-top: var(--papillon-safe-area-top, 0) !important;
 }
 
-ion-modal.modal-sheet ion-header ion-toolbar:first-child {
+ion-modal.modal-sheet ion-header ion-toolbar:first-child, ion-modal.modal-card ion-header ion-toolbar:first-child {
     padding-top: 8px !important;
 }
 
@@ -451,11 +451,6 @@ ion-content {
     --padding-bottom: env(safe-area-inset-bottom) !important;
 }
 
-ion-fab .mdls {
-    width: auto;
-    margin-left: -3.5px;
-}
-
 /* beta chip */
 .beta-chip {
     margin-top: 0px;
@@ -519,4 +514,18 @@ ion-alert.md .btn_secondary {
 /* links */
 a.inherit {
     color: inherit;
+}
+
+ion-popover {
+    --box-shadow: 0px 2px 6px #00000030 !important;
+}
+
+ion-popover::part(content) {
+    border-radius: 8px !important;
+    margin-top: -10px;
+}
+
+ion-popover ion-list {
+    padding: 0 !important;
+    overflow: hidden;
 }

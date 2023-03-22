@@ -44,6 +44,7 @@
     "capacitor-plugin-safe-area": "^1.0.1",
     "core-js": "^3.6.5",
     "fast-average-color": "^9.3.0",
+    "ics": "^3.1.0",
     "ionicons": "^6.0.3",
     "lucide-vue-next": "^0.104.0",
     "pica": "^9.0.1",
