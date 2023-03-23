@@ -15,6 +15,10 @@
 	import { Geolocation } from '@capacitor/geolocation';
 	import { Dialog } from '@capacitor/dialog';
 
+
+	import getEDPeriods from '@/functions/fetch/getEDPeriods.js';
+
+
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
@@ -95,7 +99,7 @@
 				loading.present();
 
 				axios.post(EDAPI + "/login.awp", body, requestOptions)
-				.then(data => {
+				.then(async (data) => {
 					let rsp = data.data
 					if(!rsp.token) {
 						loading.dismiss()
@@ -108,6 +112,12 @@
 					else {
 						let token = rsp.token;
 						let user = rsp.data.accounts[0];
+
+						//FETCH PERIODS
+						await getEDPeriods(user.id, token).then(periods => {
+							user.periods = periods;
+						})
+
 						localStorage.UserCache = JSON.stringify(user);
 						// save token
 						localStorage.token = token;
