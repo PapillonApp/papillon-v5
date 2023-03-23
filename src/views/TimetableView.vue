@@ -248,7 +248,7 @@
 			sharedCourse.name = this.getStringToAsciiArray(sharedCourse.name).join('-');
 			sharedCourse.teachers = this.getStringToAsciiArray(sharedCourse.teachers).join('-');
 			sharedCourse.rooms = this.getStringToAsciiArray(sharedCourse.rooms).join('-');
-			sharedCourse.status = this.getStringToAsciiArray(sharedCourse.start).join('-');
+			sharedCourse.status = this.getStringToAsciiArray(sharedCourse.status).join('-');
 
 			let urlElems = "";
 			urlElems += firstName + "$"; // first name
