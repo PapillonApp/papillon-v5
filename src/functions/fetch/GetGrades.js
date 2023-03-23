@@ -14,10 +14,13 @@ function isFloat(n){
 
 // main function
 async function getGrades(forceReload) {
-	// as only pronote is supported for now, we can just return the pronote grades
-	
-	// return pronote grades
-	return getPronoteGrades(forceReload);
+	switch(localStorage.loginService) {
+        case "pronote":    
+            // return pronote grades
+			return getPronoteGrades(forceReload);
+		case "ecoledirecte":
+            return;
+    }
 }
 
 // pronote : get grades

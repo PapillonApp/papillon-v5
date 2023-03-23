@@ -327,7 +327,7 @@
 					this.login();
 				}, 1000);
 			},
-			loginToEtab(url, cp) {
+			async loginToEtab(url, cp) {
 				// lowercase url
 				url = url.toLowerCase();
 				let etab = url.toLowerCase();
@@ -352,13 +352,17 @@
 						etab = etab + "/" + "eleve.html";
 					}
 				}
-
+				const loading = await loadingController.create({
+					message: 'Veuillez patienter...'
+				});
+					
+				loading.present();
 				// get ENT
 				axios.get(`https://api.androne.dev/papillon-v4/redirect.php?url=${encodeURIComponent(etab)}`)
 				.then(response => {
 					// end loading
 					this.isLoading = false;
-
+					loading.dismiss()
 					let resp = response.data.url;
 					let cas_host = resp.split('/')[2];
 					cas_host = cas_host.split('/')[0] || cas_host;
@@ -497,7 +501,7 @@
 
 				await alert.present();
 			},
-			login() {
+			async login() {
 				const API = this.$api;
 
 				let username = this.$refs.user.$el.value;
@@ -525,12 +529,17 @@
 					redirect: 'follow'
 				};
 
-				displayToast.presentToast("Connexion en cours...", "light", true)
+				const loading = await loadingController.create({
+					message: 'Connexion en cours...'
+				});
+					
+				loading.present();
 
 				fetch(API + "/generatetoken", requestOptions)
 					.then(response => response.json())
-					.then(result => {
+					.then(async result => {
 						if(!result.token) {
+							loading.dismiss()
 							if(result.error.includes("probably wrong login information") || result.error.includes("probably bad username/password")) {
 								displayToast.presentError("Identifiants incorrects.", "danger", result.error)
 							} else if(result.error == "Missing username") {
@@ -567,7 +576,7 @@
 									}
 								})
 
-							fetchDaysOffAndHolidays();
+							await fetchDaysOffAndHolidays()
 
 							// go to home
 							window.location.replace("/");
