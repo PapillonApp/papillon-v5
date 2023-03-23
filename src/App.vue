@@ -752,7 +752,7 @@
 					</ion-list>
 
 					<ion-button mode="md" @click="hideChangelog" fill="solid" class="endButton">Accéder à Papillon</ion-button>
-					<p class="warning">Cet écran n'apparaîtera pas au redémarrage de Papillon. Il restera accessible dans les paramètres.</p>
+					<p class="warning">Cet écran n’apparaîtra pas au redémarrage de Papillon. Il restera accessible dans les paramètres.</p>
 				</div>
 			</ion-content>
 		</ion-modal>
