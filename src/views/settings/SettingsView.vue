@@ -289,7 +289,7 @@
 			</IonList>
 
 			<IonList :inset="true" lines="inset">
-				<IonItem button @click="openURL('https://ko-fi.com/thepapillonapp')">
+				<IonItem button @click="openURL('https://ko-fi.com/thepapillonapp')" class="only-md">
 					<span class="material-symbols-outlined mdls" slot="start">volunteer_activism</span>
 					<IonLabel>
 						<p>Donation</p>
