@@ -141,7 +141,7 @@ function getEDRecap(force) {
 		});
 
 		// grades
-		/*getGrades(force).then((response) => {
+		getGrades(force).then((response) => {
 			grades.full = response;
 			requestsDone++;
 
@@ -174,7 +174,7 @@ function getEDRecap(force) {
 			}
 		});
 
-		// news
+		/*// news
 		getNews(force).then((response) => {
 			news = response;
 			requestsDone++;
