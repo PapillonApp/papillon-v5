@@ -464,9 +464,11 @@
                 }
                 else {
                     // Check permission
-                    if (await LocalNotifications.checkPermissions() != 'granted') {
+                    const permission = await LocalNotifications.checkPermissions();
+                    if (permission != 'granted') {
                         try {
-                            if (await LocalNotifications.requestPermissions() != 'granted') {
+                            const notificationEnabled = await LocalNotifications.requestPermissions();
+                            if (notificationEnabled != 'granted') {
                                 displayToast.presentError("Impossible d'activer les notifications", "danger", "Permission refusée");
                                 return;
                             } else {
