@@ -704,25 +704,49 @@
 				</div>
 			</ion-header>
 			<ion-content mode="md">
-			<ion-list id="inbox-list"> 
-				<router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
-					<ion-item v-if="!p.disabled" button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
-						<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
-						<ion-label>{{ p.title }}</ion-label>
-					</ion-item>
-					<ion-item @click="displayDevMessage()" v-if="p.disabled" button mode="md" lines="none" :detail="false" :class="{ selected: selectedIndex === i }" disabled>
-						<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
-						<ion-label>{{ p.title }}</ion-label>
-					</ion-item>
-				</router-link>
-			</ion-list>
-			</ion-content>
-		</ion-menu>
-		<ion-router-outlet ref="outlet" :animated="true" :animation="transition" id="main-content" v-slot="{ Component }">
-			<keep-alive>
-				<component :is="Component" />
-			</keep-alive>
-		</ion-router-outlet>
+				<ion-list id="inbox-list"> 
+					<router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
+						<ion-item v-if="!p.disabled" button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
+							<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
+							<ion-label>{{ p.title }}</ion-label>
+						</ion-item>
+						<ion-item @click="displayDevMessage()" v-if="p.disabled" button mode="md" lines="none" :detail="false" :class="{ selected: selectedIndex === i }" disabled>
+							<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
+							<ion-label>{{ p.title }}</ion-label>
+						</ion-item>
+					</router-link>
+				</ion-list>
+
+				<ion-list id="bottomActionsList"> 
+						<ion-item @click="openURL('https://docs.getpapillon.xyz')" button mode="md" lines="none" :detail="false">
+							<span class="material-symbols-outlined mdls" slot="start">support</span>
+							<ion-label>Aide de Papillon</ion-label>
+						</ion-item>
+						<ion-item button mode="md" lines="none" :detail="false">
+							<span class="material-symbols-outlined mdls" slot="start">dns</span>
+							<ion-label>Serveur</ion-label>
+
+							<ion-chip slot="end" color="success" v-if="connectedToServer == 'connected'">
+								<ion-label>Connecté</ion-label>
+							</ion-chip>
+							<ion-chip slot="end" color="warning" v-else-if="connectedToServer == 'connecting'">
+								<ion-label>Reconnexion</ion-label>
+							</ion-chip>
+							<ion-chip slot="end" color="danger" v-else-if="connectedToServer == 'disconnected'">
+								<ion-label>Déconnecté</ion-label>
+							</ion-chip>
+							<ion-chip slot="end" color="medium" v-else>
+								<ion-label>En pause</ion-label>
+							</ion-chip>
+						</ion-item>
+					</ion-list>
+				</ion-content>
+			</ion-menu>
+			<ion-router-outlet ref="outlet" :animated="true" :animation="showTransition" id="main-content" v-slot="{ Component }">
+				<keep-alive>
+					<component :is="Component" />
+				</keep-alive>
+			</ion-router-outlet>
 		</ion-split-pane>
 
 		<ion-modal ref="changelogModal">
