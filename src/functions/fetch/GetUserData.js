@@ -7,6 +7,7 @@ const fac = new FastAverageColor();
 // vars
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
+import getEDPeriods from '@/functions/fetch/getEDPeriods.js';
 
 // main function
 function getUser(force) {
@@ -47,9 +48,20 @@ async function getPronoteUser(force) {
         // get user from API
         return axios.get(URL)
             .then((response) => {
-                if (response == "notfound" || response == "expired") {
-                    // get new token
-                    GetToken();
+                if (response.data.code != 200) {
+                    if (response.data.code === 525) {
+                        // get new token
+                        GetToken();
+                    } else if(response.data.code === 520) {
+                        GetToken();
+                    }
+                    else {
+                        return new Promise((reject) => {
+                            reject({
+                                error: response.data.code
+                            });
+                        });
+                    }
                 }
 
                 // get user
@@ -171,7 +183,7 @@ async function getEDUser(force) {
     else {
         // get user from API
         return axios.get(URL)
-            .then((response) => {
+            .then(async(response) => {
                 if (response == "notfound" || response == "expired") {
                     // get new token
                     GetToken();
@@ -226,8 +238,15 @@ async function getEDUser(force) {
                             localStorage.setItem('avatarCache', avatarURL);
                         }
                     });*/
+                //FETCH PERIODS
+                await getEDPeriods().then(periods => {
+                    user.periods = periods;
+                    response.data.accounts[0].periods = periods;
+                })
 
                 localStorage.setItem('UserCache', JSON.stringify(response.data.accounts[0]));
+
+                
 
                 // return user
                 return constructEDUser(user);
@@ -262,7 +281,7 @@ function constructEDUser(user) {
             name: user.profile.classe.code,
             school: user.nomEtablissement
         },
-        periods: [] //user.periods
+        periods: user.periods
     }
 
     // return student

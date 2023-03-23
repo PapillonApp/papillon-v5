@@ -213,15 +213,17 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
 
         return axios.post(URL, body, requestOptions)
             .then(async (response) => {
-                if (response.data.data.code) {
-                    if (response.data.data.code == 525) {
+                if (response.data.code != 200) {
+                    if (response.data.code === 525) {
                         // get new token
+                        GetToken();
+                    } else if(response.data.code === 520) {
                         GetToken();
                     }
                     else {
                         return new Promise((reject) => {
                             reject({
-                                error: response.data.data.code
+                                error: response.data.code
                             });
                         });
                     }
