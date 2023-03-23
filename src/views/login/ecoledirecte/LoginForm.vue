@@ -260,6 +260,8 @@
 
 		padding: 20px;
 		gap: 20px;
+
+		color: var(--ion-color-light);
 	}
 
 	.alphaMessage * {
