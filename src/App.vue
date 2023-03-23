@@ -46,100 +46,100 @@
 				}
 			}
 
-    export default defineComponent({
-    name: 'App',
-    components: {
-        IonApp, 
-        IonContent, 
-        IonItem, 
-        IonLabel, 
-        IonList, 
-        IonMenu, 
-        IonMenuToggle,
-        IonRouterOutlet, 
-        IonSplitPane,
-        IonHeader,
-        IonToolbar,
-        IonSkeletonText,
-        IonModal,
-        IonThumbnail,
-        IonButtons,
-        IonButton
-    },
-    data() {
-        return {
-            loggedIn: localStorage.loggedIn,
-            dataLoading: true,
-            userData: {
-                student: {
-                    name: '',
-                    avatar: '',
-                    ine: '',
-                    contact: {
-                        email: '',
-                        phone: ''
-                    }
-                },
-                class: {
-                    name: '',
-                    school: ''
-                }
-            },
-            avatar: '',
-            presentingElement: undefined as any,
+	export default defineComponent({
+	name: 'App',
+	components: {
+		IonApp, 
+		IonContent, 
+		IonItem, 
+		IonLabel, 
+		IonList, 
+		IonMenu, 
+		IonMenuToggle,
+		IonRouterOutlet, 
+		IonSplitPane,
+		IonHeader,
+		IonToolbar,
+		IonSkeletonText,
+		IonModal,
+		IonThumbnail,
+		IonButtons,
+		IonButton
+	},
+	data() {
+		return {
+			loggedIn: localStorage.loggedIn,
+			dataLoading: true,
+			userData: {
+				student: {
+					name: '',
+					avatar: '',
+					ine: '',
+					contact: {
+						email: '',
+						phone: ''
+					}
+				},
+				class: {
+					name: '',
+					school: ''
+				}
+			},
+			avatar: '',
+			presentingElement: undefined as any,
 			isMenuOpened: false,
 			changeStatusTimeout: false,
 			connectedToServer: "",
 			showTransition: undefined as any
-        }
-    },
-    setup() {
-        const selectedIndex = ref(0);
-        // defines the tabs shown in the menu
-        const appPages = [
-            {
-                title: 'Accueil',
-                url: '/home',
-                icon: "home",
-                disabled: false
-            }
-        ];
+		}
+	},
+	setup() {
+		const selectedIndex = ref(0);
+		// defines the tabs shown in the menu
+		const appPages = [
+			{
+				title: 'Accueil',
+				url: '/home',
+				icon: "home",
+				disabled: false
+			}
+		];
 		if(localStorage.getItem("loginService") === "pronote") {
-            appPages.push({
+			appPages.push({
 				title: 'Emploi du temps',
 				url: '/timetable',
 				icon: "calendar_month",
-                disabled: false,
+				disabled: false,
 			},
 			{
 				title: 'Travail à faire',
 				url: '/homework',
 				icon: "auto_stories",
-                disabled: false,
+				disabled: false,
 			},
 			{
 				title: 'Notes',
 				url: '/grades',
 				icon: "insights",
-                disabled: false,
+				disabled: false,
 			},
 			{
 				title: 'Vie scolaire',
 				url: '/schoollife',
 				icon: "gavel",
-                disabled: false,
+				disabled: false,
 			},
 			{
 				title: 'Actualités',
 				url: '/news',
 				icon: "newspaper",
-                disabled: false,
+				disabled: false,
 			},
 			{
 				title: 'Conversations',
 				url: '/conversations',
 				icon: "forum",
-                disabled: false,
+				disabled: false,
 			},
 			{
 				title: 'Paramètres',
@@ -148,158 +148,158 @@
 				disabled: false
 			})
 		}        
-        // hides some tabs when they are not anabled
-        if(localStorage.getItem('viescolaireEnabled') !== 'true') {
-            // remove school life tab
-            appPages.splice(4, 1);
-        }
+		// hides some tabs when they are not anabled
+		if(localStorage.getItem('viescolaireEnabled') !== 'true') {
+			// remove school life tab
+			appPages.splice(4, 1);
+		}
 		if(localStorage.getItem("loginService") === "ecoledirecte") {
-            let usercache = JSON.parse(localStorage.getItem("UserCache")!)
-            usercache.modules.forEach((module1: any) => {
-                switch(module1.code) {
-                    case "VIE_SCOLAIRE":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Vie scolaire',
-                                url: '/schoollife',
-                                icon: "gavel",
-                                disabled: false
-                            })
-                        }
-                        break;
-                    case "VIE_DE_LA_CLASSE":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Vie de la classe (non dispo.)',
-                                url: '/classlife',
-                                icon: "forum",
-                                disabled: true
-                            })
-                        }
-                        break;
-                    case "NOTES":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Notes',
-                                url: '/grades',
-                                icon: "insights",
-                                disabled: false
-                            })
-                        }
-                        break;
-                    case "CLOUD":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Cloud (non dispo.)',
-                                url: '/cloud',
-                                icon: "cloud",
-                                disabled: true
-                            })
-                        }
-                        break;
-                    case "MESSAGERIE":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Messagerie (non dispo.)',
-                                url: '/mails',
-                                icon: "mail",
-                                disabled: true
-                            })
-                        }
-                        break;
-                    case "EDT":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Emploi du temps',
-                                url: '/timetable',
-                                icon: "calendar_month",
-                                disabled: false
-                            })
-                        }
-                        break;
-                    //documents élèves
-                    case "CAHIER_DE_TEXTES":
-                        if(module1.enable) {
-                            appPages.push({
-                                title: 'Travail à faire',
-                                url: '/homework',
-                                icon: "auto_stories",
-                                disabled: false
-                            })
-                        }
-                        break;
-                }
-            })
-            appPages.push({
-                title: 'Paramètres',
-                url: '/settings',
-                icon: "settings",
-                disabled: false
-            })
-        }
-        // weird ionic stuff
-        const path = window.location.pathname.split('folder/')[1];
-        if (path !== undefined) {
-            selectedIndex.value = appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
-        }
-        
-        const route = useRoute();
-        
-        return { 
-            selectedIndex,
-            appCanal: canal,
-            appVersion: version,
-            appUpdates: changelog,
-            appPages,
-            labels : [],
-            isSelected: (url: string) => url === route.path ? 'selected' : ''
-        }
-    },
-    methods: {
-        checkAndroidShortcuts() {
-            AndroidShortcuts.isDynamicSupported().then((result) => {
-                if (result) {
-                    AndroidShortcuts.addListener('shortcut', (response: any) => {
-                        switch (response.data) {
-                            case "timetable":
-                                this.$router.push('/timetable');
-                                break;
-                            case "homework":
-                                this.$router.push('/homework');
-                                break;
-                            case "grades":
-                                this.$router.push('/grades');
-                                break;
-                            default:
-                                break;
-                        }
-                    });
-                }
-            })
-        },
-        async notify(title: string, body: string) {
-            LocalNotifications.schedule({
-                notifications: [
-                    {
-                        title: title,
-                        body: body,
-                        id: this.randomID(),
-                        schedule: { at: new Date(Date.now() + 1000) },
-                    }
-                ]
-            });
-        },
-        randomID() {
-            return Math.floor(Math.random() * 100000 + 1000);
-        },
-        async backgroundFetchEvent(taskId: any) {
-            GetToken.default().then(async (token: any) => {
-                if(token) {
-                    GetRecap.default().then(async (recap: any) => {
-                        if(recap) {
-                            // grades
-                            const lastGrades = JSON.parse(localStorage.getItem('lastGrades') || '[]');
-                            const recapGrades = recap.grades.last;
+			let usercache = JSON.parse(localStorage.getItem("UserCache")!)
+			usercache.modules.forEach((module1: any) => {
+				switch(module1.code) {
+					case "VIE_SCOLAIRE":
+						if(module1.enable) {
+							appPages.push({
+								title: 'Vie scolaire',
+								url: '/schoollife',
+								icon: "gavel",
+								disabled: false
+							})
+						}
+						break;
+					case "VIE_DE_LA_CLASSE":
+						if(module1.enable) {
+							appPages.push({
+								title: 'Vie de la classe (non dispo.)',
+								url: '/classlife',
+								icon: "forum",
+								disabled: true
+							})
+						}
+						break;
+					case "NOTES":
+						if(module1.enable) {
+							appPages.push({
+								title: 'Notes',
+								url: '/grades',
+								icon: "insights",
+								disabled: false
+							})
+						}
+						break;
+					case "CLOUD":
+						if(module1.enable) {
+							appPages.push({
+								title: 'Cloud (non dispo.)',
+								url: '/cloud',
+								icon: "cloud",
+								disabled: true
+							})
+						}
+						break;
+					case "MESSAGERIE":
+						if(module1.enable) {
+							appPages.push({
+								title: 'Messagerie (non dispo.)',
+								url: '/mails',
+								icon: "mail",
+								disabled: true
+							})
+						}
+						break;
+					case "EDT":
+						if(module1.enable) {
+							appPages.push({
+								title: 'Emploi du temps',
+								url: '/timetable',
+								icon: "calendar_month",
+								disabled: false
+							})
+						}
+						break;
+					//documents élèves
+					case "CAHIER_DE_TEXTES":
+						if(module1.enable) {
+							appPages.push({
+								title: 'Travail à faire',
+								url: '/homework',
+								icon: "auto_stories",
+								disabled: false
+							})
+						}
+						break;
+				}
+			})
+			appPages.push({
+				title: 'Paramètres',
+				url: '/settings',
+				icon: "settings",
+				disabled: false
+			})
+		}
+		// weird ionic stuff
+		const path = window.location.pathname.split('folder/')[1];
+		if (path !== undefined) {
+			selectedIndex.value = appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
+		}
+		
+		const route = useRoute();
+		
+		return { 
+			selectedIndex,
+			appCanal: canal,
+			appVersion: version,
+			appUpdates: changelog,
+			appPages,
+			labels : [],
+			isSelected: (url: string) => url === route.path ? 'selected' : ''
+		}
+	},
+	methods: {
+		checkAndroidShortcuts() {
+			AndroidShortcuts.isDynamicSupported().then((result) => {
+				if (result) {
+					AndroidShortcuts.addListener('shortcut', (response: any) => {
+						switch (response.data) {
+							case "timetable":
+								this.$router.push('/timetable');
+								break;
+							case "homework":
+								this.$router.push('/homework');
+								break;
+							case "grades":
+								this.$router.push('/grades');
+								break;
+							default:
+								break;
+						}
+					});
+				}
+			})
+		},
+		async notify(title: string, body: string) {
+			LocalNotifications.schedule({
+				notifications: [
+					{
+						title: title,
+						body: body,
+						id: this.randomID(),
+						schedule: { at: new Date(Date.now() + 1000) },
+					}
+				]
+			});
+		},
+		randomID() {
+			return Math.floor(Math.random() * 100000 + 1000);
+		},
+		async backgroundFetchEvent(taskId: any) {
+			GetToken.default().then(async (token: any) => {
+				if(token) {
+					GetRecap.default().then(async (recap: any) => {
+						if(recap) {
+							// grades
+							const lastGrades = JSON.parse(localStorage.getItem('lastGrades') || '[]');
+							const recapGrades = recap.grades.last;
 
 							if(lastGrades.length === 0) {
 								localStorage.setItem('lastGrades', JSON.stringify(recapGrades));
@@ -614,23 +614,23 @@
 
 		this.askNotifPerms();
 
-        // on settingsUpdated event, setup the app
-        document.addEventListener('settingsUpdated', () => {
-            // if viescolaireEnabled is set to false, remove school life tab
-            if(localStorage.getItem('viescolaireEnabled') !== 'true') {
-                // remove school life tab
-                this.appPages.splice(3, 1);
-            }
-            else {
-                // add school life tab
-                this.appPages.splice(3, 0, {
-                    title: 'Vie scolaire',
-                    url: '/schoollife',
-                    icon: "gavel",
+		// on settingsUpdated event, setup the app
+		document.addEventListener('settingsUpdated', () => {
+			// if viescolaireEnabled is set to false, remove school life tab
+			if(localStorage.getItem('viescolaireEnabled') !== 'true') {
+				// remove school life tab
+				this.appPages.splice(3, 1);
+			}
+			else {
+				// add school life tab
+				this.appPages.splice(3, 0, {
+					title: 'Vie scolaire',
+					url: '/schoollife',
+					icon: "gavel",
 					disabled: false
-                });
-            }
-        });
+				});
+			}
+		});
 
 		// apply customizations
 		if(localStorage.getItem('customizations')) {
@@ -673,90 +673,114 @@
 			console.log('navTransitionEnable', e.detail);
 		});
 	}
-  });
+});
 </script>
 
 <template>
-  <ion-app>
-	<div id="debug_banner" v-if="appCanal == 'dev'" @click="displayDevMsg">
-		DEVBUILD
-	</div>
+	<ion-app>
+		<div id="debug_banner" v-if="appCanal == 'dev'" @click="displayDevMsg">
+			DEVBUILD
+		</div>
 
-	<ion-split-pane content-id="main-content">
-		<ion-menu @ionWillOpen="menuOpened(true)" @ionWillClose="menuOpened(false)" @ionDidOpen="menuOpened(true)" @ionDidClose="menuOpened(false)" type="overlay" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
-			<ion-header collapse="fade">
-				<div class="userItem" :style="`background-image: url('${avatar}');`">
-					<div class="userItem_content">
-						<div class="avatar" v-if="dataLoading">
-							<ion-skeleton-text :animated="true" style="width: 100%;height: 100%;border-radius: 50%;"></ion-skeleton-text>
+		<ion-split-pane content-id="main-content">
+			<ion-menu @ionWillOpen="menuOpened(true)" @ionWillClose="menuOpened(false)" @ionDidOpen="menuOpened(true)" @ionDidClose="menuOpened(false)" type="overlay" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
+				<ion-header collapse="fade">
+					<div class="userItem" :style="`background-image: url('${avatar}');`">
+						<div class="userItem_content">
+							<div class="avatar" v-if="dataLoading">
+								<ion-skeleton-text :animated="true" style="width: 100%;height: 100%;border-radius: 50%;"></ion-skeleton-text>
+							</div>
+							<img v-else class="avatar" :src="avatar" ref="avatar"/>
+
+						<div class="userData" v-if="dataLoading">
+							<h3><ion-skeleton-text :animated="true" style="width: 40%;margin-bottom: 5px;height: 18px;"></ion-skeleton-text></h3>
+							<p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
 						</div>
-						<img v-else class="avatar" :src="avatar" ref="avatar"/>
-
-                    <div class="userData" v-if="dataLoading">
-                        <h3><ion-skeleton-text :animated="true" style="width: 40%;margin-bottom: 5px;height: 18px;"></ion-skeleton-text></h3>
-                        <p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
-                    </div>
-                    <div class="userData" v-else>
-                        <h3>{{userData.student.name}}</h3>
-                        <p v-if="userData.class.school.trim() != ''">{{userData.class.name}} — {{userData.class.school}}</p>
-                    </div>
-                </div>
-            </div>
-        </ion-header>
-        <ion-content mode="md">
-          <ion-list id="inbox-list"> 
-            <router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
-                <ion-item v-if="!p.disabled" button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
-                    <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
-                    <ion-label>{{ p.title }}</ion-label>
-                </ion-item>
-                <ion-item @click="displayDevMessage()" v-if="p.disabled" button mode="md" lines="none" :detail="false" :class="{ selected: selectedIndex === i }" disabled>
-                    <span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
-                    <ion-label>{{ p.title }}</ion-label>
-                </ion-item>
-            </router-link>
-          </ion-list>
-        </ion-content>
-      </ion-menu>
-      <ion-router-outlet ref="outlet" :animated="true" :animation="transition" id="main-content" v-slot="{ Component }">
-        <keep-alive>
-            <component :is="Component" />
-        </keep-alive>
-    </ion-router-outlet>
-    </ion-split-pane>
-
-	<ion-modal ref="changelogModal">
-		<ion-header>
-			<ion-toolbar>
-				<ion-title>Notes de mise à jour</ion-title>
-				<ion-buttons slot="end">
-					<ion-button :strong="true" @click="hideChangelog">Terminé</ion-button>
-				</ion-buttons>
-			</ion-toolbar>
-		</ion-header>
-		<ion-content class="update">
-			<div class="update_inner">
-				<div id="update-header">
-					<h1>Quoi de neuf dans Papillon ?</h1>
-					<p>Voici les dernières nouveautés de Papillon.</p>
+						<div class="userData" v-else>
+							<h3>{{userData.student.name}}</h3>
+							<p v-if="userData.class.school.trim() != ''">{{userData.class.name}} — {{userData.class.school}}</p>
+						</div>
+					</div>
 				</div>
-
-				<ion-list inset>
-					<ion-item v-for="(feature, i) in appUpdates.features" :key="i">
-						<span class="material-symbols-outlined mdls" slot="start">{{feature.icon}}</span>
-						<ion-label class="ion-text-wrap">
-							<h2>{{ feature.name }}</h2>
-							<p>{{ feature.description }}</p>
-						</ion-label>
-					</ion-item>
+			</ion-header>
+			<ion-content mode="md">
+				<ion-list id="inbox-list"> 
+					<router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
+						<ion-item v-if="!p.disabled" button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
+							<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
+							<ion-label>{{ p.title }}</ion-label>
+						</ion-item>
+						<ion-item @click="displayDevMessage()" v-if="p.disabled" button mode="md" lines="none" :detail="false" :class="{ selected: selectedIndex === i }" disabled>
+							<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
+							<ion-label>{{ p.title }}</ion-label>
+						</ion-item>
+					</router-link>
 				</ion-list>
 
-				<ion-button mode="md" @click="hideChangelog" fill="solid" class="endButton">Accéder à Papillon</ion-button>
-				<p class="warning">Cet écran n'apparaîtera pas au redémarrage de Papillon. Il restera accessible dans les paramètres.</p>
-			</div>
-		</ion-content>
-	</ion-modal>
-  </ion-app>
+				<ion-list id="bottomActionsList"> 
+						<ion-item @click="openURL('https://docs.getpapillon.xyz')" button mode="md" lines="none" :detail="false">
+							<span class="material-symbols-outlined mdls" slot="start">support</span>
+							<ion-label>Aide de Papillon</ion-label>
+						</ion-item>
+						<ion-item button mode="md" lines="none" :detail="false">
+							<span class="material-symbols-outlined mdls" slot="start">dns</span>
+							<ion-label>Serveur</ion-label>
+
+							<ion-chip slot="end" color="success" v-if="connectedToServer == 'connected'">
+								<ion-label>Connecté</ion-label>
+							</ion-chip>
+							<ion-chip slot="end" color="warning" v-else-if="connectedToServer == 'connecting'">
+								<ion-label>Reconnexion</ion-label>
+							</ion-chip>
+							<ion-chip slot="end" color="danger" v-else-if="connectedToServer == 'disconnected'">
+								<ion-label>Déconnecté</ion-label>
+							</ion-chip>
+							<ion-chip slot="end" color="medium" v-else>
+								<ion-label>En pause</ion-label>
+							</ion-chip>
+						</ion-item>
+					</ion-list>
+				</ion-content>
+			</ion-menu>
+			<ion-router-outlet ref="outlet" :animated="true" :animation="showTransition" id="main-content" v-slot="{ Component }">
+				<keep-alive>
+					<component :is="Component" />
+				</keep-alive>
+			</ion-router-outlet>
+		</ion-split-pane>
+
+		<ion-modal ref="changelogModal">
+			<ion-header>
+				<ion-toolbar>
+					<ion-title>Notes de mise à jour</ion-title>
+					<ion-buttons slot="end">
+						<ion-button :strong="true" @click="hideChangelog">Terminé</ion-button>
+					</ion-buttons>
+				</ion-toolbar>
+			</ion-header>
+			<ion-content class="update">
+				<div class="update_inner">
+					<div id="update-header">
+						<h1>Quoi de neuf dans Papillon ?</h1>
+						<p>Voici les dernières nouveautés de Papillon.</p>
+					</div>
+
+					<ion-list inset>
+						<ion-item v-for="(feature, i) in appUpdates.features" :key="i">
+							<span class="material-symbols-outlined mdls" slot="start">{{feature.icon}}</span>
+							<ion-label class="ion-text-wrap">
+								<h2>{{ feature.name }}</h2>
+								<p>{{ feature.description }}</p>
+							</ion-label>
+						</ion-item>
+					</ion-list>
+
+					<ion-button mode="md" @click="hideChangelog" fill="solid" class="endButton">Accéder à Papillon</ion-button>
+					<p class="warning">Cet écran n’apparaîtra pas au redémarrage de Papillon. Il restera accessible dans les paramètres.</p>
+				</div>
+			</ion-content>
+		</ion-modal>
+	</ion-app>
 </template>
 
 <style scoped>

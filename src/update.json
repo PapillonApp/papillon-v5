@@ -2,29 +2,9 @@
     "changelog": {
         "features": [
             {
-                "icon": "bug_report",
-                "name": "Corrections de bugs",
-                "description": "Encore plus de bugs ont été corrigés !"
-            },
-            {
-                "icon": "home",
-                "name": "Widgets de l'écran d'accueil cliquables !",
-                "description": "Vous pouvez maintenant ouvrir un contenu directement depuis l'écran d'acceuil."
-            },
-            {
-                "icon": "auto_stories",
-                "name": "Travail à faire",
-                "description": "L'onglet devoirs a été complètement réécrit, il est désormais bien plus rapide et plus efficace."
-            },
-            {
-                "icon": "bolt",
-                "name": "Performance",
-                "description": "La navigation dans l'application est encore plus fluide qu'avant."
-            },
-            {
-                "icon": "forum",
-                "name": "Conversations",
-                "description": "L'expérience des conversations a été améliorée, avec une nouvelle interface et des nouvelles actions."
+                "icon": "wifi_tethering",
+                "name": "Ajout d'EcoleDirecte",
+                "description": "Ajout de l'API EcoleDirecte pour les établissements scolaires. Cette fonctionnalité est en ALPHA et comporte des bugs. Si vous rencontrez des problèmes, merci de nous contacter sur Discord ou GitHub. Les bugs peuvent aussi toucher les autres fonctionnalités de l'application dont Pronote."
             }
         ]
     }
