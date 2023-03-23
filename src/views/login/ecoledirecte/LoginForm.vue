@@ -165,7 +165,7 @@
 						<span class="material-symbols-outlined mdls icon">sms_failed</span>
 						<div class="alphaText">
 							<h2>EcoleDirecte est instable</h2>
-							<p class="description">L'utilisation d'EcoleDirecte avec Papillon est encore extrêmement instable. L'équipe de Papillon ne serait être tenue responsable de tout dysfonctionnement, de plus, le développement de cette interface est complexe du au fait de la non disponibilité d'un compte EcoleDirecte par un des membres de l'équipe.</p>
+							<p class="description">L'utilisation d'EcoleDirecte avec Papillon est encore extrêmement instable. L'équipe de Papillon ne serait être tenue responsable de tout dysfonctionnement.</p>
 						</div>
 					</div>
 					
