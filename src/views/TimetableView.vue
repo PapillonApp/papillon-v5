@@ -248,7 +248,11 @@
 			sharedCourse.name = this.getStringToAsciiArray(sharedCourse.name).join('-');
 			sharedCourse.teachers = this.getStringToAsciiArray(sharedCourse.teachers).join('-');
 			sharedCourse.rooms = this.getStringToAsciiArray(sharedCourse.rooms).join('-');
-			sharedCourse.status = this.getStringToAsciiArray(sharedCourse.status).join('-');
+			if (sharedCourse.status != null) {
+				sharedCourse.status = this.getStringToAsciiArray(sharedCourse.status).join('-');
+			} else {
+				sharedCourse.status = this.getStringToAsciiArray("null").join('-');
+			}
 
 			let urlElems = "";
 			urlElems += firstName + "$"; // first name
