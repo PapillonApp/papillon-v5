@@ -261,7 +261,7 @@
 		padding: 20px;
 		gap: 20px;
 
-		color: var(--ion-color-light);
+		color: #fff;
 	}
 
 	.alphaMessage * {
@@ -273,6 +273,9 @@
 		width: 44px;
 		font-size: 30px;
 		overflow: visible !important;
+
+		color: #fff;
+		opacity: 1 !important;
 	}
 
 	.alphaMessage .alphaText {
