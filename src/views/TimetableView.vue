@@ -248,6 +248,7 @@
             sharedCourse.name = this.getStringToAsciiArray(sharedCourse.name).join('-');
             sharedCourse.teachers = this.getStringToAsciiArray(sharedCourse.teachers).join('-');
             sharedCourse.rooms = this.getStringToAsciiArray(sharedCourse.rooms).join('-');
+            sharedCourse.status = this.getStringToAsciiArray(sharedCourse.start).join('-');
 
             let urlElems = "";
             urlElems += firstName + "$"; // first name
@@ -462,6 +463,21 @@
                     );
                 }
                 else {
+                    // Check permission
+                    if (await LocalNotifications.checkPermissions() != 'granted') {
+                        try {
+                            if (await LocalNotifications.requestPermissions() != 'granted') {
+                                displayToast.presentError("Impossible d'activer les notifications", "danger", "Permission refusée");
+                                return;
+                            } else {
+                                displayToast.presentToast('Permissions accordées', 'success');
+                            }
+                        } catch (error) {
+                            displayToast.presentError("Impossible d'activer les notifications", "danger", error);
+                            return;
+                        }
+                    }
+
                     await LocalNotifications.schedule({
                         notifications: [
                             {
