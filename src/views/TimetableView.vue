@@ -225,7 +225,7 @@
 		async shareCours(cours) {
 			let sharedCourse = {
 				name: cours.data.subject,
-				teachers: cours.data.teachers.join(', ') || "Aucun professeur",
+				teachers: cours.data.teachers.join(', ') || "Aucun.e professeur.e",
 				rooms: cours.data.rooms.join(', ') || "Aucune salle",
 				start: cours.time.start.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
 				end: cours.time.end.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
