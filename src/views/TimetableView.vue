@@ -820,7 +820,7 @@
 						<ion-item class="info-item">
 							<span class="material-symbols-outlined mdls" slot="start">face</span>
 							<ion-label>
-								<p>Professeur.e</p>
+								<p>Professeur</p>
 								<h2>{{selectedCourse.teachers}}</h2>
 							</ion-label>
 						</ion-item>
