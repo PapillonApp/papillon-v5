@@ -21,7 +21,7 @@
 			teachers: {
 				type: String,
 				required: false,
-				default: "Pas de professeur",
+				default: "Pas de professeur.e",
 			},
 			rooms: {
 				type: String,
