@@ -742,7 +742,7 @@
 					</ion-list>
 				</ion-content>
 			</ion-menu>
-			<ion-router-outlet ref="outlet" :animated="true" :animation="showTransition" id="main-content" v-slot="{ Component }">
+			<ion-router-outlet ref="outlet" :animated="true" :animation="transition" id="main-content" v-slot="{ Component }">
 				<keep-alive>
 					<component :is="Component" />
 				</keep-alive>
