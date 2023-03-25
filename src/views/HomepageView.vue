@@ -559,7 +559,7 @@
 							<div class="CoursInfo">
 								<span class="material-symbols-outlined smol" slot="start">face</span>
 
-								<p>{{ cours.data.teachers.join(', ') || 'Pas de professeur' }}</p>
+								<p>{{ cours.data.teachers.join(', ') || 'Pas de professeur.e' }}</p>
 							</div>
 						</div>
 
