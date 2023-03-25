@@ -88,7 +88,7 @@
 			avatar: '',
 			presentingElement: undefined as any,
 			isMenuOpened: false,
-			changeStatusTimeout: false,
+			changeStatusTimeout: true,
 			connectedToServer: "",
 			showTransition: undefined as any
 		}
@@ -479,7 +479,7 @@
 					StatusBar.setStyle({style: Style.Dark})
 				}
 				else {
-					if(this.changeStatusTimeout ) {
+					if(this.changeStatusTimeout) {
 						StatusBar.setStyle({style: Style.Light})
 					}
 				}
