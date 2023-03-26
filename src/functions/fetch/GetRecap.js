@@ -37,8 +37,6 @@ function getPronoteRecap(force) {
 		
 		// timetable
 		getTimetable(new Date(), force).then((response) => {
-			console.log("ttb" + response);
-
 			if(response == "ERR_NETWORK") {
 				errorsDone++;
 				errors.push(response);
@@ -55,8 +53,6 @@ function getPronoteRecap(force) {
 		endDate.setDate(endDate.getDate() + 3);
 
 		getHomeworks(today, endDate, force).then((response) => {
-			console.log("hw" + response);
-
 			if(response == "ERR_NETWORK") {
 				errorsDone++;
 				errors.push(response);
@@ -69,8 +65,6 @@ function getPronoteRecap(force) {
 		
 		// grades
 		getGrades(force).then((response) => {
-			console.log("grd" + response);
-
 			if(response == "ERR_NETWORK") {
 				errorsDone++;
 				errors.push(response);
@@ -111,8 +105,6 @@ function getPronoteRecap(force) {
 		
 		// news
 		getNews(force).then((response) => {
-			console.log("nws" + response);
-
 			if(response == "ERR_NETWORK") {
 				errorsDone++;
 				errors.push(response);
