@@ -417,6 +417,9 @@
 				<ion-buttons class="endBtns" slot="end">
 					<ion-spinner v-if="isLoading"></ion-spinner>
 
+					<span class="material-symbols-outlined mdls" v-if="display == 'Vue grille'">apps</span>
+					<span class="material-symbols-outlined mdls" v-if="display == 'Vue liste'">list</span>
+
 					<ion-select ref="displaySel" @ionChange="changeDisplay($event)" interface="popover" placeholder="Affichage" :value="display">
 						<ion-select-option value="Vue grille">Vue grille</ion-select-option>
 						<ion-select-option value="Vue liste">Vue liste</ion-select-option>
