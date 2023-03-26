@@ -443,7 +443,7 @@
 
 			<div id="noTouchZone"></div>
 
-			<div v-if="isLoading">
+			<!-- <div v-if="isLoading">
 				<ion-card class="subject" v-for="i in 6" v-bind:key="i">
 					<div class="subject-name" style="padding: 15px 15px">
 						<ion-skeleton-text :animated="true" style="width: 50%;"></ion-skeleton-text>
@@ -466,7 +466,7 @@
 						</ion-card>
 					</div>
 				</ion-card>
-			</div>
+			</div> -->
 
 			<transition-group name="ElemAnim" tag="div">
 				<ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index"
