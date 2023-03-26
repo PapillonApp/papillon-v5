@@ -416,7 +416,7 @@
 				<ion-title mode="md">Notes</ion-title>
 
 				<ion-buttons class="endBtns" slot="end">
-					<span class="selectIcon material-symbols-outlined mdls" v-if="display == 'Vue grille'">apps</span>
+					<span class="selectIcon material-symbols-outlined mdls" v-if="display == 'Vue grille'">grid_view</span>
 					<span class="selectIcon material-symbols-outlined mdls" v-if="display == 'Vue liste'">list</span>
 
 					<ion-select ref="displaySel" @ionChange="changeDisplay($event)" interface="popover" placeholder="Affichage" :value="display">
@@ -750,7 +750,7 @@
 	}
 
 	.dark .grade {
-		background: var(--ion-color-step-50);
+		background: var(--ion-color-step-100);
 	}
 
 	.myGrade {
@@ -889,7 +889,24 @@
 		font-weight: 500 !important;
 	}
 
+	.endBtns {
+		border: 1px solid var(--ion-color-step-200);
+
+		padding-left: 7px;
+		border-radius: 300px;
+
+		max-height: 32px !important;
+		min-height: 32px !important;
+		overflow: hidden;
+	}
+
+	.endBtns ion-select {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+
 	.selectIcon {
 		margin-right: -12px;
+		opacity: 48%;
 	}
 </style>
