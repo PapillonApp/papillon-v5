@@ -416,7 +416,9 @@
 				}
 
 				// set userData in localStorage
-				localStorage.userData = JSON.stringify(data);
+				if(data !== undefined) {
+					localStorage.userData = JSON.stringify(data);
+				}
 			});
 		},
 		changePage(url : string) {
