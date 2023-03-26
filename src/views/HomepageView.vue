@@ -328,11 +328,13 @@
 					this.newsLoading = false;
 				})
 				.catch((err) => {
-					console.log(err);
+					console.error("[HOMEPAGE] : " + err);
 
-					this.showLoading = false;
-					this.allLoaded = false;
-					this.serverError = true;
+					if(err[0] == "ERR_NETWORK") {
+						this.showLoading = false;
+						this.allLoaded = false;
+						this.serverError = true;
+					}
 				});
 			},
 			formatHomeworks(homeworks) {

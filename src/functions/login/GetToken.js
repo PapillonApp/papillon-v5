@@ -56,12 +56,6 @@ function getPronoteLogin() {
 
         waitingForToken = true;
 
-        displayToast.presentToastSmall(
-            "Reconnexion en cours...",
-            "light",
-            refresh
-        )
-
         document.dispatchEvent(new CustomEvent('connectionState', { detail: 'connecting' }));
 
         // get token from API
@@ -82,13 +76,6 @@ function getPronoteLogin() {
 
                 // set waitingForToken to false
                 waitingForToken = false;
-
-                // display toast
-                displayToast.presentToastSmall(
-                    "Vous êtes à nouveau connecté.",
-                    "success",
-                    checkmark
-                );
 
                 return result.token;
             } else {
@@ -147,12 +134,6 @@ function getEDLogin() {
 
         waitingForToken = true;
 
-        displayToast.presentToastSmall(
-            "Reconnexion en cours...",
-            "light",
-            refresh
-        )
-
         // get token from API
         return axios.post(EDAPI + "/login.awp", body, requestOptions)
         .then(result => {
@@ -169,13 +150,6 @@ function getEDLogin() {
 
                 // set waitingForToken to false
                 waitingForToken = false;
-
-                // display toast
-                displayToast.presentToastSmall(
-                    "Vous êtes à nouveau connecté.",
-                    "success",
-                    checkmark
-                );
 
                 return result.data.token;
             } else {
