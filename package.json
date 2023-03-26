@@ -1,6 +1,6 @@
 {
   "name": "papillon",
-  "version": "5.0.10",
+  "version": "5.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
