@@ -96,6 +96,7 @@
 				InfoView: InfoView,
 				MarkView: MarkView,
 				HomeworkItemView: HomeworkItemView,
+				serverError: false,
 			}
 		},
 		methods: {
@@ -293,6 +294,7 @@
 				this.gradesLoading = true;
 				this.newsLoading = true;
 				this.allLoaded = false;
+				this.serverError = false;
 
 				GetRecap(force).then((recap) => {
 					// loaded
@@ -324,6 +326,13 @@
 					// news
 					this.news = recap.news;
 					this.newsLoading = false;
+				})
+				.catch((err) => {
+					console.log(err);
+
+					this.showLoading = false;
+					this.allLoaded = false;
+					this.serverError = true;
 				});
 			},
 			formatHomeworks(homeworks) {
@@ -631,6 +640,11 @@
 					<ion-spinner></ion-spinner>
 					<h2>Chargement de vos données</h2>
 					<p>Nous sommes en train de récupérer vos données depuis votre service scolaire.</p>
+				</div>
+				<div class="NoCours" v-else-if="serverError">
+					<h1>⚠️</h1>
+					<h2>Impossible de se connecter au serveur Papillon</h2>
+					<p>Quelque chose s'est mal passé. Veuillez réessayer ultérieurement.</p>
 				</div>
 			</Transition>
 
