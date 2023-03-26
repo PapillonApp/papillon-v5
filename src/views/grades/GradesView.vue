@@ -443,6 +443,31 @@
 
 			<div id="noTouchZone"></div>
 
+			<div v-if="isLoading">
+				<ion-card class="subject" v-for="i in 6" v-bind:key="i">
+					<div class="subject-name" style="padding: 15px 15px">
+						<ion-skeleton-text :animated="true" style="width: 50%;"></ion-skeleton-text>
+						<ion-skeleton-text class="avg" :animated="true" style="width: 20%;"></ion-skeleton-text>
+					</div>
+					<div class="grades" v-if="display == 'Vue grille'">
+						<ion-card class="grade" v-for="i in 3" v-bind:key="i">
+							<div class="myGrade" style="width: 135px;">
+								<ion-skeleton-text :animated="true" style="width: 50%;"></ion-skeleton-text>
+								<br />
+								<ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text>
+							</div>
+							<div class="grades">
+								<ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+
+								<ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+
+								<ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+							</div>
+						</ion-card>
+					</div>
+				</ion-card>
+			</div>
+
 			<transition-group name="ElemAnim" tag="div">
 				<ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index"
 					:style="`--backgroundTheme: ${ subject.color };`">
@@ -536,7 +561,7 @@
 				</div>
 			</div>
 
-			<IonList v-if="this.grades.length != 0">
+			<IonList v-if="this.grades.length != 0 && !averages.average == -1">
 				<IonListHeader>
 					<IonLabel>
 						<h2>Moyennes</h2>
