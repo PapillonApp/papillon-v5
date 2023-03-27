@@ -20,7 +20,8 @@
 		IonModal,
 		IonSpinner,
 		IonSelect,
-		IonNavLink
+		IonNavLink,
+		IonProgressBar
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -50,10 +51,10 @@
 			IonListHeader,
 			IonSegment,
 			IonSegmentButton,
-			IonSpinner,
 			IonSelect,
 			IonText,
-			IonNavLink
+			IonNavLink,
+			IonProgressBar
 		},
 		data() {
 			let gradesDisplay = localStorage.getItem('gradesDisplay') || 'Vue liste';
@@ -415,7 +416,8 @@
 				<ion-title mode="md">Notes</ion-title>
 
 				<ion-buttons class="endBtns" slot="end">
-					<ion-spinner v-if="isLoading"></ion-spinner>
+					<span class="selectIcon material-symbols-outlined mdls" v-if="display == 'Vue grille'">grid_view</span>
+					<span class="selectIcon material-symbols-outlined mdls" v-if="display == 'Vue liste'">list</span>
 
 					<ion-select ref="displaySel" @ionChange="changeDisplay($event)" interface="popover" placeholder="Affichage" :value="display">
 						<ion-select-option value="Vue grille">Vue grille</ion-select-option>
@@ -430,6 +432,8 @@
 						<ion-label>{{period.name}}</ion-label>
 					</ion-segment-button>
 				</ion-segment>
+
+				<ion-progress-bar v-if="isLoading" type="indeterminate"></ion-progress-bar>
 			</IonToolbar>
 		</IonHeader>
 
@@ -439,6 +443,31 @@
 			</ion-refresher>
 
 			<div id="noTouchZone"></div>
+
+			<!-- <div v-if="isLoading">
+				<ion-card class="subject" v-for="i in 6" v-bind:key="i">
+					<div class="subject-name" style="padding: 15px 15px">
+						<ion-skeleton-text :animated="true" style="width: 50%;"></ion-skeleton-text>
+						<ion-skeleton-text class="avg" :animated="true" style="width: 20%;"></ion-skeleton-text>
+					</div>
+					<div class="grades" v-if="display == 'Vue grille'">
+						<ion-card class="grade" v-for="i in 3" v-bind:key="i">
+							<div class="myGrade" style="width: 135px;">
+								<ion-skeleton-text :animated="true" style="width: 50%;"></ion-skeleton-text>
+								<br />
+								<ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text>
+							</div>
+							<div class="grades">
+								<ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+
+								<ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+
+								<ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+							</div>
+						</ion-card>
+					</div>
+				</ion-card>
+			</div> -->
 
 			<transition-group name="ElemAnim" tag="div">
 				<ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index"
@@ -533,7 +562,7 @@
 				</div>
 			</div>
 
-			<IonList v-if="this.grades.length != 0">
+			<IonList v-if="this.grades.length != 0 && averages.average != -1">
 				<IonListHeader>
 					<IonLabel>
 						<h2>Moyennes</h2>
@@ -570,64 +599,6 @@
 					</IonItem>
 				</div>
 			</IonList>
-
-			<IonModal ref="gradeModal" :keep-contents-mounted="true" :initial-breakpoint="0.5"
-				:breakpoints="[0, 0.5, 0.9]" :handle="true" :canDismiss="true">
-				<IonHeader>
-					<IonToolbar class="markToolbar">
-						<ion-label v-if="selectedGradeSet">
-							<h2>Note en {{ selectedGrade.info.subject }}</h2>
-							<p>{{ new Date(selectedGrade.info.date).toLocaleString('fr-FR', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>
-						</ion-label>
-
-						<ion-buttons slot="end">
-							<IonButton @click="shareGrade(selectedGrade, selectedGrade.color)">
-								<span class="material-symbols-outlined mdls">ios_share</span>
-							</IonButton>
-						</ion-buttons>
-					</IonToolbar>
-				</IonHeader>
-				<ion-content>
-					<ion-list v-if="selectedGradeSet">
-						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start">face</span>
-							<ion-label>
-								<p>Note de l'élève</p>
-								<h2>{{ parseFloat(selectedGrade.grade.value).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
-							</ion-label>
-
-							<ion-item slot="end" lines="none">
-								<span class="material-symbols-outlined mdls" slot="start">percent</span>
-								<ion-label>
-									<p>Coefficient</p>
-									<h2>{{selectedGrade.grade.coefficient}}</h2>
-								</ion-label>
-							</ion-item>
-						</ion-item>
-						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start">groups</span>
-							<ion-label>
-								<p>Note de la classe</p>
-								<h2>{{ parseFloat(selectedGrade.grade.average).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
-							</ion-label>
-						</ion-item>
-						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start">person_remove</span>
-							<ion-label>
-								<p>Note la plus basse</p>
-								<h2>{{ parseFloat(selectedGrade.grade.min).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
-							</ion-label>
-						</ion-item>
-						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start">person_add</span>
-							<ion-label>
-								<p>Note la plus haute</p>
-								<h2>{{ parseFloat(selectedGrade.grade.max).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
-							</ion-label>
-						</ion-item>
-					</ion-list>
-				</ion-content>
-			</IonModal>
 
 			<IonModal ref="averageModal" :keep-contents-mounted="true" :initial-breakpoint="0.5"
 				:breakpoints="[0, 0.5, 0.9]" :handle="true" :canDismiss="true">
@@ -779,7 +750,7 @@
 	}
 
 	.dark .grade {
-		background: var(--ion-color-step-50);
+		background: var(--ion-color-step-100);
 	}
 
 	.myGrade {
@@ -868,16 +839,16 @@
 		border-radius: 8px;
 	}
 
-	.ios .myGrade {
+	.myGrade {
 		border: none;
 		background: linear-gradient(90deg, #00000055 0%, #00000055 100%), var(--backgroundTheme);
 	}
 
-	.ios .myGrade * {
+	.myGrade * {
 		color: #fff !important;
 	}
 
-	.ios #segment {
+	#segment {
 		width: calc(100vw - 24px);
 		margin: 0 12px;
 
@@ -885,9 +856,7 @@
 	}
 
 	.md .grade {
-		border: 1px solid var(--ion-color-step-150);
-		--background: none;
-		box-shadow: none;
+		border: 1px solid var(--ion-color-step-50);
 		border-radius: 8px;
 	}
 
@@ -918,5 +887,26 @@
 
 	.gradeItem .markLabel h2 {
 		font-weight: 500 !important;
+	}
+
+	.endBtns {
+		border: 1px solid var(--ion-color-step-200);
+
+		padding-left: 7px;
+		border-radius: 300px;
+
+		max-height: 32px !important;
+		min-height: 32px !important;
+		overflow: hidden;
+	}
+
+	.endBtns ion-select {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+
+	.selectIcon {
+		margin-right: -12px;
+		opacity: 48%;
 	}
 </style>

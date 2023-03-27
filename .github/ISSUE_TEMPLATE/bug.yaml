@@ -56,6 +56,14 @@ body:
         - Développement local (iOS ou Android)
     validations:
       required: true
+  - type: dropdown
+    attributes:
+      label: Service scolaire
+      options:
+        - 🦋 Pronote
+        - 🟦 EcoleDirecte
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: "Captures d'écran / vidéo"

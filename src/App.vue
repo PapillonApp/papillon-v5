@@ -88,7 +88,7 @@
 			avatar: '',
 			presentingElement: undefined as any,
 			isMenuOpened: false,
-			changeStatusTimeout: false,
+			changeStatusTimeout: true,
 			connectedToServer: "",
 			showTransition: undefined as any
 		}
@@ -416,7 +416,9 @@
 				}
 
 				// set userData in localStorage
-				localStorage.userData = JSON.stringify(data);
+				if(data !== undefined) {
+					localStorage.userData = JSON.stringify(data);
+				}
 			});
 		},
 		changePage(url : string) {
@@ -479,7 +481,7 @@
 					StatusBar.setStyle({style: Style.Dark})
 				}
 				else {
-					if(this.changeStatusTimeout ) {
+					if(this.changeStatusTimeout) {
 						StatusBar.setStyle({style: Style.Light})
 					}
 				}
@@ -527,9 +529,7 @@
 	mounted() {
 		// hide splash screen when dom is loaded
 		this.$nextTick(function () {
-			setTimeout(() => {
-				SplashScreen.hide();
-			}, 50);
+			SplashScreen.hide();
 		})
 
 		// shortcuts
@@ -742,7 +742,7 @@
 					</ion-list>
 				</ion-content>
 			</ion-menu>
-			<ion-router-outlet ref="outlet" :animated="true" :animation="showTransition" id="main-content" v-slot="{ Component }">
+			<ion-router-outlet ref="outlet" :animated="true" :animation="transition" id="main-content" v-slot="{ Component }">
 				<keep-alive>
 					<component :is="Component" />
 				</keep-alive>
