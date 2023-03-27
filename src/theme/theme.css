@@ -520,3 +520,7 @@ ion-alert.md .btn_secondary {
 a.inherit {
     color: inherit;
 }
+
+.ios ion-back-button {
+    padding: 8px 0px;
+}

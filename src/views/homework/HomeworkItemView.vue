@@ -14,6 +14,7 @@
 		IonTitle,
 		IonContent,
 		alertController,
+		IonBackButton,
 		IonChip
 	} from '@ionic/vue';
 
@@ -31,7 +32,7 @@
 			IonHeader,
 			IonToolbar,
 			IonButtons,
-			PapillonBackButton,
+			IonBackButton,
 			IonTitle,
 			IonContent,
 			IonList,
@@ -88,10 +89,10 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<PapillonBackButton></PapillonBackButton>
+					<IonBackButton @click="pop" text="Retour"></IonBackButton>
 				</ion-buttons>
 
-                <ion-title mode="md">Travail à faire <span v-if="openedHomework">en {{ openedHomework.subject }}</span></ion-title>
+                <ion-title>Travail à faire <span v-if="openedHomework">en {{ openedHomework.subject }}</span></ion-title>
 			</IonToolbar>
 		</IonHeader>
 
