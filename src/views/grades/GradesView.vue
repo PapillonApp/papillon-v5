@@ -562,7 +562,7 @@
 				</div>
 			</div>
 
-			<IonList v-if="this.grades.length != 0 && !averages.average == -1">
+			<IonList v-if="this.grades.length != 0 && averages.average != -1">
 				<IonListHeader>
 					<IonLabel>
 						<h2>Moyennes</h2>
