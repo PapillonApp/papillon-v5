@@ -45,7 +45,7 @@ ion-content::-webkit-scrollbar {
     --ion-box-shadow: 0 1px 2px #00000005, 0 2px 6px #00000005;
 }
 
-ion-title, h1, h2, h3, ion-button {
+ion-title:not(.title-large), h1, h2, h3, ion-button {
     font-family: var(--papillon-font), sans-serif;
 }
 
@@ -53,7 +53,7 @@ h1, h2, h3 {
     font-weight: 700 !important;
 }
 
-ion-title, h2, h3 {
+ion-title:not(.title-large), h2, h3 {
     font-weight: 600 !important;
 }
 
@@ -320,7 +320,7 @@ ion-toast::part(message) {
     font-size: 15px;
 }
 
-ion-header {
+ion-header:not(.header-collapse-condense) {
     --ion-toolbar-border-color: transparent !important;
     box-shadow: 0px 1px 2px #00000010;
 }
@@ -333,11 +333,11 @@ ion-modal.modal-sheet ion-header ion-toolbar:first-child {
     padding-top: 8px !important;
 }
 
-.dark .ios ion-header {
+.dark .ios ion-header:not(.header-collapse-condense) {
     border-bottom: 1px solid #ffffff15;
 }
 
-ion-header ion-toolbar ion-title {
+ion-header ion-toolbar ion-title:not(.title-large) {
     font-size: 17px;
     font-weight: 500 !important;
 }
