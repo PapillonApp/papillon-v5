@@ -909,4 +909,8 @@
 		margin-right: -12px;
 		opacity: 48%;
 	}
+
+	.gradesList {
+		--ion-item-background: var(--ion-color-step-50);
+	}
 </style>
