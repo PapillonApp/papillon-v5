@@ -119,8 +119,8 @@
                         <div class="logo_services" slot="end">
                             <img alt="Logo" src="/assets/welcome/pronote_logo.png" />
                             <img alt="Logo" src="/assets/welcome/ecoledirecte_logo.png" />
-                            <img alt="Logo" src="/assets/welcome/apschool_logo.png" />
-                            <img alt="Logo" src="/assets/welcome/lvs_logo.png" />
+                            <!-- <img alt="Logo" src="/assets/welcome/apschool_logo.png" />
+                            <img alt="Logo" src="/assets/welcome/lvs_logo.png" /> -->
                         </div>
                     </ion-button>
                 </ion-nav-link>
