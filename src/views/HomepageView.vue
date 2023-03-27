@@ -518,7 +518,7 @@
 					<ion-menu-button mode="md"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title>Vue d'ensemble</ion-title>
+				<ion-title mode="md">Vue d'ensemble</ion-title>
 
 				<ion-buttons slot="end">
 					<ion-nav-link v-if="avatar" router-direction="forward" :component="UserView">

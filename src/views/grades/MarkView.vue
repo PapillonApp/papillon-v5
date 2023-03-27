@@ -15,8 +15,7 @@
 		IonContent,
 		alertController,
 		IonSkeletonText,
-		IonChip,
-		IonBackButton
+		IonChip
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -31,7 +30,7 @@
 			IonHeader,
 			IonToolbar,
 			IonButtons,
-			IonBackButton,
+			PapillonBackButton,
 			IonTitle,
 			IonContent,
 			IonSkeletonText,
@@ -47,15 +46,7 @@
             }
         },
 		data() {
-			let backText = 'Retour'
-
-			// get current page
-			let currentPage = this.$route.name;
-			if(currentPage === 'Home') backText = 'Vue d\'ens.';
-			else if(currentPage === 'Grades') backText = 'Notes';
-
 			return {
-				backText: backText,
                 grades: [],
 				currentGrade: null,
 				diffAvg: 0,
@@ -170,11 +161,11 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<IonBackButton @click="pop" :text="backText"></IonBackButton>
+					<PapillonBackButton></PapillonBackButton>
 				</ion-buttons>
 
-				<ion-title v-if="currentGrade">{{ currentGrade.info.description }}</ion-title>
-				<ion-title v-else><ion-skeleton-text style="width: 200px;"></ion-skeleton-text></ion-title>
+				<ion-title mode="md" v-if="currentGrade">{{ currentGrade.info.description }}</ion-title>
+				<ion-title mode="md" v-else><ion-skeleton-text style="width: 200px;"></ion-skeleton-text></ion-title>
 			</IonToolbar>
 		</IonHeader>
 
