@@ -125,10 +125,12 @@ function getEDLogin() {
         var requestOptions = {
             headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": ""},            
         };
+
+        // encodeURIComponent because Ecoledirect needs urlencode on any field !
         let body = `data={
             "uuid": "",
-            "identifiant": "${username}",
-            "motdepasse": "${password}",
+            "identifiant": "${encodeURIComponent(username)}",
+            "motdepasse": "${encodeURIComponent(password)}",
             "isReLogin": false
         }`
 

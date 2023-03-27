@@ -85,10 +85,12 @@
 				var requestOptions = {
 					headers: { "Content-Type": "application/x-www-form-urlencoded", "x-token": "" },
 				};
+
+        // encodeURIComponent because Ecoledirect needs urlencode on any field !
 				var body = `data={
 						"uuid": "",
-						"identifiant": "${username}",
-						"motdepasse": "${password}",
+						"identifiant": "${encodeURIComponent(username)}",
+						"motdepasse": "${encodeURIComponent(password)}",
 						"isReLogin": false
 					}`
 
