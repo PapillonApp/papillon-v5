@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Papillon</string>
-    <string name="title_activity_main">Papillon</string>
-    <string name="package_name">plus.pronote.app</string>
+    <string name="app_name">Papillon Dev</string>
+    <string name="title_activity_main">Papillon Dev</string>
+    <string name="package_name">plus.pronote.devbuild</string>
     <string name="custom_url_scheme">getpapillon</string>
 </resources>

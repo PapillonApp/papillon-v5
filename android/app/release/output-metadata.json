@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "plus.pronote.app",
+  "applicationId": "plus.pronote.devbuild",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 503,
-      "versionName": "5.0.3",
+      "versionCode": 1,
+      "versionName": "5.0.0",
       "outputFile": "app-release.apk"
     }
   ],

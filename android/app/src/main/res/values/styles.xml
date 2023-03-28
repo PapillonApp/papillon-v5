@@ -11,19 +11,10 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
-        
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:enforceNavigationBarContrast">false</item>
     </style>
 
-
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <item name="android:background">@drawable/background_splash</item>
-        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="31">@drawable/splash_anim</item>
-        <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="31">3000</item>
-        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="31" >#1DB491</item>
-        <item name="android:windowSplashScreenBrandingImage" tools:targetApi="31">@drawable/branding</item>
+        <item name="android:background">@drawable/splash</item>
     </style>
 
 </resources>
