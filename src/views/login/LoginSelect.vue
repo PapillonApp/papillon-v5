@@ -157,7 +157,7 @@
                 </ion-item>
             </ion-nav-link>
 
-            <ion-item button detail="true" disabled>
+            <!-- <ion-item button detail="true" disabled>
                 <ion-avatar slot="start">
                     <img alt="Logo" src="/assets/welcome/apschool_logo.png" />
                 </ion-avatar>
@@ -165,9 +165,9 @@
                     <h2>APSchool</h2>
                     <p>Utilisez vos identifiants APSchool pour vous connecter</p>
                 </ion-label>
-            </ion-item>
+            </ion-item> -->
 
-            <ion-item button detail="true" disabled>
+            <!-- <ion-item button detail="true" disabled>
                 <ion-avatar slot="start">
                     <img alt="Logo" src="/assets/welcome/lvs_logo.png" />
                 </ion-avatar>
@@ -175,7 +175,7 @@
                     <h2>La-Vie-Scolaire</h2>
                     <p>Utilisez vos identifiants La-Vie-Scolaire.fr pour vous connecter</p>
                 </ion-label>
-            </ion-item>
+            </ion-item> -->
         </ion-list>
       </ion-content>
 </template>
