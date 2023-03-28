@@ -1,6 +1,6 @@
 {
   "name": "papillon",
-  "version": "devbuild",
+  "version": "5.0.0-devbuild",
   "canal": "dev",
   "private": true,
   "scripts": {
@@ -46,6 +46,7 @@
     "fast-average-color": "^9.3.0",
     "install": "^0.13.0",
     "ionicons": "^6.0.3",
+    "jquery": "^3.6.4",
     "lucide-vue-next": "^0.104.0",
     "moment": "^2.29.4",
     "npm": "^9.6.2",
