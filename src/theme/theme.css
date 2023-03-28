@@ -320,12 +320,12 @@ ion-toast::part(message) {
     font-size: 15px;
 }
 
-ion-header:not(.header-collapse-condense) {
+ion-header:not(.header-collapse-condense):not(ion-modal ion-header) {
     --ion-toolbar-border-color: transparent !important;
     box-shadow: 0px 1px 2px #00000010;
 }
 
-ion-header ion-toolbar:first-child {
+ion-header:not(ion-modal ion-header) ion-toolbar:first-child {
     padding-top: var(--papillon-safe-area-top, 0) !important;
 }
 
