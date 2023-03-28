@@ -393,10 +393,6 @@ ion-list.list-inset ion-list-header {
     align-items: center;
 }
 
-ion-list.list-inset ion-list-header ion-button {
-    margin: 0 !important;
-}
-
 ion-list.list-inset.md ion-list-header {
     border-radius: 8px 8px 0px 0px !important;
     overflow: hidden;
