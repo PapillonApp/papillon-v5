@@ -289,6 +289,12 @@
 				]
 			});
 		},
+		async openURL(url: string) {
+			await Browser.open({
+				url: url,
+				presentationStyle: 'popover',
+			});
+		},
 		randomID() {
 			return Math.floor(Math.random() * 100000 + 1000);
 		},
@@ -785,13 +791,7 @@
 
 <style scoped>
 	ion-menu::part(container) {
-		border-radius: 0px 20px 20px 0px;
-	}
-
-	@media screen and (min-width: 992px) {
-		ion-menu::part(container) {
-			border-radius: 0px 0px 0px 0px;
-		}
+		border-radius: 0px;
 	}
 
 	ion-menu ion-list {
