@@ -366,7 +366,41 @@ function constructEDHomework(hw) {
     return homeworkArray;
 }
 
+// tick
+async function tickHomework(id) {
+    switch(localStorage.loginService) {
+        case "pronote":    
+            // return pronote homework
+            return tickPronoteHomework(id);
+    }
+}
 
+// tick pronote homework
+async function tickPronoteHomework(data) {
+    console.log(data)
+
+    let homeworkID = data[0];
+    let dateSet = data[1];
+
+    // get token
+    const token = localStorage.getItem('token');
+    const API = app.config.globalProperties.$api;
+
+    let dayRequest = new Date(dateSet);
+    let dayString = dayRequest.toISOString().split('T')[0];
+
+    let URL = `${API}/homework/changeState`;
+
+    return axios.post(URL, {
+        token: token,
+        homeworkId: homeworkID,
+        dateFrom: dayString,
+        dateTo: dayString
+    })
+}
 
 // export
-export default getHomeworks;
+export {
+    tickHomework,
+    getHomeworks as default,
+}

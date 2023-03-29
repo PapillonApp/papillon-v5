@@ -208,6 +208,10 @@ http://ionicframework.com/docs/theming/ */
 
 	--ion-toolbar-background: #ffffff !important;
   }
+
+  .ios .light ion-modal {
+    --ion-toolbar-background: var(--ion-color-step-50);
+  }
   
 body {
     --ion-item-background: var(--ion-background-color);
