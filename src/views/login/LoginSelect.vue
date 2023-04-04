@@ -11,6 +11,8 @@
 
     import EDLoginForm from './ecoledirecte/LoginForm.vue'
 
+    import SkolengoLoginForm from './skolengo/LoginForm.vue'
+
     import { StatusBar, Style } from '@capacitor/status-bar';
 
     export default defineComponent({
@@ -102,6 +104,7 @@
             return {
                 SchoolSelection: SchoolSelection,
                 EDLoginForm: EDLoginForm,
+                SkolengoLoginForm: SkolengoLoginForm,
                 appVersion: version,
                 appPlatform: Capacitor.getPlatform(),
             }
@@ -153,6 +156,18 @@
                     <ion-label>
                         <h2>EcoleDirecte</h2>
                         <p>Utilisez vos identifiants EcoleDirecte pour vous connecter</p>
+                    </ion-label>
+                </ion-item>
+            </ion-nav-link>
+
+            <ion-nav-link router-direction="forward" :component="SkolengoLoginForm">
+                <ion-item button detail="true">
+                    <ion-avatar slot="start">
+                        <img alt="Logo" src="/assets/welcome/skolengo_logo.png"/>
+                    </ion-avatar>
+                    <ion-label>
+                        <h2>Skolengo</h2>
+                        <p>Utilisez vos identifiants d'un ENT Skolengo pour vous connecter</p>
                     </ion-label>
                 </ion-item>
             </ion-nav-link>
