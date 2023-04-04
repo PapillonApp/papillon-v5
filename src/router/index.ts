@@ -1,7 +1,18 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
 
-const routes: Array<RouteRecordRaw> = [
+type Routes = RouteRecordRaw[]
+
+const loginRoutes: Routes = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import ('../views/login/LoginSetup.vue')
+  }
+]
+
+const routes: Routes = [
+  ...loginRoutes,
   {
     path: '',
     redirect: '/home'
@@ -71,17 +82,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import ('../views/settings/SettingsView.vue')
   },
 ]
-
-const loginRoutes = [
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import ('../views/login/LoginSetup.vue')
-  }
-]
-
-// push for each login route
-loginRoutes.forEach(route => routes.push(route))
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
