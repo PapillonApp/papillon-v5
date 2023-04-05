@@ -14,7 +14,7 @@
 	import { defineComponent, ref } from 'vue';
 	import { useRoute } from 'vue-router';
 
-	const { changelog } = require('/src/update') 
+	const { changelog } = require('/src/update')
 
 	import { globeOutline } from 'ionicons/icons';
 	import { AndroidShortcuts } from 'capacitor-android-shortcuts';
@@ -49,14 +49,14 @@
 	export default defineComponent({
 	name: 'App',
 	components: {
-		IonApp, 
-		IonContent, 
-		IonItem, 
-		IonLabel, 
-		IonList, 
-		IonMenu, 
+		IonApp,
+		IonContent,
+		IonItem,
+		IonLabel,
+		IonList,
+		IonMenu,
 		IonMenuToggle,
-		IonRouterOutlet, 
+		IonRouterOutlet,
 		IonSplitPane,
 		IonHeader,
 		IonToolbar,
@@ -111,6 +111,12 @@
 				icon: "calendar_month",
 				disabled: false,
 			},
+				{
+					title: 'Travail à faire',
+					url: '/homework',
+					icon: "auto_stories",
+					disabled: false,
+				},
 			{
 				title: 'Paramètres',
 				url: '/settings',
@@ -161,7 +167,7 @@
 				icon: "settings",
 				disabled: false
 			})
-		}        
+		}
 		// hides some tabs when they are not anabled
 		if(localStorage.getItem('viescolaireEnabled') !== 'true') {
 			// remove school life tab
@@ -256,10 +262,10 @@
 		if (path !== undefined) {
 			selectedIndex.value = appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
 		}
-		
+
 		const route = useRoute();
-		
-		return { 
+
+		return {
 			selectedIndex,
 			appCanal: canal,
 			appVersion: version,
@@ -375,7 +381,7 @@
 		async configureBackgroundFetch() {
 			await BackgroundFetch.configure({minimumFetchInterval: 15}, async (taskId: any) => {
 				console.log('[js] BackgroundFetch event received: ', taskId);
-				
+
 				try {
 					this.backgroundFetchEvent(taskId);
 				} catch (e) {
@@ -449,7 +455,7 @@
 			}, 100);
 
 			if(url == "/home") {
-				if(localStorage.getItem('fillToolbar') == 'true') {	
+				if(localStorage.getItem('fillToolbar') == 'true') {
 					StatusBar.setStyle({style: Style.Dark})
 
 					this.changeStatusTimeout = false;
@@ -478,12 +484,12 @@
 				.addElement(opts.enteringEl)
 				.fromTo('opacity', 0, 1)
 				.duration(100);
-			
+
 			const leavingAnimation = createAnimation()
 				.addElement(opts.leavingEl)
 				.fromTo('opacity', 1, 0)
 				.duration(100);
-			
+
 			const animation = createAnimation()
 				.addAnimation(enteringAnimation)
 				.addAnimation(leavingAnimation);
@@ -665,7 +671,7 @@
 				document.body.style.setProperty('--ion-color-primary-rgb', customizations.color.color.rgb);
 			}
 		}
-		
+
 		// check current version in local storage
 		if(localStorage.getItem('version')) {
 			if(localStorage.getItem('version') !== this.appVersion) {
@@ -724,7 +730,7 @@
 				</div>
 			</ion-header>
 			<ion-content mode="md">
-				<ion-list id="inbox-list"> 
+				<ion-list id="inbox-list">
 					<router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
 						<ion-item v-if="!p.disabled" button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
 							<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
@@ -737,7 +743,7 @@
 					</router-link>
 				</ion-list>
 
-				<ion-list id="bottomActionsList"> 
+				<ion-list id="bottomActionsList">
 						<ion-item @click="openURL('https://docs.getpapillon.xyz')" button mode="md" lines="none" :detail="false">
 							<span class="material-symbols-outlined mdls" slot="start">support</span>
 							<ion-label>Aide de Papillon</ion-label>

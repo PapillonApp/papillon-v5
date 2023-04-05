@@ -98,8 +98,6 @@ export default defineComponent({
             const loading = await loadingController.create({
                 message: 'Connexion en cours...'
             });
-
-            console.log(this.ent)
             const ent = this.ent
             const username = this.$refs.user.$el.value;
             const password = this.$refs.pass.$el.value;
