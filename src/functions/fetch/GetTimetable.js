@@ -7,6 +7,7 @@ import GetToken from '@/functions/login/GetToken.js';
 
 import subjectColor from '@/functions/utils/subjectColor.js'
 import {ApiUrl, ApiVersion, Kdecole} from 'kdecole-api';
+import displayToast from "@/functions/utils/displayToast";
 
 let dayRequest;
 
@@ -44,22 +45,21 @@ function getSkolengoTimetable(date, forceReload) {
         // return cached timetable in promise
         return new Promise((resolve) => {
             let timetable = JSON.parse(cacheSearch[0].timetable);
-            resolve(constructSkolengoTimetable(timetable));
+            resolve(constructSkolengoTimetable(timetable?.listeSeances || []));
         });
     } else {
         const user = new Kdecole(token, ApiVersion[ent], 0, 'https://cors.api.getpapillon.xyz/' + ApiUrl[ent])
 
         return user.getCalendrier().then(calendrier => {
             if (calendrier.cdtOuvert === false) throw new Error("Le calendrier n'est pas ouvert.")
-            const seancesJour = calendrier.listeJourCdt.find(jour => jour.date.toISOString().split('T')[0] === dayString)
-            if (seancesJour.length === 0) throw new Error("Pas de données disponibles à cette date.")
-            const timetable = constructSkolengoTimetable(seancesJour)
+            const jour = calendrier.listeJourCdt.find(jour => jour.date.toISOString().split('T')[0] === dayString)
+            const timetable = constructSkolengoTimetable(jour?.listeSeances || [])
 
             let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
             let cacheElement = {
                 date: dayString,
                 token: token,
-                timetable: JSON.stringify(seancesJour)
+                timetable: JSON.stringify(jour || [])
             };
             cache.push(cacheElement);
             localStorage.setItem('TimetableCache', JSON.stringify(cache));
@@ -68,8 +68,10 @@ function getSkolengoTimetable(date, forceReload) {
 
         }).catch((error) => {
             return new Promise((reject) => {
+                displayToast.presentError(`${error.message}`, "danger", error)
+                console.error(error)
                 reject({
-                    error: error.message
+                    error: error.code
                 });
             });
         })
@@ -77,56 +79,43 @@ function getSkolengoTimetable(date, forceReload) {
 }
 
 
-function constructSkolengoTimetable(seancesJour) {
-    // declaring vars
-    let courses = [];
-    seancesJour.listeSeances.forEach(seance => {
-        // construct course
-        const newCourse = {
-            course: {
-                id: seance.idSeance,
-                subject: seance.matiere,
-                color: '',
-                num: null,
-                sameTime: false,
-                actual: false,
-                distance: false,
-                lengthCours: 0,
-            },
-            data: {
-                subject: seance.matiere,
-                teachers: [' '],
-                rooms: [seance.salle],
-                groupNames: null,
-                memo: seance.aRendre.map(ar => ar.type).join(' '),
-                hasMemo: false,
-                linkVirtual: null,
-            },
-            time: {
-                start: new Date(seance.hdeb),
-                end: new Date(seance.hfin)
-            },
-            status: {
-                isCancelled: !seance.flagActif,
-                isExempted: false,
-                isDetention: false,
-                isOuting: false,
-                isTest: false,
-                isCustom: false,
-                status: seance.motifModif
-            }
-        };
-        // push course to courses
-        courses.push(newCourse);
-    })
-
-    // put courses in start order
-    courses.sort((a, b) => {
+function constructSkolengoTimetable(seances) {
+    return seances.map(seance => ({
+        course: {
+            id: seance.idSeance,
+            subject: seance.matiere,
+            color: '',
+            num: null,
+            sameTime: false,
+            actual: false,
+            distance: false,
+            lengthCours: 0,
+        },
+        data: {
+            subject: seance.matiere,
+            teachers: [' '],
+            rooms: [seance.salle],
+            groupNames: null,
+            memo: seance.aRendre.map(ar => ar.type).join(' '),
+            hasMemo: false,
+            linkVirtual: null,
+        },
+        time: {
+            start: new Date(seance.hdeb),
+            end: new Date(seance.hfin)
+        },
+        status: {
+            isCancelled: !seance.flagActif,
+            isExempted: false,
+            isDetention: false,
+            isOuting: false,
+            isTest: false,
+            isCustom: false,
+            status: seance.motifModif
+        }
+    })).sort((a, b) => {
         return new Date(a.time.start) - new Date(b.time.start);
     });
-    console.log(courses)
-    // return courses
-    return courses;
 }
 
 // pronote : get timetable
