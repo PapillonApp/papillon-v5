@@ -15,6 +15,8 @@
 
     import { StatusBar, Style } from '@capacitor/status-bar';
 
+    import {ApiUrl, ApiVersion} from 'kdecole-api'
+
     export default defineComponent({
         name: 'FolderPage',
         components: {
@@ -38,7 +40,18 @@
                 globeSharp,
             }
         },
+        computed: {
+            ApiVersion() {
+				return ApiVersion
+			},
+			ApiUrl() {
+				return ApiUrl
+			}
+        },
         methods: {
+            skolengoENTString(ent) {
+                return ent.replace('PROD_', '').replace(/_/g, ' ').toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, l => l.toUpperCase())
+            },
             login() {
                 const API = this.$api;
                 let loginData = JSON.parse(localStorage.loginData);
@@ -160,14 +173,14 @@
                 </ion-item>
             </ion-nav-link>
 
-            <ion-nav-link router-direction="forward" :component="SkolengoLoginForm">
+            <ion-nav-link v-for="ent in Object.keys(ApiUrl).filter(x => Object.keys(ApiVersion).includes(x))" :key="ent" router-direction="forward" :component="SkolengoLoginForm" :componentProps="{ent}">
                 <ion-item button detail="true">
                     <ion-avatar slot="start">
                         <img alt="Logo" src="/assets/welcome/skolengo_logo.png"/>
                     </ion-avatar>
                     <ion-label>
-                        <h2>ENT régional Skolengo</h2>
-                        <p>Utilisez vos identifiants d'un ENT régional Skolengo pour vous connecter</p>
+                        <h2>{{ skolengoENTString(ent) }}</h2>
+                        <p>Utilisez vos identifiants {{ skolengoENTString(ent) }} pour vous connecter</p>
                     </ion-label>
                 </ion-item>
             </ion-nav-link>

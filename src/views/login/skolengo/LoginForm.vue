@@ -10,6 +10,7 @@
 
 	export default defineComponent({
 		name: 'FolderPage',
+		props: ['ent'],
 		computed: {
 			ApiVersion() {
 				return ApiVersion
@@ -52,6 +53,9 @@
 			
 		},
 		methods: {
+			skolengoENTString(ent) {
+                return ent.replace('PROD_', '').replace(/_/g, ' ').toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, l => l.toUpperCase())
+            },
 			decodeEntities(encodedString) {
 				var translate_re = /&(nbsp|amp|quot|lt|gt|Eacute|eacute|Egrave|egrave);/g;
 				var translate = {
@@ -78,7 +82,8 @@
 					message: 'Connexion en cours...'
 				});
 
-				const ent = this.$refs.ent.value;
+				console.log(this.ent)
+				const ent = this.ent
 				const username = this.$refs.user.$el.value;
 				const password = this.$refs.pass.$el.value;
 
@@ -128,7 +133,7 @@
 				<ion-back-button class="only-ios" text="Retour"></ion-back-button>
 				<ion-back-button class="only-md"></ion-back-button>
 			</ion-buttons>
-			<ion-title>Connexion à un ENT régional</ion-title>
+			<ion-title>Connexion à {{ skolengoENTString(this.ent) }}</ion-title>
 			<ion-buttons slot="end" style="padding-right: 10px;">
 				<ion-spinner v-if="isLoading"></ion-spinner>
 			</ion-buttons>
@@ -141,7 +146,7 @@
 					<div class="alphaMessage">
 						<span class="material-symbols-outlined mdls icon">sms_failed</span>
 						<div class="alphaText">
-							<h2>Skolengo est instable</h2>
+							<h2>{{ skolengoENTString(this.ent) }} est instable</h2>
 							<p class="description">L'utilisation des ENT régionaux basés sur Skolengo avec Papillon est encore extrêmement instable. L'équipe de Papillon ne serait être tenue responsable de tout dysfonctionnement.</p>
 						</div>
 					</div>
@@ -150,18 +155,11 @@
 						<img src="assets/welcome/skolengo_logo.png" alt="Pronote Logo" class="logo"/>
 						<div class="introData">
 							<h2>Connexion à Papillon</h2>
-							<p class="description">Vous souhaitez vous connecter à un ENT régional <B>Skolengo</B></p>
+							<p class="description">Vous souhaitez vous connecter à <B>{{ skolengoENTString(this.ent) }}</B></p>
 						</div>
 					</div>
 
 					<ion-list class="loginInput">
-						<ion-item mode="md" fill="solid" class="entIn">
-							<ion-label position="floating">Environnement Numérique de Travail</ion-label>
-							<ion-select ref="ent" v-model="this.ent" placeholder="Votre Environnement Numérique de Travail">
-								<ion-select-option v-for="ent in Object.keys(ApiUrl).filter(x => Object.keys(ApiVersion).includes(x))" :key="ent" :value="ent">{{ ent.replace('PROD_', '').replace(/_/g, ' ') }}</ion-select-option>
-							</ion-select>
-						</ion-item>
-
 						<ion-item mode="md" fill="solid" class="userIn">
 							<ion-label position="floating">Identifiant</ion-label>
 							<ion-input ref="user" type="text" placeholder="j.dupont6" autocomplete="username"></ion-input>
