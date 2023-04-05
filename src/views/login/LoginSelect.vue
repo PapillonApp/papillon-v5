@@ -15,7 +15,7 @@
 
     import { StatusBar, Style } from '@capacitor/status-bar';
 
-    import {ApiUrl, ApiVersion} from 'kdecole-api'
+    import {ApiUrl, ApiVersion, ApiName} from 'kdecole-api'
 
     export default defineComponent({
         name: 'FolderPage',
@@ -46,12 +46,12 @@
 			},
 			ApiUrl() {
 				return ApiUrl
-			}
+			},
+            ApiName() {
+                return ApiName
+            }
         },
         methods: {
-            skolengoENTString(ent) {
-                return ent.replace('PROD_', '').replace(/_/g, ' ').toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, l => l.toUpperCase())
-            },
             login() {
                 const API = this.$api;
                 let loginData = JSON.parse(localStorage.loginData);
@@ -179,8 +179,8 @@
                         <img alt="Logo" src="/assets/welcome/skolengo_logo.png"/>
                     </ion-avatar>
                     <ion-label>
-                        <h2>{{ skolengoENTString(ent) }}</h2>
-                        <p>Utilisez vos identifiants {{ skolengoENTString(ent) }} pour vous connecter</p>
+                        <h2>{{ ApiName[ent] }}</h2>
+                        <p>Utilisez vos identifiants {{ ApiName[ent] }} pour vous connecter</p>
                     </ion-label>
                 </ion-item>
             </ion-nav-link>

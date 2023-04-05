@@ -6,7 +6,7 @@
 	import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp, serverOutline, serverSharp } from 'ionicons/icons';
 
 	import displayToast from '@/functions/utils/displayToast.js';
-	import {ApiUrl, ApiVersion, Kdecole} from 'kdecole-api'
+	import {ApiUrl, ApiVersion, ApiName, Kdecole} from 'kdecole-api'
 
 	export default defineComponent({
 		name: 'FolderPage',
@@ -17,6 +17,9 @@
 			},
 			ApiUrl() {
 				return ApiUrl
+			},
+			ApiName() {
+				return ApiName
 			}
 		},
 		components: {
@@ -53,9 +56,6 @@
 			
 		},
 		methods: {
-			skolengoENTString(ent) {
-                return ent.replace('PROD_', '').replace(/_/g, ' ').toLowerCase().replace(/(^\w{1})|(\s+\w{1})/g, l => l.toUpperCase())
-            },
 			decodeEntities(encodedString) {
 				var translate_re = /&(nbsp|amp|quot|lt|gt|Eacute|eacute|Egrave|egrave);/g;
 				var translate = {
@@ -133,7 +133,7 @@
 				<ion-back-button class="only-ios" text="Retour"></ion-back-button>
 				<ion-back-button class="only-md"></ion-back-button>
 			</ion-buttons>
-			<ion-title>Connexion à {{ skolengoENTString(this.ent) }}</ion-title>
+			<ion-title>Connexion à {{ ApiName[this.ent] }}</ion-title>
 			<ion-buttons slot="end" style="padding-right: 10px;">
 				<ion-spinner v-if="isLoading"></ion-spinner>
 			</ion-buttons>
@@ -146,7 +146,7 @@
 					<div class="alphaMessage">
 						<span class="material-symbols-outlined mdls icon">sms_failed</span>
 						<div class="alphaText">
-							<h2>{{ skolengoENTString(this.ent) }} est instable</h2>
+							<h2>{{ ApiName[this.ent] }} est instable</h2>
 							<p class="description">L'utilisation des ENT régionaux basés sur Skolengo avec Papillon est encore extrêmement instable. L'équipe de Papillon ne serait être tenue responsable de tout dysfonctionnement.</p>
 						</div>
 					</div>
@@ -155,7 +155,7 @@
 						<img src="assets/welcome/skolengo_logo.png" alt="Pronote Logo" class="logo"/>
 						<div class="introData">
 							<h2>Connexion à Papillon</h2>
-							<p class="description">Vous souhaitez vous connecter à <B>{{ skolengoENTString(this.ent) }}</B></p>
+							<p class="description">Vous souhaitez vous connecter à <B>{{ ApiName[this.ent] }}</B></p>
 						</div>
 					</div>
 
