@@ -101,10 +101,11 @@ export default defineComponent({
                     <p>Instances Skolengo disponibles</p>
                 </ion-label>
             </ion-list-header>
-            <ion-nav-link v-for="ent in Object.keys(ApiUrl).filter(x => Object.keys(ApiVersion).includes(x))" :key="ent" router-direction="forward" :component="SkolengoLoginForm" :componentProps="{ent}">
+            <ion-nav-link v-for="ent in Object.keys(ApiUrl).filter(x => Object.keys(ApiVersion).includes(x))" :key="ent"
+                          router-direction="forward" :component="SkolengoLoginForm" :componentProps="{ent}">
                 <ion-item button detail="true">
                     <ion-avatar slot="start">
-                        <img alt="Logo" src="/assets/welcome/skolengo_logo.png"/>
+                        <img alt="Logo" :src="'/assets/welcome/skolengo/' + ent + '.png'"/>
                     </ion-avatar>
                     <ion-label>
                         <h2>{{ ApiName[ent] }}</h2>
