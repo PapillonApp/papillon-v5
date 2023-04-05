@@ -2,10 +2,6 @@
 	import { defineComponent } from 'vue';
 	import { IonItem, IonList, IonIcon, IonBackButton, IonSearchbar, IonListHeader, IonSpinner, loadingController, IonInput, 
 	IonButton, actionSheetController, alertController } from '@ionic/vue';
-
-	import axios from 'axios';
-
-	import { App } from '@capacitor/app';
 	
 	import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp, serverOutline, serverSharp } from 'ionicons/icons';
 
@@ -132,7 +128,7 @@
 				<ion-back-button class="only-ios" text="Retour"></ion-back-button>
 				<ion-back-button class="only-md"></ion-back-button>
 			</ion-buttons>
-			<ion-title>Connexion à Skolengo</ion-title>
+			<ion-title>Connexion à un ENT régional</ion-title>
 			<ion-buttons slot="end" style="padding-right: 10px;">
 				<ion-spinner v-if="isLoading"></ion-spinner>
 			</ion-buttons>
@@ -146,7 +142,7 @@
 						<span class="material-symbols-outlined mdls icon">sms_failed</span>
 						<div class="alphaText">
 							<h2>Skolengo est instable</h2>
-							<p class="description">L'utilisation de Skolengo avec Papillon est encore extrêmement instable. L'équipe de Papillon ne serait être tenue responsable de tout dysfonctionnement.</p>
+							<p class="description">L'utilisation des ENT régionaux basés sur Skolengo avec Papillon est encore extrêmement instable. L'équipe de Papillon ne serait être tenue responsable de tout dysfonctionnement.</p>
 						</div>
 					</div>
 					
@@ -154,13 +150,13 @@
 						<img src="assets/welcome/skolengo_logo.png" alt="Pronote Logo" class="logo"/>
 						<div class="introData">
 							<h2>Connexion à Papillon</h2>
-							<p class="description">Vous souhaitez vous connecter à <B>Skolengo</B></p>
+							<p class="description">Vous souhaitez vous connecter à un ENT régional <B>Skolengo</B></p>
 						</div>
 					</div>
 
 					<ion-list class="loginInput">
 						<ion-item mode="md" fill="solid" class="entIn">
-							<ion-label position="floating">ENT</ion-label>
+							<ion-label position="floating">Environnement Numérique de Travail</ion-label>
 							<ion-select ref="ent" v-model="this.ent" placeholder="Votre Environnement Numérique de Travail">
 								<ion-select-option v-for="ent in Object.keys(ApiUrl).filter(x => Object.keys(ApiVersion).includes(x))" :key="ent" :value="ent">{{ ent.replace('PROD_', '').replace(/_/g, ' ') }}</ion-select-option>
 							</ion-select>

@@ -166,8 +166,8 @@
                         <img alt="Logo" src="/assets/welcome/skolengo_logo.png"/>
                     </ion-avatar>
                     <ion-label>
-                        <h2>Skolengo</h2>
-                        <p>Utilisez vos identifiants d'un ENT Skolengo pour vous connecter</p>
+                        <h2>ENT régional Skolengo</h2>
+                        <p>Utilisez vos identifiants d'un ENT régional Skolengo pour vous connecter</p>
                     </ion-label>
                 </ion-item>
             </ion-nav-link>
