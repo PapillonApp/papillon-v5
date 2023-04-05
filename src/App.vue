@@ -104,6 +104,20 @@
 				disabled: false
 			}
 		];
+		if(localStorage.getItem("loginService") === "skolengo") {
+			appPages.push({
+				title: 'Emploi du temps',
+				url: '/timetable',
+				icon: "calendar_month",
+				disabled: false,
+			},
+			{
+				title: 'Paramètres',
+				url: '/settings',
+				icon: "settings",
+				disabled: false
+			})
+		}
 		if(localStorage.getItem("loginService") === "pronote") {
 			appPages.push({
 				title: 'Emploi du temps',

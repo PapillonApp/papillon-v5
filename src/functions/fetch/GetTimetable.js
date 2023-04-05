@@ -6,6 +6,7 @@ import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
 import subjectColor from '@/functions/utils/subjectColor.js'
+import { ApiUrl, ApiVersion, Kdecole } from 'kdecole-api';
 
 let dayRequest;
 
@@ -18,7 +19,115 @@ async function getTimetable(date, forceReload) {
             return getPronoteTimetable(date, forceReload);
         case "ecoledirecte":
             return getEDTimetable(date, forceReload);
+        case 'skolengo':
+            return getSkolengoTimetable(date, forceReload)
     }
+}
+
+function getSkolengoTimetable(date, forceReload) {
+
+    const dayRequest = new Date(date);
+
+    // get date as YYYY-MM-DD
+    const dayString = dayRequest.toISOString().split('T')[0];
+
+    const token = localStorage.getItem('token');
+    const ent = localStorage.getItem('ent');
+
+
+    // check if timetable is cached
+    let cacheSearch = JSON.parse(localStorage.getItem('TimetableCache')) || [];
+    cacheSearch = cacheSearch.filter((element) => {
+        return element.date == dayString && element.token == token;
+    });
+    if (cacheSearch.length > 0 && !forceReload) {
+        // return cached timetable in promise
+        return new Promise((resolve) => {
+            let timetable = JSON.parse(cacheSearch[0].timetable);
+            resolve(timetable);
+        });
+    } else {
+        const user = new Kdecole(token, ApiVersion[ent], 0, 'https://cors.api.getpapillon.xyz/' + ApiUrl[ent])
+
+        return user.getCalendrier().then(calendrier => {
+            if(calendrier.cdtOuvert === false) throw new Error("Le calendrier n'est pas ouvert.")
+            const timetable = constructSkolengoTimetable(calendrier)
+
+            let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
+                let cacheElement = {
+                    date: dayString,
+                    token: token,
+                    timetable: JSON.stringify(timetable)
+                };
+                cache.push(cacheElement);
+                localStorage.setItem('TimetableCache', JSON.stringify(cache));
+
+            return timetable
+
+        }).catch((error) => {
+            return new Promise((reject) => {
+                reject({
+                    error: error.message
+                });
+            });
+        })
+    }
+}
+
+
+function constructSkolengoTimetable(timetable) {
+    // declaring vars
+    let courses = [];
+    // for each course in timetable
+    timetable.listeJourCdt.forEach(jour => {
+        jour.listeSeances.forEach(seance => {
+            // construct course
+        const newCourse = {
+            course: {
+                id: seance.idSeance,
+                subject: seance.matiere,
+                color: '',
+                num: null,
+                sameTime: false,
+                actual: false,
+                distance: false,
+                lengthCours: 0,
+            },
+            data: {
+                subject: seance.matiere,
+                teachers: [' '],
+                rooms: [seance.salle],
+                groupNames: null,
+                memo: seance.aRendre.map(ar => ar.type).join(' '),
+                hasMemo: false,
+                linkVirtual: null,
+            },
+            time: {
+                start: seance.hdeb,
+                end: seance.hfin
+            },
+            status: {
+                isCancelled: !seance.flagActif,
+                isExempted: false,
+                isDetention: false,
+                isOuting: false,
+                isTest: false,
+                isCustom: false,
+                status: seance.motifModif
+            }
+        };
+        // push course to courses
+        courses.push(newCourse);
+        })
+        
+    });
+
+    // put courses in start order
+    courses.sort((a, b) => {
+        return new Date(a.time.start) - new Date(b.time.start);
+    });
+    // return courses
+    return courses;
 }
 
 // pronote : get timetable
