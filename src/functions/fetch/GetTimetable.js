@@ -51,13 +51,15 @@ function getSkolengoTimetable(date, forceReload) {
 
         return user.getCalendrier().then(calendrier => {
             if(calendrier.cdtOuvert === false) throw new Error("Le calendrier n'est pas ouvert.")
-            const timetable = constructSkolengoTimetable(calendrier)
+            const seancesJour = calendrier.listeJourCdt.find(jour => jour.date.toISOString().split('T')[0] === dayString)
+            if(seancesJour.length === 0) throw new Error("Pas de données disponibles à cette date.")
+            const timetable = constructSkolengoTimetable(seancesJour)
 
             let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
                 let cacheElement = {
                     date: dayString,
                     token: token,
-                    timetable: JSON.stringify(calendrier)
+                    timetable: JSON.stringify(seancesJour)
                 };
                 cache.push(cacheElement);
                 localStorage.setItem('TimetableCache', JSON.stringify(cache));
@@ -75,57 +77,54 @@ function getSkolengoTimetable(date, forceReload) {
 }
 
 
-function constructSkolengoTimetable(timetable) {
+function constructSkolengoTimetable(seancesJour) {
     // declaring vars
     let courses = [];
-    // for each course in timetable
-    timetable.listeJourCdt.forEach(jour => {
-        jour.listeSeances.forEach(seance => {
-            // construct course
-        const newCourse = {
-            course: {
-                id: seance.idSeance,
-                subject: seance.matiere,
-                color: '',
-                num: null,
-                sameTime: false,
-                actual: false,
-                distance: false,
-                lengthCours: 0,
-            },
-            data: {
-                subject: seance.matiere,
-                teachers: [' '],
-                rooms: [seance.salle],
-                groupNames: null,
-                memo: seance.aRendre.map(ar => ar.type).join(' '),
-                hasMemo: false,
-                linkVirtual: null,
-            },
-            time: {
-                start: new Date(seance.hdeb),
-                end: new Date(seance.hfin)
-            },
-            status: {
-                isCancelled: !seance.flagActif,
-                isExempted: false,
-                isDetention: false,
-                isOuting: false,
-                isTest: false,
-                isCustom: false,
-                status: seance.motifModif
-            }
-        };
-        // push course to courses
-        courses.push(newCourse);
-        })
-        
-    });
+    seancesJour.listeSeances.forEach(seance => {
+        // construct course
+    const newCourse = {
+        course: {
+            id: seance.idSeance,
+            subject: seance.matiere,
+            color: '',
+            num: null,
+            sameTime: false,
+            actual: false,
+            distance: false,
+            lengthCours: 0,
+        },
+        data: {
+            subject: seance.matiere,
+            teachers: [' '],
+            rooms: [seance.salle],
+            groupNames: null,
+            memo: seance.aRendre.map(ar => ar.type).join(' '),
+            hasMemo: false,
+            linkVirtual: null,
+        },
+        time: {
+            start: new Date(seance.hdeb),
+            end: new Date(seance.hfin)
+        },
+        status: {
+            isCancelled: !seance.flagActif,
+            isExempted: false,
+            isDetention: false,
+            isOuting: false,
+            isTest: false,
+            isCustom: false,
+            status: seance.motifModif
+        }
+    };
+    // push course to courses
+    courses.push(newCourse);
+    })
 
     // put courses in start order
     courses.sort((a, b) => {
         return new Date(a.time.start) - new Date(b.time.start);
     });
+    console.log(courses)
     // return courses
     return courses;
 }
