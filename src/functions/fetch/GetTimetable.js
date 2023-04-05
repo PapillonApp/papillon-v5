@@ -44,7 +44,7 @@ function getSkolengoTimetable(date, forceReload) {
         // return cached timetable in promise
         return new Promise((resolve) => {
             let timetable = JSON.parse(cacheSearch[0].timetable);
-            resolve(timetable);
+            resolve(constructSkolengoTimetable(timetable));
         });
     } else {
         const user = new Kdecole(token, ApiVersion[ent], 0, 'https://cors.api.getpapillon.xyz/' + ApiUrl[ent])
@@ -57,7 +57,7 @@ function getSkolengoTimetable(date, forceReload) {
                 let cacheElement = {
                     date: dayString,
                     token: token,
-                    timetable: JSON.stringify(timetable)
+                    timetable: JSON.stringify(calendrier)
                 };
                 cache.push(cacheElement);
                 localStorage.setItem('TimetableCache', JSON.stringify(cache));
@@ -103,8 +103,8 @@ function constructSkolengoTimetable(timetable) {
                 linkVirtual: null,
             },
             time: {
-                start: seance.hdeb,
-                end: seance.hfin
+                start: new Date(seance.hdeb),
+                end: new Date(seance.hfin)
             },
             status: {
                 isCancelled: !seance.flagActif,
