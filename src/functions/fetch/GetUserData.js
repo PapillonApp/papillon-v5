@@ -5,7 +5,7 @@ const FastAverageColor = require('fast-average-color').FastAverageColor;
 const fac = new FastAverageColor();
 
 // vars
-import { app } from '@/main.ts'
+import {app} from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 import {ApiUrl, ApiVersion, Kdecole} from "kdecole-api";
 
@@ -14,7 +14,7 @@ function getUser(force) {
     // as only pronote is supported for now, we can just return the pronote user
     // not true at this time ;)
 
-    switch(localStorage.loginService) {
+    switch (localStorage.loginService) {
         case "pronote":
             return getPronoteUser(force);
         case "ecoledirecte":
@@ -37,15 +37,14 @@ async function getSkolengoUser(force) {
         return new Promise((resolve) => {
             resolve(constructSkolengoUser(user));
         });
-    }
-    else {
+    } else {
         const etudiant = new Kdecole(token, ApiVersion[ent], 0, 'https://cors.api.getpapillon.xyz/' + ApiUrl[ent])
         return etudiant.getInfoUtilisateur().then(infoUser => {
-                localStorage.setItem('avatarCache', 'data:image/png;base64,' + defaultAvatar);
-                const user = constructSkolengoUser(infoUser)
-                localStorage.setItem('UserCache', JSON.stringify(user))
-                return user
-            })
+            localStorage.setItem('avatarCache', 'data:image/png;base64,' + defaultAvatar);
+            const user = constructSkolengoUser(infoUser)
+            localStorage.setItem('UserCache', JSON.stringify(user))
+            return user
+        })
     }
 }
 
@@ -53,7 +52,7 @@ function constructSkolengoUser(user) {
     // construct student
     return {
         student: {
-            name:  user.nom,
+            name: user.nom,
             avatar: '',
             ine: '',
             contact: {
@@ -91,8 +90,7 @@ async function getPronoteUser(force) {
         return new Promise((resolve) => {
             resolve(constructPronoteUser(user));
         });
-    }
-    else {
+    } else {
         // get user from API
         return axios.get(URL)
             .then((response) => {
@@ -118,7 +116,7 @@ async function getPronoteUser(force) {
                 }
                 // download avatar
                 let url = `https://cors.api.getpapillon.xyz/` + avatar;
-                axios.get(url, { responseType: 'blob' })
+                axios.get(url, {responseType: 'blob'})
                     .then((response) => {
                         // get blob
                         let blob = response.data;
@@ -139,7 +137,7 @@ async function getPronoteUser(force) {
                             fac.getColorAsync(avatarURL)
                                 .then(color => {
                                     localStorage.setItem('averageColor', JSON.stringify(color));
-                                    
+
                                     document.dispatchEvent(new CustomEvent('averageColorUpdated'));
                                 })
                                 .catch(e => {
@@ -162,8 +160,7 @@ async function getPronoteUser(force) {
                     if (error.response.data == "notfound") {
                         // get new token
                         GetToken();
-                    }
-                    else if (error.response.data == "expired") {
+                    } else if (error.response.data == "expired") {
                         // get new token
                         GetToken();
                     }
@@ -171,6 +168,7 @@ async function getPronoteUser(force) {
             });
     }
 }
+
 // pronote : construct user
 function constructPronoteUser(user) {
     // construct student
@@ -196,7 +194,6 @@ function constructPronoteUser(user) {
 }
 
 
-
 // ecoledirecte : get user
 async function getEDUser(force) {
     // gather vars
@@ -216,8 +213,7 @@ async function getEDUser(force) {
         return new Promise((resolve) => {
             resolve(constructEDUser(cache));
         });
-    }
-    else {
+    } else {
         // get user from API
         return axios.get(URL)
             .then((response) => {
@@ -264,7 +260,7 @@ async function getEDUser(force) {
                             fac.getColorAsync(avatarURL)
                                 .then(color => {
                                     localStorage.setItem('averageColor', JSON.stringify(color));
-                                    
+
                                     document.dispatchEvent(new CustomEvent('averageColorUpdated'));
                                 })
                                 .catch(e => {
@@ -317,7 +313,6 @@ function constructEDUser(user) {
     // return student
     return student;
 }
-
 
 
 // export
