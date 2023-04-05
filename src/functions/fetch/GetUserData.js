@@ -1,13 +1,13 @@
 // modules
 import axios from 'axios';
-
-const FastAverageColor = require('fast-average-color').FastAverageColor;
-const fac = new FastAverageColor();
-
 // vars
 import {app} from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 import {ApiUrl, ApiVersion, Kdecole} from "kdecole-api";
+import displayToast from "@/functions/utils/displayToast";
+
+const FastAverageColor = require('fast-average-color').FastAverageColor;
+const fac = new FastAverageColor();
 
 // main function
 function getUser(force) {
@@ -44,7 +44,10 @@ async function getSkolengoUser(force) {
             const user = constructSkolengoUser(infoUser)
             localStorage.setItem('UserCache', JSON.stringify(user))
             return user
-        })
+        }).catch(error => {
+            displayToast.presentError("Impossible de joindre le serveur.", "danger", error)
+            console.error('Unable to join server - ' + error);
+        });
     }
 }
 
@@ -172,7 +175,8 @@ async function getPronoteUser(force) {
 // pronote : construct user
 function constructPronoteUser(user) {
     // construct student
-    let student = {
+    // return student
+    return {
         student: {
             name: user.name,
             avatar: user.profile_picture,
@@ -187,10 +191,7 @@ function constructPronoteUser(user) {
             school: user.establishment
         },
         periods: user.periods
-    }
-
-    // return student
-    return student;
+    };
 }
 
 
@@ -293,7 +294,8 @@ async function getEDUser(force) {
 function constructEDUser(user) {
     console.log(user)
     // construct student
-    let student = {
+    // return student
+    return {
         student: {
             name: user.nom + " " + user.prenom,
             avatar: user.profile.photo,
@@ -308,10 +310,7 @@ function constructEDUser(user) {
             school: user.nomEtablissement
         },
         periods: [] //user.periods
-    }
-
-    // return student
-    return student;
+    };
 }
 
 

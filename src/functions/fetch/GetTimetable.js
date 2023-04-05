@@ -80,43 +80,56 @@ function getSkolengoTimetable(date, forceReload) {
 
 
 function constructSkolengoTimetable(seances) {
-    return seances.map(seance => ({
-        course: {
-            id: seance.idSeance,
-            subject: seance.matiere,
-            color: '',
-            num: null,
-            sameTime: false,
-            actual: false,
-            distance: false,
-            lengthCours: 0,
-        },
-        data: {
-            subject: seance.matiere,
-            teachers: [' '],
-            rooms: [seance.salle],
-            groupNames: null,
-            memo: seance.aRendre.map(ar => ar.type).join(' '),
-            hasMemo: false,
-            linkVirtual: null,
-        },
-        time: {
-            start: new Date(seance.hdeb),
-            end: new Date(seance.hfin)
-        },
-        status: {
-            isCancelled: !seance.flagActif,
-            isExempted: false,
-            isDetention: false,
-            isOuting: false,
-            isTest: false,
-            isCustom: false,
-            status: seance.motifModif
+    const stringToColour = str => {
+        let hash = 0;
+        for (let i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
-    })).sort((a, b) => {
-        return new Date(a.time.start) - new Date(b.time.start);
-    });
-}
+        let colour = '#';
+        for (let i = 0; i < 3; i++) {
+            let value = (hash >> (i * 8)) & 0xFF;
+            colour += ('00' + value.toString(16)).substr(-2);
+        }
+        return colour;
+    }
+
+        return seances.map(seance => ({
+            course: {
+                id: seance.idSeance,
+                subject: seance.matiere,
+                color: subjectColor.setSubjectColor(seance.matiere, stringToColour(seance.matiere), true),
+                num: null,
+                sameTime: false,
+                actual: false,
+                distance: false,
+                lengthCours: 0,
+            },
+            data: {
+                subject: seance.matiere,
+                teachers: [' '],
+                rooms: [seance.salle],
+                groupNames: null,
+                memo: seance.aRendre.map(ar => ar.type).join(' '),
+                hasMemo: false,
+                linkVirtual: null,
+            },
+            time: {
+                start: new Date(seance.hdeb),
+                end: new Date(seance.hfin)
+            },
+            status: {
+                isCancelled: !seance.flagActif,
+                isExempted: false,
+                isDetention: false,
+                isOuting: false,
+                isTest: false,
+                isCustom: false,
+                status: seance.motifModif
+            }
+        })).sort((a, b) => {
+            return new Date(a.time.start) - new Date(b.time.start);
+        });
+    }
 
 // pronote : get timetable
 function getPronoteTimetable(date, forceReload) {
