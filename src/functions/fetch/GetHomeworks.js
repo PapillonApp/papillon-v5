@@ -3,20 +3,91 @@ import axios from 'axios';
 import * as moment from "moment";
 
 // vars
-import { app } from '@/main.ts'
+import {app} from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
 import subjectColor from '@/functions/utils/subjectColor.js'
+import {ApiUrl, ApiVersion, Kdecole} from "kdecole-api";
+import displayToast from "@/functions/utils/displayToast";
 
 // main function
 async function getHomeworks(dateFrom, dateTo, forceReload) {
-    switch(localStorage.loginService) {
-        case "pronote":    
+    switch (localStorage.loginService) {
+        case "pronote":
             // return pronote homework
             return getPronoteHomework(dateFrom, dateTo, forceReload);
-		case "ecoledirecte":
+        case "ecoledirecte":
             return getEDHomework(dateFrom, dateTo, forceReload)
+        case 'skolengo':
+            return getSkolengoHomeWork(dateFrom, dateTo, forceReload)
     }
+}
+
+async function getSkolengoHomeWork(dateFrom, dateTo, forceReload) {
+
+    const dayString = new Date(dateFrom).toISOString().split('T')[0]
+    let cacheSearch = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
+    cacheSearch = cacheSearch.filter((element) => {
+        return element.dateFrom === dayString;
+    });
+    if (cacheSearch.length > 0 && !forceReload) {
+        // return cached homework in promise
+        return new Promise((resolve) => {
+            let homework = JSON.parse(cacheSearch[0].homework);
+            resolve(constructSkolengoHomework(homework));
+        });
+    } else {
+        try {
+            const token = localStorage.getItem('token');
+            const ent = localStorage.getItem('ent');
+            const etudiant = new Kdecole(token, ApiVersion[ent], 0, 'https://cors.api.getpapillon.xyz/' + ApiUrl[ent])
+
+            console.log("[REQUEST] [HOMEWORK] Requesting homeworks...")
+            const taf = await etudiant.getTravailAFaire(undefined, new Date(dateFrom))
+            if (!taf.tafOuvert) throw new Error("Service TAF fermé")
+
+            const homeworks = (
+                await Promise.all(
+                    taf.listeTravaux.map(jour => jour.listTravail).flat()
+                        .map(travail => etudiant.getContenuActivite(travail.uidSeance, travail.uid).catch(console.error))
+                )).filter(t => t !== undefined)
+
+            if (!homeworks.length) throw new Error("Aucun travail à faire n'a été trouvé.")
+
+            const all_homeworks = constructSkolengoHomework(homeworks)
+
+            let cache = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
+            let cacheElement = {
+                dateFrom: dayString,
+                token: token,
+                homework: JSON.stringify(homeworks)
+            };
+            cache.push(cacheElement);
+            localStorage.setItem('HomeworkCache', JSON.stringify(cache));
+
+            return all_homeworks
+        } catch (e) {
+            displayToast.presentError(`${e.message}`, "danger", e)
+            console.error(e);
+        }
+    }
+}
+
+function constructSkolengoHomework(homework) {
+    return homework.map(travail => ({
+        data: {
+            id: travail.uid,
+            date: travail.date,
+            color: subjectColor.getSubjectColor(travail.matiere),
+            done: travail.flagRealise,
+        },
+        homework: {
+            subject: travail.matiere,
+            content: travail.codeHTML.replace(/style=/g, 'nostyle='),
+            shortContent: travail.type,
+        },
+        files: travail.pjs.map(pj => ({name: pj.name, url: pj.url})),
+    }))
 }
 
 // pronote : get homework
@@ -47,8 +118,7 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
             let homework = JSON.parse(cacheSearch[0].homework);
             resolve(constructPronoteHomework(homework));
         });
-    }
-    else {
+    } else {
         // get homework from API
         return axios.get(URL)
             .then((response) => {
@@ -83,14 +153,13 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
                     if (error.response.data == "notfound") {
                         // get new token
                         GetToken();
-                    }
-                    else if (error.response.data == "expired") {
+                    } else if (error.response.data == "expired") {
                         // get new token
                         GetToken();
                     }
                 }
 
-                if(error.code) {
+                if (error.code) {
                     // return error code
                     return error.code;
                 }
@@ -161,11 +230,6 @@ function constructPronoteHomework(hw) {
 }
 
 
-
-
-
-
-
 // ed : get homework
 function getEDHomework(dateFrom, dateTo, forceReload) {
     // gather vars
@@ -196,12 +260,11 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
             let homework = JSON.parse(cacheSearch[0].homework);
             resolve(constructEDHomework(homework));
         });
-    }
-    else {
+    } else {
         // get homework from API
 
         var requestOptions = {
-            headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": token },            
+            headers: {"Content-Type": "application/x-www-form-urlencoded", "X-Token": token},
         };
         let body = `data={}`
 
@@ -213,8 +276,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                     if (response.data.data.code == 525) {
                         // get new token
                         GetToken();
-                    }
-                    else {
+                    } else {
                         return new Promise((reject) => {
                             reject({
                                 error: response.data.data.code
@@ -227,7 +289,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                 let homeworksdate = response.data.data;
 
                 var all_homeworks = [];
-                
+
                 console.log("[REQUEST] [HOMEWORK] Requesting content homeworks...")
 
                 Object.keys(homeworksdate).forEach(date => {
@@ -239,8 +301,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                             if (response.data.data.code == 525) {
                                 // get new token
                                 GetToken();
-                            }
-                            else {
+                            } else {
                                 return new Promise((reject) => {
                                     reject({
                                         error: response.data.data.code
@@ -254,8 +315,6 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                         hw_object[date] = homework.matieres
                         all_homeworks.push(hw_object)
                         console.log(`[${date}] ${JSON.stringify(homework.matieres)}`)
-
-
                     })
                 })
 
@@ -290,7 +349,7 @@ function constructEDHomework(hw) {
     // declaring vars
     let homeworkArray = [];
 
-    
+
     const token = localStorage.getItem('token');
     const userID = JSON.parse(localStorage.UserCache).id;
 
@@ -318,8 +377,8 @@ function constructEDHomework(hw) {
             let homeworkDescription = hws.aFaire.contenu;
             /*
                 Traitement des balises HTML (<strong>, <u>)
-            
-            
+
+
             */
 
             if (homeworkDescription.length > 80) {
@@ -366,8 +425,8 @@ function constructEDHomework(hw) {
 
 // tick
 async function tickHomework(id) {
-    switch(localStorage.loginService) {
-        case "pronote":    
+    switch (localStorage.loginService) {
+        case "pronote":
             // return pronote homework
             return tickPronoteHomework(id);
     }

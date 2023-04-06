@@ -2,24 +2,121 @@
 import axios from 'axios';
 
 // vars
-import { app } from '@/main.ts'
+import {app} from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
 import subjectColor from '@/functions/utils/subjectColor.js'
+import {ApiUrl, ApiVersion, Kdecole} from 'kdecole-api';
+import displayToast from "@/functions/utils/displayToast";
 
 let dayRequest;
 
 // main function
 async function getTimetable(date, forceReload) {
     // as only pronote is supported for now, we can just return the pronote timetable
-    switch(localStorage.loginService) {
+    switch (localStorage.loginService) {
         case "pronote":
             // return pronote timetable
             return getPronoteTimetable(date, forceReload);
         case "ecoledirecte":
             return getEDTimetable(date, forceReload);
+        case 'skolengo':
+            return getSkolengoTimetable(date, forceReload)
     }
 }
+
+function getSkolengoTimetable(date, forceReload) {
+
+    const dayRequest = new Date(date);
+
+    // get date as YYYY-MM-DD
+    const dayString = dayRequest.toISOString().split('T')[0];
+
+    const token = localStorage.getItem('token');
+    const ent = localStorage.getItem('ent');
+
+
+    // check if timetable is cached
+    let cacheSearch = JSON.parse(localStorage.getItem('TimetableCache')) || [];
+    cacheSearch = cacheSearch.filter((element) => {
+        return element.date == dayString && element.token == token;
+    });
+    if (cacheSearch.length > 0 && !forceReload) {
+        // return cached timetable in promise
+        return new Promise((resolve) => {
+            let timetable = JSON.parse(cacheSearch[0].timetable);
+            resolve(constructSkolengoTimetable(timetable?.listeSeances || []));
+        });
+    } else {
+        const user = new Kdecole(token, ApiVersion[ent], 0, 'https://cors.api.getpapillon.xyz/' + ApiUrl[ent])
+
+        return user.getCalendrier().then(calendrier => {
+            if (calendrier.cdtOuvert === false) throw new Error("Le calendrier n'est pas ouvert.")
+            const jour = calendrier.listeJourCdt.find(jour => jour.date.toISOString().split('T')[0] === dayString)
+            const timetable = constructSkolengoTimetable(jour?.listeSeances || [])
+
+            let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
+            let cacheElement = {
+                date: dayString,
+                token: token,
+                timetable: JSON.stringify(jour || [])
+            };
+            cache.push(cacheElement);
+            localStorage.setItem('TimetableCache', JSON.stringify(cache));
+
+            return timetable
+
+        }).catch((error) => {
+            return new Promise((reject) => {
+                displayToast.presentError(`${error.message}`, "danger", error)
+                console.error(error)
+                reject({
+                    error: error.code
+                });
+            });
+        })
+    }
+}
+
+
+function constructSkolengoTimetable(seances) {
+        return seances.map(seance => ({
+            course: {
+                id: seance.idSeance,
+                subject: seance.matiere,
+                color: subjectColor.getSubjectColor(seance.matiere),
+                num: null,
+                sameTime: false,
+                actual: false,
+                distance: false,
+                lengthCours: 0,
+            },
+            data: {
+                subject: seance.matiere,
+                teachers: [' '],
+                rooms: [seance.salle],
+                groupNames: null,
+                memo: seance.aRendre.map(ar => ar.type).join(' '),
+                hasMemo: false,
+                linkVirtual: null,
+            },
+            time: {
+                start: new Date(seance.hdeb),
+                end: new Date(seance.hfin)
+            },
+            status: {
+                isCancelled: !seance.flagActif,
+                isExempted: false,
+                isDetention: false,
+                isOuting: false,
+                isTest: false,
+                isCustom: false,
+                status: seance.motifModif
+            }
+        })).sort((a, b) => {
+            return new Date(a.time.start) - new Date(b.time.start);
+        });
+    }
 
 // pronote : get timetable
 function getPronoteTimetable(date, forceReload) {
@@ -47,54 +144,52 @@ function getPronoteTimetable(date, forceReload) {
             let timetable = JSON.parse(cacheSearch[0].timetable);
             resolve(constructPronoteTimetable(timetable));
         });
-    }
-    else {
+    } else {
         // get timetable from API
         return axios.get(URL)
-        .then((response) => {
-            // get timetable
-            let timetable = response.data;
+            .then((response) => {
+                // get timetable
+                let timetable = response.data;
 
-            // construct timetable
-            timetable = constructPronoteTimetable(timetable);
+                // construct timetable
+                timetable = constructPronoteTimetable(timetable);
 
-            // cache response
-            let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
-            let cacheElement = {
-                date: dayString,
-                token: token,
-                timetable: JSON.stringify(response.data)
-            };
-            cache.push(cacheElement);
-            localStorage.setItem('TimetableCache', JSON.stringify(cache));
+                // cache response
+                let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
+                let cacheElement = {
+                    date: dayString,
+                    token: token,
+                    timetable: JSON.stringify(response.data)
+                };
+                cache.push(cacheElement);
+                localStorage.setItem('TimetableCache', JSON.stringify(cache));
 
-            document.dispatchEvent(new CustomEvent('connectionState', { detail: 'connected' }));
+                document.dispatchEvent(new CustomEvent('connectionState', {detail: 'connected'}));
 
-            // return timetable
-            return timetable;
-        })
-        .catch((error) => {
-            if (error.response) {
-                // check if "notfound" or "expired"
-                if (error.response.data == "notfound") {
-                    // get new token
-                    GetToken();
+                // return timetable
+                return timetable;
+            })
+            .catch((error) => {
+                if (error.response) {
+                    // check if "notfound" or "expired"
+                    if (error.response.data == "notfound") {
+                        // get new token
+                        GetToken();
 
-                    document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
+                        document.dispatchEvent(new CustomEvent('connectionState', {detail: 'disconnected'}));
+                    } else if (error.response.data == "expired") {
+                        // get new token
+                        GetToken();
+
+                        document.dispatchEvent(new CustomEvent('connectionState', {detail: 'disconnected'}));
+                    }
                 }
-                else if (error.response.data == "expired") {
-                    // get new token
-                    GetToken();
 
-                    document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
+                if (error.code) {
+                    // return error code
+                    return error.code;
                 }
-            }
-
-            if(error.code) {
-                // return error code
-                return error.code;
-            }
-        });
+            });
     }
 }
 
@@ -142,7 +237,7 @@ function constructPronoteTimetable(timetable) {
 
         if (course.subject.name != "") {
             subjectColor.setSubjectColor(newCourse.data.subject, newCourse.course.color, true);
-        }        
+        }
 
         if (course.memo != null) {
             newCourse.data.hasMemo = true;
@@ -173,9 +268,6 @@ function constructPronoteTimetable(timetable) {
 }
 
 
-
-
-
 // ed : get timetable
 function getEDTimetable(date, forceReload) {
     // gather vars
@@ -203,12 +295,11 @@ function getEDTimetable(date, forceReload) {
             let timetable = JSON.parse(cacheSearch[0].timetable);
             resolve(constructEDTimetable(timetable));
         });
-    }
-    else {
+    } else {
         // get timetable from API
 
         var requestOptions = {
-            headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": token },            
+            headers: {"Content-Type": "application/x-www-form-urlencoded", "X-Token": token},
         };
         let body = `data={
             "dateDebut": "${dayString}",
@@ -216,45 +307,45 @@ function getEDTimetable(date, forceReload) {
             "avecTrous": false
         }`
         return axios.post(URL, body, requestOptions)
-        .then((response) => {
+            .then((response) => {
 
-            // get timetable
-            let timetable = response.data.data;
+                // get timetable
+                let timetable = response.data.data;
 
-            // construct timetable
-            timetable = constructEDTimetable(timetable);
+                // construct timetable
+                timetable = constructEDTimetable(timetable);
 
-            // cache response
-            let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
-            let cacheElement = {
-                date: dayString,
-                token: token,
-                timetable: JSON.stringify(response.data.data)
-            };
-            cache.push(cacheElement);
-            localStorage.setItem('TimetableCache', JSON.stringify(cache));
+                // cache response
+                let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
+                let cacheElement = {
+                    date: dayString,
+                    token: token,
+                    timetable: JSON.stringify(response.data.data)
+                };
+                cache.push(cacheElement);
+                localStorage.setItem('TimetableCache', JSON.stringify(cache));
 
-            // return timetable
-            return timetable;
-        })
-        .catch((error) => {
-            if (error.response) {
-                // check if "notfound" or "expired"
-                if (error.response.data.code == 525) {
-                    // get new token
-                    GetToken();
+                // return timetable
+                return timetable;
+            })
+            .catch((error) => {
+                if (error.response) {
+                    // check if "notfound" or "expired"
+                    if (error.response.data.code == 525) {
+                        // get new token
+                        GetToken();
+                    }
                 }
-            }
 
-            if(error.code) {
-                // return empty timetable in promise
-                return new Promise((reject) => {
-                    reject({
-                        error: error.code
+                if (error.code) {
+                    // return empty timetable in promise
+                    return new Promise((reject) => {
+                        reject({
+                            error: error.code
+                        });
                     });
-                });
-            }
-        });
+                }
+            });
     }
 }
 
