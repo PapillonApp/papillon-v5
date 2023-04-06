@@ -30,7 +30,7 @@ async function getSkolengoHomeWork(dateFrom, dateTo, forceReload) {
     cacheSearch = cacheSearch.filter((element) => {
         return element.dateFrom === dayString;
     });
-    if (cacheSearch.length > 0 && forceReload) {
+    if (cacheSearch.length > 0 && !forceReload) {
         // return cached homework in promise
         return new Promise((resolve) => {
             let homework = JSON.parse(cacheSearch[0].homework);
