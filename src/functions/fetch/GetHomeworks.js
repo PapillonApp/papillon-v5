@@ -66,23 +66,11 @@ async function getSkolengoHomeWork(dateFrom, dateTo, forceReload) {
 }
 
 function constructSkolengoHomework(homework) {
-    const stringToColour = str => {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            hash = str.charCodeAt(i) + ((hash << 5) - hash);
-        }
-        let colour = '#';
-        for (let i = 0; i < 3; i++) {
-            let value = (hash >> (i * 8)) & 0xFF;
-            colour += ('00' + value.toString(16)).substr(-2);
-        }
-        return colour;
-    }
     return homework.map((jour) => jour.listTravail.map(travail => ({
         data: {
             id: travail.uid,
             date: travail.date,
-            color: subjectColor.getSubjectColor(travail.matiere, stringToColour(travail.matiere)),
+            color: subjectColor.getSubjectColor(travail.matiere),
             done: travail.flagRealise,
         },
         homework: {
