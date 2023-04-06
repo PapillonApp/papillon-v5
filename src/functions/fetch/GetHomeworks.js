@@ -30,7 +30,7 @@ async function getSkolengoHomeWork(dateFrom, dateTo, forceReload) {
     cacheSearch = cacheSearch.filter((element) => {
         return element.dateFrom === dayString;
     });
-    if (cacheSearch.length > 0 && !forceReload) {
+    if (cacheSearch.length > 0 && forceReload) {
         // return cached homework in promise
         return new Promise((resolve) => {
             let homework = JSON.parse(cacheSearch[0].homework);
@@ -46,13 +46,21 @@ async function getSkolengoHomeWork(dateFrom, dateTo, forceReload) {
             const taf = await etudiant.getTravailAFaire(undefined, new Date(dateFrom))
             if (!taf.tafOuvert) throw new Error("Service TAF fermé")
 
-            const all_homeworks = constructSkolengoHomework(taf.listeTravaux)
+            const homeworks = (
+                await Promise.all(
+                    taf.listeTravaux.map(jour => jour.listTravail).flat()
+                        .map(travail => etudiant.getContenuActivite(travail.uidSeance, travail.uid).catch(console.error))
+                )).filter(t => t !== undefined)
+
+            if (!homeworks.length) throw new Error("Aucun travail à faire n'a été trouvé.")
+
+            const all_homeworks = constructSkolengoHomework(homeworks)
 
             let cache = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
             let cacheElement = {
                 dateFrom: dayString,
                 token: token,
-                homework: JSON.stringify(taf.listeTravaux)
+                homework: JSON.stringify(homeworks)
             };
             cache.push(cacheElement);
             localStorage.setItem('HomeworkCache', JSON.stringify(cache));
@@ -66,7 +74,7 @@ async function getSkolengoHomeWork(dateFrom, dateTo, forceReload) {
 }
 
 function constructSkolengoHomework(homework) {
-    return homework.map((jour) => jour.listTravail.map(travail => ({
+    return homework.map(travail => ({
         data: {
             id: travail.uid,
             date: travail.date,
@@ -75,11 +83,11 @@ function constructSkolengoHomework(homework) {
         },
         homework: {
             subject: travail.matiere,
-            content: travail.titre,
+            content: travail.codeHTML.replace(/style=/g, 'nostyle='),
             shortContent: travail.type,
         },
-        files: [],
-    }))).flat()
+        files: travail.pjs.map(pj => ({name: pj.name, url: pj.url})),
+    }))
 }
 
 // pronote : get homework

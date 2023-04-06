@@ -106,23 +106,29 @@
 		];
 		if(localStorage.getItem("loginService") === "skolengo") {
 			appPages.push({
-				title: 'Emploi du temps',
-				url: '/timetable',
-				icon: "calendar_month",
-				disabled: false,
-			},
-				{
-					title: 'Travail à faire',
-					url: '/homework',
-					icon: "auto_stories",
-					disabled: false,
-				},
-			{
-				title: 'Paramètres',
-				url: '/settings',
-				icon: "settings",
-				disabled: false
-			})
+						title: 'Emploi du temps',
+						url: '/timetable',
+						icon: "calendar_month",
+						disabled: false,
+					},
+					{
+						title: 'Travail à faire',
+						url: '/homework',
+						icon: "auto_stories",
+						disabled: false,
+					},
+					{
+						title: 'Actualités',
+						url: '/news',
+						icon: "newspaper",
+						disabled: false,
+					},
+					{
+						title: 'Paramètres',
+						url: '/settings',
+						icon: "settings",
+						disabled: false
+					})
 		}
 		if(localStorage.getItem("loginService") === "pronote") {
 			appPages.push({
