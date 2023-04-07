@@ -711,7 +711,7 @@ function constructEDGrades(grades) {
 	let classAverage = parseFloat(period.ensembleMatieres.moyenneClasse.replace(",", "."));
 	let classMin = parseFloat(period.ensembleMatieres.moyenneMin.replace(",", "."));
 	let classMax = parseFloat(period.ensembleMatieres.moyenneMax.replace(",", "."));
-	let averagesCalculate = [moment(period.ensembleMatieres.dateCalcul).format("DD/MM/YYYY"), moment(period.ensembleMatieres.dateCalcul).format("HH:MM")]
+	let averagesCalculate = [moment(period.ensembleMatieres.dateCalcul).format("DD/MM/YYYY"), period.ensembleMatieres.dateCalcul.split(' ')[1] ]//moment(period.ensembleMatieres.dateCalcul).format("HH:MM")]
 	/*
 	markArray.forEach(subject => {
 		console.log(subject.class)
