@@ -232,11 +232,11 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                 
                 console.log("[REQUEST] [HOMEWORK] Requesting content homeworks...")
 
-                Object.keys(homeworksdate).forEach(date => {
+                await Object.keys(homeworksdate).forEach(async date => {
 
                     let URL2 = `${EDAPI}/Eleves/${userID}/cahierdetexte/${date}.awp?verbe=get`;
 
-                    axios.post(URL2, body, requestOptions).then(response2 => {
+                    await axios.post(URL2, body, requestOptions).then(response2 => {
                         if (response.data.data.code) {
                             if (response.data.data.code == 525) {
                                 // get new token
@@ -252,9 +252,8 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                         }
 
                         let homework = response2.data.data;
-                        let hw_object = {};
-                        hw_object[date] = homework.matieres
-                        all_homeworks.push(hw_object)
+                        all_homeworks[date] = []
+                        all_homeworks[date].push(homework.matieres)
                         console.log(`[${date}] ${JSON.stringify(homework.matieres)}`)
 
 
@@ -262,7 +261,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                 })
 
                 // construct homework
-                all_homeworks = await constructEDHomework(all_homeworks);
+                all_homeworks = constructEDHomework(all_homeworks);
 
 
                 // cache response
