@@ -83,6 +83,8 @@
 				selectedGrade: [],
 				selectedGradeSet: false,
 				out_of_20: localStorage.getItem('tweakGrades20') == "true" ? true : false,
+				loginService: localStorage.getItem("loginService"),
+				calcAverage: []
 			}
 		},
 		methods: {
@@ -370,6 +372,7 @@
 				this.isLoading = false;
 
 				this.classAverages = data.averages.class;
+				if(localStorage.getItem("loginService") === "ecoledirecte") this.calcAverage = data.averages.calculate
 			});
 
 			this.getPeriods();
@@ -380,7 +383,7 @@
 					this.fullGrades = this.editMarks(data.marks);
 					this.averages = data.averages;
 					this.isLoading = false;
-
+					if(localStorage.getItem("loginService") === "ecoledirecte") this.calcAverage = data.averages.calculate
 					this.classAverages = data.averages.class;
 				});
 			});
@@ -393,7 +396,7 @@
 					this.fullGrades = this.editMarks(data.marks);
 					this.averages = data.averages;
 					this.isLoading = false;
-
+					if(localStorage.getItem("loginService") === "ecoledirecte") this.calcAverage = data.averages.calculate
 					this.classAverages = data.averages.class;
 				});
 
@@ -470,6 +473,15 @@
 			</div> -->
 
 			<transition-group name="ElemAnim" tag="div">
+				<ion-item v-if="loginService === 'ecoledirecte'">
+					<div class="alphaMessage">
+						<span class="material-symbols-outlined mdls icon">sms_failed</span>
+						<div class="alphaText">
+							<h2>Les moyennes affichées correspondent à celles calculées par EcoleDirecte.</h2>
+							<p class="description">Selon les paramètres définis par votre établissement, les moyennes peuvent être calculées à l'ajout d'une notes ou à intervale régulier.<br>Papillon ne saurait être tenu responsable de l'affichage d'une moyenne fausse.</p>
+						</div>
+					</div>				
+				</ion-item>
 				<ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index"
 					:style="`--backgroundTheme: ${ subject.color };`">
 					<div class="subject-name" @click="openAverageModal(subject)">
@@ -598,6 +610,9 @@
 						</IonLabel>
 					</IonItem>
 				</div>
+				<ion-item v-id="loginService === 'ecoledirecte'">
+					<p>Moyennes calculées le {{ calcAverage[0] }} à {{ calcAverage[1] }}</p>
+				</ion-item>
 			</IonList>
 
 			<IonModal ref="averageModal" :keep-contents-mounted="true" :initial-breakpoint="0.5"
@@ -677,6 +692,49 @@
 </template>
 
 <style scoped>
+	.alphaMessage {
+		background: var(--ion-color-warning);
+		margin: 20px;
+		border-radius: 10px;
+
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		padding: 20px;
+		gap: 20px;
+
+		color: #fff;
+	}
+
+	.alphaMessage * {
+		margin: 0;
+	}
+
+	.alphaMessage .icon {
+		height: 44px;
+		width: 44px;
+		font-size: 30px;
+		overflow: visible !important;
+
+		color: #fff;
+		opacity: 1 !important;
+	}
+
+	.alphaMessage .alphaText {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
+	.alphaMessage .alphaText h2 {
+		font-size: 18px;
+	}
+
+	.alphaMessage .alphaText .description {
+		font-size: 15px;
+		opacity: 0.7;
+	}
 	.emoji {
 		font-size: 1.3rem;
 	}

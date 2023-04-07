@@ -6,7 +6,7 @@ import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
 import subjectColor from '@/functions/utils/subjectColor.js'
-
+import * as moment from "moment";
 // funcs
 function isFloat(n){
 	return Number(n) === n && n % 1 !== 0;
@@ -154,7 +154,7 @@ function determineSignificant(significant, service) {
 		if(significant.nonSignificatif) {
 			result.significant = false;
 		}
-		if(significant.valeurisee && significant.enLettre) {
+		if(significant.enLettre) {
 			result.significant = false;
 			result.significantReason =  significant.valeur;
 		}
@@ -578,7 +578,6 @@ function constructEDGrades(grades) {
 	marks.sort((a, b) => {
 		return new Date(b.date) - new Date(a.date);
 	});
-
 	matieres.forEach(matiere => {
 		let subject = {
 			data: matiere,
@@ -588,7 +587,9 @@ function constructEDGrades(grades) {
 			grouped: matiere.groupeMatiere,
 			class: {},
 			color: subjectColor.getSubjectColor(matiere.discipline, subjectColor.getRandomColor()),
-			marks: []
+			marks: [],
+			average: parseFloat(matiere.moyenne.replace(",", ".")),
+			significant: true
 		}
 		markArray.push(subject);
 	})
@@ -602,6 +603,7 @@ function constructEDGrades(grades) {
 				subject: mark.libelle,
 				date: mark.date,
 				description: mark.devoir || "Pas d'intitulé",
+				significant: true
 			},
 			class: { max: mark.maxClasse, min: mark.minClasse, average: mark.moyenneClasse },
 			grade: { value: parseFloat(mark.valeur), coefficient: parseFloat(mark.coef), average: parseFloat(mark.moyenneClasse), min: parseFloat(mark.minClasse), max: parseFloat(mark.maxClasse), out_of: parseFloat(mark.noteSur) }
@@ -666,16 +668,16 @@ function constructEDGrades(grades) {
 		// check if subject exists		
 		if (!subject.grouped) {
 			
-			if(subject.data.moyenne.length > 1) subject.average = parseFloat(subject.data.moyenne)
+			if(subject.data.moyenne.length > 1) subject.average = parseFloat(subject.data.moyenne.replace(",", "."))
 			else subject.average = 0;
 
-			if(subject.data.moyenneClasse.length > 1) subject.class.average = parseFloat(subject.data.moyenneClasse)
+			if(subject.data.moyenneClasse.length > 1) subject.class.average = parseFloat(subject.data.moyenneClasse.replace(",", "."))
 			else subject.class.average = 0;
 
-			if(subject.data.moyenneMin.length > 1) subject.class.min = parseFloat(subject.data.moyenneMin)
+			if(subject.data.moyenneMin.length > 1) subject.class.min = parseFloat(subject.data.moyenneMin.replace(",", "."))
 			else subject.class.min = 0;
 
-			if(subject.data.moyenneMax.length > 1) subject.class.max = parseFloat(subject.data.moyenneMax)
+			if(subject.data.moyenneMax.length > 1) subject.class.max = parseFloat(subject.data.moyenneMax.replace(",", "."))
 			else subject.class.max = 0;
 
 		} else {
@@ -692,20 +694,25 @@ function constructEDGrades(grades) {
 				classMin += mark.grade.min * coef;
 				classMax += mark.grade.max * coef;
 			});
-
+			/*
 			subject.average = parseFloat((studentAverage / subject.marks.reduce((a, b) => a + (b.grade.coefficient * b.grade.out_of), 0) * 20).toFixed(2));
 			subject.class.average = parseFloat((classAverage / subject.marks.reduce((a, b) => a + (b.grade.coefficient * b.grade.out_of), 0) * 20).toFixed(2));
 			subject.class.min = parseFloat((classMin / subject.marks.reduce((a, b) => a + (b.grade.coefficient * b.grade.out_of), 0) * 20).toFixed(2));
 			subject.class.max = parseFloat((classMax / subject.marks.reduce((a, b) => a + (b.grade.coefficient * b.grade.out_of), 0) * 20).toFixed(2));
+			*/
 		}
 	});
 
 	// calculate averages for each subject in markArray
-	let studentAverage = 0;
-	let classAverage = 0;
-	let classMin = 0;
-	let classMax = 0;
-
+	let period = grades.periodes.filter(p => p.cloture === false)
+	period = period[0]
+	
+	let studentAverage = parseFloat(period.ensembleMatieres.moyenneGenerale.replace(",", "."));
+	let classAverage = parseFloat(period.ensembleMatieres.moyenneClasse.replace(",", "."));
+	let classMin = parseFloat(period.ensembleMatieres.moyenneMin.replace(",", "."));
+	let classMax = parseFloat(period.ensembleMatieres.moyenneMax.replace(",", "."));
+	let averagesCalculate = [moment(period.ensembleMatieres.dateCalcul).format("DD/MM/YYYY"), moment(period.ensembleMatieres.dateCalcul).format("HH:MM")]
+	/*
 	markArray.forEach(subject => {
 		console.log(subject.class)
 		studentAverage += subject.average;
@@ -713,7 +720,7 @@ function constructEDGrades(grades) {
 		classMin += subject.class.min;
 		classMax += subject.class.max;
 	});
-
+	
 	studentAverage /= markArray.length;
 	classAverage /= markArray.length;
 	classMin /= markArray.length;
@@ -726,19 +733,19 @@ function constructEDGrades(grades) {
 	if (grades.class_overall_average != -1 && grades.class_overall_average != undefined) {
 		classAverage = grades.class_overall_average;
 	}
-
+*/
 	let avgs = {
 		average: studentAverage,
 		class: {
 			average: classAverage,
 			min: classMin,
 			max: classMax
-		}
+		},
+		calculate: averagesCalculate
 	}
 
 	// order all subjects by first mark date
 	markArray.sort((a, b) => {
-		console.log(a)
 		if(a.marks.length == 0) return;
 		if(b.marks.length == 0) return;
 		return new Date(a.marks[0].date) - new Date(b.marks[0].date);
@@ -749,7 +756,6 @@ function constructEDGrades(grades) {
 		marks: markArray,
 		averages: avgs
 	}
-	console.log(finalArray)
 	
 	return finalArray;
 }
