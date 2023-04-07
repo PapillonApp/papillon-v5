@@ -85,10 +85,12 @@
 				var requestOptions = {
 					headers: { "Content-Type": "application/x-www-form-urlencoded", "x-token": "" },
 				};
+
+        // encodeURIComponent because Ecoledirect needs urlencode on any field !
 				var body = `data={
 						"uuid": "",
-						"identifiant": "${username}",
-						"motdepasse": "${password}",
+						"identifiant": "${encodeURIComponent(username)}",
+						"motdepasse": "${encodeURIComponent(password)}",
 						"isReLogin": false
 					}`
 
@@ -271,7 +273,7 @@
 		padding: 20px;
 		gap: 20px;
 
-		color: var(--ion-color-light);
+		color: #fff;
 	}
 
 	.alphaMessage * {
@@ -283,6 +285,9 @@
 		width: 44px;
 		font-size: 30px;
 		overflow: visible !important;
+
+		color: #fff;
+		opacity: 1 !important;
 	}
 
 	.alphaMessage .alphaText {

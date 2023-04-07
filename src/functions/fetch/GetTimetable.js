@@ -91,12 +91,8 @@ function getPronoteTimetable(date, forceReload) {
             }
 
             if(error.code) {
-                // return empty timetable in promise
-                return new Promise((reject) => {
-                    reject({
-                        error: error.code
-                    });
-                });
+                // return error code
+                return error.code;
             }
         });
     }

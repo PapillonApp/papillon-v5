@@ -248,7 +248,11 @@
 			sharedCourse.name = this.getStringToAsciiArray(sharedCourse.name).join('-');
 			sharedCourse.teachers = this.getStringToAsciiArray(sharedCourse.teachers).join('-');
 			sharedCourse.rooms = this.getStringToAsciiArray(sharedCourse.rooms).join('-');
-			sharedCourse.status = this.getStringToAsciiArray(sharedCourse.start).join('-');
+			if (sharedCourse.status != null) {
+				sharedCourse.status = this.getStringToAsciiArray(sharedCourse.status).join('-');
+			} else {
+				sharedCourse.status = this.getStringToAsciiArray("null").join('-');
+			}
 
 			let urlElems = "";
 			urlElems += firstName + "$"; // first name
@@ -816,7 +820,7 @@
 						<ion-item class="info-item">
 							<span class="material-symbols-outlined mdls" slot="start">face</span>
 							<ion-label>
-								<p>Professeur.e</p>
+								<p>Professeur</p>
 								<h2>{{selectedCourse.teachers}}</h2>
 							</ion-label>
 						</ion-item>

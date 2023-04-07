@@ -20,12 +20,17 @@
 		IonRefresherContent,
 		IonSkeletonText,
 		alertController,
-		IonNavLink
+		IonNavLink,
+		IonCheckbox
 	} from '@ionic/vue';
 
 	import { NotificationBadge } from 'capacitor-notification-badge';
 
+	import hapticsController from '@/functions/utils/hapticsController.js';
+
 	import { StatusBar, Style } from '@capacitor/status-bar';
+
+	import { tickHomework } from "@/functions/fetch/GetHomeworks.js";
 
 	import { Network } from '@capacitor/network';
 
@@ -39,6 +44,9 @@
 
 	// recap
 	import GetRecap from "@/functions/fetch/GetRecap.js";
+
+	import displayToast from '@/functions/utils/displayToast.js';
+	import { checkmark, alertCircle } from 'ionicons/icons';
 
 	export default defineComponent({
 		name: 'FolderPage',
@@ -61,7 +69,8 @@
 			IonItemGroup,
 			IonRefresherContent,
 			IonSkeletonText,
-			IonNavLink
+			IonNavLink,
+			IonCheckbox
 		},
 		data() {
 			return {
@@ -96,6 +105,7 @@
 				InfoView: InfoView,
 				MarkView: MarkView,
 				HomeworkItemView: HomeworkItemView,
+				serverError: false,
 			}
 		},
 		methods: {
@@ -293,6 +303,7 @@
 				this.gradesLoading = true;
 				this.newsLoading = true;
 				this.allLoaded = false;
+				this.serverError = false;
 
 				GetRecap(force).then((recap) => {
 					// loaded
@@ -324,6 +335,15 @@
 					// news
 					this.news = recap.news;
 					this.newsLoading = false;
+				})
+				.catch((err) => {
+					console.error("[HOMEPAGE] : " + err);
+
+					if(err[0] == "ERR_NETWORK") {
+						this.showLoading = false;
+						this.allLoaded = false;
+						this.serverError = true;
+					}
 				});
 			},
 			formatHomeworks(homeworks) {
@@ -374,6 +394,43 @@
 					}
 				}
 			},
+			changeDone(hw) {
+                // microinteractions
+                hapticsController.notification('success');
+
+                // vars
+                let homeworkID = hw.data.id;
+                let dateSet = new Date(hw.data.date)
+
+				// add one day to date
+				dateSet.setDate(dateSet.getDate() + 1);
+
+                // new send request
+                if(!this.dontRetryCheck) {
+                    tickHomework([homeworkID, dateSet]).then((response) => {
+                        setTimeout(() => {
+                            this.dontRetryCheck = true;
+
+                            setTimeout(() => {
+                                this.dontRetryCheck = false;
+                            }, 200);
+                        }, 200);
+                    })
+					.catch((error) => {
+                        // refresh
+						this.getRecap(true);
+
+                        displayToast.presentToastFull(
+                            "Impossible de marquer ce devoir comme fait",
+                            "Une erreur est survenue lors de la requête.",
+                            "danger",
+                            alertCircle,
+                            true,
+                            error
+                         )
+                    });
+                }
+            },
 			checkUndone() {
 				// get number of undone homeworks (for badge)
 				let homeworkDays = this.homeworks;
@@ -632,6 +689,11 @@
 					<h2>Chargement de vos données</h2>
 					<p>Nous sommes en train de récupérer vos données depuis votre service scolaire.</p>
 				</div>
+				<div class="NoCours" v-else-if="serverError">
+					<h1>⚠️</h1>
+					<h2>Impossible de se connecter au serveur Papillon</h2>
+					<p>Quelque chose s'est mal passé. Veuillez réessayer ultérieurement.</p>
+				</div>
 			</Transition>
 
 			<div id="components" ref="components">
@@ -667,7 +729,7 @@
 				</Transition>
 
 				<Transition name="ElemAnim">
-					<ion-list v-if="allLoaded && !hwloading" id="comp-hw" ref="comp-hw" lines="none" inset="true">
+					<ion-list v-if="allLoaded && !hwloading" lines="none" id="comp-hw" ref="comp-hw" inset="true">
 							<ion-list-header v-if="allLoaded && !hwloading">
 								<ion-label>
 									<h2 style="font-size: 20px;">Travail à faire</h2>
@@ -681,25 +743,18 @@
 									<div class="divider"></div>
 								</div>
 
-								<IonNavLink v-for="homework in day.homeworks" :key="homework.id" router-direction="forward" :component="HomeworkItemView" :componentProps="{urlHw: encodeURIComponent(JSON.stringify(homework))}">
-								<ion-item button>
-									<ion-label :style="`--courseColor: ${homework.data.color};`">
-										<p><span class="courseColor"></span> {{ homework.homework.subject }}</p>
-										<h2>{{ homework.homework.content }}</h2>
-									</ion-label>
+								<ion-item v-for="homework in day.homeworks" :key="homework.id" button>
+									<div slot="start">
+										<IonCheckbox :checked="homework.data.done" @click="changeDone(homework)"></IonCheckbox>
+									</div>
 
-									<ion-chip slot="end" v-if="homework.data.done" color="success">
-										<span class="material-symbols-outlined mdls">check_circle</span>
-										Fait
-									</ion-chip>
-									<ion-chip slot="end" v-else color="medium">
-										<span class="material-symbols-outlined mdls">schedule</span>
-										<p v-if="homework.data.timeLeft > 1">{{homework.data.timeLeft}} jours</p>
-										<p v-else-if="homework.data.timeLeft > 0">1 jour</p>
-										<p v-else-if="homework.data.timeLeft < 0">Aujourd'hui</p>
-										<p v-else>Demain</p>
-									</ion-chip>
-								</ion-item></IonNavLink>
+									<IonNavLink class="navlink" router-direction="forward" :component="HomeworkItemView" :componentProps="{urlHw: encodeURIComponent(JSON.stringify(homework))}">
+										<ion-label class="ion-text-wrap" :style="`--courseColor: ${homework.data.color};`">
+											<p><span class="courseColor"></span> {{ homework.homework.subject }}</p>
+											<h2>{{ homework.homework.shortContent }}</h2>
+										</ion-label>
+									</IonNavLink>
+								</ion-item>
 							</ion-item-group></div>
 
 							<ion-item v-if="homeworks.length == 0 && !hwLoading" lines="none">
@@ -924,11 +979,11 @@
 	.homepage_divider {
 		display: flex;
 		align-items: center;
-		margin: 10px 18px;
+		margin: 2px 18px;
 	}
 
 	.md .homepage_divider {
-		margin: 10px 16px;
+		margin: 0px 16px;
 	}
 
 	.ios .homepage_divider {
@@ -1067,5 +1122,19 @@
 		#components ion-list {
 			margin: 0;
 		}
+	}
+
+	.navlink {
+		width: 100%;
+		
+	}
+
+	.navlink ion-label {
+		width: 100%;
+		padding: 10px 0px !important;
+	}
+
+	.navlink ion-label p {
+		margin-bottom: 5px;
 	}
 </style>

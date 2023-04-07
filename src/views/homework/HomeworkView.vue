@@ -13,6 +13,7 @@
     import HomeworkItemView from './HomeworkItemView.vue';
 
     import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
+    import { tickHomework } from "@/functions/fetch/GetHomeworks.js";
     import GetToken from "@/functions/login/GetToken.js";
 
     import displayToast from '@/functions/utils/displayToast.js';
@@ -189,108 +190,57 @@
                 // microinteractions
                 hapticsController.notification('success');
 
-                // send request
+                // vars
+                let homeworkID = hw.data.id;
+                let dateSet = new Date(this.$rn)
+
+                let checkboxID = `checkbox_${hw.data.id}`;
+                let checkbox = document.getElementById(checkboxID);
+
+                // new send request
                 if(!this.dontRetryCheck) {
-                    let homeworkID = hw.data.id;
+                    tickHomework([homeworkID, dateSet]).then((response) => {
+                        setTimeout(() => {
+                            this.dontRetryCheck = true;
 
-                    const API = this.$api;
-                    let token = localStorage.getItem('token');
-
-                    let dayRequest = new Date(this.$rn);
-                    let dayString = dayRequest.toISOString().split('T')[0];
-
-                    let URL = `${API}/homework/changeState`;
-
-                    // post request with token, homeworkId, dateFrom and dateTo
-                    axios.post(URL, {
-                        token: token,
-                        homeworkId: homeworkID,
-                        dateFrom: dayString,
-                        dateTo: dayString
-                    }).then(() => {
-                        let checkboxID = `checkbox_${hw.data.id}`;
-                        let checkbox = document.getElementById(checkboxID);
-
-                        if(checkbox.checked) {
-                            displayToast.presentToastFull(
-                                "Devoir marqué comme fait",
-                                `Votre devoir de ${hw.homework.subject} a été marqué comme fait.`,
-                                "success",
-                                checkmark
-                            )
-                        }
-                        else {
-                            displayToast.presentToastFull(
-                                "Devoir marqué comme non fait",
-                                `Votre devoir de ${hw.homework.subject} a été marqué comme non fait.`,
-                                "success",
-                                checkmark
-                            )
-                        }
-
+                            setTimeout(() => {
+                                this.dontRetryCheck = false;
+                            }, 200);
+                        }, 200);
+                        
                         // reset homework cache
                         localStorage.removeItem('HomeworkCache');
 
                         // reload homeworks
                         this.getHomeworks();
+
                     })
                     .catch((error) => {
-                        let response = error.response.data;
-
-                        // untick checkbox
-                        let checkboxID = `checkbox_${hw.data.id}`;
-                        let checkbox = document.getElementById(checkboxID);
-
+                        // revert change
                         setTimeout(() => {
                             this.dontRetryCheck = true;
                             checkbox.checked = !checkbox.checked;
 
                             setTimeout(() => {
                                 this.dontRetryCheck = false;
-                            }, 100);
+                            }, 200);
                         }, 200);
 
-                        if(response == "expired" || response == "notfound") {
-                            displayToast.presentToastFull(
-                                "Impossible de marquer ce devoir comme fait",
-                                "Le token à expiré",
-                                "danger",
-                                alertCircle,
-                            )
+                        
 
-                            GetToken();
-                        }
-                        else if(response.status == "not found") {
-                            displayToast.presentToastFull(
-                                "Impossible de marquer ce devoir comme fait",
-                                "Nous n'avons pas pu trouver ce devoir sur nos serveurs.",
-                                "danger",
-                                alertCircle,
-                                true,
-                                response.error
-                            )
-                        }
-                        else if(response.status == "error") {
-                            displayToast.presentToastFull(
-                                "Impossible de marquer ce devoir comme fait",
-                                "Une erreur est survenue lors de la requête.",
-                                "danger",
-                                alertCircle,
-                                true,
-                                response.error
-                            )
-                        }
-                        else {
-                            displayToast.presentToastFull(
-                                "Impossible de marquer ce devoir comme fait",
-                                "Erreur inconnue",
-                                "danger",
-                                alertCircle,
-                                true,
-                                error
-                            )
-                        }
+                        displayToast.presentToastFull(
+                            "Impossible de marquer ce devoir comme fait",
+                            "Une erreur est survenue lors de la requête.",
+                            "danger",
+                            alertCircle,
+                            true,
+                            error
+                         )
                     });
+                }
+                else {
+                    // revert change
+                    checkbox.checked = !checkbox.checked;
                 }
             }
 		},

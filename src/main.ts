@@ -44,8 +44,4 @@ router.isReady().then(() => {
 
 // Global vars in Vue
 app.config.globalProperties.$rn = new Date;
-if (localStorage.getItem('customApiUrl') == null) {
-	app.config.globalProperties.$api = "https://api.getpapillon.xyz";
-} else {
-	app.config.globalProperties.$api = localStorage.getItem('customApiUrl');
-}
+app.config.globalProperties.$api = localStorage.getItem('customApiUrl') || "https://api.getpapillon.xyz";
