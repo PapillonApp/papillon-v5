@@ -606,7 +606,7 @@ function constructEDGrades(grades) {
 				significant: true
 			},
 			class: { max: mark.maxClasse, min: mark.minClasse, average: mark.moyenneClasse },
-			grade: { value: parseFloat(mark.valeur), coefficient: parseFloat(mark.coef), average: parseFloat(mark.moyenneClasse), min: parseFloat(mark.minClasse), max: parseFloat(mark.maxClasse), out_of: parseFloat(mark.noteSur) }
+			grade: { value: parseFloat(mark.valeur.replace(",", ".")), coefficient: parseFloat(mark.coef), average: parseFloat(mark.moyenneClasse), min: parseFloat(mark.minClasse), max: parseFloat(mark.maxClasse), out_of: parseFloat(mark.noteSur) }
 		}
 
 		// determine if mark is significant
