@@ -6,7 +6,7 @@ import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
 import subjectColor from '@/functions/utils/subjectColor.js'
-
+import * as moment from "moment";
 // funcs
 function isFloat(n){
 	return Number(n) === n && n % 1 !== 0;
@@ -711,6 +711,7 @@ function constructEDGrades(grades) {
 	let classAverage = parseFloat(period.ensembleMatieres.moyenneClasse.replace(",", "."));
 	let classMin = parseFloat(period.ensembleMatieres.moyenneMin.replace(",", "."));
 	let classMax = parseFloat(period.ensembleMatieres.moyenneMax.replace(",", "."));
+	let averagesCalculate = [moment(period.ensembleMatieres.dateCalcul).format("DD/MM/YYYY"), moment(period.ensembleMatieres.dateCalcul).format("HH:MM")]
 	/*
 	markArray.forEach(subject => {
 		console.log(subject.class)
@@ -739,7 +740,8 @@ function constructEDGrades(grades) {
 			average: classAverage,
 			min: classMin,
 			max: classMax
-		}
+		},
+		calculate: averagesCalculate
 	}
 
 	// order all subjects by first mark date

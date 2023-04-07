@@ -83,7 +83,8 @@
 				selectedGrade: [],
 				selectedGradeSet: false,
 				out_of_20: localStorage.getItem('tweakGrades20') == "true" ? true : false,
-				loginService: localStorage.getItem("loginService")
+				loginService: localStorage.getItem("loginService"),
+				calcAverage: []
 			}
 		},
 		methods: {
@@ -371,6 +372,7 @@
 				this.isLoading = false;
 
 				this.classAverages = data.averages.class;
+				if(localStorage.getItem("loginService") === "ecoledirecte") this.calcAverage = data.averages.calculate
 			});
 
 			this.getPeriods();
@@ -381,7 +383,7 @@
 					this.fullGrades = this.editMarks(data.marks);
 					this.averages = data.averages;
 					this.isLoading = false;
-
+					if(localStorage.getItem("loginService") === "ecoledirecte") this.calcAverage = data.averages.calculate
 					this.classAverages = data.averages.class;
 				});
 			});
@@ -394,7 +396,7 @@
 					this.fullGrades = this.editMarks(data.marks);
 					this.averages = data.averages;
 					this.isLoading = false;
-
+					if(localStorage.getItem("loginService") === "ecoledirecte") this.calcAverage = data.averages.calculate
 					this.classAverages = data.averages.class;
 				});
 
@@ -478,7 +480,7 @@
 							<h2>Les moyennes affichées correspondent à celles calculées par EcoleDirecte.</h2>
 							<p class="description">Selon les paramètres définis par votre établissement, les moyennes peuvent être calculées à l'ajout d'une notes ou à intervale régulier.<br>Papillon ne saurait être tenu responsable de l'affichage d'une moyenne fausse.</p>
 						</div>
-					</div>
+					</div>				
 				</ion-item>
 				<ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index"
 					:style="`--backgroundTheme: ${ subject.color };`">
@@ -608,6 +610,9 @@
 						</IonLabel>
 					</IonItem>
 				</div>
+				<ion-item v-id="loginService === 'ecoledirecte'">
+					<p>Moyennes calculées le {{ calcAverage[0] }} à {{ calcAverage[1] }}</p>
+				</ion-item>
 			</IonList>
 
 			<IonModal ref="averageModal" :keep-contents-mounted="true" :initial-breakpoint="0.5"
