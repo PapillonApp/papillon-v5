@@ -153,8 +153,9 @@ function determineSignificant(significant, service) {
 		if(significant.nonSignificatif) {
 			result.significant = false;
 		}
-		if(significant.valeurisee) {
-			//result.significant = false;
+		if(significant.valeurisee && significant.enLettre) {
+			result.significant = false;
+			result.significantReason =  significant.valeur;
 		}
 	}
 
