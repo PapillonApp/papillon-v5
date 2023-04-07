@@ -232,34 +232,38 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                 
                 console.log("[REQUEST] [HOMEWORK] Requesting content homeworks...")
 
-                await Object.keys(homeworksdate).forEach(async date => {
+                async function requestContent() {
+                    return new Promise((resolve, reject) => {
+                        Object.keys(homeworksdate).forEach(async date => {
 
-                    let URL2 = `${EDAPI}/Eleves/${userID}/cahierdetexte/${date}.awp?verbe=get`;
-
-                    await axios.post(URL2, body, requestOptions).then(response2 => {
-                        if (response.data.data.code) {
-                            if (response.data.data.code == 525) {
-                                // get new token
-                                GetToken();
-                            }
-                            else {
-                                return new Promise((reject) => {
-                                    reject({
-                                        error: response.data.data.code
-                                    });
-                                });
-                            }
-                        }
-
-                        let homework = response2.data.data;
-                        all_homeworks[date] = []
-                        all_homeworks[date].push(homework.matieres)
-                        console.log(`[${date}] ${JSON.stringify(homework.matieres)}`)
-
-
+                            let URL2 = `${EDAPI}/Eleves/${userID}/cahierdetexte/${date}.awp?verbe=get`;
+        
+                            await axios.post(URL2, body, requestOptions).then(response2 => {
+                                if (response.data.data.code) {
+                                    if (response.data.data.code == 525) {
+                                        // get new token
+                                        GetToken();
+                                    }
+                                    else {
+                                        return new Promise((reject) => {
+                                            reject({
+                                                error: response.data.data.code
+                                            });
+                                        });
+                                    }
+                                }
+        
+                                let homework = response2.data.data;
+                                all_homeworks[date] = []
+                                all_homeworks[date].push(homework.matieres)
+                                console.log(`[${date}] ${JSON.stringify(homework.matieres)}`)
+        
+                                resolve(all_homeworks)
+                            })
+                        })
                     })
-                })
-
+                }
+                all_homeworks = await requestContent()
                 // construct homework
                 all_homeworks = constructEDHomework(all_homeworks);
 
