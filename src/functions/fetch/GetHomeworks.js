@@ -254,8 +254,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                                 }
         
                                 let homework = response2.data.data;
-                                all_homeworks[date] = []
-                                all_homeworks[date].push(homework.matieres)
+                                all_homeworks[date] = homework.matieres;
                                 console.log(`[${date}] ${JSON.stringify(homework.matieres)}`)
         
                                 resolve(all_homeworks)
@@ -290,11 +289,8 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
 function constructEDHomework(hw) {
 
     console.log("Building homeworks...")
-    console.log(hw)
-
     // declaring vars
     let homeworkArray = [];
-
     
     const token = localStorage.getItem('token');
     const userID = JSON.parse(localStorage.UserCache).id;
@@ -304,6 +300,7 @@ function constructEDHomework(hw) {
         //on obtiens une date avec une liste
         //2023-03-17
         hw[date].forEach((homework) => {
+            console.log(homework)
             // get homework
             let hws = homework;
             //foreach documents
@@ -345,7 +342,7 @@ function constructEDHomework(hw) {
                 data: {
                     id: hws.id,
                     //date: hws.aFaire.donneLe.replace(/-/g, "/"),
-                    date: hws.date.replace(/-/g, "/"),
+                    date: hws.aFaire.donneLe.replace(/-/g, "/"),
                     color: subjectColor.getSubjectColor(hws.matiere, hws.color || "#12d4a6"),
                     done: hws.effectue,
                 },
