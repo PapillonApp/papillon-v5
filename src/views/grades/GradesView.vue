@@ -475,7 +475,7 @@
 			<transition-group name="ElemAnim" tag="div">
 				<ion-item v-if="loginService === 'ecoledirecte'">
 					<div class="alphaMessage">
-						<span class="material-symbols-outlined mdls icon">sms_failed</span>
+						<span class="material-symbols-outlined mdls icon">warning</span>
 						<div class="alphaText">
 							<h2>Les moyennes affichées correspondent à celles calculées par EcoleDirecte.</h2>
 							<p class="description">Selon les paramètres définis par votre établissement, les moyennes peuvent être calculées à l'ajout d'une notes ou à intervale régulier.<br>Papillon ne saurait être tenu responsable de l'affichage d'une moyenne fausse.</p>
