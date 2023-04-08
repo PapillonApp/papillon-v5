@@ -21,7 +21,8 @@
 		IonSkeletonText,
 		alertController,
 		IonNavLink,
-		IonCheckbox
+		IonCheckbox,
+		IonProgressBar
 	} from '@ionic/vue';
 
 	import { NotificationBadge } from 'capacitor-notification-badge';
@@ -75,12 +76,14 @@
 			IonRefresherContent,
 			IonSkeletonText,
 			IonNavLink,
-			IonCheckbox
+			IonCheckbox,
+			IonProgressBar,
 		},
 		data() {
 			return {
 				connected: false,
 				fakeTime: 200,
+				currentlyLoading: false,
 				timetable: [],
 				ttbLoading: false,
 				nextCoursTime: "",
@@ -304,22 +307,29 @@
 				return lessons;
 			},
 			getRecap(force, load) {
-				if(!load) {
+				if(force) {
+					this.currentlyLoading = true;
+				}
+
+				if(load) {
 					this.showLoading = true;
 					this.allLoaded = false;
+				}
+
+				GetRecap(force).then((recap) => {
+					this.currentlyLoading = false;
 
 					this.timetable = [];
 					this.homeworks = [];
 					this.grades = [];
 					this.news = [];
-				}
 
-				GetRecap(force).then((recap) => {
 					this.useRecap(recap)
 
 					localStorage.setItem("recap", JSON.stringify(recap));
 				})
 				.catch((err) => {
+					this.currentlyLoading = false;
 					console.error("[HOMEPAGE] : " + err);
 
 					if(err[0] == "ERR_NETWORK") {
@@ -490,6 +500,7 @@
 				this.connected = await Network.getStatus()
 				this.connected = this.connected.connected;
 
+				// watch for changes in this.timetable
 				setTimeout(() => {
 					event.detail.complete();
 				}, 100);
@@ -539,7 +550,7 @@
 				this.useRecap(recap);
 			}
 
-			this.getRecap(true, true);
+			this.getRecap(true, false);
 			this.getAvatar();
 
 			document.addEventListener('tokenUpdated', () => {
@@ -697,6 +708,8 @@
 					<p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
 				</ion-label>
 			</ion-item>
+
+			<IonProgressBar v-if="currentlyLoading" class="progress" type="indeterminate"></IonProgressBar>
 		</ion-list>
 
 		<ion-content :fullscreen="true">
@@ -1162,5 +1175,10 @@
 
 	.navlink ion-label p {
 		margin-bottom: 5px;
+	}
+
+	.progress {
+		position: absolute;
+		bottom: 36px;
 	}
 </style>
