@@ -10,8 +10,6 @@ const FastAverageColor = require('fast-average-color').FastAverageColor;
 const fac = new FastAverageColor();
 
 // vars
-import { app } from '@/main.ts'
-import GetToken from '@/functions/login/GetToken.js';
 import getEDPeriods from '@/functions/fetch/getEDPeriods.js';
 
 // main function
