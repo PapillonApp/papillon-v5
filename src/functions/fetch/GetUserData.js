@@ -95,30 +95,17 @@ async function getPronoteUser(force) {
         // get user from API
         return axios.get(URL)
             .then((response) => {
-                if (response.data.code != 200) {
-                    if (response.data.code === 525) {
-                        // get new token
-                        GetToken();
-                    } else if(response.data.code === 520) {
-                        GetToken();
-                    }
-                    else {
-                        return new Promise((reject) => {
-                            reject({
-                                error: response.data.code
-                            });
-                        });
-                    }
-                }
-
                 // get user
                 let user = response.data;
 
                 // cache avatar
                 let avatar = user.profile_picture;
 
+                console.debug("Avatar : " + avatar + "")
+
                 // if avatar is null or undefined, set default avatar
                 if (avatar == null || avatar == undefined) {
+                    console.debug("Avatar is null or undefined")
                     let avatarBase64 = defaultAvatar
 
                     // save in cache
@@ -130,6 +117,7 @@ async function getPronoteUser(force) {
                 let url = `https://cors.api.getpapillon.xyz/` + avatar;
                 axios.get(url, {responseType: 'blob'})
                     .then((response) => {
+                        console.debug("Avatar downloaded")
                         // get blob
                         let blob = response.data;
 
@@ -139,6 +127,8 @@ async function getPronoteUser(force) {
 
                         // read blob
                         reader.onloadend = async function () {
+                            console.debug("Avatar readed")
+
                             // get base64
                             let base64 = reader.result;
 
@@ -148,19 +138,22 @@ async function getPronoteUser(force) {
                             // get average color
                             fac.getColorAsync(avatarURL)
                                 .then(color => {
+                                    console.debug("Average color : " + color + "")
                                     localStorage.setItem('averageColor', JSON.stringify(color));
 
                                     document.dispatchEvent(new CustomEvent('averageColorUpdated'));
                                 })
                                 .catch(e => {
-                                    console.log(e);
+                                    console.error(e);
                                 });
 
+                            console.debug("Avatar saved in cache")
                             // save in cache
                             localStorage.setItem('avatarCache', avatarURL);
                         }
                     });
 
+                console.debug("User saved in cache")
                 localStorage.setItem('UserCache', JSON.stringify(response.data));
 
                 // return user
@@ -175,6 +168,13 @@ async function getPronoteUser(force) {
                     } else if (error.response.data == "expired") {
                         // get new token
                         GetToken();
+                    } else {
+                        console.error(error);
+                        return new Promise((reject) => {
+                            reject({
+                                error: error.response.data
+                            });
+                        });
                     }
                 }
             });
@@ -185,6 +185,7 @@ async function getPronoteUser(force) {
 function constructPronoteUser(user) {
     // construct student
     // return student
+    console.debug("Construct user : " + user + "")
     return {
         student: {
             name: user.name,
