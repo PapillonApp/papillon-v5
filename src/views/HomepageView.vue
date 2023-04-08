@@ -48,6 +48,11 @@
 	import displayToast from '@/functions/utils/displayToast.js';
 	import { checkmark, alertCircle } from 'ionicons/icons';
 
+	// confetti
+
+	import JSConfetti from 'js-confetti'
+	const jsConfetti = new JSConfetti()
+
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
@@ -393,16 +398,26 @@
 					}
 				}
 			},
-			changeDone(hw) {
-                // microinteractions
-                hapticsController.notification('success');
-
+			changeDone(hw, event) {
                 // vars
                 let homeworkID = hw.data.id;
                 let dateSet = new Date(hw.data.date)
 
 				// add one day to date
 				dateSet.setDate(dateSet.getDate() + 1);
+
+				// if checked
+				if(!event.target.checked) {
+					jsConfetti.addConfetti({
+						emojis: ['✅', '🍾', '🎊'],
+						confettiNumber: 20,
+					})
+
+					hapticsController.confetti();
+				}
+				else {
+					hapticsController.notification('success');
+				}
 
                 // new send request
                 if(!this.dontRetryCheck) {
@@ -746,7 +761,7 @@
 
 								<ion-item v-for="homework in day.homeworks" :key="homework.id" button>
 									<div slot="start">
-										<IonCheckbox :checked="homework.data.done" @click="changeDone(homework)"></IonCheckbox>
+										<IonCheckbox :checked="homework.data.done" @click="changeDone(homework, $event)"></IonCheckbox>
 									</div>
 
 									<IonNavLink class="navlink" router-direction="forward" :component="HomeworkItemView" :componentProps="{urlHw: encodeURIComponent(JSON.stringify(homework))}">
