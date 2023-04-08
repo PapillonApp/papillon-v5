@@ -550,12 +550,12 @@
 			localStorage.setItem('version', this.appVersion);
 
 			// show changelog
-			let refs = this.$refs as any;
-			refs.changelogModal.$el.present();
+			const changelogModal = (this.$refs.changelogModal as any).$el;
+			changelogModal.present();
 		},
 		hideChangelog() {
-			let refs = this.$refs as any;
-			refs.changelogModal.$el.dismiss();
+			const changelogModal = (this.$refs.changelogModal as any).$el;
+			changelogModal.dismiss();
 		},
 	},
 	mounted() {
