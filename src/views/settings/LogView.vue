@@ -220,63 +220,61 @@ Contient **${this.logs.length}** logs
 </script>
 
 <template>
-	<ion-page ref="page">
-		<IonHeader class="AppHeader" translucent>
-			<IonToolbar>
+	<IonHeader class="AppHeader" translucent>
+		<IonToolbar>
 
-				<ion-buttons slot="start">
-					<PapillonBackButton></PapillonBackButton>
-				</ion-buttons>
+			<ion-buttons slot="start">
+				<PapillonBackButton></PapillonBackButton>
+			</ion-buttons>
 
-				<ion-title mode="md">Logs</ion-title>
+			<ion-title mode="md">Logs</ion-title>
 
-				<ion-buttons slot="end">
-					<IonButton @click="share()">
-						<span class="material-symbols-outlined mdls">ios_share</span>
-					</IonButton>
-				</ion-buttons>
+			<ion-buttons slot="end">
+				<IonButton @click="share()">
+					<span class="material-symbols-outlined mdls">ios_share</span>
+				</IonButton>
+			</ion-buttons>
 
-			</IonToolbar>
+		</IonToolbar>
 
 
-		</IonHeader>
+	</IonHeader>
 
-		<ion-content :fullscreen="true">
-			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
-				<ion-refresher-content></ion-refresher-content>
-			</ion-refresher>
+	<ion-content :fullscreen="true">
+		<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+			<ion-refresher-content></ion-refresher-content>
+		</ion-refresher>
 
-			<div class="NoCours" v-if="logs.length == 0">
-				<span class="material-symbols-outlined mdls">developer_mode</span>
-				<h2>Aucun rapport n'a été enregistré.</h2>
-				<p>C'est parfait, il n'y a aucun problème sur l'application (ou alors vous les avez effacés). Détendez-vous, profitez-en !</p>
+		<div class="NoCours" v-if="logs.length == 0">
+			<span class="material-symbols-outlined mdls">developer_mode</span>
+			<h2>Aucun rapport n'a été enregistré.</h2>
+			<p>C'est parfait, il n'y a aucun problème sur l'application (ou alors vous les avez effacés). Détendez-vous, profitez-en !</p>
+		</div>
+
+		<ion-list v-else>
+			<ion-item-sliding v-for="log in logs" :key="log.id">
+				<ion-item>
+					<ion-label class="ion-text-wrap" :color="getTypeColor(log.type)">
+						<h2>{{ log.message }}</h2>
+						<p>{{ new Date(log.date).toLocaleString("fr-fr", {dateStyle: 'long', timeStyle: 'short'}) }}</p>
+					</ion-label>
+				</ion-item>
+
+				<ion-item-options side="end">
+					<ion-item-option color="danger" @click="clearLog(log, $event)">
+						<span class="material-symbols-outlined mdls">delete</span>
+						Supprimer
+					</ion-item-option>
+				</ion-item-options>
+			</ion-item-sliding>
+
+			<div class="NoCours">
+				<p v-if="this.logs.length <= 1">Vous avez atteint la fin de la liste.</p>
+				<p v-else>Vous avez atteint la fin de la liste.<br/>Mais il y a tout de même {{ this.logs.length }} journaux !</p>
 			</div>
+		</ion-list>
 
-			<ion-list v-else>
-				<ion-item-sliding v-for="log in logs" :key="log.id">
-					<ion-item>
-						<ion-label class="ion-text-wrap" :color="getTypeColor(log.type)">
-							<h2>{{ log.message }}</h2>
-							<p>{{ new Date(log.date).toLocaleString("fr-fr", {dateStyle: 'long', timeStyle: 'short'}) }}</p>
-						</ion-label>
-					</ion-item>
-
-					<ion-item-options side="end">
-						<ion-item-option color="danger" @click="clearLog(log, $event)">
-							<span class="material-symbols-outlined mdls">delete</span>
-							Supprimer
-						</ion-item-option>
-					</ion-item-options>
-				</ion-item-sliding>
-
-				<div class="NoCours">
-					<p v-if="this.logs.length <= 1">Vous avez atteint la fin de la liste.</p>
-					<p v-else>Vous avez atteint la fin de la liste.<br/>Mais il y a tout de même {{ this.logs.length }} journaux !</p>
-				</div>
-			</ion-list>
-
-		</ion-content>
-	</ion-page>
+	</ion-content>
 </template>
 
 <style scoped>
