@@ -4,17 +4,79 @@ import axios from 'axios';
 // vars
 import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
+import {ApiUrl, ApiVersion, Kdecole} from "kdecole-api";
+import displayToast from "@/functions/utils/displayToast";
 
 // main function
 async function getNews(forceReload) {
-    switch(localStorage.loginService) {
-        case "pronote":    
-			// return pronote news
-			return getPronoteNews(forceReload);
-		case "ecoledirecte":
+    switch (localStorage.loginService) {
+        case "pronote":
+            // return pronote news
+            return getPronoteNews(forceReload);
+        case "ecoledirecte":
             return;
+        case 'skolengo':
+            return getSkolengoNews(forceReload)
     }
-    
+}
+
+function getSkolengoNews(forceReload) {
+    const token = localStorage.getItem('token');
+    const ent = localStorage.getItem('ent');
+    const etudiant = new Kdecole(token, ApiVersion[ent], 0, 'https://cors.api.getpapillon.xyz/' + ApiUrl[ent])
+
+    let newsCache = localStorage.getItem('NewsCache');
+    if (newsCache != null && !forceReload) {
+        newsCache = JSON.parse(newsCache);
+
+        let today = new Date();
+        let cacheDate = new Date(newsCache.date);
+
+        if (today.toDateString() == cacheDate.toDateString()) {
+            return new Promise((resolve) => {
+                resolve(constructSkolengoNews(newsCache.news));
+            });
+        }
+    }
+
+    return etudiant.getActualites().then(actu => {
+        const today = new Date();
+        const newsCache = {
+            date: today,
+            news: actu
+        }
+        localStorage.setItem('NewsCache', JSON.stringify(newsCache));
+
+        return new Promise((resolve) => {
+            resolve(constructSkolengoNews(actu));
+        });
+    }).catch((error) => {
+        displayToast.presentError(`${error.message}`, "danger", error)
+        console.error(error);
+    })
+
+}
+
+function constructSkolengoNews(news) {
+    return news.map((item) => ({
+        title: item.titre,
+        content: item.titre,
+        htmlContent: 'Rendez vous votre ENT pour consulter le détail de cet article.',
+        date: new Date(item.date),
+        dateString: new Date(item.date).toLocaleDateString('fr-FR', {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric'
+        }) + " à " + new Date(item.date).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'}),
+        category: item.type,
+        author: item.auteur,
+        attachments: [],
+        isSurvey: false,
+        isRead: true,
+        isAnonymized: false,
+    })).sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+    })
 }
 
 // pronote : get timetable
