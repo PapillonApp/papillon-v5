@@ -1163,9 +1163,4 @@
 	.navlink ion-label p {
 		margin-bottom: 5px;
 	}
-
-	.progress {
-		position: absolute;
-		bottom: 36px;
-	}
 </style>
