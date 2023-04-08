@@ -21,8 +21,7 @@
 		IonSkeletonText,
 		alertController,
 		IonNavLink,
-		IonCheckbox,
-		IonProgressBar
+		IonCheckbox
 	} from '@ionic/vue';
 
 	import { NotificationBadge } from 'capacitor-notification-badge';
@@ -76,14 +75,12 @@
 			IonRefresherContent,
 			IonSkeletonText,
 			IonNavLink,
-			IonCheckbox,
-			IonProgressBar,
+			IonCheckbox
 		},
 		data() {
 			return {
 				connected: false,
 				fakeTime: 200,
-				currentlyLoading: false,
 				timetable: [],
 				ttbLoading: false,
 				nextCoursTime: "",
@@ -307,29 +304,22 @@
 				return lessons;
 			},
 			getRecap(force, load) {
-				if(force) {
-					this.currentlyLoading = true;
-				}
-
-				if(load) {
+				if(!load) {
 					this.showLoading = true;
 					this.allLoaded = false;
-				}
-
-				GetRecap(force).then((recap) => {
-					this.currentlyLoading = false;
 
 					this.timetable = [];
 					this.homeworks = [];
 					this.grades = [];
 					this.news = [];
+				}
 
+				GetRecap(force).then((recap) => {
 					this.useRecap(recap)
 
 					localStorage.setItem("recap", JSON.stringify(recap));
 				})
 				.catch((err) => {
-					this.currentlyLoading = false;
 					console.error("[HOMEPAGE] : " + err);
 
 					if(err[0] == "ERR_NETWORK") {
@@ -500,7 +490,6 @@
 				this.connected = await Network.getStatus()
 				this.connected = this.connected.connected;
 
-				// watch for changes in this.timetable
 				setTimeout(() => {
 					event.detail.complete();
 				}, 100);
@@ -550,7 +539,7 @@
 				this.useRecap(recap);
 			}
 
-			this.getRecap(true, false);
+			this.getRecap(true, true);
 			this.getAvatar();
 
 			document.addEventListener('tokenUpdated', () => {
@@ -708,8 +697,6 @@
 					<p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
 				</ion-label>
 			</ion-item>
-
-			<IonProgressBar v-if="currentlyLoading" class="progress" type="indeterminate"></IonProgressBar>
 		</ion-list>
 
 		<ion-content :fullscreen="true">
@@ -1179,6 +1166,6 @@
 
 	.progress {
 		position: absolute;
-		bottom: 35px;
+		bottom: 36px;
 	}
 </style>
