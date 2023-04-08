@@ -302,7 +302,7 @@
 									etaburl = etaburl.split('/').slice(0, -1).join('/');
 								}
 
-								this.loginToEtab(etaburl);
+								this.loginToEtab(etaburl, null, true);
 							}
 						}
 					],
@@ -327,7 +327,7 @@
 					this.login();
 				}, 1000);
 			},
-			async loginToEtab(url, cp) {
+			async loginToEtab(url, cp, customUrl = false) {
 				// lowercase url
 				url = url.toLowerCase();
 				let etab = url.toLowerCase();
@@ -379,7 +379,18 @@
 					let cas = all_cas_same_host[0];
 					if (all_cas_same_host.length == 0) {
 						// no CAS for this host
-						displayToast.presentToast(`Aucun CAS trouvé pour ${cas_host}.`, "danger")
+						if (customUrl) {
+							all_cas_same_host.push({
+								name: "Connexion directe via Pronote",
+								url: "index-education.net",
+								py: "",
+								educonnect: false,
+							})
+							cas = all_cas_same_host[0].py;
+						}
+						else {
+							displayToast.presentToast(`Aucun CAS trouvé pour ${cas_host}.`, "danger")
+						}
 					}
 					else if (all_cas_same_host.length == 1 && all_cas_same_host[0].url == "index-education.net") {
 						// only one CAS for this host and not an ENT
