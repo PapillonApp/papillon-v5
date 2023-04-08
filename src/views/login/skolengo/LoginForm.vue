@@ -225,6 +225,7 @@ export default defineComponent({
 
 .loginIntro .logo {
     height: 44px;
+    border-radius: 100%;
 }
 
 .loginIntro .introData {
