@@ -72,6 +72,9 @@
 			}
 		},
 		methods: {
+            isED() {
+              return localStorage.loginService === 'ecoledirecte'
+            },
             getHomeworks(force, goTo, event) {
                 let startloading = setTimeout(() => {
                     this.isLoading = true;
@@ -321,7 +324,8 @@
                             <IonNavLink class="navLink"  router-direction="forward" :component="HomeworkItemView" :componentProps="{urlHw: encodeURIComponent(JSON.stringify(homework))}">
                                 <IonLabel :style="`--courseColor: ${homework.data.color};`" class="ion-text-wrap">
                                     <p><span class="courseColor"></span> {{ homework.homework.subject }}</p>
-                                    <h5 class="hwContent">{{ homework.homework.shortContent }}</h5>
+                                    <h5 v-if="isED()" v-html="homework.homework.shortContent" class="hwContent"></h5>
+                                    <h5 v-else class="hwContent">{{ homework.homework.shortContent }}</h5>
                                 </IonLabel>
                             </IonNavLink>
                         </IonItem>
