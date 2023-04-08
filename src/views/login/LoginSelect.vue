@@ -121,7 +121,7 @@
                 <ion-back-button class="only-ios" text="Retour"></ion-back-button>
                 <ion-back-button class="only-md"></ion-back-button>
             </ion-buttons>
-            <ion-title>Séléctionnez votre service scolaire</ion-title>
+            <ion-title>Sélectionnez votre service scolaire</ion-title>
         </ion-toolbar>
       </ion-header>
       
