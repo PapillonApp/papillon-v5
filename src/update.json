@@ -3,8 +3,13 @@
         "features": [
             {
                 "icon": "wifi_tethering",
-                "name": "Ajout d'EcoleDirecte",
-                "description": "Ajout de l'API EcoleDirecte pour les établissements scolaires. Cette fonctionnalité est en ALPHA et comporte des bugs. Si vous rencontrez des problèmes, merci de nous contacter sur Discord ou GitHub. Les bugs peuvent aussi toucher les autres fonctionnalités de l'application dont Pronote."
+                "name": "Ajout de Skolengo",
+                "description": "Ajout de l'API de Skolengo pour les établissements scolaires. Cette fonctionnalité est en ALPHA et comporte des bugs. Si vous rencontrez des problèmes, merci de nous contacter sur Discord ou GitHub. Les bugs peuvent aussi toucher les autres fonctionnalités de l'application dont Pronote."
+            },
+            {
+                "name": "Correction de bugs et améliorations",
+                "description": "De multiples corrections de bugs et améliorations ont été apportées à l'application. L'interface a été légèrement modifiée pour être plus claire et plus agréable à utiliser.",
+                "icon": "brush"
             }
         ]
     }
