@@ -303,7 +303,17 @@
 
 				return lessons;
 			},
-			getRecap(force) {
+			getRecap(force, load) {
+				if(!load) {
+					this.showLoading = true;
+					this.allLoaded = false;
+
+					this.timetable = [];
+					this.homeworks = [];
+					this.grades = [];
+					this.news = [];
+				}
+
 				GetRecap(force).then((recap) => {
 					this.useRecap(recap)
 
@@ -472,7 +482,7 @@
 				}
 			},
 			async handleRefresh(event) {
-				this.getRecap(true);
+				this.getRecap(true, false);
 
 				this.noCoursesMsg = this.randomMsg();
 				this.noCoursesEmoji = this.randomEmoji();
@@ -482,7 +492,7 @@
 
 				setTimeout(() => {
 					event.detail.complete();
-				}, 1000);
+				}, 100);
 			},
 			async displayBetaMsg() {
 				const alert = await alertController.create({
@@ -529,7 +539,7 @@
 				this.useRecap(recap);
 			}
 
-			this.getRecap();
+			this.getRecap(true, true);
 			this.getAvatar();
 
 			document.addEventListener('tokenUpdated', () => {
