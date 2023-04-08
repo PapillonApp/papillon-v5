@@ -18,7 +18,7 @@
 		IonChip
 	} from '@ionic/vue';
 
-    import { Browser } from '@capacitor/browser';
+	import { Browser } from '@capacitor/browser';
 
 	import displayToast from '@/functions/utils/displayToast.js';
 	import hapticsController from '@/functions/utils/hapticsController.js';
@@ -40,42 +40,42 @@
 			IonItem,
 			IonLabel,
 		},
-        props: {
-            urlNews: {
-                type: String,
-                required: true,
-            }
-        },
+		props: {
+			urlNews: {
+				type: String,
+				required: true,
+			}
+		},
 		data() {
 			return {
-                openedNews: []
+				openedNews: []
 			}
 		},
 		methods: {
 			async openLink(url) {
-                await Browser.open({
-                    url: url,
+				await Browser.open({
+					url: url,
 					presentationStyle: 'popover',
-                });
-            },
+				});
+			},
 		},
 		mounted() {
-            // if urlNews prop is set
-            if(this.urlNews) {
-                let encoded = this.urlNews;
+			// if urlNews prop is set
+			if(this.urlNews) {
+				let encoded = this.urlNews;
 
-                // decode url
-                let decoded = decodeURIComponent(encoded);
+				// decode url
+				let decoded = decodeURIComponent(encoded);
 
-                // parse json
-                let parsed = JSON.parse(decoded);
+				// parse json
+				let parsed = JSON.parse(decoded);
 
-                // open urlNews
-                this.openedNews = parsed;
-            }
+				// open urlNews
+				this.openedNews = parsed;
+			}
 
-            return false;
-        }
+			return false;
+		}
 	});
 </script>
 
@@ -87,22 +87,22 @@
 					<PapillonBackButton></PapillonBackButton>
 				</ion-buttons>
 
-                <ion-title mode="md" v-if="openedNews">{{ openedNews.title }}</ion-title>
+				<ion-title mode="md" v-if="openedNews">{{ openedNews.title }}</ion-title>
 				<ion-title mode="md" v-else><ion-skeleton-text style="width: 200px;"></ion-skeleton-text></ion-title>
 			</IonToolbar>
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-            <div v-if="openedNews">
+			<div v-if="openedNews">
 
-                <IonList>
-                    <IonItem>
-                        <IonLabel>
-                            <h1 class="newsTitle">{{ openedNews.title }}</h1>
-                            <p>{{ openedNews.author }} - {{ openedNews.dateString }}</p>
-                        </IonLabel>
-                    </IonItem>
-                </IonList>
+				<IonList>
+					<IonItem>
+						<IonLabel>
+							<h1 class="newsTitle">{{ openedNews.title }}</h1>
+							<p>{{ openedNews.author }} - {{ openedNews.dateString }}</p>
+						</IonLabel>
+					</IonItem>
+				</IonList>
 
 				<IonList v-if="openedNews.isSurvey" inset>
 					<IonItem color="danger">
@@ -114,7 +114,7 @@
 					</IonItem>
 				</IonList>
 
-                <div class="content" v-html="openedNews.htmlContent"></div>
+				<div class="content" v-html="openedNews.htmlContent"></div>
 
 				<div v-if="openedNews.attachments">
 					<IonList inset v-if="openedNews.attachments.length !== 0">
@@ -129,16 +129,16 @@
 					</IonList>
 				</div>
 
-            </div>
+			</div>
 		</ion-content>
 </template>
 
 <style scoped>
-    .newsTitle {
-        font-weight: 500 !important;
-    }
+	.newsTitle {
+		font-weight: 500 !important;
+	}
 
 	.content {
-        margin: 10px 20px;
-    }
+		margin: 10px 20px;
+	}
 </style>
