@@ -299,42 +299,10 @@
 				return lessons;
 			},
 			getRecap(force) {
-				this.hwLoading = true;
-				this.gradesLoading = true;
-				this.newsLoading = true;
-				this.allLoaded = false;
-				this.serverError = false;
-
 				GetRecap(force).then((recap) => {
-					// loaded
-					setTimeout(() => {
-						this.allLoaded = true;
-						this.showLoading = false;
-					}, this.fakeTime);
+					this.useRecap(recap)
 
-					this.fakeTime = 0;
-
-					// timetable
-					const timetable = recap.timetable;
-					this.timetable = this.editTimetable(timetable);
-					this.ttbloading = false;
-
-					this.updateTime = setInterval(() => {
-						this.timetable = this.editTimetable(timetable);
-					}, 600);
-
-					// homeworks
-					const homeworks = recap.homeworks;
-					this.homeworks = this.formatHomeworks(homeworks);
-					this.hwLoading = false;
-
-					// grades
-					this.grades = recap.grades.last;
-					this.gradesLoading = false;
-
-					// news
-					this.news = recap.news;
-					this.newsLoading = false;
+					localStorage.setItem("recap", JSON.stringify(recap));
 				})
 				.catch((err) => {
 					console.error("[HOMEPAGE] : " + err);
@@ -345,6 +313,37 @@
 						this.serverError = true;
 					}
 				});
+			},
+			useRecap(recap) {
+				// loaded
+				setTimeout(() => {
+					this.allLoaded = true;
+					this.showLoading = false;
+				}, this.fakeTime);
+
+				this.fakeTime = 0;
+
+				// timetable
+				const timetable = recap.timetable;
+				this.timetable = this.editTimetable(timetable);
+				this.ttbloading = false;
+
+				this.updateTime = setInterval(() => {
+					this.timetable = this.editTimetable(timetable);
+				}, 600);
+
+				// homeworks
+				const homeworks = recap.homeworks;
+				this.homeworks = this.formatHomeworks(homeworks);
+				this.hwLoading = false;
+
+				// grades
+				this.grades = recap.grades.last;
+				this.gradesLoading = false;
+
+				// news
+				this.news = recap.news;
+				this.newsLoading = false;
 			},
 			formatHomeworks(homeworks) {
 				let homeworkDays = [];
@@ -458,9 +457,6 @@
 				}
 			},
 			async handleRefresh(event) {
-				this.homeworks = [];
-				this.grades = [];
-
 				this.getRecap(true);
 
 				this.noCoursesMsg = this.randomMsg();
@@ -513,6 +509,11 @@
 			this.connected = this.connected.connected;
 
 			// get data
+			if (localStorage.getItem('recap')) {
+				let recap = JSON.parse(localStorage.getItem('recap'));
+				this.useRecap(recap);
+			}
+
 			this.getRecap();
 			this.getAvatar();
 
