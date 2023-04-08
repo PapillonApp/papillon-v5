@@ -5,14 +5,10 @@ import {app} from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 import {ApiUrl, ApiVersion, Kdecole} from "kdecole-api";
 import displayToast from "@/functions/utils/displayToast";
+import getEDPeriods from '@/functions/fetch/getEDPeriods.js';
 
 const FastAverageColor = require('fast-average-color').FastAverageColor;
 const fac = new FastAverageColor();
-
-// vars
-import { app } from '@/main.ts'
-import GetToken from '@/functions/login/GetToken.js';
-import getEDPeriods from '@/functions/fetch/getEDPeriods.js';
 
 // main function
 function getUser(force) {
