@@ -20,7 +20,8 @@
 		IonModal,
 		IonSpinner,
 		IonSelect,
-		IonNavLink
+		IonNavLink,
+		IonProgressBar
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -50,10 +51,10 @@
 			IonListHeader,
 			IonSegment,
 			IonSegmentButton,
-			IonSpinner,
 			IonSelect,
 			IonText,
-			IonNavLink
+			IonNavLink,
+			IonProgressBar
 		},
 		data() {
 			let gradesDisplay = localStorage.getItem('gradesDisplay') || 'Vue liste';
@@ -82,6 +83,8 @@
 				selectedGrade: [],
 				selectedGradeSet: false,
 				out_of_20: localStorage.getItem('tweakGrades20') == "true" ? true : false,
+				loginService: localStorage.getItem("loginService"),
+				calcAverage: []
 			}
 		},
 		methods: {
@@ -158,7 +161,9 @@
 					'accomp': '👨‍🏫',
 					'tech': '🔧',
 					'musique': '🎼',
+					'musical': '🎼',
 					'vie': '🌱',
+					'stage': '👔',
 					'default': '📝'
 				}
 
@@ -367,6 +372,7 @@
 				this.isLoading = false;
 
 				this.classAverages = data.averages.class;
+				if(localStorage.getItem("loginService") === "ecoledirecte") this.calcAverage = data.averages.calculate
 			});
 
 			this.getPeriods();
@@ -377,7 +383,7 @@
 					this.fullGrades = this.editMarks(data.marks);
 					this.averages = data.averages;
 					this.isLoading = false;
-
+					if(localStorage.getItem("loginService") === "ecoledirecte") this.calcAverage = data.averages.calculate
 					this.classAverages = data.averages.class;
 				});
 			});
@@ -390,7 +396,7 @@
 					this.fullGrades = this.editMarks(data.marks);
 					this.averages = data.averages;
 					this.isLoading = false;
-
+					if(localStorage.getItem("loginService") === "ecoledirecte") this.calcAverage = data.averages.calculate
 					this.classAverages = data.averages.class;
 				});
 
@@ -413,7 +419,8 @@
 				<ion-title mode="md">Notes</ion-title>
 
 				<ion-buttons class="endBtns" slot="end">
-					<ion-spinner v-if="isLoading"></ion-spinner>
+					<span class="selectIcon material-symbols-outlined mdls" v-if="display == 'Vue grille'">grid_view</span>
+					<span class="selectIcon material-symbols-outlined mdls" v-if="display == 'Vue liste'">list</span>
 
 					<ion-select ref="displaySel" @ionChange="changeDisplay($event)" interface="popover" placeholder="Affichage" :value="display">
 						<ion-select-option value="Vue grille">Vue grille</ion-select-option>
@@ -428,6 +435,8 @@
 						<ion-label>{{period.name}}</ion-label>
 					</ion-segment-button>
 				</ion-segment>
+
+				<ion-progress-bar v-if="isLoading" type="indeterminate"></ion-progress-bar>
 			</IonToolbar>
 		</IonHeader>
 
@@ -438,7 +447,41 @@
 
 			<div id="noTouchZone"></div>
 
+			<!-- <div v-if="isLoading">
+				<ion-card class="subject" v-for="i in 6" v-bind:key="i">
+					<div class="subject-name" style="padding: 15px 15px">
+						<ion-skeleton-text :animated="true" style="width: 50%;"></ion-skeleton-text>
+						<ion-skeleton-text class="avg" :animated="true" style="width: 20%;"></ion-skeleton-text>
+					</div>
+					<div class="grades" v-if="display == 'Vue grille'">
+						<ion-card class="grade" v-for="i in 3" v-bind:key="i">
+							<div class="myGrade" style="width: 135px;">
+								<ion-skeleton-text :animated="true" style="width: 50%;"></ion-skeleton-text>
+								<br />
+								<ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text>
+							</div>
+							<div class="grades">
+								<ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+
+								<ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+
+								<ion-skeleton-text class="average" :animated="true"></ion-skeleton-text>
+							</div>
+						</ion-card>
+					</div>
+				</ion-card>
+			</div> -->
+
 			<transition-group name="ElemAnim" tag="div">
+				<ion-item v-if="loginService === 'ecoledirecte'">
+					<div class="alphaMessage">
+						<span class="material-symbols-outlined mdls icon">warning</span>
+						<div class="alphaText">
+							<h2>Les moyennes affichées correspondent à celles calculées par EcoleDirecte.</h2>
+							<p class="description">Selon les paramètres définis par votre établissement, les moyennes peuvent être calculées à l'ajout d'une notes ou à intervale régulier.<br>Papillon ne saurait être tenu responsable de l'affichage d'une moyenne fausse.</p>
+						</div>
+					</div>				
+				</ion-item>
 				<ion-card class="subject" v-for="(subject, index) in grades" v-bind:key="index"
 					:style="`--backgroundTheme: ${ subject.color };`">
 					<div class="subject-name" @click="openAverageModal(subject)">
@@ -531,7 +574,7 @@
 				</div>
 			</div>
 
-			<IonList v-if="this.grades.length != 0">
+			<IonList v-if="this.grades.length != 0 && averages.average != -1">
 				<IonListHeader>
 					<IonLabel>
 						<h2>Moyennes</h2>
@@ -567,65 +610,10 @@
 						</IonLabel>
 					</IonItem>
 				</div>
+				<ion-item v-id="loginService === 'ecoledirecte'">
+					<p>Moyennes calculées le {{ calcAverage[0] }} à {{ calcAverage[1] }}</p>
+				</ion-item>
 			</IonList>
-
-			<IonModal ref="gradeModal" :keep-contents-mounted="true" :initial-breakpoint="0.5"
-				:breakpoints="[0, 0.5, 0.9]" :handle="true" :canDismiss="true">
-				<IonHeader>
-					<IonToolbar class="markToolbar">
-						<ion-label v-if="selectedGradeSet">
-							<h2>Note en {{ selectedGrade.info.subject }}</h2>
-							<p>{{ new Date(selectedGrade.info.date).toLocaleString('fr-FR', {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) }}</p>
-						</ion-label>
-
-						<ion-buttons slot="end">
-							<IonButton @click="shareGrade(selectedGrade, selectedGrade.color)">
-								<span class="material-symbols-outlined mdls">ios_share</span>
-							</IonButton>
-						</ion-buttons>
-					</IonToolbar>
-				</IonHeader>
-				<ion-content>
-					<ion-list v-if="selectedGradeSet">
-						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start">face</span>
-							<ion-label>
-								<p>Note de l'élève</p>
-								<h2>{{ parseFloat(selectedGrade.grade.value).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
-							</ion-label>
-
-							<ion-item slot="end" lines="none">
-								<span class="material-symbols-outlined mdls" slot="start">percent</span>
-								<ion-label>
-									<p>Coefficient</p>
-									<h2>{{selectedGrade.grade.coefficient}}</h2>
-								</ion-label>
-							</ion-item>
-						</ion-item>
-						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start">groups</span>
-							<ion-label>
-								<p>Note de la classe</p>
-								<h2>{{ parseFloat(selectedGrade.grade.average).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
-							</ion-label>
-						</ion-item>
-						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start">person_remove</span>
-							<ion-label>
-								<p>Note la plus basse</p>
-								<h2>{{ parseFloat(selectedGrade.grade.min).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
-							</ion-label>
-						</ion-item>
-						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start">person_add</span>
-							<ion-label>
-								<p>Note la plus haute</p>
-								<h2>{{ parseFloat(selectedGrade.grade.max).toFixed(2) }}<small>/{{ selectedGrade.grade.out_of }}</small></h2>
-							</ion-label>
-						</ion-item>
-					</ion-list>
-				</ion-content>
-			</IonModal>
 
 			<IonModal ref="averageModal" :keep-contents-mounted="true" :initial-breakpoint="0.5"
 				:breakpoints="[0, 0.5, 0.9]" :handle="true" :canDismiss="true">
@@ -704,6 +692,49 @@
 </template>
 
 <style scoped>
+	.alphaMessage {
+		background: var(--ion-color-warning);
+		margin: 20px;
+		border-radius: 10px;
+
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		padding: 20px;
+		gap: 20px;
+
+		color: #fff;
+	}
+
+	.alphaMessage * {
+		margin: 0;
+	}
+
+	.alphaMessage .icon {
+		height: 44px;
+		width: 44px;
+		font-size: 30px;
+		overflow: visible !important;
+
+		color: #fff;
+		opacity: 1 !important;
+	}
+
+	.alphaMessage .alphaText {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
+	.alphaMessage .alphaText h2 {
+		font-size: 18px;
+	}
+
+	.alphaMessage .alphaText .description {
+		font-size: 15px;
+		opacity: 0.7;
+	}
 	.emoji {
 		font-size: 1.3rem;
 	}
@@ -777,7 +808,7 @@
 	}
 
 	.dark .grade {
-		background: var(--ion-color-step-50);
+		background: var(--ion-color-step-100);
 	}
 
 	.myGrade {
@@ -866,16 +897,16 @@
 		border-radius: 8px;
 	}
 
-	.ios .myGrade {
+	.myGrade {
 		border: none;
 		background: linear-gradient(90deg, #00000055 0%, #00000055 100%), var(--backgroundTheme);
 	}
 
-	.ios .myGrade * {
+	.myGrade * {
 		color: #fff !important;
 	}
 
-	.ios #segment {
+	#segment {
 		width: calc(100vw - 24px);
 		margin: 0 12px;
 
@@ -883,9 +914,7 @@
 	}
 
 	.md .grade {
-		border: 1px solid var(--ion-color-step-150);
-		--background: none;
-		box-shadow: none;
+		border: 1px solid var(--ion-color-step-50);
 		border-radius: 8px;
 	}
 
@@ -916,5 +945,30 @@
 
 	.gradeItem .markLabel h2 {
 		font-weight: 500 !important;
+	}
+
+	.endBtns {
+		border: 1px solid var(--ion-color-step-200);
+
+		padding-left: 7px;
+		border-radius: 300px;
+
+		max-height: 32px !important;
+		min-height: 32px !important;
+		overflow: hidden;
+	}
+
+	.endBtns ion-select {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+
+	.selectIcon {
+		margin-right: -12px;
+		opacity: 48%;
+	}
+
+	.gradesList {
+		--ion-item-background: var(--ion-color-step-50);
 	}
 </style>

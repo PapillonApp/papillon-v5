@@ -2,34 +2,9 @@
     "changelog": {
         "features": [
             {
-                "icon": "bug_report",
-                "name": "Corrections de bugs",
-                "description": "De nombreux bugs ont été corrigés et l'expérience utilisateur est améliorée."
-            },
-            {
-                "icon": "home",
-                "name": "Changements d'écran d'accueil",
-                "description": "On a revu le design de l'écran d'accueil, n'est-il pas plus agréable ?"
-            },
-            {
-                "icon": "grade",
-                "name": "Notes",
-                "description": "Un nouveau mode d'affichage des notes a été ajouté, vous pouvez désormais choisir entre une liste ou une grille."
-            },
-            {
-                "icon": "bolt",
-                "name": "Performance",
-                "description": "Le temps de chargement des pages à été drastiquement réduit."
-            },
-            {
-                "icon": "auto_awesome",
-                "name": "Animations",
-                "description": "Il y a désormais pleins d'animations dans l'application, vous allez adorer !"
-            },
-            {
-                "icon": "settings",
-                "name": "Personnalisation",
-                "description": "Vous pouvez désormais choisir la couleur du thème de Papillon et une nouvelle police a été ajoutée."
+                "icon": "wifi_tethering",
+                "name": "Ajout d'EcoleDirecte",
+                "description": "Ajout de l'API EcoleDirecte pour les établissements scolaires. Cette fonctionnalité est en ALPHA et comporte des bugs. Si vous rencontrez des problèmes, merci de nous contacter sur Discord ou GitHub. Les bugs peuvent aussi toucher les autres fonctionnalités de l'application dont Pronote."
             }
         ]
     }

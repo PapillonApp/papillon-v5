@@ -75,9 +75,10 @@ function getPronoteNews(forceReload) {
             }
 
             // error, return error
-            return new Promise((reject) => {
-                reject(error);
-            });
+            if(error.code) {
+                // return error code
+                return error.code;
+            }
         });
 }
 

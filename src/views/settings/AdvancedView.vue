@@ -80,6 +80,15 @@
 					}, 1000);
 				}, 100);
 			},
+			getLocalStorageSize() {
+				let total = 0;
+				for (let i = 0; i < localStorage.length; i++) {
+					let key = localStorage.key(i);
+					let value = localStorage.getItem(key);
+					total += value.length;
+				}
+				return total / 1024;
+			},
 			async setAcadName() {
 				const { value, cancelled } = await Dialog.prompt({
 					title: 'Nom de l\'académie',

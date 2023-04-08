@@ -530,6 +530,10 @@
 		color: var(--backgroundColor);
 	}
 
+	.true .CoursTime {
+		opacity: 0.5;
+	}
+
 	.true .cours {
 		background: var(--ion-color-danger-dark) !important;
 		--backgroundColor: var(--ion-color-danger) !important;

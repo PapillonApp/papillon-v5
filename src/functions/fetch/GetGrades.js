@@ -6,7 +6,7 @@ import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
 import subjectColor from '@/functions/utils/subjectColor.js'
-
+import * as moment from "moment";
 // funcs
 function isFloat(n){
 	return Number(n) === n && n % 1 !== 0;
@@ -19,7 +19,7 @@ async function getGrades(forceReload) {
             // return pronote grades
 			return getPronoteGrades(forceReload);
 		case "ecoledirecte":
-            return;
+            return getEDGrades(forceReload);
     }
 }
 
@@ -81,9 +81,10 @@ function getPronoteGrades(forceReload) {
 			}
 
 			// error, return error
-			return new Promise((reject) => {
-				reject(error);
-			});
+			if(error.code) {
+                // return error code
+                return error.code;
+            }
 		});
 }
 
@@ -146,6 +147,16 @@ function determineSignificant(significant, service) {
 				result.significantReason = null;
 				result.significantZero = false;
 				break;
+		}
+	}
+
+	if(service == 'ecoledirecte') {
+		if(significant.nonSignificatif) {
+			result.significant = false;
+		}
+		if(significant.enLettre) {
+			result.significant = false;
+			result.significantReason =  significant.valeur;
 		}
 	}
 
@@ -409,6 +420,348 @@ function constructPronoteGrades(grades) {
 	
 	return finalArray;
 }
+
+
+
+
+
+
+
+
+
+// ecoledirecte : get grades
+function getEDGrades(forceReload) {
+	// gather vars
+	const EDAPI = "https://api.ecoledirecte.com/v3"
+	console.log("Getting grades from ecoledirecte")
+
+	// get token
+	const token = localStorage.getItem('token');
+
+	const userID = JSON.parse(localStorage.UserCache).id;
+	// construct url (date is a TEST date)
+	let URL = `${EDAPI}/eleves/${userID}/notes.awp?verbe=get`;
+
+	// check if grade is cached
+	let gradeCache = localStorage.getItem('GradeCache');
+
+	if(gradeCache != null && !forceReload) {
+		// grade is cached, check if it's up to date
+		gradeCache = JSON.parse(gradeCache);
+
+		let today = new Date();
+		let cacheDate = new Date(gradeCache.date);
+
+		if(today.toDateString() == cacheDate.toDateString()) {
+			// grade is up to date, return it
+			return new Promise((resolve) => {
+				resolve(constructEDGrades(gradeCache.grades));
+			});
+		}
+	}
+
+	var requestOptions = {
+		headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": token },            
+	};
+	let body = `data={}`
+
+	// send request
+	return axios.post(URL, body, requestOptions).then((response) => {
+		if (response.data.code != 200) {
+			if (response.data.code === 525) {
+				// get new token
+				GetToken();
+			} else if(response.data.code === 520) {
+				GetToken();
+			}
+			else {
+				return new Promise((reject) => {
+					reject({
+						error: response.data.code
+					});
+				});
+			}
+		}
+
+		// save grades to localstorage cache with today's date
+		let today = new Date();
+		let gradeCache = {
+			date: today,
+			grades: response.data.data
+		}
+
+		localStorage.setItem('GradeCache', JSON.stringify(gradeCache));
+
+		// construct grades and return it as a promise
+		return new Promise((resolve) => {
+			resolve(constructEDGrades(response.data.data));
+		});
+	})
+}
+
+
+function groupEDSubjects(subjectData, markArray) {
+	let subject = []
+	let subjectName = '';
+	let subjectId = '';
+	let grouped = false;
+	let excluded = false;
+
+	console.log("GROUP ED SUBJECTS")
+	console.log(subjectData)
+
+	if (localStorage.getItem('groupSubjects') != 'true') {
+		subject = markArray.find(subject => subject.id == subjectData.id);
+		subjectName = subjectData.discipline;
+		subjectId = subjectData.id;
+	} else {
+		subject = markArray.find(subject => subject.id == subjectData.id);
+		subjectName = subjectData.discipline;
+		subjectId = subjectData.id;
+	}
+	
+	
+	
+	
+	/* else {
+		if (localStorage.getItem('excludedGroupSubjects') != null) {
+			let excludedGroupSubjects = JSON.parse(localStorage.getItem('excludedGroupSubjects'));
+			for (let i = 0; i < excludedGroupSubjects.length; i++) {
+				if (subjectData.discipline.split(' > ')[0] == excludedGroupSubjects[i]) {
+					excluded = true;
+					break;
+				} else {
+					excluded = false;
+				}
+			}
+		}
+
+		if (excluded) {
+			subject = markArray.find(subject => subject.id == subjectData.id);
+			subjectName = subjectData.discipline;
+			subjectId = subjectData.id;
+		} else {
+			subject = markArray.find(subject => subject.discipline == subjectData.discipline.split(' > ')[0]);
+			subjectName = subjectData.discipline.split(' > ')[0];
+			subjectId = subjectData.id;
+
+			if (subjectData.discipline.split(' > ').length > 1) {
+				grouped = true;
+				subjectId = generateRandomId();
+			}
+		}
+	}*/
+
+	return {
+		subject: subject, 
+		subjectName: subjectName, 
+		subjectId: subjectId, 
+		grouped: grouped,
+		excluded: excluded
+	}
+}
+
+// ecoledirecte : construct grades
+function constructEDGrades(grades) {   
+	console.log("Building grades") 
+	let marks = grades.notes;
+
+	let allPeriods = JSON.parse(localStorage.getItem('userData')).periods;
+	let actualPeriodID = allPeriods.find(period => period.actual == true).id;
+	let actualPeriod = grades.periodes.find(period => period.idPeriode == actualPeriodID);
+
+	let matieres = actualPeriod.ensembleMatieres.disciplines
+
+	let markArray = [];
+
+	// order marks by date
+	marks.sort((a, b) => {
+		return new Date(b.date) - new Date(a.date);
+	});
+	matieres.forEach(matiere => {
+		let subject = {
+			data: matiere,
+			codeMatiere: matiere.codeMatiere,
+			name: matiere.discipline,
+			id: matiere.id,
+			grouped: matiere.groupeMatiere,
+			class: {},
+			color: subjectColor.getSubjectColor(matiere.discipline, subjectColor.getRandomColor()),
+			marks: [],
+			average: parseFloat(matiere.moyenne.replace(",", ".")),
+			significant: true
+		}
+		markArray.push(subject);
+	})
+
+	// for each mark, add it to the corresponding subject in the array
+	marks.forEach(mark => {
+		// add mark to subject
+		let newMark = {
+			id: mark.id,
+			info: {
+				subject: mark.libelle,
+				date: mark.date,
+				description: mark.devoir || "Pas d'intitulé",
+				significant: true
+			},
+			class: { max: mark.maxClasse, min: mark.minClasse, average: mark.moyenneClasse },
+			grade: { value: parseFloat(mark.valeur.replace(",", ".")), coefficient: parseFloat(mark.coef), average: parseFloat(mark.moyenneClasse), min: parseFloat(mark.minClasse), max: parseFloat(mark.maxClasse), out_of: parseFloat(mark.noteSur) }
+		}
+
+		// determine if mark is significant
+		let significant = determineSignificant(mark, 'ecoledirecte');
+		newMark.info.significant = significant.significant;
+		newMark.info.significantReason = significant.significantReason;
+		newMark.info.significantZero = significant.significantZero;
+
+		//delete newMark.grade.significant;
+
+		if (newMark.info.significantZero) {
+			newMark.grade.value = 0;
+		}
+
+		/*if (!newMark.info.significant && mark.grade.average == -1) {
+			newMark.info.significantAverage = false;
+		} else {
+			newMark.info.significantAverage = true;
+		}*/
+
+		if (!newMark.info.significant && newMark.info.significantReason == null) {
+			return; // It's an empty mark so don't show it on the tab
+		}
+
+		if(mark.noteSur == "20") {
+			newMark.info.outOf20 = 20;
+		}
+		
+		//newMark.info.bonus = mark.is_bonus;
+		//newMark.info.optional = mark.is_optional;
+
+		newMark.grade.value = parseFloat(newMark.grade.value).toFixed(2);
+
+		if(isFloat(newMark.grade.average)) {
+			newMark.grade.average = parseFloat(newMark.grade.average).toFixed(2);
+		}
+		
+		if(isFloat(newMark.grade.min)) {
+			newMark.grade.min = parseFloat(newMark.grade.min).toFixed(2);
+		}
+
+		if(isFloat(newMark.grade.max)) {
+			newMark.grade.max = parseFloat(newMark.grade.max).toFixed(2);
+		}
+
+		let subject = markArray.find(matiere => matiere.codeMatiere == mark.codeMatiere)
+		subject.marks.push(newMark);
+	});
+	
+	// sort marks by date
+	markArray.forEach(subject => {
+		subject.marks.sort((a, b) => {
+			return new Date(b.date) - new Date(a.date);
+		});
+	});
+
+	// add averages
+	markArray.forEach(subject => {
+		// check if subject exists		
+		if (!subject.grouped) {
+			
+			if(subject.data.moyenne.length > 1) subject.average = parseFloat(subject.data.moyenne.replace(",", "."))
+			else subject.average = 0;
+
+			if(subject.data.moyenneClasse.length > 1) subject.class.average = parseFloat(subject.data.moyenneClasse.replace(",", "."))
+			else subject.class.average = 0;
+
+			if(subject.data.moyenneMin.length > 1) subject.class.min = parseFloat(subject.data.moyenneMin.replace(",", "."))
+			else subject.class.min = 0;
+
+			if(subject.data.moyenneMax.length > 1) subject.class.max = parseFloat(subject.data.moyenneMax.replace(",", "."))
+			else subject.class.max = 0;
+
+		} else {
+			let studentAverage = 0;
+			let classAverage = 0;
+			let classMin = 0;
+			let classMax = 0;
+
+			subject.marks.forEach(mark => {
+				let coef = mark.grade.coefficient;
+
+				studentAverage += mark.grade.value * coef;
+				classAverage += mark.grade.average * coef;
+				classMin += mark.grade.min * coef;
+				classMax += mark.grade.max * coef;
+			});
+			/*
+			subject.average = parseFloat((studentAverage / subject.marks.reduce((a, b) => a + (b.grade.coefficient * b.grade.out_of), 0) * 20).toFixed(2));
+			subject.class.average = parseFloat((classAverage / subject.marks.reduce((a, b) => a + (b.grade.coefficient * b.grade.out_of), 0) * 20).toFixed(2));
+			subject.class.min = parseFloat((classMin / subject.marks.reduce((a, b) => a + (b.grade.coefficient * b.grade.out_of), 0) * 20).toFixed(2));
+			subject.class.max = parseFloat((classMax / subject.marks.reduce((a, b) => a + (b.grade.coefficient * b.grade.out_of), 0) * 20).toFixed(2));
+			*/
+		}
+	});
+
+	// calculate averages for each subject in markArray
+	let period = grades.periodes.filter(p => p.cloture === false)
+	period = period[0]
+	
+	let studentAverage = parseFloat(period.ensembleMatieres.moyenneGenerale.replace(",", "."));
+	let classAverage = parseFloat(period.ensembleMatieres.moyenneClasse.replace(",", "."));
+	let classMin = parseFloat(period.ensembleMatieres.moyenneMin.replace(",", "."));
+	let classMax = parseFloat(period.ensembleMatieres.moyenneMax.replace(",", "."));
+	let averagesCalculate = [moment(period.ensembleMatieres.dateCalcul).format("DD/MM/YYYY"), period.ensembleMatieres.dateCalcul.split(' ')[1] ]//moment(period.ensembleMatieres.dateCalcul).format("HH:MM")]
+	/*
+	markArray.forEach(subject => {
+		console.log(subject.class)
+		studentAverage += subject.average;
+		classAverage += subject.class.average;
+		classMin += subject.class.min;
+		classMax += subject.class.max;
+	});
+	
+	studentAverage /= markArray.length;
+	classAverage /= markArray.length;
+	classMin /= markArray.length;
+	classMax /= markArray.length;
+
+	if (studentAverage != -1 && studentAverage != undefined) {
+		studentAverage = grades.overall_average;
+	}
+
+	if (grades.class_overall_average != -1 && grades.class_overall_average != undefined) {
+		classAverage = grades.class_overall_average;
+	}
+*/
+	let avgs = {
+		average: studentAverage,
+		class: {
+			average: classAverage,
+			min: classMin,
+			max: classMax
+		},
+		calculate: averagesCalculate
+	}
+
+	// order all subjects by first mark date
+	markArray.sort((a, b) => {
+		if(a.marks.length == 0) return;
+		if(b.marks.length == 0) return;
+		return new Date(a.marks[0].date) - new Date(b.marks[0].date);
+	});
+
+
+	let finalArray = {
+		marks: markArray,
+		averages: avgs
+	}
+	
+	return finalArray;
+}
+
+
+
 
 // export
 export default getGrades;
