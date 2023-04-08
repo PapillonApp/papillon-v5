@@ -1179,6 +1179,6 @@
 
 	.progress {
 		position: absolute;
-		bottom: 36px;
+		bottom: 35px;
 	}
 </style>
