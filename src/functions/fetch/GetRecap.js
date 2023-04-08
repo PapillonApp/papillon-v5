@@ -173,10 +173,10 @@ function getEDRecap(force) {
             requestsDone++;
         });
 
-        // grades
-        /*getGrades(force).then((response) => {
-            grades.full = response;
-            requestsDone++;
+		// grades
+		getGrades(force).then((response) => {
+			grades.full = response;
+			requestsDone++;
 
             // get all grades in all subjects
             let allGrades = [];
@@ -207,11 +207,11 @@ function getEDRecap(force) {
             }
         });
 
-        // news
-        getNews(force).then((response) => {
-            news = response;
-            requestsDone++;
-        });*/
+		/*// news
+		getNews(force).then((response) => {
+			news = response;
+			requestsDone++;
+		});*/
 
         // wait for all requests to be done
         let interval = setInterval(() => {

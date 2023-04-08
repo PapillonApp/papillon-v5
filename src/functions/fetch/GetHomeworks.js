@@ -272,14 +272,17 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
 
         return axios.post(URL, body, requestOptions)
             .then(async (response) => {
-                if (response.data.data.code) {
-                    if (response.data.data.code == 525) {
+                if (response.data.code != 200) {
+                    if (response.data.code === 525) {
                         // get new token
                         GetToken();
-                    } else {
+                    } else if(response.data.code === 520) {
+                        GetToken();
+                    }
+                    else {
                         return new Promise((reject) => {
                             reject({
-                                error: response.data.data.code
+                                error: response.data.code
                             });
                         });
                     }
@@ -292,34 +295,39 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
 
                 console.log("[REQUEST] [HOMEWORK] Requesting content homeworks...")
 
-                Object.keys(homeworksdate).forEach(date => {
+                async function requestContent() {
+                    return new Promise((resolve, reject) => {
+                        Object.keys(homeworksdate).forEach(async date => {
 
-                    let URL2 = `${EDAPI}/Eleves/${userID}/cahierdetexte/${date}.awp?verbe=get`;
-
-                    axios.post(URL2, body, requestOptions).then(response2 => {
-                        if (response.data.data.code) {
-                            if (response.data.data.code == 525) {
-                                // get new token
-                                GetToken();
-                            } else {
-                                return new Promise((reject) => {
-                                    reject({
-                                        error: response.data.data.code
-                                    });
-                                });
-                            }
-                        }
-
-                        let homework = response2.data.data;
-                        let hw_object = {};
-                        hw_object[date] = homework.matieres
-                        all_homeworks.push(hw_object)
-                        console.log(`[${date}] ${JSON.stringify(homework.matieres)}`)
+                            let URL2 = `${EDAPI}/Eleves/${userID}/cahierdetexte/${date}.awp?verbe=get`;
+        
+                            await axios.post(URL2, body, requestOptions).then(response2 => {
+                                if (response.data.data.code) {
+                                    if (response.data.data.code == 525) {
+                                        // get new token
+                                        GetToken();
+                                    }
+                                    else {
+                                        return new Promise((reject) => {
+                                            reject({
+                                                error: response.data.data.code
+                                            });
+                                        });
+                                    }
+                                }
+        
+                                let homework = response2.data.data;
+                                all_homeworks[date] = homework.matieres;
+                                console.log(`[${date}] ${JSON.stringify(homework.matieres)}`)
+        
+                                resolve(all_homeworks)
+                            })
+                        })
                     })
-                })
-
+                }
+                all_homeworks = await requestContent()
                 // construct homework
-                all_homeworks = await constructEDHomework(all_homeworks);
+                all_homeworks = constructEDHomework(all_homeworks);
 
 
                 // cache response
@@ -344,12 +352,9 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
 function constructEDHomework(hw) {
 
     console.log("Building homeworks...")
-    console.log(hw)
-
     // declaring vars
     let homeworkArray = [];
-
-
+    
     const token = localStorage.getItem('token');
     const userID = JSON.parse(localStorage.UserCache).id;
 
@@ -358,6 +363,7 @@ function constructEDHomework(hw) {
         //on obtiens une date avec une liste
         //2023-03-17
         hw[date].forEach((homework) => {
+            console.log(homework)
             // get homework
             let hws = homework;
             //foreach documents
@@ -399,7 +405,7 @@ function constructEDHomework(hw) {
                 data: {
                     id: hws.id,
                     //date: hws.aFaire.donneLe.replace(/-/g, "/"),
-                    date: hws.date.replace(/-/g, "/"),
+                    date: hws.aFaire.donneLe.replace(/-/g, "/"),
                     color: subjectColor.getSubjectColor(hws.matiere, hws.color || "#12d4a6"),
                     done: hws.effectue,
                 },

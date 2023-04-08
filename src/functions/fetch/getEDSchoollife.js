@@ -38,15 +38,17 @@ async function getEDSchoollife(forceReload) {
 
 		return axios.post(URL, body, requestOptions)
 		.then((response) => {
-            if (response.data.data.code) {
-                if (response.data.data.code == 525) {
+            if (response.data.code != 200) {
+                if (response.data.code === 525) {
                     // get new token
+                    GetToken();
+                } else if(response.data.code === 520) {
                     GetToken();
                 }
                 else {
                     return new Promise((reject) => {
                         reject({
-                            error: response.data.data.code
+                            error: response.data.code
                         });
                     });
                 }
@@ -87,32 +89,45 @@ async function getEDSchoollife(forceReload) {
 
 // pronote : construct delays
 function constructEDSchoollife(schoollife) {
-    console.log(schoollife)
 	let schlife = {
         "absences": [],
         "delays": [],
         "punishments": [],
         "encouragements": [],
     }
-    console.log(schoollife)
 	schoollife.absencesRetards.forEach((absDelays) => {
-		let newabsDelays = {
-			data: {
-				id: absDelays.id,
-				isJustified: absDelays.justifie,
-				justification: absDelays.motif,
-				reasons: absDelays.commentaire,
-			},
-			date: {
-				date: new Date(absDelays.date),
-				duration: absDelays.libelle,
-			}
-		}
-        console.log(newabsDelays)
-        if(absDelays.typeElement == "Absence") schlife.absences.push(newabsDelays)
-
-        if(absDelays.typeElement == "Retard") schlife.delays.push(newabsDelays)
-
+        if(absDelays.typeElement == "Retard") {
+            let newDelays = {
+                data: {
+                    id: absDelays.id,
+                    isJustified: absDelays.justifie,
+                    justification: absDelays.commentaire || "Aucun commentaire",
+                    reasons: [ absDelays.motif ],
+                },
+                date: {
+                    date: new Date(absDelays.date),
+                    duration: absDelays.libelle,
+                }
+            }
+            schlife.delays.push(newDelays)
+        }
+		
+        if(absDelays.typeElement == "Absence") {
+            let newAbsence = {
+                data: {
+                    id: absDelays.id,
+                    isJustified: absDelays.justifie,
+                    reasons: [ absDelays.motif ],
+                    hours: absDelays.hours
+                },
+                date: {
+                    from: new Date(absDelays.from),
+                    to: new Date(absDelays.to),
+                }
+            }
+            schlife.absences.push(newAbsence)
+        }
+        
 	})
 
 
@@ -123,7 +138,7 @@ function constructEDSchoollife(schoollife) {
             let newPunishment = {
                 data: {
                     id: sctEncour.id,
-                    reasons: { text: sctEncour.commentaire },
+                    reasons: { text: [ sctEncour.libelle || "Aucun motif fournit" ], circumstances: sctEncour.commentaire || sctEncour.motif || "Aucune circonstance" },
                     nature: sctEncour.libelle,
                     givenBy: sctEncour.par
                 },
@@ -132,11 +147,11 @@ function constructEDSchoollife(schoollife) {
                     schedules: sctEncour.schedule,
                     duration: sctEncour.duration
                 },
-                homeworks: sctEncour.aFaire,
+                homeworks: sctEncour.aFaire || "Aucun devoir à faire",
                 status: {
-                    isSchedulable: sctEncour.schedulable,
-                    isExclusion: sctEncour.exclusion,
-                    isDuringLesson: sctEncour.durring_lesson,
+                    isSchedulable: sctEncour.schedulable || false,
+                    isExclusion: sctEncour.exclusion || false,
+                    isDuringLesson: sctEncour.durring_lesson || false,
                 }
             }
             schlife.punishments.push(newPunishment)
@@ -176,7 +191,6 @@ function constructEDSchoollife(schoollife) {
     schlife.encouragements.sort((a, b) => {
 		return b.date.from - a.date.from;
 	})
-
 	return schlife
 }
 

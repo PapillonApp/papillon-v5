@@ -6,7 +6,7 @@
 	import axios from 'axios';
 
 	import { App } from '@capacitor/app';
-	
+
 	import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp, serverOutline, serverSharp } from 'ionicons/icons';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -14,6 +14,11 @@
 
 	import { Geolocation } from '@capacitor/geolocation';
 	import { Dialog } from '@capacitor/dialog';
+
+
+	import getEDPeriods from '@/functions/fetch/getEDPeriods.js';
+  import getEDPhoto from "@/functions/fetch/getEDPhoto";
+
 
 	export default defineComponent({
 		name: 'FolderPage',
@@ -81,10 +86,12 @@
 				var requestOptions = {
 					headers: { "Content-Type": "application/x-www-form-urlencoded", "x-token": "" },
 				};
+
+        // encodeURIComponent because Ecoledirect needs urlencode on any field !
 				var body = `data={
 						"uuid": "",
-						"identifiant": "${username}",
-						"motdepasse": "${password}",
+						"identifiant": "${encodeURIComponent(username)}",
+						"motdepasse": "${encodeURIComponent(password)}",
 						"isReLogin": false
 					}`
 
@@ -95,7 +102,7 @@
 				loading.present();
 
 				axios.post(EDAPI + "/login.awp", body, requestOptions)
-				.then(data => {
+				.then(async (data) => {
 					let rsp = data.data
 					if(!rsp.token) {
 						loading.dismiss()
@@ -108,6 +115,14 @@
 					else {
 						let token = rsp.token;
 						let user = rsp.data.accounts[0];
+
+						//FETCH PERIODS
+						await getEDPeriods(user.id, token).then(periods => {
+							user.periods = periods;
+						})
+
+            rsp.data.accounts[0].profile.photo = await getEDPhoto(rsp.data.accounts[0])
+
 						localStorage.UserCache = JSON.stringify(user);
 						// save token
 						localStorage.token = token;
@@ -118,7 +133,7 @@
 						}));
 						localStorage.loginService = "ecoledirecte";
 						localStorage.setItem("disabledDays", JSON.stringify([0]));
-						const ACAD_NAME_API = "https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-adresse-et-geolocalisation-etablissements-premier-et-second-degre&q=&facet=code_postal_uai&facet=nature_uai_libe&facet=libelle_academie&timezone=Europe%2FParis"
+						// const ACAD_NAME_API = "https://data.education.gouv.fr/api/records/1.0/search/?dataset=fr-en-adresse-et-geolocalisation-etablissements-premier-et-second-degre&q=&facet=code_postal_uai&facet=nature_uai_libe&facet=libelle_academie&timezone=Europe%2FParis"
 						/*axios.get(ACAD_NAME_API + "&refine.numero_uai=" + url.split("/")[2].split(".")[0].toUpperCase())
 							.then(response => response.json())
 							.then(result => {

@@ -307,10 +307,24 @@ function getEDTimetable(date, forceReload) {
             "avecTrous": false
         }`
         return axios.post(URL, body, requestOptions)
-            .then((response) => {
-
-                // get timetable
-                let timetable = response.data.data;
+        .then((response) => {
+            if (response.data.code != 200) {
+                if (response.data.code === 525) {
+                    // get new token
+                    GetToken();
+                } else if(response.data.code === 520) {
+                    GetToken();
+                }
+                else {
+                    return new Promise((reject) => {
+                        reject({
+                            error: response.data.code
+                        });
+                    });
+                }
+            }
+            // get timetable
+            let timetable = response.data.data;
 
                 // construct timetable
                 timetable = constructEDTimetable(timetable);
@@ -398,6 +412,10 @@ function constructEDTimetable(timetable) {
 
         if (course.memo != null) {
             newCourse.data.hasMemo = true;
+        }
+
+        if (course.isModifie) {
+            newCourse.status.status = "Le cours a été modifié";
         }
 
         if (course.is_detention) {

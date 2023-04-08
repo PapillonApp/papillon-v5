@@ -96,8 +96,14 @@
 				})
 			},    
 			async GetLocation() {
-				const coordinates = await Geolocation.getCurrentPosition();
-
+				const coordinates = await Geolocation.getCurrentPosition()
+				.catch(err => {
+					if(err.code === 1) {
+						this.permissionWait = false
+						this.permissionDeny = true
+					}
+				})
+				console.log(coordinates)
 				let lat = coordinates.coords.latitude;
 				let lon = coordinates.coords.longitude;
 
@@ -143,6 +149,7 @@
 				await actionSheet.present();
 			},
 			getPostal(e) {
+				if(this.permissionDeny) return;
 				let postal = e.detail.value
 
 				if (postal.trim().length != 5) {
@@ -193,6 +200,8 @@
 				})
 			},
 			findEstablishments(lat, lon) {
+				this.permissionWait = false
+				this.etabsFetching = true
 				fetch("https://www.index-education.com/swie/geoloc.php", {
 					headers: {
 						accept: "*/*",
@@ -222,17 +231,17 @@
 				.then((response) => response.json())
 				.then((data) => {
 					this.etabs = data;
-
+					this.etabsFetching = false;
 					if (this.etabs.length == 0) {
-					this.etabsEmpty = true;
+						this.etabsEmpty = true;
 					} else {
-					this.etabsEmpty = false;
+						this.etabsEmpty = false;
 					}
 
 					if (JSON.stringify(data) == "{}") {
-					this.locationFailed = true;
+						this.locationFailed = true;
 					} else {
-					this.locationFailed = false;
+						this.locationFailed = false;
 					}
 
 					// remove all etabs with no URL
@@ -600,7 +609,7 @@
 				presentingElement: null,
 				terms: "",
 				foundCity: "",
-				etabsEmpty: true,
+				etabsEmpty: false,
 				locationFailed: false,
 				etabs: [],
 				isLoading: false,
@@ -610,6 +619,9 @@
 				etabName: "",
 				ents: [],
 				retries: 0,
+				etabsFetching: false,
+				permissionDeny: false,
+				permissionWait: true
 			}
 		},
 	});
@@ -649,6 +661,22 @@
 				</ion-label>
 			</ion-item>
 
+			<ion-item v-if="permissionWait">
+				<ion-icon class="icon" slot="start" :ios="businessOutline" :md="businessSharp"></ion-icon>
+				<ion-label>
+					<h2>En attente de la permission...</h2>
+					<p>Veuillez autoriser la permission de géolocalisation pour rechercher les établissements à proximité.</p>
+				</ion-label>
+			</ion-item>
+
+			<ion-item v-if="etabsFetching">
+				<ion-icon class="icon" slot="start" :ios="businessOutline" :md="businessSharp"></ion-icon>
+				<ion-label>
+					<h2>Recherche des établissements...</h2>
+					<p></p>
+				</ion-label>
+			</ion-item>
+
 			<ion-item v-if="etabsEmpty">
 				<ion-icon class="icon" slot="start" :ios="businessOutline" :md="businessSharp"></ion-icon>
 				<ion-label>
@@ -662,6 +690,14 @@
 				<ion-label>
 					<h2>Emplacement introuvable</h2>
 					<p>Impossible de trouver des établissements à "{{ terms }}"</p>
+				</ion-label>
+			</ion-item>
+
+			<ion-item v-if="permissionDeny">
+				<ion-icon class="icon" slot="start" :ios="navigateOutline" :md="navigateSharp"></ion-icon>
+				<ion-label>
+					<h2>Permission "Géolocalisation" refusée</h2>
+					<p>Nous ne pouvons pas chercher les établissements à proximité. Veuillez autoriser la géolocalisation et réessayez.</p>
 				</ion-label>
 			</ion-item>
 		</ion-list>
