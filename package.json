@@ -35,6 +35,7 @@
     "@capacitor/toast": "^4.1.0",
     "@capawesome/capacitor-file-picker": "^0.6.1",
     "@hugotomazi/capacitor-navigation-bar": "^2.0.0",
+    "@ionic/core": "^7.0.1",
     "@ionic/vue": "^6.7.0",
     "@ionic/vue-router": "^6.7.0",
     "@transistorsoft/capacitor-background-fetch": "^1.0.3",
@@ -53,9 +54,9 @@
     "sharp": "^0.31.3",
     "swiper": "^8.4.5",
     "values.js": "^2.1.1",
-    "vue": "^3.2.21",
+    "vue": "^3.2.47",
     "vue-lazyload": "^3.0.0-rc.2",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@capacitor/cli": "^4.6.1",
