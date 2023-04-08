@@ -437,7 +437,11 @@
 			this.dataLoading = true;
 			GetUser.default().then((data: UserData) => {
 				this.userData = data;
-				this.dataLoading = false;
+				
+				if(data.student) {
+					this.dataLoading = false;
+				}
+
 				if(!localStorage.getItem('avatarCache')) {
 					this.avatar = data.student.avatar;
 				}
