@@ -2,7 +2,7 @@ import { app } from '@/main.ts'
 import displayToast from '@/functions/utils/displayToast.js';
 
 import axios from 'axios';
-
+import getEDPhoto from "@/functions/fetch/getEDPhoto";
 
 import { checkmark, refresh } from 'ionicons/icons';
 
@@ -102,7 +102,6 @@ function getPronoteLogin() {
 
 
 //ecoledirecte : get token
-
 function getEDLogin() {
     if(!waitingForToken) {
         // gather vars
@@ -138,10 +137,13 @@ function getEDLogin() {
 
         // get token from API
         return axios.post(EDAPI + "/login.awp", body, requestOptions)
-        .then(result => {
+        .then(async result => {
             if(result.data.code === 200) {
                 // save token
                 localStorage.setItem('token', result.data.token);
+
+                // set base64 avatar
+                result.data.data.accounts[0].profile.photo = await getEDPhoto(result.data.data.accounts[0])
 
                 // empty localstorage cache
                 localStorage.setItem('UserCache', JSON.stringify(result.data.data.accounts[0]));
