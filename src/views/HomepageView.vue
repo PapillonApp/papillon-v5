@@ -308,6 +308,11 @@
 			},
 			getRecap(force) {
 				GetRecap(force).then((recap) => {
+					this.timetable = [];
+					this.homeworks = [];
+					this.grades = [];
+					this.news = [];
+
 					this.useRecap(recap)
 
 					localStorage.setItem("recap", JSON.stringify(recap));
@@ -425,13 +430,11 @@
                 // new send request
                 if(!this.dontRetryCheck) {
                     tickHomework([homeworkID, dateSet]).then((response) => {
-                        setTimeout(() => {
-                            this.dontRetryCheck = true;
-
-                            setTimeout(() => {
-                                this.dontRetryCheck = false;
-                            }, 200);
-                        }, 200);
+                        this.dontRetryCheck = true;
+                            
+						setTimeout(() => {
+                            this.dontRetryCheck = false;
+                        }, 100);
                     })
 					.catch((error) => {
                         // refresh
@@ -739,7 +742,7 @@
 
 			<div id="components" ref="components">
 				<Transition name="ElemAnim">
-					<ion-list v-if="allLoaded && !hwloading" lines="none" id="comp-hw" ref="comp-hw" inset="true">
+					<ion-list v-if="homeworks.length !== 0 && allLoaded && !hwloading" lines="none" id="comp-hw" ref="comp-hw" inset="true">
 							<ion-list-header class="listHeader" v-if="allLoaded && !hwloading">
 								<ion-label>
 									<h2 style="font-size: 20px;">Travail à faire</h2>
@@ -756,7 +759,7 @@
 
 								<ion-item detail="false" v-for="homework in day.homeworks" :key="homework.id" button>
 									<div slot="start">
-										<IonCheckbox :checked="homework.data.done" @click="changeDone(homework, $event)"></IonCheckbox>
+										<IonCheckbox :checked="homework.data.done" @ionChange="changeDone(homework, $event)"></IonCheckbox>
 									</div>
 
 									<IonNavLink class="navlink" router-direction="forward" :component="HomeworkItemView" :componentProps="{urlHw: encodeURIComponent(JSON.stringify(homework))}">
@@ -781,7 +784,7 @@
 				</Transition>
 
 				<Transition name="ElemAnim">
-					<ion-list v-if="allLoaded && !gradesLoading" id="comp-grades" ref="comp-grades" lines="none" inset="true" class="hw_group">
+					<ion-list v-if="grades.length !== 0 && allLoaded && !gradesLoading" id="comp-grades" ref="comp-grades" lines="none" inset="true" class="hw_group">
 							<ion-list-header class="listHeader">
 								<ion-label>
 									<h2 style="font-size: 20px;">Dernières notes</h2>
@@ -813,7 +816,7 @@
 				</Transition>
 
 				<Transition name="ElemAnim">
-					<ion-list v-if="allLoaded && !newsLoading" id="comp-news" ref="comp-news" lines="none" inset="true">
+					<ion-list v-if="news.length !== 0 && allLoaded && !newsLoading" id="comp-news" ref="comp-news" lines="none" inset="true">
 							<ion-list-header class="listHeader">
 								<ion-label>
 									<h2 style="font-size: 20px;">Actualités</h2>
