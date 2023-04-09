@@ -610,7 +610,7 @@
 						</IonLabel>
 					</IonItem>
 				</div>
-				<ion-item v-id="loginService === 'ecoledirecte'">
+				<ion-item v-if="loginService === 'ecoledirecte'">
 					<p>Moyennes calculées le {{ calcAverage[0] }} à {{ calcAverage[1] }}</p>
 				</ion-item>
 			</IonList>
