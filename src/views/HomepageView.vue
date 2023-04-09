@@ -415,7 +415,7 @@
 				dateSet.setDate(dateSet.getDate() + 1);
 
 				// if checked
-				if(!event.target.checked) {
+				if(event.target.checked) {
 					jsConfetti.addConfetti({
 						emojis: ['✅', '🍾', '🎊'],
 						confettiNumber: 20,
@@ -827,7 +827,8 @@
 
 							<IonNavLink v-for="(info, i) in news.slice(0, 5)" :key="i" router-direction="forward" :component="InfoView" :componentProps="{urlNews: encodeURIComponent(JSON.stringify(info))}">
 								<ion-item button>
-									<span slot="start" class="material-symbols-outlined mdls emoji">feed</span>
+									<span v-if="info.title.toLowerCase().includes('menu')" slot="start" class="material-symbols-outlined mdls emoji">restaurant</span>
+									<span v-else slot="start" class="material-symbols-outlined mdls emoji">feed</span>
 										
 									<ion-label>
 										<h2>{{ info.title }}</h2>
