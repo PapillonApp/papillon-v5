@@ -974,5 +974,15 @@
 
 	.gradesList {
 		--ion-item-background: var(--ion-color-step-50);
+		background: var(--ion-color-step-50);
+	}
+
+	ion-card {
+		box-shadow: var(--ion-box-shadow);
+		background: var(--ion-toolbar-background);
+	}
+
+	.dark ion-card {
+		background: var(--ion-color-step-50);
 	}
 </style>
