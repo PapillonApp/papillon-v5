@@ -391,11 +391,11 @@
 				try {
 					this.backgroundFetchEvent(taskId);
 				} catch (e) {
-					console.log(e);
+					console.error(e);
 					await BackgroundFetch.finish(taskId);
 				}
 			}, () => {
-				console.log('[js] RNBackgroundFetch failed to start');
+				console.error('[js] RNBackgroundFetch failed to start');
 			});
 		},
 		checkIosShortcuts() {
