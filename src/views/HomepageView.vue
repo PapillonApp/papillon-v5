@@ -59,7 +59,6 @@
 			IonHeader,
 			IonContent,
 			IonToolbar,
-			IonTitle,
 			IonMenuButton,
 			IonButtons,
 			IonPage,
@@ -97,6 +96,7 @@
 				noCoursesMsg: this.randomMsg(),
 				userData: [],
 				userName: "",
+				userFullName: "",
 				avatar: "",
 				grades: [],
 				gradesLoading: true,
@@ -115,6 +115,9 @@
 		},
 		methods: {
 			goto(url) {
+				setTimeout(() => {
+					StatusBar.setStyle({style: Style.Default})
+				}, 100);
 				document.dispatchEvent(new CustomEvent('navTransitionEnable'));
 				this.$router.push(url);
 			},
@@ -540,6 +543,7 @@
 			this.userData = JSON.parse(localStorage.userData);
 
 			this.userName = JSON.parse(localStorage.userData).student.name.split(" ")[JSON.parse(localStorage.userData).student.name.split(" ").length - 1]
+			this.userFullName = JSON.parse(localStorage.userData).student.name
 
 			// check internet connection
 			Network.addListener('networkStatusChange', (status) => {
@@ -580,114 +584,121 @@
 					<ion-menu-button mode="md"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Vue d'ensemble</ion-title>
+				<div class="profile">
+					<ion-avatar class="userAvatar">
+						<img :src="avatar"/>
+					</ion-avatar>
+
+					<div class="name">
+						<p>{{ userFullName }}</p>
+						<h3>Page d'accueil</h3>
+					</div>
+				</div>
+
+				
 
 				<ion-buttons slot="end">
 					<ion-nav-link v-if="avatar" router-direction="forward" :component="UserView">
-						<ion-avatar class="userAvatar">
-							<img :src="avatar"/>
-						</ion-avatar>
+						
 					</ion-nav-link>
 				</ion-buttons>
 			</IonToolbar>
 
-			<IonToolbar class="nextToolbar toolbar" :color="toolbarColor">
-				
+			<IonToolbar class="toolbar" :color="toolbarColor">
+				<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
+					<div class="coursElemNext" v-for="cours in timetable" :key="cours.id" :style="`--courseColor: ${cours.course.color};`">
+						<ion-item class="nextCours" button :detail="false" mode="md" lines="none"
+							@click="goto('timetable')" 
+							:class="{ cancelled: cours.status.isCancelled, HasStatus: cours.hasStatus }">
+							<div slot="start" class="timeChip">
+								<IonChip>
+									{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}
+								</IonChip>
+							</div>
+							<ion-label :style="`--courseColor: ${cours.course.color};`">
+								<h2><span class="courseColor"></span>{{ cours.data.subject }}</h2>
+
+								<div class="progression" v-if="nextCoursStarted">
+									<p class="startProg">{{ nextCoursTime }}</p>
+
+									<div class="progressBar">
+										<div class="progress" :style="`width: ${nextCoursCompletion}%`"></div>
+									</div>
+
+											<p class="endProg">{{ cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</p>
+										</div>
+										<div v-else>
+											<p>{{ nextCoursTime }}</p>
+										</div>
+
+								<div class="CoursInfoContainer">
+									<div class="CoursInfo room">
+										<span class="material-symbols-outlined smol" slot="start">location_on</span>
+
+										<p>{{ cours.data.rooms.join(', ') || 'Pas de salle' }}</p>
+									</div>
+									<div class="separator"></div>
+									<div class="CoursInfo">
+										<span class="material-symbols-outlined smol" slot="start">face</span>
+
+										<p>{{ cours.data.teachers.join(', ') || 'Pas de professeur' }}</p>
+									</div>
+								</div>
+
+							</ion-label>
+						</ion-item>
+						<div class="nextStatus" v-if="cours.status.status" :class="{ 'cancelled' : cours.status.isCancelled }">
+							<span class="material-symbols-outlined mdls">info</span>
+							<p>{{ cours.status.status }}</p>
+						</div>
+					</div>
+
+					<ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0 && !connected" style="margin-top: 12px;"
+						class="nextCours" button :detail="false" mode="md" lines="none">
+						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
+							<span class="material-symbols-outlined mdls">wifi_off</span>
+						</div>
+						<ion-label class="ion-text-wrap">
+							<h2>Aucune connexion internet</h2>
+							<p>Les cours ne peuvent pas être chargés sans connection internet, réessayer plus tard...</p>
+						</ion-label>
+					</ion-item>
+
+					<ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0 && connected" style="margin-top: 12px;"
+						class="nextCours" button :detail="false" mode="md" lines="none">
+						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
+							<span class="material-symbols-outlined mdls">crisis_alert</span>
+						</div>
+						<ion-label class="ion-text-wrap">
+							<h2>Serveurs indisponibles</h2>
+							<p>Les cours ne peuvent pas être chargés, nos serveurs seront bientôt de nouveaux disponibles...</p>
+						</ion-label>
+					</ion-item>
+
+					<ion-item class="nextCours" button :detail="false" mode="md" v-if="!ttbLoading && timetable.length == 0" style="margin-top: 12px;"
+						@click="goto('timetable')">
+						<div slot="start" class="emoji">
+							{{ noCoursesEmoji }}
+						</div>
+						<ion-label class="ion-text-wrap">
+							<h2>Aucun cours</h2>
+							<p>{{ noCoursesMsg }}</p>
+						</ion-label>
+					</ion-item>
+
+					<ion-item v-if="ttbLoading && timetable.length == 0" class="nextCours" button :detail="false" mode="md" lines="none">
+						<div slot="start" style="margin-left: 5px; margin-right: 20px;">
+							<IonSpinner></IonSpinner>
+						</div>
+						<ion-label>
+							<h2 style="display: flex;"><ion-skeleton-text class="courseColor" :animated="true" style="width: 10px;"></ion-skeleton-text> <ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text></h2>
+							<h3><ion-skeleton-text :animated="true" style="width: 35%;"></ion-skeleton-text></h3>
+							<p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
+						</ion-label>
+					</ion-item>
+				</ion-list>
 			</IonToolbar>
 		</IonHeader>
-
-		<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
-			<div class="coursElemNext" v-for="cours in timetable" :key="cours.id" :style="`--courseColor: ${cours.course.color};`">
-				<ion-item class="nextCours" button :detail="false" mode="md" lines="none"
-					@click="goto('timetable')" 
-					:class="{ cancelled: cours.status.isCancelled, HasStatus: cours.hasStatus }">
-					<div slot="start" class="timeChip">
-						<IonChip>
-							{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}
-						</IonChip>
-					</div>
-					<ion-label :style="`--courseColor: ${cours.course.color};`">
-						<h2><span class="courseColor"></span>{{ cours.data.subject }}</h2>
-
-						<div class="progression" v-if="nextCoursStarted">
-							<p class="startProg">{{ nextCoursTime }}</p>
-
-							<div class="progressBar">
-								<div class="progress" :style="`width: ${nextCoursCompletion}%`"></div>
-							</div>
-
-									<p class="endProg">{{ cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</p>
-								</div>
-								<div v-else>
-									<p>{{ nextCoursTime }}</p>
-								</div>
-
-						<div class="CoursInfoContainer">
-							<div class="CoursInfo room">
-								<span class="material-symbols-outlined smol" slot="start">location_on</span>
-
-								<p>{{ cours.data.rooms.join(', ') || 'Pas de salle' }}</p>
-							</div>
-							<div class="separator"></div>
-							<div class="CoursInfo">
-								<span class="material-symbols-outlined smol" slot="start">face</span>
-
-								<p>{{ cours.data.teachers.join(', ') || 'Pas de professeur' }}</p>
-							</div>
-						</div>
-
-					</ion-label>
-				</ion-item>
-				<div class="nextStatus" v-if="cours.status.status" :class="{ 'cancelled' : cours.status.isCancelled }">
-					<span class="material-symbols-outlined mdls">info</span>
-					<p>{{ cours.status.status }}</p>
-				</div>
-			</div>
-
-			<ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0 && !connected" style="margin-top: 12px;"
-				class="nextCours" button :detail="false" mode="md" lines="none">
-				<div slot="start" style="margin-left: 5px; margin-right: 20px;">
-					<span class="material-symbols-outlined mdls">wifi_off</span>
-				</div>
-				<ion-label class="ion-text-wrap">
-					<h2>Aucune connexion internet</h2>
-					<p>Les cours ne peuvent pas être chargés sans connection internet, réessayer plus tard...</p>
-				</ion-label>
-			</ion-item>
-
-			<ion-item v-if="timetable.error == 'ERR_NETWORK' && timetable.length == 0 && connected" style="margin-top: 12px;"
-				class="nextCours" button :detail="false" mode="md" lines="none">
-				<div slot="start" style="margin-left: 5px; margin-right: 20px;">
-					<span class="material-symbols-outlined mdls">crisis_alert</span>
-				</div>
-				<ion-label class="ion-text-wrap">
-					<h2>Serveurs indisponibles</h2>
-					<p>Les cours ne peuvent pas être chargés, nos serveurs seront bientôt de nouveaux disponibles...</p>
-				</ion-label>
-			</ion-item>
-
-			<ion-item class="nextCours" button :detail="false" mode="md" v-if="!ttbLoading && timetable.length == 0" style="margin-top: 12px;"
-				@click="goto('timetable')">
-				<div slot="start" class="emoji">
-					{{ noCoursesEmoji }}
-				</div>
-				<ion-label class="ion-text-wrap">
-					<h2>Aucun cours</h2>
-					<p>{{ noCoursesMsg }}</p>
-				</ion-label>
-			</ion-item>
-
-			<ion-item v-if="ttbLoading && timetable.length == 0" class="nextCours" button :detail="false" mode="md" lines="none">
-				<div slot="start" style="margin-left: 5px; margin-right: 20px;">
-					<IonSpinner></IonSpinner>
-				</div>
-				<ion-label>
-					<h2 style="display: flex;"><ion-skeleton-text class="courseColor" :animated="true" style="width: 10px;"></ion-skeleton-text> <ion-skeleton-text :animated="true" style="width: 40%;"></ion-skeleton-text></h2>
-					<h3><ion-skeleton-text :animated="true" style="width: 35%;"></ion-skeleton-text></h3>
-					<p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
-				</ion-label>
-			</ion-item>
-		</ion-list>
 
 		<ion-content :fullscreen="true">
 			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
@@ -714,52 +725,22 @@
 
 			<div id="components" ref="components">
 				<Transition name="ElemAnim">
-					<ion-list v-if="allLoaded && !gradesLoading" id="comp-grades" ref="comp-grades" lines="none" inset="true" class="hw_group">
-							<ion-list-header>
-								<ion-label>
-									<h2 style="font-size: 20px;">Dernières notes</h2>
-								</ion-label>
-								<ion-button @click="goto('grades')">Voir tout</ion-button>
-							</ion-list-header>
-
-							<div v-if="!gradesLoading">
-								<IonNavLink v-for="grade in grades" :key="grade.id" router-direction="forward" :component="MarkView" :componentProps="{markID: grade.id}">
-									<ion-item button>
-										<ion-label :style="`--courseColor: ${grade.subject.color};`">
-											<p><span class="courseColor"></span> {{ grade.subject.name }}</p>
-											<h2>{{ grade.info.description }}</h2>
-										</ion-label>
-
-										<div slot="end">
-											<ion-label v-if="grade.info.significant">
-												<h2>{{ grade.grade.value }}<small>/{{ grade.grade.out_of }}</small></h2>
-											</ion-label>
-											<ion-label v-else>
-												<h2>{{ grade.info.significantReason }}</h2>
-											</ion-label>
-										</div>
-									</ion-item>
-								</IonNavLink>
-							</div>
-					</ion-list>
-				</Transition>
-
-				<Transition name="ElemAnim">
 					<ion-list v-if="allLoaded && !hwloading" lines="none" id="comp-hw" ref="comp-hw" inset="true">
-							<ion-list-header v-if="allLoaded && !hwloading">
+							<ion-list-header class="listHeader" v-if="allLoaded && !hwloading">
 								<ion-label>
 									<h2 style="font-size: 20px;">Travail à faire</h2>
 								</ion-label>
-								<ion-button @click="goto('homework')">Voir tout</ion-button>
+								<ion-button @click="goto('homework')">Voir tout
+								<span class="material-symbols-outlined mdls" slot="end">arrow_outward</span></ion-button>
 							</ion-list-header>
 
 							<div v-if="!hwloading"><ion-item-group class="hw_group" v-for="(day, i) in homeworks" :key="i">
 								<div class="homepage_divider">
-									<p>{{ new Date(day.date).toLocaleString('fr-FR', { weekday: 'long' }) }}</p>
+									<p>pour <span>{{ new Date(day.date).toLocaleString('fr-FR', { weekday: 'long', day:'numeric', month:'short' }) }}</span></p>
 									<div class="divider"></div>
 								</div>
 
-								<ion-item v-for="homework in day.homeworks" :key="homework.id" button>
+								<ion-item detail="false" v-for="homework in day.homeworks" :key="homework.id" button>
 									<div slot="start">
 										<IonCheckbox :checked="homework.data.done" @click="changeDone(homework, $event)"></IonCheckbox>
 									</div>
@@ -786,12 +767,45 @@
 				</Transition>
 
 				<Transition name="ElemAnim">
+					<ion-list v-if="allLoaded && !gradesLoading" id="comp-grades" ref="comp-grades" lines="none" inset="true" class="hw_group">
+							<ion-list-header class="listHeader">
+								<ion-label>
+									<h2 style="font-size: 20px;">Dernières notes</h2>
+								</ion-label>
+								<ion-button @click="goto('grades')">Voir tout
+								<span class="material-symbols-outlined mdls" slot="end">arrow_outward</span></ion-button>
+							</ion-list-header>
+
+							<div v-if="!gradesLoading">
+								<IonNavLink v-for="grade in grades" :key="grade.id" router-direction="forward" :component="MarkView" :componentProps="{markID: grade.id}">
+									<ion-item button>
+										<ion-label :style="`--courseColor: ${grade.subject.color};`">
+											<p><span class="courseColor"></span> {{ grade.subject.name }}</p>
+											<h2>{{ grade.info.description }}</h2>
+										</ion-label>
+
+										<div slot="end">
+											<ion-label v-if="grade.info.significant" class="gradeLabel">
+												<h2>{{ grade.grade.value }}<small>/{{ grade.grade.out_of }}</small></h2>
+											</ion-label>
+											<ion-label v-else class="gradeLabel">
+												<h2>{{ grade.info.significantReason }}</h2>
+											</ion-label>
+										</div>
+									</ion-item>
+								</IonNavLink>
+							</div>
+					</ion-list>
+				</Transition>
+
+				<Transition name="ElemAnim">
 					<ion-list v-if="allLoaded && !newsLoading" id="comp-news" ref="comp-news" lines="none" inset="true">
-							<ion-list-header>
+							<ion-list-header class="listHeader">
 								<ion-label>
 									<h2 style="font-size: 20px;">Actualités</h2>
 								</ion-label>
-								<ion-button @click="goto('news')">Voir tout</ion-button>
+								<ion-button @click="goto('news')">Voir tout
+								<span class="material-symbols-outlined mdls" slot="end">arrow_outward</span></ion-button>
 							</ion-list-header>
 
 							<IonNavLink v-for="(info, i) in news.slice(0, 5)" :key="i" router-direction="forward" :component="InfoView" :componentProps="{urlNews: encodeURIComponent(JSON.stringify(info))}">
@@ -824,6 +838,37 @@
 </template>
 
 <style scoped>
+	.profile {
+		display: flex;
+		gap: 16px;
+		margin-left: 12px;
+		padding-top: 8px;
+		padding-bottom: 8px;
+	}
+
+	.profile * {
+		margin: 0;
+	}
+
+	.profile .name {
+		margin-top: -2.5px;
+	}
+
+	.profile .name p {
+		font-size: 15.5px;
+		opacity: 0.5;
+	}
+
+	.profile .name h3 {
+		font-size: 17.5px;
+		font-weight: 600;
+	}
+
+	.userAvatar {
+		height: 38px;
+		width: 38px;
+	}
+
 	.iconDisplay {
 		display: flex;
 		align-items: center;
@@ -864,8 +909,6 @@
 		overflow: visible;
 		background: none;
 		padding: 0;
-
-		margin-top: -40px;
 		z-index: 99999;
 	}
 
@@ -881,12 +924,14 @@
 		;
 		border-top: 0.5px solid #00000010;
 
-		margin: 0px 16px;
+		margin: 0px 12px;
 
 		--ion-item-background: #fff;
+		--ion-text-color: #000;
 	}
 
 	.dark .nextCours {
+		--ion-text-color: #fff;
 		--ion-item-background: var(--ion-color-step-100) !important;
 	}
 
@@ -995,30 +1040,29 @@
 	.homepage_divider {
 		display: flex;
 		align-items: center;
-		margin: 2px 18px;
+		padding: 5px 18px;
+		width: 210px;
+		background: #EADBFC;
+		border-radius: 0px 300px 300px 0px;
 	}
 
-	.md .homepage_divider {
-		margin: 0px 16px;
+	.dark .homepage_divider {
+		background: #443F4A77;
+		color: #EADBFC !important;
 	}
 
-	.ios .homepage_divider {
-		width: 100%;
+	.homepage_divider * {
+		margin: 0;
 	}
 
 	.homepage_divider p {
-		margin: 0;
-		font-size: 1em;
-		font-weight: 500;
-		font-family: var(--papillon-font);
-		opacity: 0.5;
+		font-weight: 400;
+		font-size: 16px;
+		font-family: var(--papillon-font) !important;
 	}
 
-	.homepage_divider .divider {
-		flex: 1;
-		height: 1px;
-		background-color: var(--ion-color-step-150);
-		margin-left: 10px;
+	.homepage_divider p span {
+		font-weight: 600;
 	}
 
 	.hw_group {
@@ -1106,13 +1150,6 @@
 		margin-right: 12px !important;
 	}
 
-	.userAvatar {
-		height: 34px;
-		width: 34px;
-
-		border: 1px solid #00000020;
-	}
-
 	.toolbar[color=primary] {
 		--ion-text-color: #fff !important;
 		color: #fff !important;
@@ -1153,4 +1190,26 @@
 	.navlink ion-label p {
 		margin-bottom: 5px;
 	}
+
+	.listHeader ion-label h2 {
+		font-size: 18px !important;
+	}
+
+	.listHeader ion-button {
+		--background: rgba(var(--ion-color-primary-rgb), 0.1);
+		--border-radius: 30px;
+		margin-top: -7px !important;
+		margin-right: 10px;
+	}
+
+	.listHeader ion-button::part(native) {
+		padding: 15px 10px;
+	}
+
+	.listHeader ion-button .mdls {
+		font-size: 22px !important;
+		margin-left: 2px;
+		margin-top: 2px;
+	}
+	
 </style>

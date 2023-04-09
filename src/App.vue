@@ -514,7 +514,15 @@
 			}
 			else {
 				if(this.changeStatusTimeout) {
-					StatusBar.setStyle({style: Style.Default})
+					// get current page from URL
+					const currentUrl = window.location.pathname;
+
+					if(currentUrl !== "/home") {
+						StatusBar.setStyle({style: Style.Default})
+					}
+					else if(localStorage.getItem('fillToolbar') == 'false') {
+						StatusBar.setStyle({style: Style.Default})
+					}
 				}
 
 				setTimeout(() => {
