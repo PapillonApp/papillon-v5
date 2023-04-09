@@ -943,6 +943,10 @@
 		margin-right: 10px;
 	}
 
+	.gradeItem {
+		--background: var(--ion-toolbar-background);
+	}
+
 	.gradeItem .markLabel h2 {
 		font-weight: 500 !important;
 	}

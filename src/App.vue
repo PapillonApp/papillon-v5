@@ -454,6 +454,8 @@
 				// set userData in localStorage
 				if(data !== undefined) {
 					localStorage.userData = JSON.stringify(data);
+
+					document.dispatchEvent(new CustomEvent('userDataLoaded'));
 				}
 			});
 		},

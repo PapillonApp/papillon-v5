@@ -513,6 +513,17 @@
 						this.avatar = localStorage.getItem('avatarCache');
 					}
 				});
+			},
+			getUserData() {
+				this.getAvatar();
+
+				// get userData
+				this.userData = JSON.parse(localStorage.userData);
+
+				console.log(this.userData)
+
+				this.userName = JSON.parse(localStorage.userData).student.name.split(" ")[JSON.parse(localStorage.userData).student.name.split(" ").length - 1]
+				this.userFullName = JSON.parse(localStorage.userData).student.name
 			}
 		},
 		async mounted() {
@@ -533,17 +544,20 @@
 			}
 
 			this.getRecap();
-			this.getAvatar();
 
 			document.addEventListener('tokenUpdated', () => {
 				this.getRecap();
 			});
 
-			// get userData
-			this.userData = JSON.parse(localStorage.userData);
+			this.getUserData();
 
-			this.userName = JSON.parse(localStorage.userData).student.name.split(" ")[JSON.parse(localStorage.userData).student.name.split(" ").length - 1]
-			this.userFullName = JSON.parse(localStorage.userData).student.name
+			document.addEventListener('userDataLoaded', () => {
+				this.getUserData();
+			});
+
+			document.addEventListener('avatarLoaded', () => {
+				this.getUserData();
+			});
 
 			// check internet connection
 			Network.addListener('networkStatusChange', (status) => {

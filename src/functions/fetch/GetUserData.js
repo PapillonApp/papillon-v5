@@ -41,6 +41,7 @@ async function getSkolengoUser(force) {
             localStorage.setItem('avatarCache', 'data:image/png;base64,' + defaultAvatar);
             const user = constructSkolengoUser(infoUser)
             localStorage.setItem('UserCache', JSON.stringify(user))
+            document.dispatchEvent(new CustomEvent('avatarLoaded'));
             return user
         }).catch(error => {
             displayToast.presentError("Impossible de joindre le serveur.", "danger", error)
