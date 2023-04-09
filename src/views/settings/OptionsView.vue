@@ -71,7 +71,7 @@
 			},
 			async disabledDaysChanges() {
 				try {
-					window.nav.$el.pop()
+					window.nav.value.$el.pop()
 					const disabledDays = JSON.parse(localStorage.getItem('disabledDays')) || [];
 
 					const alert = await alertController.create({
