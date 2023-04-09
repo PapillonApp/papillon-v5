@@ -513,13 +513,8 @@
 				StatusBar.setStyle({style: Style.Dark})
 			}
 			else {
-				if(dark) {
-					StatusBar.setStyle({style: Style.Dark})
-				}
-				else {
-					if(this.changeStatusTimeout) {
-						StatusBar.setStyle({style: Style.Light})
-					}
+				if(this.changeStatusTimeout) {
+					StatusBar.setStyle({style: Style.Default})
 				}
 
 				setTimeout(() => {

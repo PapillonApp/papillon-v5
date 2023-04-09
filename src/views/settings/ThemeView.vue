@@ -129,7 +129,9 @@
 
 				document.dispatchEvent(new CustomEvent('settingsUpdated'));
 				
-				this.customThemeModeList = elChecked;
+				if(option == "customThemeMode") {
+					this.customThemeModeList = elChecked;
+				}
 
 				if (option == "useScolColors") {
 					localStorage.removeItem('SubjectColors');
