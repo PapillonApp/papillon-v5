@@ -570,7 +570,9 @@
 	mounted() {
 		// hide splash screen when dom is loaded
 		this.$nextTick(function () {
-			SplashScreen.hide();
+			setTimeout(() => {
+				SplashScreen.hide();
+			}, 100);
 		})
 
 		// shortcuts
