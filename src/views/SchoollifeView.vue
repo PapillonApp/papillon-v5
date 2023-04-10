@@ -117,7 +117,16 @@
 			}
 		},
 		mounted() {
-			this.getDatas(false);
+			try {
+				this.getDatas(false);
+			}
+			catch (err) {
+				console.error("[School Life View]: " + err);
+				this.punishmentsError = true;
+				this.absError = true;
+				this.delaysError = true;
+				this.punishments = [];
+			}
 		}
 	});
 </script>
@@ -131,21 +140,15 @@
 					<ion-menu-button color="dark" mode="md"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Vie scolaire <ion-chip class="beta-chip" color="warning" @click="displayBetaMsg()">BETA</ion-chip></ion-title>
+				<ion-title mode="md">Vie scolaire</ion-title>
 
 			</IonToolbar>
 		</IonHeader>
 
-		<ion-content :fullscreen="true">
+		<ion-content>
 			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
-
-			<IonHeader collapse="condense">
-				<IonToolbar>
-					<ion-title size="large">Vie scolaire <ion-chip class="beta-chip" color="warning" @click="displayBetaMsg()">BETA</ion-chip></ion-title>
-				</IonToolbar>
-			</IonHeader>
 
 			<ion-list>
 				<ion-list-header>
