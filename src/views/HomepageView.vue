@@ -414,14 +414,21 @@
 				// add one day to date
 				dateSet.setDate(dateSet.getDate() + 1);
 
+				let disableConfetti = localStorage.getItem("disableConfetti");
+
 				// if checked
 				if(event.target.checked) {
-					jsConfetti.addConfetti({
-						emojis: ['✅', '🍾', '🎊'],
-						confettiNumber: 20,
-					})
+					if(disableConfetti != "true") {
+						jsConfetti.addConfetti({
+							emojis: ['✅', '🍾', '🎊'],
+							confettiNumber: 20,
+						})
 
-					hapticsController.confetti();
+						hapticsController.confetti();
+					}
+					else {
+						hapticsController.notification('success');
+					}
 				}
 				else {
 					hapticsController.notification('success');
