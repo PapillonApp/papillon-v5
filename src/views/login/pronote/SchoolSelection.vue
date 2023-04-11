@@ -149,6 +149,8 @@
 				await actionSheet.present();
 			},
 			getPostal(e) {
+				console.log(e)
+
 				if(this.permissionDeny) return;
 				let postal = e.detail.value
 
@@ -640,7 +642,7 @@
 			</ion-buttons>
 		</ion-toolbar>
 		<ion-toolbar>
-			<ion-searchbar autocomplete="off" ref="postalInput" placeholder="Chercher avec un code postal..." type="number" @ionChange="getPostal($event)" @ionClear="clearEtabs()" maxlength="5"></ion-searchbar>
+			<ion-searchbar autocomplete="off" ref="postalInput" placeholder="Chercher avec un code postal..." type="number" @ionInput="getPostal($event)" @ionClear="clearEtabs()" maxlength="5"></ion-searchbar>
 		</ion-toolbar>
 	</ion-header>
 

@@ -115,7 +115,7 @@
           <ion-title mode="md">Actualités</ion-title>
         </IonToolbar>
         <IonToolbar>
-            <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></ion-searchbar>
+            <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionInput="searchNews()"></ion-searchbar>
         </IonToolbar>
       </IonHeader>
       
