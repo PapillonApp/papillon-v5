@@ -522,7 +522,7 @@
 					if(currentUrl !== "/home") {
 						StatusBar.setStyle({style: Style.Default})
 					}
-					else if(localStorage.getItem('fillToolbar') == 'false') {
+					else if(localStorage.getItem('fillToolbar') !== 'true') {
 						StatusBar.setStyle({style: Style.Default})
 					}
 				}

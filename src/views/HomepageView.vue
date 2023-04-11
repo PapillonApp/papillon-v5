@@ -111,6 +111,8 @@
 				MarkView: MarkView,
 				HomeworkItemView: HomeworkItemView,
 				serverError: false,
+				nextCoursStartTime: "00:00",
+				nextCoursEndTime: "00:00",
 			}
 		},
 		methods: {
@@ -200,6 +202,9 @@
 					if (lessons.length != 0) {
 						return false;
 					}
+
+					this.nextCoursStartTime = lessonStart.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+					this.nextCoursEndTime = lessonEnd.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })
 
 					// if less than 60 mins
 					if (mins < 60 && mins >= 0) {
@@ -414,14 +419,21 @@
 				// add one day to date
 				dateSet.setDate(dateSet.getDate() + 1);
 
+				let disableConfetti = localStorage.getItem("disableConfetti");
+
 				// if checked
 				if(event.target.checked) {
-					jsConfetti.addConfetti({
-						emojis: ['✅', '🍾', '🎊'],
-						confettiNumber: 20,
-					})
+					if(disableConfetti != "true") {
+						jsConfetti.addConfetti({
+							emojis: ['✅', '🍾', '🎊'],
+							confettiNumber: 20,
+						})
 
-					hapticsController.confetti();
+						hapticsController.confetti();
+					}
+					else {
+						hapticsController.notification('success');
+					}
 				}
 				else {
 					hapticsController.notification('success');
@@ -629,7 +641,7 @@
 							:class="{ cancelled: cours.status.isCancelled, HasStatus: cours.hasStatus }">
 							<div slot="start" class="timeChip">
 								<IonChip>
-									{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}
+									{{ nextCoursStartTime }}
 								</IonChip>
 							</div>
 							<ion-label :style="`--courseColor: ${cours.course.color};`">
@@ -642,7 +654,7 @@
 										<div class="progress" :style="`width: ${nextCoursCompletion}%`"></div>
 									</div>
 
-											<p class="endProg">{{ cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</p>
+											<p class="endProg">{{ nextCoursEndTime }}</p>
 										</div>
 										<div v-else>
 											<p>{{ nextCoursTime }}</p>
@@ -1021,18 +1033,18 @@
 	}
 
 	.nextStatus {
-		width: calc(100% - 16px * 2);
+		width: calc(100% - 12px * 2);
 		background: var(--courseColor) !important;
 
 		display: flex;
 		align-items: center;
 		gap: 12px;
 
-		margin: 0px 16px;
+		margin: 0px 12px;
 		padding: 8px 24px;
 
 		margin-top: -11px;
-		margin-bottom: 5px;
+		margin-bottom: 10px;
 		color: #fff;
 
 		border-radius: 0 0 12px 12px !important;
@@ -1052,7 +1064,11 @@
 	}
 
 	.nextStatus.cancelled {
-		background: #FF453A !important;
+		background: #FF453A;
+	}
+
+	.ion-color .nextStatus {
+		background: #ffffff20 !important;
 	}
 
 	.homepage_divider {
