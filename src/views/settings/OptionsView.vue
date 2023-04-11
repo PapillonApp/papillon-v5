@@ -71,7 +71,7 @@
 			},
 			async disabledDaysChanges() {
 				try {
-					window.nav.$el.pop()
+					window.nav.value.$el.pop()
 					const disabledDays = JSON.parse(localStorage.getItem('disabledDays')) || [];
 
 					const alert = await alertController.create({
@@ -144,10 +144,6 @@
 			let viescolaireEnabled = this.$refs.viescolaireEnabled;
 			viescolaireEnabled.$el.checked = localStorage.getItem('viescolaireEnabled') == 'true';
 
-			// get changePeriodSelection ref
-			let changePeriodSelection = this.$refs.changePeriodSelection;
-			changePeriodSelection.$el.checked = localStorage.getItem('changePeriodSelection') == 'true';
-
 			// get groupSubjects ref
 			let groupSubjects = this.$refs.groupSubjects;
 			groupSubjects.$el.checked = localStorage.getItem('groupSubjects') == 'true';
@@ -155,6 +151,10 @@
 			// get disableHolidays ref
 			let disableHolidays = this.$refs.disableHolidays;
 			disableHolidays.$el.checked = localStorage.getItem('disableHolidays') == 'true';
+
+			// get changePeriodSelection ref
+			let disableConfetti = this.$refs.disableConfetti;
+			disableConfetti.$el.checked = localStorage.getItem('disableConfetti') == 'true';
 		}
 	});
 </script>
@@ -173,6 +173,38 @@
 
 		<ion-content :fullscreen="true">
 			<IonList :inset="true" lines="inset">
+				<IonListHeader>
+					<IonLabel>
+						<p>Onglet Notes</p>
+					</IonLabel>
+				</IonListHeader>
+
+				<IonItem>
+					<span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Remettre les notes sur 20</h2>
+						<p>Uniformise le barème de toutes les notes</p>
+					</IonLabel>
+					<IonToggle slot="end" ref="tweakGrades20" @ionChange="changeTick('tweakGrades20')"></IonToggle>
+				</IonItem>
+
+				<IonItem>
+					<span class="material-symbols-outlined mdls" slot="start">join_inner</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Joindre les matières identiques</h2>
+						<p>Permet de joindre les matières identiques entre-elles</p>
+					</IonLabel>
+					<IonToggle slot="end" ref="groupSubjects" @ionChange="changeGroupSubjects('groupSubjects')"></IonToggle>
+				</IonItem>
+			</IonList>
+
+			<IonList :inset="true" lines="inset">
+				<IonListHeader>
+					<IonLabel>
+						<p>Onglets et calendrier</p>
+					</IonLabel>
+				</IonListHeader>
+
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">holiday_village</span>
 					<IonLabel class="ion-text-wrap">
@@ -203,35 +235,17 @@
 			<IonList :inset="true" lines="inset">
 				<IonListHeader>
 					<IonLabel>
-						<p>Onglet Notes</p>
+						<p>Page d'accueil</p>
 					</IonLabel>
 				</IonListHeader>
 
 				<IonItem>
-					<span class="material-symbols-outlined mdls" slot="start">toggle_off</span>
+					<span class="material-symbols-outlined mdls" slot="start">celebration</span>
 					<IonLabel class="ion-text-wrap">
-						<h2>Activer la sélection de période</h2>
-						<p>Permet de changer de trimestre/semestre</p>
+						<h2>Ne pas faire apparaître de confettis</h2>
+						<p>Retirer les confettis lorsqu'un devoir est coché sur l'accueil</p>
 					</IonLabel>
-					<IonToggle slot="end" ref="changePeriodSelection" @ionChange="changeTick('changePeriodSelection')"></IonToggle>
-				</IonItem>
-
-				<IonItem>
-					<span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
-					<IonLabel class="ion-text-wrap">
-						<h2>Remettre les notes sur 20</h2>
-						<p>Uniformise le barème de toutes les notes</p>
-					</IonLabel>
-					<IonToggle slot="end" ref="tweakGrades20" @ionChange="changeTick('tweakGrades20')"></IonToggle>
-				</IonItem>
-
-				<IonItem>
-					<span class="material-symbols-outlined mdls" slot="start">join_inner</span>
-					<IonLabel class="ion-text-wrap">
-						<h2>Joindre les matières identiques</h2>
-						<p>Permet de joindre les matières identiques entre-elles</p>
-					</IonLabel>
-					<IonToggle slot="end" ref="groupSubjects" @ionChange="changeGroupSubjects('groupSubjects')"></IonToggle>
+					<IonToggle slot="end" ref="disableConfetti" @ionChange="changeTick('disableConfetti')"></IonToggle>
 				</IonItem>
 			</IonList>
 		</ion-content>

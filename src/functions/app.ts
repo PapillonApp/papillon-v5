@@ -34,12 +34,7 @@ function checkDarkMode() {
 
 function setStatusBarStyle() {
 	StatusBar.setOverlaysWebView({overlay: true});
-
-	if (themeMode === 'dark' || (isDarkMode && themeMode !== 'light')) {
-		StatusBar.setStyle({style: Style.Dark})
-	} else {
-		StatusBar.setStyle({style: Style.Light})
-	}
+	StatusBar.setStyle({style: Style.Default})
 }
 
 function setStyle() {

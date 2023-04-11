@@ -142,13 +142,15 @@
 
 				const actionSheet = await actionSheetController.create({
 					header: 'Choisissez votre méthode de connexion',
-					subHeader: 'Plusieurs méthodes de connexion sont disponible pour votre établissement. Choisissez celle que vous souhaitez utiliser.',
+					subHeader: 'Plusieurs méthodes de connexion sont disponibles pour votre établissement. Choisissez celle que vous souhaitez utiliser.',
 					buttons: options
 				});
 
 				await actionSheet.present();
 			},
 			getPostal(e) {
+				console.log(e)
+
 				if(this.permissionDeny) return;
 				let postal = e.detail.value
 
@@ -640,7 +642,7 @@
 			</ion-buttons>
 		</ion-toolbar>
 		<ion-toolbar>
-			<ion-searchbar autocomplete="off" ref="postalInput" placeholder="Chercher avec un code postal..." type="number" @ionChange="getPostal($event)" @ionClear="clearEtabs()" maxlength="5"></ion-searchbar>
+			<ion-searchbar autocomplete="off" ref="postalInput" placeholder="Chercher avec un code postal..." type="number" @ionInput="getPostal($event)" @ionClear="clearEtabs()" maxlength="5"></ion-searchbar>
 		</ion-toolbar>
 	</ion-header>
 

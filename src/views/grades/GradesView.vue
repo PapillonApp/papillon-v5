@@ -71,7 +71,6 @@
 				current_period: [],
 				base_period: [],
 				segChangeTimeout: false,
-				changePeriodSelection: localStorage.getItem('changePeriodSelection') == "true" ? true : false,
 				selectedMark: {
 					subject: "",
 					average: 0,
@@ -399,9 +398,6 @@
 					if(localStorage.getItem("loginService") === "ecoledirecte") this.calcAverage = data.averages.calculate
 					this.classAverages = data.averages.class;
 				});
-
-				this.changePeriodSelection = localStorage.getItem('changePeriodSelection') == "true" ?
-					true : false;
 			});
 		}
 	});
@@ -428,7 +424,7 @@
 					</ion-select>
 				</ion-buttons>
 			</IonToolbar>
-			<IonToolbar v-if="changePeriodSelection">
+			<IonToolbar>
 				<ion-segment v-if="periods.length > 0" id="segment" :value="current_period.id"
 				ref="segment" @ionChange="segChange()">
 					<ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.id" :id="period.id">
@@ -610,7 +606,7 @@
 						</IonLabel>
 					</IonItem>
 				</div>
-				<ion-item v-id="loginService === 'ecoledirecte'">
+				<ion-item v-if="loginService === 'ecoledirecte'">
 					<p>Moyennes calculées le {{ calcAverage[0] }} à {{ calcAverage[1] }}</p>
 				</ion-item>
 			</IonList>
@@ -943,6 +939,10 @@
 		margin-right: 10px;
 	}
 
+	.gradeItem {
+		--background: var(--ion-toolbar-background);
+	}
+
 	.gradeItem .markLabel h2 {
 		font-weight: 500 !important;
 	}
@@ -970,5 +970,15 @@
 
 	.gradesList {
 		--ion-item-background: var(--ion-color-step-50);
+		background: var(--ion-color-step-50);
+	}
+
+	ion-card {
+		box-shadow: var(--ion-box-shadow);
+		background: var(--ion-toolbar-background);
+	}
+
+	.dark ion-card {
+		background: var(--ion-color-step-50);
 	}
 </style>

@@ -128,7 +128,10 @@
 				localStorage.setItem(option, elChecked);
 
 				document.dispatchEvent(new CustomEvent('settingsUpdated'));
-				this.checkThemeMode();
+				
+				if(option == "customThemeMode") {
+					this.customThemeModeList = elChecked;
+				}
 
 				if (option == "useScolColors") {
 					localStorage.removeItem('SubjectColors');
@@ -210,6 +213,7 @@
 			checkThemeMode() {
 				let themeMode = this.$refs.themeMode;
 				let customThemeMode = this.$refs.customThemeMode;
+				console.log(customThemeMode.$el.checked);
 
 				if (localStorage.getItem('customThemeMode') == 'true') {
 					let enableTheme = null;
@@ -219,7 +223,6 @@
 						enableTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 					}
 
-					this.customThemeModeList = true;
 					customThemeMode.$el.checked = true;
 					themeMode.$el.value = enableTheme;
 				} else {

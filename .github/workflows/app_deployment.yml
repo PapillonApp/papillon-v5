@@ -167,7 +167,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Android App (APK) - ${{ needs.initialize.outputs.VERSION_NUMBER }}
+          name: Android App - ${{ needs.initialize.outputs.VERSION_NUMBER }} - APK
           path: ${{ env.APK_LOCATION }}
           retention-days: 3
 
@@ -309,18 +309,32 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Download Android Artifact for Github Release
+        uses: actions/download-artifact@v3
+        id: download_apk
+        with:
+          name: Android App - ${{ needs.initialize.outputs.VERSION_NUMBER }} - APK
+
+      - name: Download iOS Artifact for Github Release
+        uses: actions/download-artifact@v3
+        id: download_ipa
+        with:
+          name: iOS App - ${{ needs.initialize.outputs.VERSION_NUMBER }} - IPA
+      
       - name: Push to Github release
-        if: ${{ env.GH_RELEASE }} == 'true'
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: ${{ env.APK_LOCATION }} #, ${{ env.IPA_LOCATION }}
+          artifacts: |
+            ${{ steps.download_apk.outputs.download_path }}/*.apk
+            ${{ steps.download_ipa.outputs.download_path }}/*.ipa
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ needs.initialize.outputs.VERSION_NUMBER }}
           name: Papillon - ${{ needs.initialize.outputs.VERSION_NUMBER }}
-          draft: true
+          draft: false
           generateReleaseNotes: true
-          makeLatest: true
+          prerelease: ${{ needs.initialize.outputs.DEPLOY_TYPE == 'beta' }}
+          makeLatest: ${{ needs.initialize.outputs.DEPLOY_TYPE == 'prod' }}
           body: |
             **Release de version ${{ needs.initialize.outputs.VERSION_NUMBER }}**
             - [Android] Version **${{ needs.initialize.outputs.VERSION_NUMBER }}**

@@ -8,7 +8,7 @@ Please check if your PR fulfills the following requirements:
 - [ ] You use **tabs** for indentation
 - [ ] You make sure that your PR is **not a duplicate**
 - [ ] This PR is **ready** to be reviewed and merged
-- [ ] This PR merges into the **`development`** branch
+- [ ] This PR merges into the **`development`** branch or in the specific branch of the feature you want to merge into
 - [ ] There is no **`TODO`** in the code
 - [ ] There is no spelling or grammatical errors in the code
 - [ ] Details of the issue or feature are documented below
