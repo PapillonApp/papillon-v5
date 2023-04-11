@@ -111,6 +111,7 @@
 				MarkView: MarkView,
 				HomeworkItemView: HomeworkItemView,
 				serverError: false,
+				nextCoursStartTime: "00:00",
 			}
 		},
 		methods: {
@@ -200,6 +201,8 @@
 					if (lessons.length != 0) {
 						return false;
 					}
+
+					this.nextCoursStartTime = lessonStart.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })
 
 					// if less than 60 mins
 					if (mins < 60 && mins >= 0) {
@@ -636,7 +639,7 @@
 							:class="{ cancelled: cours.status.isCancelled, HasStatus: cours.hasStatus }">
 							<div slot="start" class="timeChip">
 								<IonChip>
-									{{ cours.time.start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}
+									{{ nextCoursStartTime }}
 								</IonChip>
 							</div>
 							<ion-label :style="`--courseColor: ${cours.course.color};`">
