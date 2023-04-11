@@ -41,6 +41,7 @@ async function getSkolengoUser(force) {
             localStorage.setItem('avatarCache', 'data:image/png;base64,' + defaultAvatar);
             const user = constructSkolengoUser(infoUser)
             localStorage.setItem('UserCache', JSON.stringify(user))
+            document.dispatchEvent(new CustomEvent('avatarLoaded'));
             return user
         }).catch(error => {
             displayToast.presentError("Impossible de joindre le serveur.", "danger", error)
@@ -101,11 +102,8 @@ async function getPronoteUser(force) {
                 // cache avatar
                 let avatar = user.profile_picture;
 
-                console.debug("Avatar : " + avatar + "")
-
                 // if avatar is null or undefined, set default avatar
                 if (avatar == null || avatar == undefined) {
-                    console.debug("Avatar is null or undefined")
                     let avatarBase64 = defaultAvatar
 
                     // save in cache
@@ -117,7 +115,6 @@ async function getPronoteUser(force) {
                 let url = `https://cors.api.getpapillon.xyz/` + avatar;
                 axios.get(url, {responseType: 'blob'})
                     .then((response) => {
-                        console.debug("Avatar downloaded")
                         // get blob
                         let blob = response.data;
 
@@ -127,8 +124,6 @@ async function getPronoteUser(force) {
 
                         // read blob
                         reader.onloadend = async function () {
-                            console.debug("Avatar readed")
-
                             // get base64
                             let base64 = reader.result;
 
@@ -138,7 +133,6 @@ async function getPronoteUser(force) {
                             // get average color
                             fac.getColorAsync(avatarURL)
                                 .then(color => {
-                                    console.debug("Average color : " + color + "")
                                     localStorage.setItem('averageColor', JSON.stringify(color));
 
                                     document.dispatchEvent(new CustomEvent('averageColorUpdated'));
@@ -147,13 +141,11 @@ async function getPronoteUser(force) {
                                     console.error(e);
                                 });
 
-                            console.debug("Avatar saved in cache")
                             // save in cache
                             localStorage.setItem('avatarCache', avatarURL);
                         }
                     });
 
-                console.debug("User saved in cache")
                 localStorage.setItem('UserCache', JSON.stringify(response.data));
 
                 // return user
@@ -185,7 +177,6 @@ async function getPronoteUser(force) {
 function constructPronoteUser(user) {
     // construct student
     // return student
-    console.debug("Construct user : " + user + "")
     return {
         student: {
             name: user.name,

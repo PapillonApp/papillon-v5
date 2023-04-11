@@ -141,8 +141,9 @@
         <IonList v-if="news.length !== 0">
             <IonNavLink v-for="(news, i) in news" v-bind:key="i" router-direction="forward" :component="InfoView" :componentProps="{urlNews: encodeURIComponent(JSON.stringify(news))}">
                 <IonItem button>
-                    <span v-if="!news.isSurvey" class="material-symbols-outlined mdls" slot="start">feed</span>
-                    <span v-if="news.isSurvey" class="material-symbols-outlined mdls" slot="start">contact_support</span>
+                    <span v-if="news.title.toLowerCase().includes('menu')" slot="start" class="material-symbols-outlined mdls emoji">restaurant</span>
+                    <span v-else-if="!news.isSurvey" class="material-symbols-outlined mdls" slot="start">feed</span>
+                    <span v-else-if="news.isSurvey" class="material-symbols-outlined mdls" slot="start">contact_support</span>
                         <IonLabel>
                             <h2>{{ news.title }}</h2>
                             <p>{{ news.author }} - {{ news.category }}</p>

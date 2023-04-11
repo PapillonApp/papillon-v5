@@ -391,11 +391,11 @@
 				try {
 					this.backgroundFetchEvent(taskId);
 				} catch (e) {
-					console.log(e);
+					console.error(e);
 					await BackgroundFetch.finish(taskId);
 				}
 			}, () => {
-				console.log('[js] RNBackgroundFetch failed to start');
+				console.error('[js] RNBackgroundFetch failed to start');
 			});
 		},
 		checkIosShortcuts() {
@@ -437,7 +437,11 @@
 			this.dataLoading = true;
 			GetUser.default().then((data: UserData) => {
 				this.userData = data;
-				this.dataLoading = false;
+				
+				if(data.student) {
+					this.dataLoading = false;
+				}
+
 				if(!localStorage.getItem('avatarCache')) {
 					this.avatar = data.student.avatar;
 				}
@@ -450,6 +454,8 @@
 				// set userData in localStorage
 				if(data !== undefined) {
 					localStorage.userData = JSON.stringify(data);
+
+					document.dispatchEvent(new CustomEvent('userDataLoaded'));
 				}
 			});
 		},
@@ -509,12 +515,15 @@
 				StatusBar.setStyle({style: Style.Dark})
 			}
 			else {
-				if(dark) {
-					StatusBar.setStyle({style: Style.Dark})
-				}
-				else {
-					if(this.changeStatusTimeout) {
-						StatusBar.setStyle({style: Style.Light})
+				if(this.changeStatusTimeout) {
+					// get current page from URL
+					const currentUrl = window.location.pathname;
+
+					if(currentUrl !== "/home") {
+						StatusBar.setStyle({style: Style.Default})
+					}
+					else if(localStorage.getItem('fillToolbar') !== 'true') {
+						StatusBar.setStyle({style: Style.Default})
 					}
 				}
 
@@ -561,7 +570,9 @@
 	mounted() {
 		// hide splash screen when dom is loaded
 		this.$nextTick(function () {
-			SplashScreen.hide();
+			setTimeout(() => {
+				SplashScreen.hide();
+			}, 100);
 		})
 
 		// shortcuts
