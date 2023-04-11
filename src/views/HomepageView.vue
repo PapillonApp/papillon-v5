@@ -1033,18 +1033,18 @@
 	}
 
 	.nextStatus {
-		width: calc(100% - 16px * 2);
+		width: calc(100% - 12px * 2);
 		background: var(--courseColor) !important;
 
 		display: flex;
 		align-items: center;
 		gap: 12px;
 
-		margin: 0px 16px;
+		margin: 0px 12px;
 		padding: 8px 24px;
 
 		margin-top: -11px;
-		margin-bottom: 5px;
+		margin-bottom: 10px;
 		color: #fff;
 
 		border-radius: 0 0 12px 12px !important;
@@ -1064,7 +1064,11 @@
 	}
 
 	.nextStatus.cancelled {
-		background: #FF453A !important;
+		background: #FF453A;
+	}
+
+	.ion-color .nextStatus {
+		background: #ffffff20 !important;
 	}
 
 	.homepage_divider {
