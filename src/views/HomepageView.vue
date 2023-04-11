@@ -112,6 +112,7 @@
 				HomeworkItemView: HomeworkItemView,
 				serverError: false,
 				nextCoursStartTime: "00:00",
+				nextCoursEndTime: "00:00",
 			}
 		},
 		methods: {
@@ -203,6 +204,7 @@
 					}
 
 					this.nextCoursStartTime = lessonStart.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+					this.nextCoursEndTime = lessonEnd.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })
 
 					// if less than 60 mins
 					if (mins < 60 && mins >= 0) {
@@ -652,7 +654,7 @@
 										<div class="progress" :style="`width: ${nextCoursCompletion}%`"></div>
 									</div>
 
-											<p class="endProg">{{ cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</p>
+											<p class="endProg">{{ nextCoursEndTime }}</p>
 										</div>
 										<div v-else>
 											<p>{{ nextCoursTime }}</p>
