@@ -10,7 +10,7 @@
 	import displayToast from '@/functions/utils/displayToast.js';
 
 	import getEDPeriods from '@/functions/fetch/getEDPeriods.js';
-  	import getEDPhoto from "@/functions/fetch/getEDPhoto";
+	import getEDPhoto from "@/functions/fetch/getEDPhoto";
 
 
 	export default defineComponent({
