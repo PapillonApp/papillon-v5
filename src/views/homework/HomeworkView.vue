@@ -75,6 +75,11 @@
                     subHeader: 'Entrez ici le contenu de votre devoir',
                     inputs: [
                         {
+                            name: 'subject',
+                            type: 'input',
+                            placeholder: 'Matière (optionnel)'
+                        },
+                        {
                             name: 'content',
                             type: 'textarea',
                             placeholder: 'Contenu du devoir'
@@ -89,6 +94,15 @@
                             text: 'Ajouter',
                             handler: async (data) => {
                                 let text = data.content;
+                                let subject = data.subject;
+
+                                if (!subject) {
+                                    subject = "DEVOIR PERSONNALISÉ"
+                                }
+
+                                if (!text) {
+                                    return;
+                                }
 
                                 // get --ion-color-primary
                                 let color = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-primary');
@@ -108,7 +122,7 @@
                                         done: false,
                                     },
                                     homework: {
-                                        subject: "DEVOIR PERSONNALISÉ",
+                                        subject: subject.toUpperCase(),
                                         content: text,
                                         shortContent: shortText,
                                     },
