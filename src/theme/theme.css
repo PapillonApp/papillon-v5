@@ -516,3 +516,12 @@ ion-alert.md .btn_secondary {
 a.inherit {
     color: inherit;
 }
+
+.md .alert-input-group {
+    padding: 0px 24px;
+}
+
+.md .alert-input {
+    border-radius: 0;
+    font-size: 16px;
+}
