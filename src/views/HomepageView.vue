@@ -4,7 +4,6 @@
 		IonHeader,
 		IonContent,
 		IonToolbar,
-		IonTitle,
 		IonMenuButton,
 		IonPage,
 		IonList,
@@ -46,7 +45,7 @@
 	import GetRecap from "@/functions/fetch/GetRecap.js";
 
 	import displayToast from '@/functions/utils/displayToast.js';
-	import { checkmark, alertCircle } from 'ionicons/icons';
+	import { alertCircle } from 'ionicons/icons';
 
 	// confetti
 
@@ -346,6 +345,7 @@
 				this.timetable = this.editTimetable(timetable);
 				this.ttbloading = false;
 
+				clearInterval(this.updateTime);
 				this.updateTime = setInterval(() => {
 					this.timetable = this.editTimetable(timetable);
 				}, 600);
@@ -441,7 +441,7 @@
 
                 // new send request
                 if(!this.dontRetryCheck) {
-                    tickHomework([homeworkID, dateSet]).then((response) => {
+                    tickHomework([homeworkID, dateSet]).then(() => {
                         this.dontRetryCheck = true;
                             
 						setTimeout(() => {

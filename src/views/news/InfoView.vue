@@ -6,25 +6,17 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
 		IonLabel,
-		IonToggle,
 		IonButtons,
 		IonTitle,
 		IonContent,
-		alertController,
-		IonSkeletonText,
-		IonChip
+		IonSkeletonText
 	} from '@ionic/vue';
 
 	import { Browser } from '@capacitor/browser';
 
-	import displayToast from '@/functions/utils/displayToast.js';
-	import hapticsController from '@/functions/utils/hapticsController.js';
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
-
-	import GetGrades from '@/functions/fetch/GetGrades.js';
 
 	export default defineComponent({
 		name: 'FolderPage',

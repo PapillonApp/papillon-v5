@@ -13,7 +13,7 @@ import {
     globeSharp
 } from 'ionicons/icons';
 
-import {version} from '/package'
+import packageInfo from '/package'
 import {Capacitor} from '@capacitor/core';
 
 import SkolengoLoginForm from './LoginForm.vue'
@@ -76,7 +76,7 @@ export default defineComponent({
     data() {
         return {
             SkolengoLoginForm: SkolengoLoginForm,
-            appVersion: version,
+            appVersion: packageInfo.version,
             appPlatform: Capacitor.getPlatform(),
         }
     }

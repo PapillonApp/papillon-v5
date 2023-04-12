@@ -1,52 +1,52 @@
 <script lang="ts">
-	import { IonApp, IonContent, IonButton, IonButtons, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText, alertController, IonModal, IonThumbnail, IonAvatar } from '@ionic/vue';
+import { IonApp, IonContent, IonButton, IonButtons, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText, alertController, IonModal, IonThumbnail } from '@ionic/vue';
 
-	import { StatusBar, Style } from '@capacitor/status-bar';
+import { StatusBar, Style } from '@capacitor/status-bar';
 
-	import { Browser } from '@capacitor/browser';
+import { Browser } from '@capacitor/browser';
 
-	const { BackgroundFetch } = require("@transistorsoft/capacitor-background-fetch");
+const { BackgroundFetch } = require("@transistorsoft/capacitor-background-fetch");
 
-	import { Capacitor } from '@capacitor/core';
+import { Capacitor } from '@capacitor/core';
 
-	const { version, canal } = require('/package')
+const { version, canal } = require('/package')
 
-	import { defineComponent, ref } from 'vue';
-	import { useRoute } from 'vue-router';
+import { defineComponent, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
-	const { changelog } = require('/src/update')
+const { changelog } = require('/src/update')
 
-	import { globeOutline } from 'ionicons/icons';
-	import { AndroidShortcuts } from 'capacitor-android-shortcuts';
+import { globeOutline } from 'ionicons/icons';
+import { AndroidShortcuts } from 'capacitor-android-shortcuts';
 
-	import { createAnimation } from '@ionic/vue';
+import { createAnimation } from '@ionic/vue';
 
-	const GetUser = require('./functions/fetch/GetUserData');
-	const GetRecap = require('./functions/fetch/GetRecap');
-	const GetToken = require('./functions/login/GetToken');
+const GetUser = require('./functions/fetch/GetUserData');
+const GetRecap = require('./functions/fetch/GetRecap');
+const GetToken = require('./functions/login/GetToken');
 
-	import { LocalNotifications } from '@capacitor/local-notifications';
+import { LocalNotifications } from '@capacitor/local-notifications';
 
-	import { SplashScreen } from '@capacitor/splash-screen';
+import { SplashScreen } from '@capacitor/splash-screen';
 
-	// defines the user data return interface
-	interface UserData {
-				student: {
-					name: string,
-					avatar: string,
-					ine: string,
-					contact: {
-						email: string,
-						phone: string
-					}
-				},
-				class: {
-					name: string,
-					school: string
-				}
-			}
+// defines the user data return interface
+interface UserData {
+	student: {
+		name: string,
+		avatar: string,
+		ine: string,
+		contact: {
+			email: string,
+			phone: string
+		}
+	},
+	class: {
+		name: string,
+		school: string
+	}
+}
 
-	export default defineComponent({
+export default defineComponent({
 	name: 'App',
 	components: {
 		IonApp,
@@ -104,164 +104,167 @@
 				disabled: false
 			}
 		];
-		if(localStorage.getItem("loginService") === "skolengo") {
-			appPages.push({
-						title: 'Emploi du temps',
-						url: '/timetable',
-						icon: "calendar_month",
-						disabled: false,
-					},
-					{
-						title: 'Travail à faire',
-						url: '/homework',
-						icon: "auto_stories",
-						disabled: false,
-					},
-					{
-						title: 'Actualités',
-						url: '/news',
-						icon: "newspaper",
-						disabled: false,
-					},
-					{
-						title: 'Paramètres',
-						url: '/settings',
-						icon: "settings",
-						disabled: false
-					})
-		}
-		if(localStorage.getItem("loginService") === "pronote") {
+		if (localStorage.getItem("loginService") === "skolengo") {
 			appPages.push({
 				title: 'Emploi du temps',
 				url: '/timetable',
 				icon: "calendar_month",
 				disabled: false,
 			},
-			{
-				title: 'Travail à faire',
-				url: '/homework',
-				icon: "auto_stories",
+				{
+					title: 'Travail à faire',
+					url: '/homework',
+					icon: "auto_stories",
+					disabled: false,
+				},
+				{
+					title: 'Actualités',
+					url: '/news',
+					icon: "newspaper",
+					disabled: false,
+				},
+				{
+					title: 'Paramètres',
+					url: '/settings',
+					icon: "settings",
+					disabled: false
+				})
+		}
+		if (localStorage.getItem("loginService") === "pronote") {
+			appPages.push({
+				title: 'Emploi du temps',
+				url: '/timetable',
+				icon: "calendar_month",
 				disabled: false,
 			},
-			{
-				title: 'Notes',
-				url: '/grades',
-				icon: "insights",
-				disabled: false,
-			},
-			{
-				title: 'Vie scolaire',
-				url: '/schoollife',
-				icon: "gavel",
-				disabled: false,
-			},
-			{
-				title: 'Actualités',
-				url: '/news',
-				icon: "newspaper",
-				disabled: false,
-			},
-			{
-				title: 'Conversations',
-				url: '/conversations',
-				icon: "forum",
-				disabled: false,
-			},
-			{
-				title: 'Paramètres',
-				url: '/settings',
-				icon: "settings",
-				disabled: false
-			})
+				{
+					title: 'Travail à faire',
+					url: '/homework',
+					icon: "auto_stories",
+					disabled: false,
+				},
+				{
+					title: 'Notes',
+					url: '/grades',
+					icon: "insights",
+					disabled: false,
+				},
+				{
+					title: 'Vie scolaire',
+					url: '/schoollife',
+					icon: "gavel",
+					disabled: false,
+				},
+				{
+					title: 'Actualités',
+					url: '/news',
+					icon: "newspaper",
+					disabled: false,
+				},
+				{
+					title: 'Conversations',
+					url: '/conversations',
+					icon: "forum",
+					disabled: false,
+				},
+				{
+					title: 'Paramètres',
+					url: '/settings',
+					icon: "settings",
+					disabled: false
+				})
 		}
 		// hides some tabs when they are not anabled
-		if(localStorage.getItem('viescolaireEnabled') !== 'true') {
+		if (localStorage.getItem('viescolaireEnabled') !== 'true') {
 			// remove school life tab
 			appPages.splice(4, 1);
 		}
-		if(localStorage.getItem("loginService") === "ecoledirecte") {
-			let usercache = JSON.parse(localStorage.getItem("UserCache")!)
-			usercache.modules.forEach((module1: any) => {
-				switch(module1.code) {
-					case "VIE_SCOLAIRE":
-						if(module1.enable) {
-							appPages.push({
-								title: 'Vie scolaire',
-								url: '/schoollife',
-								icon: "gavel",
-								disabled: false
-							})
-						}
-						break;
-					case "VIE_DE_LA_CLASSE":
-						if(module1.enable) {
-							appPages.push({
-								title: 'Vie de la classe (non dispo.)',
-								url: '/classlife',
-								icon: "forum",
-								disabled: true
-							})
-						}
-						break;
-					case "NOTES":
-						if(module1.enable) {
-							appPages.push({
-								title: 'Notes',
-								url: '/grades',
-								icon: "insights",
-								disabled: false
-							})
-						}
-						break;
-					case "CLOUD":
-						if(module1.enable) {
-							appPages.push({
-								title: 'Cloud (non dispo.)',
-								url: '/cloud',
-								icon: "cloud",
-								disabled: true
-							})
-						}
-						break;
-					case "MESSAGERIE":
-						if(module1.enable) {
-							appPages.push({
-								title: 'Messagerie (non dispo.)',
-								url: '/mails',
-								icon: "mail",
-								disabled: true
-							})
-						}
-						break;
-					case "EDT":
-						if(module1.enable) {
-							appPages.push({
-								title: 'Emploi du temps',
-								url: '/timetable',
-								icon: "calendar_month",
-								disabled: false
-							})
-						}
-						break;
-					//documents élèves
-					case "CAHIER_DE_TEXTES":
-						if(module1.enable) {
-							appPages.push({
-								title: 'Travail à faire',
-								url: '/homework',
-								icon: "auto_stories",
-								disabled: false
-							})
-						}
-						break;
-				}
-			})
-			appPages.push({
-				title: 'Paramètres',
-				url: '/settings',
-				icon: "settings",
-				disabled: false
-			})
+		if (localStorage.getItem("loginService") === "ecoledirecte") {
+			let usercache = localStorage.getItem("UserCache");
+			if (usercache != null) {
+				let JSONUserCache = JSON.parse(usercache);
+				JSONUserCache.modules.forEach((module1: any) => {
+					switch (module1.code) {
+						case "VIE_SCOLAIRE":
+							if (module1.enable) {
+								appPages.push({
+									title: 'Vie scolaire',
+									url: '/schoollife',
+									icon: "gavel",
+									disabled: false
+								})
+							}
+							break;
+						case "VIE_DE_LA_CLASSE":
+							if (module1.enable) {
+								appPages.push({
+									title: 'Vie de la classe (non dispo.)',
+									url: '/classlife',
+									icon: "forum",
+									disabled: true
+								})
+							}
+							break;
+						case "NOTES":
+							if (module1.enable) {
+								appPages.push({
+									title: 'Notes',
+									url: '/grades',
+									icon: "insights",
+									disabled: false
+								})
+							}
+							break;
+						case "CLOUD":
+							if (module1.enable) {
+								appPages.push({
+									title: 'Cloud (non dispo.)',
+									url: '/cloud',
+									icon: "cloud",
+									disabled: true
+								})
+							}
+							break;
+						case "MESSAGERIE":
+							if (module1.enable) {
+								appPages.push({
+									title: 'Messagerie (non dispo.)',
+									url: '/mails',
+									icon: "mail",
+									disabled: true
+								})
+							}
+							break;
+						case "EDT":
+							if (module1.enable) {
+								appPages.push({
+									title: 'Emploi du temps',
+									url: '/timetable',
+									icon: "calendar_month",
+									disabled: false
+								})
+							}
+							break;
+						//documents élèves
+						case "CAHIER_DE_TEXTES":
+							if (module1.enable) {
+								appPages.push({
+									title: 'Travail à faire',
+									url: '/homework',
+									icon: "auto_stories",
+									disabled: false
+								})
+							}
+							break;
+					}
+				})
+				appPages.push({
+					title: 'Paramètres',
+					url: '/settings',
+					icon: "settings",
+					disabled: false
+				})
+			}
 		}
 		// weird ionic stuff
 		const path = window.location.pathname.split('folder/')[1];
@@ -277,7 +280,7 @@
 			appVersion: version,
 			appUpdates: changelog,
 			appPages,
-			labels : [],
+			labels: [],
 			isSelected: (url: string) => url === route.path ? 'selected' : ''
 		}
 	},
@@ -326,14 +329,14 @@
 		},
 		async backgroundFetchEvent(taskId: any) {
 			GetToken.default().then(async (token: any) => {
-				if(token) {
+				if (token) {
 					GetRecap.default().then(async (recap: any) => {
-						if(recap) {
+						if (recap) {
 							// grades
 							const lastGrades = JSON.parse(localStorage.getItem('lastGrades') || '[]');
 							const recapGrades = recap.grades.last;
 
-							if(lastGrades.length === 0) {
+							if (lastGrades.length === 0) {
 								localStorage.setItem('lastGrades', JSON.stringify(recapGrades));
 							}
 							else if (JSON.stringify(lastGrades[0]) == JSON.stringify(recapGrades[0])) {
@@ -359,12 +362,12 @@
 
 								// get reaction if gradeAs20 is over a certain value
 								for (const [key, value] of Object.entries(reactions)) {
-									if(gradeAs20 >= parseInt(key)) {
+									if (gradeAs20 >= parseInt(key)) {
 										reaction = value;
 									}
 								}
 
-								if(description.trim() === '') {
+								if (description.trim() === '') {
 									description = 'votre nouvelle note.';
 								}
 								else {
@@ -385,7 +388,7 @@
 			});
 		},
 		async configureBackgroundFetch() {
-			await BackgroundFetch.configure({minimumFetchInterval: 15}, async (taskId: any) => {
+			await BackgroundFetch.configure({ minimumFetchInterval: 15 }, async (taskId: any) => {
 				console.log('[js] BackgroundFetch event received: ', taskId);
 
 				try {
@@ -409,10 +412,10 @@
 			const s = l - Math.min(r, g, b);
 			const h = s
 				? l === r
-				? (g - b) / s
-				: l === g
-				? 2 + (b - r) / s
-				: 4 + (r - g) / s
+					? (g - b) / s
+					: l === g
+						? 2 + (b - r) / s
+						: 4 + (r - g) / s
 				: 0;
 			return [
 				60 * h < 0 ? 60 * h + 360 : 60 * h,
@@ -437,12 +440,12 @@
 			this.dataLoading = true;
 			GetUser.default().then((data: UserData) => {
 				this.userData = data;
-				
-				if(data.student) {
+
+				if (data.student) {
 					this.dataLoading = false;
 				}
 
-				if(!localStorage.getItem('avatarCache')) {
+				if (!localStorage.getItem('avatarCache')) {
 					this.avatar = data.student.avatar;
 				}
 
@@ -452,23 +455,23 @@
 				}
 
 				// set userData in localStorage
-				if(data !== undefined) {
+				if (data !== undefined) {
 					localStorage.userData = JSON.stringify(data);
 
 					document.dispatchEvent(new CustomEvent('userDataLoaded'));
 				}
 			});
 		},
-		changePage(url : string) {
+		changePage(url: string) {
 			// close menu
 			const menu = document.querySelector('ion-menu');
 			setTimeout(() => {
 				menu?.toggle();
 			}, 100);
 
-			if(url == "/home") {
-				if(localStorage.getItem('fillToolbar') == 'true') {
-					StatusBar.setStyle({style: Style.Dark})
+			if (url == "/home") {
+				if (localStorage.getItem('fillToolbar') == 'true') {
+					StatusBar.setStyle({ style: Style.Dark })
 
 					this.changeStatusTimeout = false;
 					setTimeout(() => {
@@ -491,7 +494,7 @@
 
 			await toast.present();
 		},
-		transition (baseEl: any, opts: any) {
+		transition(baseEl: any, opts: any) {
 			const enteringAnimation = createAnimation()
 				.addElement(opts.enteringEl)
 				.fromTo('opacity', 0, 1)
@@ -509,27 +512,25 @@
 			return animation;
 		},
 		async menuOpened(isOpen: boolean) {
-			const dark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-			if(isOpen) {
-				StatusBar.setStyle({style: Style.Dark})
+			if (isOpen) {
+				StatusBar.setStyle({ style: Style.Dark })
 			}
 			else {
-				if(this.changeStatusTimeout) {
+				if (this.changeStatusTimeout) {
 					// get current page from URL
 					const currentUrl = window.location.pathname;
 
-					if(currentUrl !== "/home") {
-						StatusBar.setStyle({style: Style.Default})
+					if (currentUrl !== "/home") {
+						StatusBar.setStyle({ style: Style.Default })
 					}
-					else if(localStorage.getItem('fillToolbar') !== 'true') {
-						StatusBar.setStyle({style: Style.Default})
+					else if (localStorage.getItem('fillToolbar') !== 'true') {
+						StatusBar.setStyle({ style: Style.Default })
 					}
 				}
 
 				setTimeout(() => {
-					if(this.isMenuOpened == true) {
-						StatusBar.setStyle({style: Style.Dark})
+					if (this.isMenuOpened == true) {
+						StatusBar.setStyle({ style: Style.Dark })
 					}
 				}, 500);
 			}
@@ -576,16 +577,16 @@
 		})
 
 		// shortcuts
-		if(Capacitor.getPlatform() === 'android') {
+		if (Capacitor.getPlatform() === 'android') {
 			this.checkAndroidShortcuts();
 		}
-		else if(Capacitor.getPlatform() === 'ios') {
+		else if (Capacitor.getPlatform() === 'ios') {
 			this.checkIosShortcuts();
 			this.configureBackgroundFetch();
 		}
 
 		// user data if logged in
-		if(localStorage.loggedIn) {
+		if (localStorage.loggedIn) {
 			this.getUserData();
 		}
 
@@ -602,9 +603,9 @@
 		setInterval(() => {
 			let now = new Date();
 			let diff = now.getTime() - lastRefesh.getTime();
-			let minutes = Math.floor((diff/1000)/60);
+			let minutes = Math.floor((diff / 1000) / 60);
 
-			if(minutes >= 5) {
+			if (minutes >= 5) {
 				this.connectedToServer = "paused";
 			}
 		}, 1000);
@@ -614,18 +615,18 @@
 		});
 
 		// if avatarCache is set, make it the avatar
-		if(localStorage.getItem('customAvatar')) {
+		if (localStorage.getItem('customAvatar')) {
 			this.avatar = localStorage.getItem('customAvatar') as string;
 		}
-		else if(localStorage.getItem('avatarCache')) {
+		else if (localStorage.getItem('avatarCache')) {
 			this.avatar = localStorage.getItem('avatarCache') as string;
 		}
 
 		document.addEventListener('userDataUpdated', () => {
-			if(localStorage.getItem('customAvatar')) {
+			if (localStorage.getItem('customAvatar')) {
 				this.avatar = localStorage.getItem('customAvatar') as string;
 			}
-			else if(localStorage.getItem('avatarCache')) {
+			else if (localStorage.getItem('avatarCache')) {
 				this.avatar = localStorage.getItem('avatarCache') as string;
 			}
 
@@ -640,7 +641,7 @@
 
 		// check internet connection
 		window.addEventListener('online', () => {
-			this.presentToast('Vous êtes de nouveau connecté.','Certaines informations nécessiteront peut-être un rafraîchissement.', 'success', globeOutline)
+			this.presentToast('Vous êtes de nouveau connecté.', 'Certaines informations nécessiteront peut-être un rafraîchissement.', 'success', globeOutline)
 			document.dispatchEvent(new CustomEvent('connectionState', { detail: 'paused' }));
 		});
 
@@ -650,7 +651,7 @@
 		});
 
 		// check if online
-		if(!navigator.onLine) {
+		if (!navigator.onLine) {
 			this.presentToast('Vous n\'êtes pas connecté à Internet.', 'Vous n\'aurez accès qu\'aux informations déjà téléchargées.', 'danger', globeOutline)
 			document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
 		}
@@ -660,7 +661,7 @@
 		// on settingsUpdated event, setup the app
 		document.addEventListener('settingsUpdated', () => {
 			// if viescolaireEnabled is set to false, remove school life tab
-			if(localStorage.getItem('viescolaireEnabled') !== 'true') {
+			if (localStorage.getItem('viescolaireEnabled') !== 'true') {
 				// remove school life tab
 				this.appPages.splice(3, 1);
 			}
@@ -676,26 +677,26 @@
 		});
 
 		// apply customizations
-		if(localStorage.getItem('customizations')) {
+		if (localStorage.getItem('customizations')) {
 			let customizations = JSON.parse(localStorage.getItem('customizations') as string);
 
-			if(customizations.font) {
+			if (customizations.font) {
 				document.body.style.setProperty('--papillon-font', customizations.font);
 			}
 
-			if(customizations.color) {
+			if (customizations.color) {
 				document.body.style.setProperty('--ion-color-primary', customizations.color.color.hex);
 				document.body.style.setProperty('--ion-color-primary-rgb', customizations.color.color.rgb);
 			}
 		}
 
 		// check current version in local storage
-		if(localStorage.getItem('version')) {
-			if(localStorage.getItem('version') !== this.appVersion) {
+		if (localStorage.getItem('version')) {
+			if (localStorage.getItem('version') !== this.appVersion) {
 				this.showChangelog();
 			}
 		}
-		else if(!this.loggedIn) {
+		else if (!this.loggedIn) {
 			// do nothing
 		}
 		else {
@@ -726,42 +727,51 @@
 		</div>
 
 		<ion-split-pane content-id="main-content">
-			<ion-menu @ionWillOpen="menuOpened(true)" @ionWillClose="menuOpened(false)" @ionDidOpen="menuOpened(true)" @ionDidClose="menuOpened(false)" type="overlay" content-id="main-content" class="menu" v-if="loggedIn" :swipeGesture="true">
+			<ion-menu @ionWillOpen="menuOpened(true)" @ionWillClose="menuOpened(false)" @ionDidOpen="menuOpened(true)"
+				@ionDidClose="menuOpened(false)" type="overlay" content-id="main-content" class="menu" v-if="loggedIn"
+				:swipeGesture="true">
 				<ion-header collapse="fade">
 					<div class="userItem" :style="`background-image: url('${avatar}');`">
 						<div class="userItem_content">
 							<div class="avatar" v-if="dataLoading">
-								<ion-skeleton-text :animated="true" style="width: 100%;height: 100%;border-radius: 50%;"></ion-skeleton-text>
+								<ion-skeleton-text :animated="true"
+									style="width: 100%;height: 100%;border-radius: 50%;"></ion-skeleton-text>
 							</div>
-							<img v-else class="avatar" :src="avatar" ref="avatar"/>
+							<img v-else class="avatar" :src="avatar" ref="avatar" />
 
-						<div class="userData" v-if="dataLoading">
-							<h3><ion-skeleton-text :animated="true" style="width: 40%;margin-bottom: 5px;height: 18px;"></ion-skeleton-text></h3>
-							<p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
-						</div>
-						<div class="userData" v-else>
-							<h3>{{userData.student.name}}</h3>
-							<p v-if="userData.class.school.trim() != ''">{{userData.class.name}} — {{userData.class.school}}</p>
+							<div class="userData" v-if="dataLoading">
+								<h3><ion-skeleton-text :animated="true"
+										style="width: 40%;margin-bottom: 5px;height: 18px;"></ion-skeleton-text></h3>
+								<p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
+							</div>
+							<div class="userData" v-else>
+								<h3>{{ userData.student.name }}</h3>
+								<p v-if="userData.class.school.trim() != ''">{{ userData.class.name }} —
+									{{ userData.class.school }}</p>
+							</div>
 						</div>
 					</div>
-				</div>
-			</ion-header>
-			<ion-content mode="md">
-				<ion-list id="inbox-list">
-					<router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
-						<ion-item v-if="!p.disabled" button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
-							<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
-							<ion-label>{{ p.title }}</ion-label>
-						</ion-item>
-						<ion-item @click="displayDevMessage()" v-if="p.disabled" button mode="md" lines="none" :detail="false" :class="{ selected: selectedIndex === i }" disabled>
-							<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
-							<ion-label>{{ p.title }}</ion-label>
-						</ion-item>
-					</router-link>
-				</ion-list>
+				</ion-header>
+				<ion-content mode="md">
+					<ion-list id="inbox-list">
+						<router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages"
+							:key="i">
+							<ion-item v-if="!p.disabled" button mode="md" lines="none" :detail="false"
+								@click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
+								<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
+								<ion-label>{{ p.title }}</ion-label>
+							</ion-item>
+							<ion-item @click="displayDevMessage()" v-if="p.disabled" button mode="md" lines="none"
+								:detail="false" :class="{ selected: selectedIndex === i }" disabled>
+								<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
+								<ion-label>{{ p.title }}</ion-label>
+							</ion-item>
+						</router-link>
+					</ion-list>
 
-				<ion-list id="bottomActionsList">
-						<ion-item @click="openURL('https://docs.getpapillon.xyz')" button mode="md" lines="none" :detail="false">
+					<ion-list id="bottomActionsList">
+						<ion-item @click="openURL('https://docs.getpapillon.xyz')" button mode="md" lines="none"
+							:detail="false">
 							<span class="material-symbols-outlined mdls" slot="start">support</span>
 							<ion-label>Aide de Papillon</ion-label>
 						</ion-item>
@@ -785,7 +795,8 @@
 					</ion-list>
 				</ion-content>
 			</ion-menu>
-			<ion-router-outlet ref="outlet" :animated="true" :animation="transition" id="main-content" v-slot="{ Component }">
+			<ion-router-outlet ref="outlet" :animated="true" :animation="transition" id="main-content"
+				v-slot="{ Component }">
 				<component :is="Component" />
 			</ion-router-outlet>
 		</ion-split-pane>
@@ -808,7 +819,7 @@
 
 					<ion-list inset>
 						<ion-item v-for="(feature, i) in appUpdates.features" :key="i">
-							<span class="material-symbols-outlined mdls" slot="start">{{feature.icon}}</span>
+							<span class="material-symbols-outlined mdls" slot="start">{{ feature.icon }}</span>
 							<ion-label class="ion-text-wrap">
 								<h2>{{ feature.name }}</h2>
 								<p>{{ feature.description }}</p>
@@ -816,8 +827,10 @@
 						</ion-item>
 					</ion-list>
 
-					<ion-button mode="md" @click="hideChangelog" fill="solid" class="endButton">Accéder à Papillon</ion-button>
-					<p class="warning">Cet écran n’apparaîtra pas au redémarrage de Papillon. Il restera accessible dans les paramètres.</p>
+					<ion-button mode="md" @click="hideChangelog" fill="solid" class="endButton">Accéder à
+						Papillon</ion-button>
+					<p class="warning">Cet écran n’apparaîtra pas au redémarrage de Papillon. Il restera accessible dans les
+						paramètres.</p>
 				</div>
 			</ion-content>
 		</ion-modal>
@@ -825,146 +838,146 @@
 </template>
 
 <style scoped>
-	ion-menu::part(container) {
-		border-radius: 0px;
-	}
+ion-menu::part(container) {
+	border-radius: 0px;
+}
 
-	ion-menu ion-list {
-		background: none;
-	}
+ion-menu ion-list {
+	background: none;
+}
 
-	.navLink {
-		text-decoration: none;
-	}
+.navLink {
+	text-decoration: none;
+}
 
-	.userItem {
-		display: flex;
-		padding: 0px;
-		align-items: center;
+.userItem {
+	display: flex;
+	padding: 0px;
+	align-items: center;
 
-		background-size: cover;
-		background-position: center;
+	background-size: cover;
+	background-position: center;
 
-		min-height: 120px;
-	}
+	min-height: 120px;
+}
 
-	.ios .userItem {
-		width: 100%;
-	}
+.ios .userItem {
+	width: 100%;
+}
 
-	.userItem * {
-		margin: 0;
-		padding: 0;
-	}
+.userItem * {
+	margin: 0;
+	padding: 0;
+}
 
-	.userItem_content {
-		width: 100%;
+.userItem_content {
+	width: 100%;
 
-		display: flex;
-		padding: 10px 12px;
-		gap: 12px;
-		align-items: center;
+	display: flex;
+	padding: 10px 12px;
+	gap: 12px;
+	align-items: center;
 
-		background-color: #00000080;
-		backdrop-filter: blur(10px);
-		-webkit-backdrop-filter: blur(20px);
+	background-color: #00000080;
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(20px);
 
-		padding-top: calc(var(--papillon-safe-area-top) + 10px) !important;
-	}
+	padding-top: calc(var(--papillon-safe-area-top) + 10px) !important;
+}
 
-	.userItem .avatar {
-		width: 42px;
-		height: 42px;
-		border-radius: 50%;
-		object-fit: cover;
-	}
+.userItem .avatar {
+	width: 42px;
+	height: 42px;
+	border-radius: 50%;
+	object-fit: cover;
+}
 
-	.userData {
-		width: calc(100% - 12px - 42px);
-	}
+.userData {
+	width: calc(100% - 12px - 42px);
+}
 
-	.userData p {
-		text-transform: uppercase;
-	}
+.userData p {
+	text-transform: uppercase;
+}
 
-	.userItem h3 {
-		font-size: 18px;
-		font-weight: 600;
-		margin-bottom: 1px;
-		width: 100%;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
+.userItem h3 {
+	font-size: 18px;
+	font-weight: 600;
+	margin-bottom: 1px;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 
 
-	.userItem p {
-		font-size: 15px;
-		color: #888;
-		width: 100%;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		margin-top: 3px;
-	}
+.userItem p {
+	font-size: 15px;
+	color: #888;
+	width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	margin-top: 3px;
+}
 
-	.ios .userItem p {
-		font-size: 16px;
-		margin-top: 0;
-		font-family: var(--papillon-font);
-	}
+.ios .userItem p {
+	font-size: 16px;
+	margin-top: 0;
+	font-family: var(--papillon-font);
+}
 
-	.userItem_content {
-		flex-direction: column;
-		align-items: flex-start;
-		padding: 16px 16px;
-		color: #fff;
-	}
+.userItem_content {
+	flex-direction: column;
+	align-items: flex-start;
+	padding: 16px 16px;
+	color: #fff;
+}
 
-	.userItem h3 {
-		font-size: 20px;
-	}
+.userItem h3 {
+	font-size: 20px;
+}
 
-	.userItem p {
-		color: #ffffffc2;
-	}
+.userItem p {
+	color: #ffffffc2;
+}
 
-	.userData {
-		width: calc(100%);
-	}
+.userData {
+	width: calc(100%);
+}
 
-	ion-menu ion-content {
+ion-menu ion-content {
 	--background: var(--ion-item-background, var(--ion-background-color, #fff));
-	}
+}
 
-	ion-menu ion-content {
+ion-menu ion-content {
 	--padding-start: 8px;
 	--padding-end: 8px;
 	--padding-top: 8px;
 	--padding-bottom: 20px;
-	}
+}
 
-	ion-menu ion-list {
+ion-menu ion-list {
 	padding: 0px 0;
-	}
+}
 
-	ion-menu ion-note {
+ion-menu ion-note {
 	margin-bottom: 30px;
-	}
+}
 
-	ion-menu ion-list-header,
-	ion-menu ion-note {
+ion-menu ion-list-header,
+ion-menu ion-note {
 	padding-left: 10px;
-	}
+}
 
-	ion-menu ion-list#inbox-list ion-list-header {
+ion-menu ion-list#inbox-list ion-list-header {
 	font-size: 22px;
 	font-weight: 600;
 
 	min-height: 20px;
-	}
+}
 
-	ion-menu ion-list#labels-list ion-list-header {
+ion-menu ion-list#labels-list ion-list-header {
 	font-size: 16px;
 
 	margin-bottom: 18px;
@@ -972,172 +985,173 @@
 	color: #757575;
 
 	min-height: 26px;
-	}
+}
 
-	ion-item *:not(span) {
-		font-family: var(--papillon-font), sans-serif !important;
-	}
+ion-item *:not(span) {
+	font-family: var(--papillon-font), sans-serif !important;
+}
 
-	ion-menu ion-item {
-		--padding-start: 15px;
-		--padding-end: 10px;
-		border-radius: 300px;
-		isolation: isolate;
-	}
+ion-menu ion-item {
+	--padding-start: 15px;
+	--padding-end: 10px;
+	border-radius: 300px;
+	isolation: isolate;
+}
 
-	ion-menu ion-item ion-chip {
-		margin: 0;
-		margin-right: -10px;
-		margin-left: 5px;
-	}
+ion-menu ion-item ion-chip {
+	margin: 0;
+	margin-right: -10px;
+	margin-left: 5px;
+}
 
-	ion-menu ion-item {
-		color: var(--ion-color-step-500);
-		margin-bottom: 2px;
-		--background: transparent;
-	}
+ion-menu ion-item {
+	color: var(--ion-color-step-500);
+	margin-bottom: 2px;
+	--background: transparent;
+}
 
-	ion-menu .router-link-active ion-item {
-		--background: rgba(var(--ion-color-primary-rgb), 0.14);
-		color: var(--ion-color-primary-rgb);
-	}
+ion-menu .router-link-active ion-item {
+	--background: rgba(var(--ion-color-primary-rgb), 0.14);
+	color: var(--ion-color-primary-rgb);
+}
 
-	ion-menu ion-item .mdls {
-		margin-right: calc(var(--padding-start) + 2px);
-	}
+ion-menu ion-item .mdls {
+	margin-right: calc(var(--padding-start) + 2px);
+}
 
-	ion-menu .router-link-active ion-item ion-icon {
+ion-menu .router-link-active ion-item ion-icon {
 	color: var(--ion-color-primary);
-	}
+}
 
-	ion-menu.md ion-item ion-icon {
+ion-menu.md ion-item ion-icon {
 	color: var(--color);
-	}
+}
 
-	ion-menu ion-item ion-label {
+ion-menu ion-item ion-label {
 	font-weight: 500;
-	}
+}
 
-	ion-note {
+ion-note {
 	display: inline-block;
 	font-size: 16px;
 
 	color: var(--ion-color-medium-shade);
-	}
+}
 
-	.router-link-active ion-item {
-		--color: var(--ion-color-primary);
-	}
+.router-link-active ion-item {
+	--color: var(--ion-color-primary);
+}
 
-	.router-link-active ion-item:hover {
-		background: rgba(var(--ion-color-primary-rgb), 0.1);
-		cursor: pointer;
-	}
+.router-link-active ion-item:hover {
+	background: rgba(var(--ion-color-primary-rgb), 0.1);
+	cursor: pointer;
+}
 
-	a:not(.router-link-active) ion-menu-toggle ion-item {
-		--color: var(--ion-color-medium-shade);
-	}
+a:not(.router-link-active) ion-menu-toggle ion-item {
+	--color: var(--ion-color-medium-shade);
+}
 
-	a:not(.router-link-active) ion-menu-toggle ion-item:hover {
-		opacity: 0.75;
-		cursor: pointer;
-	}
+a:not(.router-link-active) ion-menu-toggle ion-item:hover {
+	opacity: 0.75;
+	cursor: pointer;
+}
 
-	.fade-enter-active, .fade-leave-active {
-		transition-property: opacity;
-		transition-duration: .25s;
-	}
+.fade-enter-active,
+.fade-leave-active {
+	transition-property: opacity;
+	transition-duration: .25s;
+}
 
-	.fade-enter-active {
-		transition-delay: .25s;
-	}
+.fade-enter-active {
+	transition-delay: .25s;
+}
 
-	.fade-enter, .fade-leave-active {
-		opacity: 0
-	}
+.fade-enter,
+.fade-leave-active {
+	opacity: 0
+}
 
-	/* updates */
-	#update-header {
-		margin: 40px 25px;
+/* updates */
+#update-header {
+	margin: 40px 25px;
 
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-direction: column;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
 
-		color: #000;
-		border-radius: 10px;
+	color: #000;
+	border-radius: 10px;
 
-		margin-bottom: 30px;
-	}
+	margin-bottom: 30px;
+}
 
-	.dark #update-header {
-		color: #fff !important;
-	}
+.dark #update-header {
+	color: #fff !important;
+}
 
-	#update-header * {
-		margin: 0;
-		padding: 0;
-		text-align: center;
-	}
+#update-header * {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
 
-	#update-header .updateIcon {
-		margin-bottom: 15px !important;
+#update-header .updateIcon {
+	margin-bottom: 15px !important;
 
-		height: 62px;
-	}
+	height: 62px;
+}
 
-	#update-header h1 {
-		font-size: 24px;
-		letter-spacing: -0.2px;
-		margin-bottom: 5px;
-		color: var(--ion-color-primary);
-	}
+#update-header h1 {
+	font-size: 24px;
+	letter-spacing: -0.2px;
+	margin-bottom: 5px;
+	color: var(--ion-color-primary);
+}
 
-	#update-header p {
-		font-size: 16px;
-		opacity: 0.5;
-	}
+#update-header p {
+	font-size: 16px;
+	opacity: 0.5;
+}
 
-	.update .warning {
-		margin: 0px 40px;
-		font-size: 13px;
-		opacity: 0.5;
-		text-align: center;
-		margin-top: 10px;
-	}
+.update .warning {
+	margin: 0px 40px;
+	font-size: 13px;
+	opacity: 0.5;
+	text-align: center;
+	margin-top: 10px;
+}
 
-	.update::part(scroll) {
-		padding-bottom: calc(var(--papillon-safe-area-bottom) + 100px) !important;
-	}
+.update::part(scroll) {
+	padding-bottom: calc(var(--papillon-safe-area-bottom) + 100px) !important;
+}
 
-	.endButton {
-		width: calc(100% - 40px);
-		margin: 0px 20px;
+.endButton {
+	width: calc(100% - 40px);
+	margin: 0px 20px;
 
-		--border-radius: 8px;
-	}
+	--border-radius: 8px;
+}
 
-	.update ion-list {
-		margin-bottom: 30px;
-	}
+.update ion-list {
+	margin-bottom: 30px;
+}
 
-	.menuContent {
-		overflow: hidden !important;
-	}
+.menuContent {
+	overflow: hidden !important;
+}
 
-	#bottomActionsList {
-		width: 100%;
-		background: var(--ion-background-color);
+#bottomActionsList {
+	width: 100%;
+	background: var(--ion-background-color);
 
-		position: fixed;
-		padding-bottom: calc(var(--papillon-safe-area-bottom) + 20px) !important;
-		padding-top: 10px;
+	position: fixed;
+	padding-bottom: calc(var(--papillon-safe-area-bottom) + 20px) !important;
+	padding-top: 10px;
 
-		bottom: 0;
-		left: 0;
+	bottom: 0;
+	left: 0;
 
-		padding-left: 10px;
-		padding-right: 10px;
-	}
-</style>
+	padding-left: 10px;
+	padding-right: 10px;
+}</style>

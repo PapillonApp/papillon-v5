@@ -97,21 +97,6 @@ setInterval(setStyle, 100);
 setInterval(updateStatus, 100);
 
 import { AndroidShortcuts } from 'capacitor-android-shortcuts';
-import axios from 'axios';
-
-
-// FIXME: This code is not working
-async function getToBase64(filepath: string) {
-	const response = await axios.get(filepath, { responseType: 'blob' });
-	const filereader = new FileReader();
-	return new Promise((resolve) => {
-		filereader.onloadend = () => {
-			const result = filereader.result;
-			resolve(result);
-		};
-		filereader.readAsDataURL(response.data);
-	})
-}
 
 AndroidShortcuts.isDynamicSupported().then((result) => {
 	if (result) {

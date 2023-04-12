@@ -1,20 +1,17 @@
 <script>
-	import { defineComponent, refs } from 'vue';
-	import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonListHeader, IonLabel, IonItem, actionSheetController, IonNavLink, IonChip, IonSkeletonText, IonAvatar, IonRefresher, IonRefresherContent, IonCheckbox, IonButton, IonModal, IonDatetime, IonRippleEffect } from '@ionic/vue';
+	import { defineComponent } from 'vue';
+	import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonLabel, IonItem, IonNavLink, IonRefresher, IonRefresherContent, IonCheckbox, IonButton, IonModal, IonDatetime } from '@ionic/vue';
 
-    import { checkmark, alertCircle } from 'ionicons/icons';
+    import { alertCircle } from 'ionicons/icons';
 
     import { Virtual } from 'swiper'
     import { Swiper, SwiperSlide } from 'swiper/vue';
     import 'swiper/css';
 
-    import axios from 'axios';
-
     import HomeworkItemView from './HomeworkItemView.vue';
 
     import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
     import { tickHomework } from "@/functions/fetch/GetHomeworks.js";
-    import GetToken from "@/functions/login/GetToken.js";
 
     import displayToast from '@/functions/utils/displayToast.js';
     import hapticsController from '@/functions/utils/hapticsController.js';
@@ -202,7 +199,7 @@
 
                 // new send request
                 if(!this.dontRetryCheck) {
-                    tickHomework([homeworkID, dateSet]).then((response) => {
+                    tickHomework([homeworkID, dateSet]).then(() => {
                         setTimeout(() => {
                             this.dontRetryCheck = true;
 

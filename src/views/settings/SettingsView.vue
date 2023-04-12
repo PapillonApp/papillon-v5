@@ -9,7 +9,7 @@
 	import UserView from './UserView.vue';
 	import AdvancedView from './AdvancedView.vue';
 
-	import { version, canal } from '/package'
+	import packageInfo from '/package'
 	import { Capacitor } from '@capacitor/core';
 
 	import getContributors from '@/functions/fetch/GetContributors';
@@ -35,8 +35,8 @@
 		},
 		setup() {
 			return { 
-				appVersion: version,
-				appCanal: canal,
+				appVersion: packageInfo.version,
+				appCanal: packageInfo.canal,
 				appPlatform: Capacitor.getPlatform(),
 				localStorageSize: '',
 			}
