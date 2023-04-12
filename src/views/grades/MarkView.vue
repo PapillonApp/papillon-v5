@@ -6,20 +6,15 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
 		IonLabel,
-		IonToggle,
 		IonButtons,
 		IonTitle,
 		IonContent,
-		alertController,
 		IonSkeletonText,
 		IonChip
 	} from '@ionic/vue';
 
-	import displayToast from '@/functions/utils/displayToast.js';
-	import hapticsController from '@/functions/utils/hapticsController.js';
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	import GetGrades from '@/functions/fetch/GetGrades.js';
