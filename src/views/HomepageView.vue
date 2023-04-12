@@ -345,6 +345,7 @@
 				this.timetable = this.editTimetable(timetable);
 				this.ttbloading = false;
 
+				clearInterval(this.updateTime);
 				this.updateTime = setInterval(() => {
 					this.timetable = this.editTimetable(timetable);
 				}, 600);
