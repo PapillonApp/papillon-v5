@@ -1,23 +1,16 @@
 <script>
 	import { defineComponent } from 'vue';
-	import { IonItem, IonList, IonIcon, IonBackButton, IonSearchbar, IonListHeader, IonSpinner, loadingController, IonInput, 
-	IonButton, actionSheetController, alertController } from '@ionic/vue';
+	import { IonItem, IonList, IonBackButton, IonSpinner, loadingController, IonInput, 
+	IonButton } from '@ionic/vue';
 
 	import axios from 'axios';
-
-	import { App } from '@capacitor/app';
 
 	import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp, serverOutline, serverSharp } from 'ionicons/icons';
 
 	import displayToast from '@/functions/utils/displayToast.js';
-	import { fetchDaysOffAndHolidays } from '@/functions/utils/datetimePicker.js';
-
-	import { Geolocation } from '@capacitor/geolocation';
-	import { Dialog } from '@capacitor/dialog';
-
 
 	import getEDPeriods from '@/functions/fetch/getEDPeriods.js';
-  import getEDPhoto from "@/functions/fetch/getEDPhoto";
+  	import getEDPhoto from "@/functions/fetch/getEDPhoto";
 
 
 	export default defineComponent({
