@@ -5,7 +5,7 @@
 	import { Share } from '@capacitor/share';
 	import displayToast from '@/functions/utils/displayToast.js';
 
-	import { version, canal } from '/package'
+	import packageInfo from '/package'
 
 	import {
 		IonHeader,
@@ -49,7 +49,7 @@
 		data() {
 			return {
 				logs: [],
-				channel: canal,
+				channel: packageInfo.canal,
 				apiVersion: this.getApiVersion(),
 				localStorageSize : this.getLocalStorageSize(),
 				account: {
@@ -156,7 +156,7 @@
 Contient **${this.logs.length}** logs
 
 *Application* :
-> **Version** : ${version}
+> **Version** : ${packageInfo.version}
 > **Canal** : ${this.channel}
 > **Type de plateforme** : ${Capacitor.getPlatform()}
 > **Version API** : ${this.apiVersion}
@@ -189,11 +189,11 @@ Contient **${this.logs.length}** logs
 				event.target.complete();
 			},
 			getCanal() {
-				if (canal == 'dev') {
+				if (packageInfo.canal == 'dev') {
 					this.channel = "Développement";
-				} else if (canal == 'beta') {
+				} else if (packageInfo.canal == 'beta') {
 					this.channel = "Bêta";
-				} else if (canal == 'prod') {
+				} else if (packageInfo.canal == 'prod') {
 					this.channel = "Stable";
 				} else {
 					this.channel = "Inconnu";
