@@ -519,6 +519,9 @@
 				else if(localStorage.getItem('avatarCache')) {
 					this.avatar = localStorage.getItem('avatarCache');
 				}
+				else if(localStorage.getItem('userData')) {
+					this.avatar = JSON.parse(localStorage.getItem('userData')).student.avatar;
+				}
 
 				document.addEventListener('userDataUpdated', () => {
 					if(localStorage.getItem('customAvatar')) {
@@ -570,7 +573,7 @@
 				this.getUserData();
 			});
 
-			document.addEventListener('avatarLoaded', () => {
+			document.addEventListener('userDataUpdated', () => {
 				this.getUserData();
 			});
 
