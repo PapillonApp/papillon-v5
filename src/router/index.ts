@@ -77,6 +77,11 @@ const routes: Routes = [
     component: () => import ('../views/news/InfoView.vue')
   },
   {
+    path: '/contents',
+    name: 'Contents',
+    component: () => import ('../views/contents/ContentsView.vue')
+  },
+  {
     path: '/settings',
     name: 'Settings',
     component: () => import ('../views/settings/SettingsView.vue')

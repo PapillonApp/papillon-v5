@@ -144,15 +144,15 @@ export default defineComponent({
 					disabled: false,
 				},
 				{
-					title: 'Notes',
-					url: '/grades',
-					icon: "insights",
+					title: 'Contenu des cours',
+					url: '/contents',
+					icon: "document_scanner",
 					disabled: false,
 				},
 				{
-					title: 'Vie scolaire',
-					url: '/schoollife',
-					icon: "gavel",
+					title: 'Notes',
+					url: '/grades',
+					icon: "insights",
 					disabled: false,
 				},
 				{
@@ -175,9 +175,14 @@ export default defineComponent({
 				})
 		}
 		// hides some tabs when they are not anabled
-		if (localStorage.getItem('viescolaireEnabled') !== 'true') {
+		if (localStorage.getItem('viescolaireEnabled') == 'true') {
 			// remove school life tab
-			appPages.splice(4, 1);
+			appPages.push({
+					title: 'Vie scolaire',
+					url: '/schoollife',
+					icon: "gavel",
+					disabled: false,
+			})
 		}
 		if (localStorage.getItem("loginService") === "ecoledirecte") {
 			let usercache = localStorage.getItem("UserCache");
