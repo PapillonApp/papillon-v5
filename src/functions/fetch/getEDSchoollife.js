@@ -2,7 +2,6 @@
 import axios from 'axios';
 
 // vars
-import { app } from '@/main.ts'
 import GetToken from '@/functions/login/GetToken.js';
 
 

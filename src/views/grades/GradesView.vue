@@ -14,11 +14,9 @@
 		IonLabel,
 		IonItem,
 		IonCard,
-		IonSkeletonText,
 		IonSegment,
 		IonSegmentButton,
 		IonModal,
-		IonSpinner,
 		IonSelect,
 		IonNavLink,
 		IonProgressBar

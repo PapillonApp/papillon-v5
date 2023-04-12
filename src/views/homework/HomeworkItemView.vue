@@ -6,24 +6,17 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
 		IonLabel,
-		IonToggle,
 		IonButtons,
+        IonButton,
 		IonTitle,
-		IonContent,
-		alertController,
-		IonChip
+		IonContent
 	} from '@ionic/vue';
 
     import { Browser } from '@capacitor/browser';
 
-	import displayToast from '@/functions/utils/displayToast.js';
-	import hapticsController from '@/functions/utils/hapticsController.js';
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
-
-	import GetGrades from '@/functions/fetch/GetGrades.js';
 
 	export default defineComponent({
 		name: 'FolderPage',
@@ -31,6 +24,7 @@
 			IonHeader,
 			IonToolbar,
 			IonButtons,
+            IonButton,
 			PapillonBackButton,
 			IonTitle,
 			IonContent,
@@ -50,6 +44,8 @@
                 openedData: [],
                 openedHomework: [],
                 openedFiles: [],
+                custom: false,
+                deleted: false,
 			}
 		},
 		methods: {
@@ -59,6 +55,22 @@
 					presentationStyle: 'popover',
                 });
             },
+            async deleteHW(e) {
+                let customHomeworks = JSON.parse(localStorage.customHomeworks);
+
+                // find homework
+                let homework = customHomeworks.find((homework) => {
+                    return homework.homework.data.id == this.openedData.id;
+                });
+
+                // remove homework
+                customHomeworks.splice(customHomeworks.indexOf(homework), 1);
+
+                // save customHomeworks
+                localStorage.customHomeworks = JSON.stringify(customHomeworks);
+
+                this.deleted = true;
+            }
 		},
 		mounted() {
             // if urlHw prop is set
@@ -76,6 +88,11 @@
                 this.openedData = parsed.data;
                 this.openedHomework = parsed.homework;
                 this.openedFiles = parsed.files;
+
+                // if parsed.data.id starts with "custom"
+                if(parsed.data.id.startsWith("custom")) {
+                    this.custom = true;
+                }
             }
 
             return false;
@@ -86,16 +103,34 @@
 <template>
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
-
 				<ion-buttons slot="start">
 					<PapillonBackButton></PapillonBackButton>
 				</ion-buttons>
 
-                <ion-title mode="md">Travail à faire <span v-if="openedHomework">en {{ openedHomework.subject }}</span></ion-title>
+                <ion-title mode="md" v-if="openedHomework && custom">Devoir personnalisé</ion-title>
+                <ion-title mode="md" v-else>Travail à faire <span v-if="openedHomework">en {{ openedHomework.subject }}</span></ion-title>
+
+                <ion-buttons slot="end">
+					<ion-button v-if="custom" color="danger" @click="deleteHW($event)">
+                        <span slot="start" class="material-symbols-outlined mdls">delete</span>
+                        Supprimer
+                    </ion-button>
+				</ion-buttons>
 			</IonToolbar>
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
+            <IonList inset v-if="deleted">
+                <IonItem color="danger">
+                    <span class="material-symbols-outlined mdls" slot="start">delete</span>
+
+                    <IonLabel>
+                        <h2>Ce devoir à été supprimé</h2>
+                        <p>Vous consultez une archive de ce devoir.</p>
+                    </IonLabel>
+                </IonItem>
+            </IonList>
+
             <div v-if="openedHw">
                 <div class="content" v-html="openedHomework.content"></div>
             </div>

@@ -17,7 +17,7 @@ const config: CapacitorConfig = {
 			sound: "/public/audio/tone.ogg",
 		},
 		Keyboard: {
-			resize: KeyboardResize.None,
+			resize: KeyboardResize.Ionic,
 		},
 	},
 	/* server: {

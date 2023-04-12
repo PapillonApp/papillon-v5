@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonLabel, IonItem, IonModal, IonSpinner, IonSearchbar, IonNavLink } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonLabel, IonItem, IonSpinner, IonSearchbar, IonNavLink } from '@ionic/vue';
     
     import { Browser } from '@capacitor/browser';
 
@@ -115,7 +115,7 @@
           <ion-title mode="md">Actualités</ion-title>
         </IonToolbar>
         <IonToolbar>
-            <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionChange="searchNews()"></ion-searchbar>
+            <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionInput="searchNews()"></ion-searchbar>
         </IonToolbar>
       </IonHeader>
       

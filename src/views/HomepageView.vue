@@ -4,7 +4,6 @@
 		IonHeader,
 		IonContent,
 		IonToolbar,
-		IonTitle,
 		IonMenuButton,
 		IonPage,
 		IonList,
@@ -46,7 +45,7 @@
 	import GetRecap from "@/functions/fetch/GetRecap.js";
 
 	import displayToast from '@/functions/utils/displayToast.js';
-	import { checkmark, alertCircle } from 'ionicons/icons';
+	import { alertCircle } from 'ionicons/icons';
 
 	// confetti
 
@@ -112,6 +111,7 @@
 				HomeworkItemView: HomeworkItemView,
 				serverError: false,
 				nextCoursStartTime: "00:00",
+				nextCoursEndTime: "00:00",
 			}
 		},
 		methods: {
@@ -203,6 +203,7 @@
 					}
 
 					this.nextCoursStartTime = lessonStart.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })
+					this.nextCoursEndTime = lessonEnd.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' })
 
 					// if less than 60 mins
 					if (mins < 60 && mins >= 0) {
@@ -344,6 +345,7 @@
 				this.timetable = this.editTimetable(timetable);
 				this.ttbloading = false;
 
+				clearInterval(this.updateTime);
 				this.updateTime = setInterval(() => {
 					this.timetable = this.editTimetable(timetable);
 				}, 600);
@@ -439,7 +441,7 @@
 
                 // new send request
                 if(!this.dontRetryCheck) {
-                    tickHomework([homeworkID, dateSet]).then((response) => {
+                    tickHomework([homeworkID, dateSet]).then(() => {
                         this.dontRetryCheck = true;
                             
 						setTimeout(() => {
@@ -517,6 +519,9 @@
 				else if(localStorage.getItem('avatarCache')) {
 					this.avatar = localStorage.getItem('avatarCache');
 				}
+				else if(localStorage.getItem('userData')) {
+					this.avatar = JSON.parse(localStorage.getItem('userData')).student.avatar;
+				}
 
 				document.addEventListener('userDataUpdated', () => {
 					if(localStorage.getItem('customAvatar')) {
@@ -568,7 +573,7 @@
 				this.getUserData();
 			});
 
-			document.addEventListener('avatarLoaded', () => {
+			document.addEventListener('userDataUpdated', () => {
 				this.getUserData();
 			});
 
@@ -652,7 +657,7 @@
 										<div class="progress" :style="`width: ${nextCoursCompletion}%`"></div>
 									</div>
 
-											<p class="endProg">{{ cours.time.end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</p>
+											<p class="endProg">{{ nextCoursEndTime }}</p>
 										</div>
 										<div v-else>
 											<p>{{ nextCoursTime }}</p>
@@ -1031,18 +1036,18 @@
 	}
 
 	.nextStatus {
-		width: calc(100% - 16px * 2);
+		width: calc(100% - 12px * 2);
 		background: var(--courseColor) !important;
 
 		display: flex;
 		align-items: center;
 		gap: 12px;
 
-		margin: 0px 16px;
+		margin: 0px 12px;
 		padding: 8px 24px;
 
 		margin-top: -11px;
-		margin-bottom: 5px;
+		margin-bottom: 10px;
 		color: #fff;
 
 		border-radius: 0 0 12px 12px !important;
@@ -1062,7 +1067,11 @@
 	}
 
 	.nextStatus.cancelled {
-		background: #FF453A !important;
+		background: #FF453A;
+	}
+
+	.ion-color .nextStatus {
+		background: #ffffff20 !important;
 	}
 
 	.homepage_divider {

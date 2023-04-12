@@ -13,7 +13,7 @@
 		globeSharp
 	} from 'ionicons/icons';
 
-	import {version} from '/package'
+	import packageInfo from '/package'
 	import {Capacitor} from '@capacitor/core';
 
 	import SchoolSelection from './pronote/SchoolSelection.vue';
@@ -115,7 +115,7 @@
 				SchoolSelection: SchoolSelection,
 				EDLoginForm: EDLoginForm,
 				SkolengoSelection: SkolengoSelection,
-				appVersion: version,
+				appVersion: packageInfo.version,
 				appPlatform: Capacitor.getPlatform(),
 			}
 		},
