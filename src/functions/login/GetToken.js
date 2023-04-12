@@ -4,8 +4,6 @@ import displayToast from '@/functions/utils/displayToast.js';
 import axios from 'axios';
 import getEDPhoto from "@/functions/fetch/getEDPhoto";
 
-import { checkmark, refresh } from 'ionicons/icons';
-
 let waitingForToken = false;
 
 // get token
