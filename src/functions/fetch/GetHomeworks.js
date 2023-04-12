@@ -116,7 +116,7 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
         // return cached homework in promise
         return new Promise((resolve) => {
             let homework = JSON.parse(cacheSearch[0].homework);
-            resolve(constructPronoteHomework(homework));
+            resolve(constructPronoteHomework(homework, dateFrom));
         });
     } else {
         // get homework from API
@@ -126,7 +126,7 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
                 let homeworks = response.data;
 
                 // construct homework
-                homeworks = constructPronoteHomework(homeworks);
+                homeworks = constructPronoteHomework(homeworks, dateFrom);
 
                 // cache response
                 let cache = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
@@ -168,7 +168,7 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
 }
 
 // pronote : construct homework
-function constructPronoteHomework(hw) {
+function constructPronoteHomework(hw, dateFrom) {
     // declaring vars
     let homeworkArray = [];
 
@@ -223,6 +223,23 @@ function constructPronoteHomework(hw) {
 
         // push course to courses
         homeworkArray.push(newHomework);
+    });
+
+    // add custom homework
+    let customHomework = JSON.parse(localStorage.getItem('customHomeworks')) || [];
+
+    customHomework.forEach((homework) => {
+        let homeworkDate = new Date(homework.date);
+        homeworkDate.setHours(0, 0, 0, 0);
+
+        let searchDate = new Date(dateFrom);
+        searchDate.setHours(0, 0, 0, 0);
+
+        // check if homework is in date range
+        if (homeworkDate.getDate() == searchDate.getDate()) {
+            // construct homework
+            homeworkArray.push(homework.homework);
+        }
     });
 
     // return courses
@@ -436,11 +453,36 @@ function constructEDHomework(hw) {
 
 // tick
 async function tickHomework(id) {
-    switch (localStorage.loginService) {
-        case "pronote":
-            // return pronote homework
-            return tickPronoteHomework(id);
+    // if id starts with "custom_"
+    if (id[0].startsWith("custom_")) {
+        // return custom homework
+        return tickCustomHomework(id[0]);
     }
+    else {
+        switch (localStorage.loginService) {
+            case "pronote":
+                // return pronote homework
+                return tickPronoteHomework(id);
+        }
+    }
+}
+
+async function tickCustomHomework(id) {
+    let customHomeworks = JSON.parse(localStorage.customHomeworks);
+
+    // find homework
+    let homework = customHomeworks.find((homework) => {
+        return homework.homework.data.id == id;
+    });
+
+    // if homework is found
+    if (homework) { 
+        // toggle homework.done
+        homework.homework.data.done = !homework.homework.data.done;
+    }
+
+    // save customHomeworks
+    localStorage.customHomeworks = JSON.stringify(customHomeworks);
 }
 
 // tick pronote homework
