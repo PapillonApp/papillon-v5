@@ -95,6 +95,7 @@
 	},
 	setup() {
 		const selectedIndex = ref(0);
+
 		// defines the tabs shown in the menu
 		const appPages = [
 			{
@@ -748,16 +749,12 @@
 			</ion-header>
 			<ion-content mode="md">
 				<ion-list id="inbox-list">
-					<router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages" :key="i">
-						<ion-item v-if="!p.disabled" button mode="md" lines="none" :detail="false" @click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
+					<ion-menu-toggle auto-hide="false" v-for="(p, i) in appPages" :key="i" :class="{ selected: selectedIndex === i }">
+						<ion-item @click="selectedIndex = i" router-direction="root" :router-link="p.url" lines="none" detail="false" class="">
 							<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
 							<ion-label>{{ p.title }}</ion-label>
 						</ion-item>
-						<ion-item @click="displayDevMessage()" v-if="p.disabled" button mode="md" lines="none" :detail="false" :class="{ selected: selectedIndex === i }" disabled>
-							<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
-							<ion-label>{{ p.title }}</ion-label>
-						</ion-item>
-					</router-link>
+					</ion-menu-toggle>
 				</ion-list>
 
 				<ion-list id="bottomActionsList">
@@ -786,7 +783,9 @@
 				</ion-content>
 			</ion-menu>
 			<ion-router-outlet ref="outlet" :animated="true" :animation="transition" id="main-content" v-slot="{ Component }">
-				<component :is="Component" />
+				<keep-alive>
+					<component :is="Component" />
+				</keep-alive>
 			</ion-router-outlet>
 		</ion-split-pane>
 
@@ -997,16 +996,20 @@
 		--background: transparent;
 	}
 
-	ion-menu .router-link-active ion-item {
+	ion-menu .selected ion-item {
 		--background: rgba(var(--ion-color-primary-rgb), 0.14);
-		color: var(--ion-color-primary-rgb);
+		color: var(--ion-color-primary) !important;
+	}
+
+	ion-menu .selected ion-item * {
+		color: var(--ion-color-primary) !important;
 	}
 
 	ion-menu ion-item .mdls {
 		margin-right: calc(var(--padding-start) + 2px);
 	}
 
-	ion-menu .router-link-active ion-item ion-icon {
+	ion-menu .selected ion-item ion-icon {
 	color: var(--ion-color-primary);
 	}
 
@@ -1025,20 +1028,20 @@
 	color: var(--ion-color-medium-shade);
 	}
 
-	.router-link-active ion-item {
+	.selected ion-item {
 		--color: var(--ion-color-primary);
 	}
 
-	.router-link-active ion-item:hover {
+	.selected ion-item:hover {
 		background: rgba(var(--ion-color-primary-rgb), 0.1);
 		cursor: pointer;
 	}
 
-	a:not(.router-link-active) ion-menu-toggle ion-item {
+	a:not(.selected) ion-menu-toggle ion-item {
 		--color: var(--ion-color-medium-shade);
 	}
 
-	a:not(.router-link-active) ion-menu-toggle ion-item:hover {
+	a:not(.selected) ion-menu-toggle ion-item:hover {
 		opacity: 0.75;
 		cursor: pointer;
 	}

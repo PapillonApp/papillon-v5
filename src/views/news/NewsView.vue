@@ -85,7 +85,7 @@
                 });
             },
         },
-        mounted() {
+        ionViewDidEnter() {
             this.presentingElement = this.$refs.page.$el;
 
             this.isLoading = true;

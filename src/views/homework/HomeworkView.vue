@@ -247,7 +247,7 @@
                 }
             }
 		},
-		mounted() {
+		ionViewDidEnter() {
             document.addEventListener('rnChanged', (e) => {
                 this.rnButtonString = this.createDateString(e.detail);
                 this.getHomeworks(false, e.detail);

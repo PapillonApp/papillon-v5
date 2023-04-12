@@ -160,7 +160,7 @@
 				}
 			}
 		},
-		mounted() {
+		ionViewDidEnter() {
 			this.getApiVersion();
 
 			// Get user data

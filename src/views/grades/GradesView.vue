@@ -360,7 +360,7 @@
 				this.$refs.gradeModal.$el.present();
 			},
 		},
-		mounted() {
+		ionViewDidEnter() {
 			this.isLoading = true;
 
 			GetGrades().then((data) => {

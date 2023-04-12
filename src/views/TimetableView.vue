@@ -579,7 +579,7 @@
 			isLoading: true,
 		}
 	},
-	mounted() {
+	ionViewDidEnter() {
 		// sets presentingElement
 		this.presentingElement = this.$refs.page.$el;
 
