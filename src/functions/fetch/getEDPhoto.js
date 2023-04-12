@@ -1,6 +1,3 @@
-// modules
-import axios from 'axios';
-
 const FastAverageColor = require('fast-average-color').FastAverageColor;
 const fac = new FastAverageColor();
 

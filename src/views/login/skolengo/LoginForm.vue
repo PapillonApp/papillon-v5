@@ -1,8 +1,8 @@
 <script>
 import {defineComponent} from 'vue';
 import {
-    IonItem, IonList, IonIcon, IonBackButton, IonSearchbar, IonListHeader, IonSpinner, loadingController, IonInput,
-    IonButton, actionSheetController, alertController
+    IonItem, IonList, IonBackButton, IonSpinner, loadingController, IonInput,
+    IonButton
 } from '@ionic/vue';
 
 import {

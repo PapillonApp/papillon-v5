@@ -5,7 +5,7 @@
         alertController
     } from '@ionic/vue';
 
-    import { version } from '/package'
+    import packageInfo from '/package'
     import { Capacitor } from '@capacitor/core';
 
     import { Browser } from '@capacitor/browser';
@@ -85,7 +85,7 @@
         data() {
             return {
                 LoginSelect: LoginSelect,
-                appVersion: version,
+                appVersion: packageInfo.version,
                 appPlatform: Capacitor.getPlatform(),
                 status: "",
             }

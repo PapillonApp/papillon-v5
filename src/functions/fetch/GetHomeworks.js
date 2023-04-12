@@ -296,7 +296,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                 console.log("[REQUEST] [HOMEWORK] Requesting content homeworks...")
 
                 async function requestContent() {
-                    return new Promise((resolve, reject) => {
+                    return new Promise((resolve) => {
                         Object.keys(homeworksdate).forEach(async date => {
 
                             let URL2 = `${EDAPI}/Eleves/${userID}/cahierdetexte/${date}.awp?verbe=get`;
@@ -355,9 +355,14 @@ function constructEDHomework(hw) {
     // declaring vars
     let homeworkArray = [];
     
+    /*
+    ===============================================
+    UNUSED VARIABLES | PLEASE UNCOMMENT WHEN NEEDED
+    ===============================================
     const token = localStorage.getItem('token');
     const userID = JSON.parse(localStorage.UserCache).id;
-
+    */
+   
     // for each course in homework
     Object.keys(hw).forEach((date) => {
         //on obtiens une date avec une liste
