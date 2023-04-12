@@ -97,7 +97,6 @@ setInterval(setStyle, 100);
 setInterval(updateStatus, 100);
 
 import { AndroidShortcuts } from 'capacitor-android-shortcuts';
-import axios from 'axios';
 
 AndroidShortcuts.isDynamicSupported().then((result) => {
 	if (result) {
