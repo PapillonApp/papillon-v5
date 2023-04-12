@@ -18,160 +18,172 @@ function getToken() {
 
 // pronote : get token
 function getPronoteLogin() {
-    if(!waitingForToken) {
-        // gather vars
-        const API = app.config.globalProperties.$api;
-        let loginData = null;
-        try { 
-            loginData = JSON.parse(atob(localStorage.getItem('loginData')));
-        } catch(e) {
-            displayToast.presentError("Merci de vous reconnecter.", "danger", `Une erreur s'est produite lors de la récupération des données de connexion. Merci de vous reconnecter. (${e})`)
-            console.error(`[Connect to Pronote API] Error while parsing loginData: ${e}`);
-            return;
-        }
-
-        // get username and password
-        let username = loginData.username;
-        let password = loginData.password;
-        let cas = loginData.cas;
-        let url = loginData.url;
-
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-                    
-        var urlencoded = new URLSearchParams();
-        urlencoded.append("url", url);
-        urlencoded.append("ent", cas);
-        urlencoded.append("username", username);
-        urlencoded.append("password", password);
-
-        var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: urlencoded,
-            redirect: 'follow'
-        };
-
-        waitingForToken = true;
-
-        document.dispatchEvent(new CustomEvent('connectionState', { detail: 'connecting' }));
-
-        // get token from API
-        return fetch(API + "/generatetoken", requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            if(result.token) {
-                // save token
-                localStorage.setItem('token', result.token);
-
-                // empty localstorage cache
-                localStorage.setItem('UserCache', JSON.stringify({}));
-                localStorage.setItem('TimetableCache', JSON.stringify([]));
-
-                // broadcast event to document
-                document.dispatchEvent(new CustomEvent('tokenUpdated'));
-                document.dispatchEvent(new CustomEvent('connectionState', { detail: 'connected' }));
-
-                // set waitingForToken to false
-                waitingForToken = false;
-
-                return result.token;
-            } else {
-                if(result.error == "Missing password" || result.error == "Missing username" || result.error.includes("probably wrong login information") || result.error.includes("probably bad username/password")) {
-                    displayToast.presentToast("Merci de vous reconnecter.", "danger")
-                } else if(result.error == "Your IP address is suspended.") {
-                    displayToast.presentError("Une erreur s'est produite", "danger", "L'adresse IP de nos serveurs est suspendue pour votre établissement. S'il vous plaît réessayez dans quelques heures.")
-                }
-                else {
-                    displayToast.presentError("Une erreur s'est produite.", "danger", result.error)
-                }
-                // redirect to login page
-                console.error('[Get Token]: Return to login page - ' + result);
-
-                document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
+    return new Promise((resolve, reject) => {
+        if(!waitingForToken) {
+            // gather vars
+            const API = app.config.globalProperties.$api;
+            let loginData = null;
+            try { 
+                loginData = JSON.parse(atob(localStorage.getItem('loginData')));
+            } catch(e) {
+                displayToast.presentError("Merci de vous reconnecter.", "danger", `Une erreur s'est produite lors de la récupération des données de connexion. Merci de vous reconnecter. (${e})`)
+                console.error(`[Connect to Pronote API] Error while parsing loginData: ${e}`);
+                reject(e)
+                return;
             }
-        })
-        .catch(error => {
-            displayToast.presentError("Impossible de joindre le serveur.", "danger", error)
-            console.error('[Get Token]: Unable to join server - ' + error);
-        });
-    }
+    
+            // get username and password
+            let username = loginData.username;
+            let password = loginData.password;
+            let cas = loginData.cas;
+            let url = loginData.url;
+    
+            var myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+                        
+            var urlencoded = new URLSearchParams();
+            urlencoded.append("url", url);
+            urlencoded.append("ent", cas);
+            urlencoded.append("username", username);
+            urlencoded.append("password", password);
+    
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: urlencoded,
+                redirect: 'follow'
+            };
+    
+            waitingForToken = true;
+    
+            document.dispatchEvent(new CustomEvent('connectionState', { detail: 'connecting' }));
+    
+            // get token from API
+            return fetch(API + "/generatetoken", requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                if(result.token) {
+                    // save token
+                    localStorage.setItem('token', result.token);
+    
+                    // empty localstorage cache
+                    localStorage.setItem('UserCache', JSON.stringify({}));
+                    localStorage.setItem('TimetableCache', JSON.stringify([]));
+    
+                    // broadcast event to document
+                    document.dispatchEvent(new CustomEvent('tokenUpdated'));
+                    document.dispatchEvent(new CustomEvent('connectionState', { detail: 'connected' }));
+    
+                    // set waitingForToken to false
+                    waitingForToken = false;
+    
+                    resolve(result.token)
+                } else {
+                    if(result.error == "Missing password" || result.error == "Missing username" || result.error.includes("probably wrong login information") || result.error.includes("probably bad username/password")) {
+                        displayToast.presentToast("Merci de vous reconnecter.", "danger")
+                    } else if(result.error == "Your IP address is suspended.") {
+                        displayToast.presentError("Une erreur s'est produite", "danger", "L'adresse IP de nos serveurs est suspendue pour votre établissement. S'il vous plaît réessayez dans quelques heures.")
+                    }
+                    else {
+                        displayToast.presentError("Une erreur s'est produite.", "danger", result.error)
+                    }
+                    reject(result.error)
+                    // redirect to login page
+                    console.error('[Get Token]: Return to login page - ' + result);
+    
+                    document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
+                }
+            })
+            .catch(error => {
+                displayToast.presentError("Impossible de joindre le serveur.", "danger", error)
+                console.error('[Get Token]: Unable to join server - ' + error);
+                reject(error)
+            });
+        }
+    })
 }
 
 
 //ecoledirecte : get token
 function getEDLogin() {
-    if(!waitingForToken) {
-        // gather vars
-        const EDAPI = "https://api.ecoledirecte.com/v3"//app.config.globalProperties.$api;
-
-
-        let loginData = null;
-        try { 
-            loginData = JSON.parse(atob(localStorage.getItem('loginData')));
-        } catch(e) {
-            displayToast.presentError("Une erreur interne est survenue", "danger", `Une erreur s'est produite lors de la récupération des données de connexion. Merci de vous reconnecter. (${e})`)
-            console.error(`[Connect to EcoleDirecte API] Error while parsing loginData: ${e}`);
-            return;
-        }
-
-        // get username and password
-        let username = loginData.username;
-        let password = loginData.password;
-
-        var requestOptions = {
-            headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": ""},            
-        };
-
-        // encodeURIComponent because Ecoledirect needs urlencode on any field !
-        let body = `data={
-            "uuid": "",
-            "identifiant": "${encodeURIComponent(username)}",
-            "motdepasse": "${encodeURIComponent(password)}",
-            "isReLogin": false
-        }`
-
-        waitingForToken = true;
-
-        // get token from API
-        return axios.post(EDAPI + "/login.awp", body, requestOptions)
-        .then(async result => {
-            if(result.data.code === 200) {
-                // save token
-                localStorage.setItem('token', result.data.token);
-
-                // set base64 avatar
-                result.data.data.accounts[0].profile.photo = await getEDPhoto(result.data.data.accounts[0])
-
-                // empty localstorage cache
-                localStorage.setItem('UserCache', JSON.stringify(result.data.data.accounts[0]));
-                localStorage.setItem('TimetableCache', JSON.stringify([]));
-
-                // broadcast event to document
-                document.dispatchEvent(new CustomEvent('tokenUpdated'));
-
-                // set waitingForToken to false
-                waitingForToken = false;
-
-                return result.data.token;
-            } else {
-                if(result.code === 505) {
-                    displayToast.presentToast("Ñchec de la reconnexion", "danger", "Vos identifiants semblent invalides. Pour les mettre à jour, déconnectez-vous puis reconnectez-vous de papillon.\n" + result.data.message)
-                }/* else if(result.error == "Your IP address is suspended.") {
-                    displayToast.presentError("Une erreur s'est produite", "danger", "L'adresse IP de nos serveurs est suspendue pour votre établissement. S'il vous plaît réessayez dans quelques heures.")
-                }*/
-                else {
-                    displayToast.presentError("Une erreur s'est produite.", "danger", result.error)
-                }
-                // redirect to login page
-                console.error('[Get Token]: Return to login page - ' + result);
+    return new Promise((resolve, reject) => {
+        document.dispatchEvent(new CustomEvent('connectionState', { detail: 'connecting' }));
+        if(!waitingForToken) {
+            // gather vars
+            const EDAPI = "https://api.ecoledirecte.com/v3"//app.config.globalProperties.$api;
+    
+    
+            let loginData = null;
+            try { 
+                loginData = JSON.parse(atob(localStorage.getItem('loginData')));
+            } catch(e) {
+                displayToast.presentError("Une erreur interne est survenue", "danger", `Une erreur s'est produite lors de la récupération des données de connexion. Merci de vous reconnecter. (${e})`)
+                console.error(`[Connect to EcoleDirecte API] Error while parsing loginData: ${e}`);
+                reject(e)
+                document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
+                return;
             }
-        })
-        .catch(error => {
-            displayToast.presentError("Impossible de joindre le serveur.", "danger", error)
-            console.error('[Get Token]: Unable to join server - ' + error);
-        });
-    }
+    
+            // get username and password
+            let username = loginData.username;
+            let password = loginData.password;
+    
+            var requestOptions = {
+                headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": ""},            
+            };
+    
+            // encodeURIComponent because Ecoledirect needs urlencode on any field !
+            let body = `data={
+                "uuid": "",
+                "identifiant": "${encodeURIComponent(username)}",
+                "motdepasse": "${encodeURIComponent(password)}",
+                "isReLogin": false
+            }`
+    
+            waitingForToken = true;
+    
+            // get token from API
+            return axios.post(EDAPI + "/login.awp", body, requestOptions)
+            .then(async result => {
+                if(result.data.code === 200) {
+                    // save token
+                    localStorage.setItem('token', result.data.token);
+    
+                    // set base64 avatar
+                    result.data.data.accounts[0].profile.photo = await getEDPhoto(result.data.data.accounts[0])
+    
+                    // empty localstorage cache
+                    localStorage.setItem('UserCache', JSON.stringify(result.data.data.accounts[0]));
+                    localStorage.setItem('TimetableCache', JSON.stringify([]));
+    
+                    // broadcast event to document
+                    document.dispatchEvent(new CustomEvent('tokenUpdated'));
+    
+                    // set waitingForToken to false
+                    waitingForToken = false;
+                    document.dispatchEvent(new CustomEvent('connectionState', { detail: 'connected' }));
+                    resolve(result.data.token);
+                } else {
+                    reject(result.code, result.message)
+                    if(result.code === 505) {
+                        displayToast.presentToast("Ñchec de la reconnexion", "danger", "Vos identifiants semblent invalides. Pour les mettre à jour, déconnectez-vous puis reconnectez-vous de papillon.\n" + result.data.message)
+                    }
+                    else {
+                        displayToast.presentError("Une erreur s'est produite.", "danger", result.error)
+                    }
+                    // redirect to login page
+                    console.error('[Get Token]: Return to login page - ' + result);
+                    document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
+                }
+            })
+            .catch(error => {
+                displayToast.presentError("Impossible de joindre le serveur.", "danger", error)
+                console.error('[Get Token]: Unable to join server - ' + error);
+                document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
+                reject(null, error)
+            });
+        }
+    })
 }
 
 // export
