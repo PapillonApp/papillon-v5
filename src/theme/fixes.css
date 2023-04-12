@@ -71,3 +71,7 @@ ion-content::part(scroll) {
 ion-list-header ion-button {
     margin-top: 1px !important;
 }
+
+.md ion-list {
+    padding: 0 !important;
+}
