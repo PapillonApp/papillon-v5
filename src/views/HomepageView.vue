@@ -543,20 +543,25 @@ export default defineComponent({
 			this.userName = JSON.parse(localStorage.userData).student.name.split(" ")[JSON.parse(localStorage.userData).student.name.split(" ").length - 1]
 			this.userFullName = JSON.parse(localStorage.userData).student.name
 		},
-		getDisplayNextCourse() {
-			console.log("getDisplayNextCourse call");
-			if (localStorage.getItem('displayNextCourse')) {
-				this.displayNextCourse = (localStorage.getItem('displayNextCourse') == 'true' ? true : false);
+		getBoolOpt(opt, defaultVal = true) {
+			if (localStorage.getItem(opt)) {
+				this[opt] = (localStorage.getItem(opt) == 'true' ? true : false);
 			}
-			else {
-				this.displayNextCourse = true;
-				console.log(this.displayNextCourse);
-				localStorage.setItem('displayNextCourse', 'true');
-				console.log('DISPLAY NEXT COURSE IS SET TO TRUE');
+			else if ((typeof defaultVal) != 'undefined' && defaultVal != null) {
+				this[opt] = defaultVal;
+				localStorage.setItem(opt, defaultVal);
 			}
+		},
+		getBoolOpts(opts) {
+			opts.forEach(opt => this.getBoolOpt(opt));
 		}
 	},
 	async mounted() {
+		const boolOpts = [
+			'displayNextCourse',
+			'displayNews'
+		];
+
 		if (localStorage.getItem('userData')) {
 			// get first name
 			let name = JSON.parse(localStorage.getItem('userData')).student.name;
@@ -564,7 +569,7 @@ export default defineComponent({
 			this.firstName = name.split(' ').pop();
 		}
 
-		this.getDisplayNextCourse();
+		this.getBoolOpts(boolOpts);
 
 		this.connected = await Network.getStatus();
 		this.connected = this.connected.connected;
@@ -618,7 +623,7 @@ export default defineComponent({
 				this.toolbarColor = '';
 			}
 
-			this.getDisplayNextCourse();
+			this.getBoolOpts(boolOpts);
 		});
 	}
 });
@@ -642,9 +647,6 @@ export default defineComponent({
 						<h3>Page d'accueil</h3>
 					</div>
 				</div>
-
-
-
 				<ion-buttons slot="end">
 					<ion-nav-link v-if="avatar" router-direction="forward" :component="UserView">
 
@@ -860,7 +862,7 @@ export default defineComponent({
 				</Transition>
 
 				<Transition name="ElemAnim">
-					<ion-list v-if="news.length !== 0 && allLoaded && !newsLoading" id="comp-news" ref="comp-news"
+					<ion-list v-if="displayNews && news.length !== 0 && allLoaded && !newsLoading" id="comp-news" ref="comp-news"
 						lines="none" inset="true">
 						<ion-list-header class="listHeader">
 							<ion-label>
@@ -884,7 +886,7 @@ export default defineComponent({
 							</ion-item>
 						</IonNavLink>
 
-						<ion-item v-if="news.length == 0 && !newsLoading" lines="none">
+						<ion-item v-if="displayNews && news.length == 0 && !newsLoading" lines="none">
 							<div slot="start" style="margin-left: 5px; margin-right: 20px;">
 								<span class="material-symbols-outlined mdls">newspaper</span>
 							</div>
@@ -1279,4 +1281,5 @@ ion-buttons[slot=end] {
 	font-size: 22px !important;
 	margin-left: 2px;
 	margin-top: 2px;
-}</style>
+}
+</style>

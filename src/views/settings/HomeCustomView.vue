@@ -37,6 +37,9 @@ export default defineComponent({
     mounted() {
         let displayNextCourse = this.$refs.displayNextCourse;
         displayNextCourse.$el.checked = localStorage.getItem('displayNextCourse') == 'true';
+    
+        let displayNews = this.$refs.displayNews;
+        displayNews.$el.checked = localStorage.getItem('displayNews') == 'true';
     }
 });
 </script>
@@ -54,12 +57,20 @@ export default defineComponent({
     <ion-content :fullscreen="true">
         <IonList :inset="true" lines="none">
             <IonItem>
-                <span class="material-symbols-outlined mdls" slot="start">book-outline</span>
+                <span class="material-symbols-outlined mdls" slot="start">book</span>
                 <IonLabel class="ion-text-wrap">
                     <h2>Afficher le prochain cours</h2>
                     <p>Affiche le prochain cours en haut de l'écran d'accueil</p>
                 </IonLabel>
                 <IonToggle slot="end" ref="displayNextCourse" @ionChange="changeTick('displayNextCourse')"></IonToggle>
+            </IonItem>
+            <IonItem>
+                <span class="material-symbols-outlined mdls" slot="start">feed</span>
+                <IonLabel class="ion-text-wrap">
+                    <h2>Afficher les actus</h2>
+                    <p>Affiche les actualités sur l'écran d'accueil</p>
+                </IonLabel>
+                <IonToggle slot="end" ref="displayNews" @ionChange="changeTick('displayNews')"></IonToggle>
             </IonItem>
         </IonList>
     </ion-content>
