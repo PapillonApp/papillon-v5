@@ -6,6 +6,7 @@
 
 	import ThemeView from './ThemeView.vue';
 	import OptionsView from './OptionsView.vue';
+	import HomeCustomView from './HomeCustomView.vue';
 	import UserView from './UserView.vue';
 	import AdvancedView from './AdvancedView.vue';
 
@@ -48,6 +49,7 @@
 				userAvatar: '',
 				ThemeView: ThemeView,
 				OptionsView: OptionsView,
+				HomeCustomView: HomeCustomView,
 				UserView: UserView,
 				AdvancedView: AdvancedView,
 				randomTextWidth: [],
@@ -219,6 +221,16 @@
 						<IonLabel class="ion-text-wrap">
 							<h2>Options de Papillon</h2>
 							<p>Modifier le comportement de Papillon</p>
+						</IonLabel>
+						<span class="only-md next-md-icon material-symbols-outlined mdls" slot="end">navigate_next</span>
+					</IonItem>
+				</ion-nav-link>
+				<ion-nav-link router-direction="forward" :component="HomeCustomView">
+					<IonItem button>
+						<span class="material-symbols-outlined mdls" slot="start">home</span>
+						<IonLabel class="ion-text-wrap">
+							<h2>Personnalisation de l'écran d'accueil</h2>
+							<p>Affichez ou masquez les informations à votre guise sur l'écran d'accueil !</p>
 						</IonLabel>
 						<span class="only-md next-md-icon material-symbols-outlined mdls" slot="end">navigate_next</span>
 					</IonItem>
