@@ -55,7 +55,7 @@
 					presentationStyle: 'popover',
                 });
             },
-            async deleteHW(e) {
+            async deleteHW() {
                 let customHomeworks = JSON.parse(localStorage.customHomeworks);
 
                 // find homework

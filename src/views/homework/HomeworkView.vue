@@ -1,6 +1,6 @@
 <script>
 	import { defineComponent } from 'vue';
-	import { IonHeader, IonFooter, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonLabel, IonItem, IonNavLink, IonRefresher, IonRefresherContent, IonCheckbox, IonButton, IonModal, IonDatetime, alertController } from '@ionic/vue';
+	import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonLabel, IonItem, IonNavLink, IonRefresher, IonRefresherContent, IonCheckbox, IonButton, IonModal, IonDatetime, alertController } from '@ionic/vue';
 
     import { alertCircle } from 'ionicons/icons';
 
@@ -69,7 +69,7 @@
 			}
 		},
 		methods: {
-            async addHomework(e) {
+            async addHomework() {
                 const alert = await alertController.create({
                     header: 'Ajouter un devoir',
                     subHeader: 'Entrez ici le contenu de votre devoir',
