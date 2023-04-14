@@ -560,7 +560,8 @@ export default defineComponent({
 		const boolOpts = [
 			'displayNextCourse',
 			'displayNews',
-			'displayLastGrades'
+			'displayLastGrades',
+			'displayAvatar'
 		];
 
 		if (localStorage.getItem('userData')) {
@@ -639,7 +640,7 @@ export default defineComponent({
 				</ion-buttons>
 
 				<div class="profile">
-					<ion-avatar class="userAvatar">
+					<ion-avatar class="userAvatar" v-if="displayAvatar">
 						<img :src="avatar" />
 					</ion-avatar>
 

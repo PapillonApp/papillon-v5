@@ -62,6 +62,12 @@ export default defineComponent({
                     label: 'Afficher les dernières notes',
                     description: 'Affiche les dernières notes sur l\'écran d\'accueil',
                     icon: 'star'
+                },
+                {
+                    name: 'displayAvatar',
+                    label: 'Afficher votre photo de profil',
+                    description: 'Affiche votre avatar Pronote en haut de l\'écran d\'accueil',
+                    icon: 'person'
                 }
             ]
         };
