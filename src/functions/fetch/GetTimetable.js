@@ -370,7 +370,6 @@ function constructEDTimetable(timetable) {
 
     // for each course in timetable
     timetable.forEach((course) => {
-        console.log(subjectColor.getSubjectColor(course.matiere, course.color))
         // construct course
         let newCourse = {
             course: {
@@ -405,6 +404,14 @@ function constructEDTimetable(timetable) {
                 status: course.isAnnule ? "Cours annulé" : null
             }
         };
+
+        if(course.typeCours == "CONGE") {
+            newCourse.data.subject = course.text;
+            newCourse.course.color = "#3462e0";
+            newCourse.status.status = "Vous êtes en congés";
+            newCourse.data.rooms = ["Chez vous"];
+            newCourse.data.teachers = ["Aucun prof."]
+        }
 
         if (course.matiere != "") {
             subjectColor.setSubjectColor(newCourse.data.subject, newCourse.course.color, true);
