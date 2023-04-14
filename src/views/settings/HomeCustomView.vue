@@ -26,20 +26,48 @@ export default defineComponent({
         changeTick(option) {
             this.tickClick();
 
-            let el = this.$refs[option];
-            let elChecked = el.$el.checked;
-
-            localStorage.setItem(option, elChecked);
+            let el = this.$refs[option][0].$el;
+            let elChecked = el.checked;
+            localStorage.setItem(this.toggles[option.split('toggle')[1]].name, elChecked);
 
             document.dispatchEvent(new CustomEvent('settingsUpdated'));
         },
+        checkToggles() {
+            let i = 0;
+            this.toggles.forEach(toggle => {
+                console.log(this.$refs['toggle' + i])
+                let toggleRef = this.$refs['toggle' + i][0].$el;
+                toggleRef.checked = localStorage.getItem(toggle.name) == 'true';
+                i++;
+            })
+        }
+    },
+    data() {
+        return {
+            toggles: [
+                {
+                    name: 'displayNextCourse',
+                    label: 'Afficher le prochain cours',
+                    description: 'Affiche le prochain cours en haut de l\'écran d\'accueil',
+                    icon: 'book'
+                },
+                {
+                    name: 'displayNews',
+                    label: 'Afficher les actus',
+                    description: 'Affiche les actualités sur l\'écran d\'accueil',
+                    icon: 'feed'
+                },
+                {
+                    name: 'displayLastGrades',
+                    label: 'Afficher les dernières notes',
+                    description: 'Affiche les dernières notes sur l\'écran d\'accueil',
+                    icon: 'star'
+                }
+            ]
+        };
     },
     mounted() {
-        let displayNextCourse = this.$refs.displayNextCourse;
-        displayNextCourse.$el.checked = localStorage.getItem('displayNextCourse') == 'true';
-    
-        let displayNews = this.$refs.displayNews;
-        displayNews.$el.checked = localStorage.getItem('displayNews') == 'true';
+        this.checkToggles();
     }
 });
 </script>
@@ -56,21 +84,14 @@ export default defineComponent({
     </IonHeader>
     <ion-content :fullscreen="true">
         <IonList :inset="true" lines="none">
-            <IonItem>
-                <span class="material-symbols-outlined mdls" slot="start">book</span>
+            <IonItem v-for="(toggle, index) in toggles" :key="toggle.name">
+                <span class="material-symbols-outlined mdls" slot="start">{{toggle.icon}}</span>
                 <IonLabel class="ion-text-wrap">
-                    <h2>Afficher le prochain cours</h2>
-                    <p>Affiche le prochain cours en haut de l'écran d'accueil</p>
+                    <h2>{{toggle.label}}</h2>
+                    <p>{{toggle.description}}</p>
                 </IonLabel>
-                <IonToggle slot="end" ref="displayNextCourse" @ionChange="changeTick('displayNextCourse')"></IonToggle>
-            </IonItem>
-            <IonItem>
-                <span class="material-symbols-outlined mdls" slot="start">feed</span>
-                <IonLabel class="ion-text-wrap">
-                    <h2>Afficher les actus</h2>
-                    <p>Affiche les actualités sur l'écran d'accueil</p>
-                </IonLabel>
-                <IonToggle slot="end" ref="displayNews" @ionChange="changeTick('displayNews')"></IonToggle>
+                
+                <IonToggle slot="end" :ref="'toggle' + index" @ionChange="changeTick('toggle' + index)"></IonToggle>
             </IonItem>
         </IonList>
     </ion-content>

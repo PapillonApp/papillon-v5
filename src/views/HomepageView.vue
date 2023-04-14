@@ -559,7 +559,8 @@ export default defineComponent({
 	async mounted() {
 		const boolOpts = [
 			'displayNextCourse',
-			'displayNews'
+			'displayNews',
+			'displayLastGrades'
 		];
 
 		if (localStorage.getItem('userData')) {
@@ -828,7 +829,7 @@ export default defineComponent({
 				</Transition>
 
 				<Transition name="ElemAnim">
-					<ion-list v-if="grades.length !== 0 && allLoaded && !gradesLoading" id="comp-grades" ref="comp-grades"
+					<ion-list v-if="displayLastGrades && grades.length !== 0 && allLoaded && !gradesLoading" id="comp-grades" ref="comp-grades"
 						lines="none" inset="true" class="hw_group">
 						<ion-list-header class="listHeader">
 							<ion-label>
