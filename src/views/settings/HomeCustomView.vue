@@ -74,6 +74,12 @@ export default defineComponent({
                     label: 'Afficher votre nom de famille',
                     description: 'Choisissez d\'afficher ou non votre nom de famille sur l\'écran d\'accueil',
                     icon: 'badge'
+                },
+                {
+                    name: 'displayHomeworks',
+                    label: 'Afficher le travail à faire',
+                    description: 'Affiche les prochains devoirs à rendre',
+                    icon: 'work'
                 }
             ]
         };

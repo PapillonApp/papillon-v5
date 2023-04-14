@@ -562,7 +562,8 @@ export default defineComponent({
 			'displayNews',
 			'displayLastGrades',
 			'displayAvatar',
-			'displayFirstName'
+			'displayFirstName',
+			'displayHomeworks'
 		];
 
 		if (localStorage.getItem('userData')) {
@@ -783,7 +784,7 @@ export default defineComponent({
 
 			<div id="components" ref="components">
 				<Transition name="ElemAnim">
-					<ion-list v-if="homeworks.length !== 0 && allLoaded && !hwloading" lines="none" id="comp-hw"
+					<ion-list v-if="displayHomeworks && homeworks.length !== 0 && allLoaded && !hwloading" lines="none" id="comp-hw"
 						ref="comp-hw" inset="true">
 						<ion-list-header class="listHeader" v-if="allLoaded && !hwloading">
 							<ion-label>
