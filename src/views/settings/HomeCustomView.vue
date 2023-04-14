@@ -1,6 +1,6 @@
 <script>
 import { defineComponent } from 'vue';
-import { IonHeader, IonContent, IonToggle, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonListHeader, IonLabel, IonItem, actionSheetController, IonNavLink, IonChip, IonSkeletonText, IonAvatar } from '@ionic/vue';
+import { IonHeader, IonContent, IonToggle, IonToolbar, IonTitle, IonButtons, IonLabel, IonItem} from '@ionic/vue';
 import PapillonBackButton from '@/components/PapillonBackButton.vue';
 import hapticsController from '@/functions/utils/hapticsController.js';
 
@@ -35,7 +35,6 @@ export default defineComponent({
         checkToggles() {
             let i = 0;
             this.toggles.forEach(toggle => {
-                console.log(this.$refs['toggle' + i])
                 let toggleRef = this.$refs['toggle' + i][0].$el;
                 toggleRef.checked = localStorage.getItem(toggle.name) == 'true';
                 i++;
