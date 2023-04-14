@@ -68,6 +68,12 @@ export default defineComponent({
                     label: 'Afficher votre photo de profil',
                     description: 'Affiche votre avatar Pronote en haut de l\'écran d\'accueil',
                     icon: 'person'
+                },
+                {
+                    name: 'displayFirstName',
+                    label: 'Afficher votre nom de famille',
+                    description: 'Choisissez d\'afficher ou non votre nom de famille sur l\'écran d\'accueil',
+                    icon: 'badge'
                 }
             ]
         };

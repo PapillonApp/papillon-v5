@@ -561,7 +561,8 @@ export default defineComponent({
 			'displayNextCourse',
 			'displayNews',
 			'displayLastGrades',
-			'displayAvatar'
+			'displayAvatar',
+			'displayFirstName'
 		];
 
 		if (localStorage.getItem('userData')) {
@@ -645,7 +646,7 @@ export default defineComponent({
 					</ion-avatar>
 
 					<div class="name">
-						<p>{{ userFullName }}</p>
+						<p>{{ displayFirstName ? userFullName : userName }}</p>
 						<h3>Page d'accueil</h3>
 					</div>
 				</div>
