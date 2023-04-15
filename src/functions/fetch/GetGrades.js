@@ -571,8 +571,7 @@ function groupEDSubjects(subjectData, markArray) {
 function constructEDGrades(grades) {   
 	console.log("Building grades") 
 	let marks = grades.notes;
-
-	let allPeriods = JSON.parse(localStorage.getItem('userData')).periods;
+	let allPeriods = JSON.parse(localStorage.getItem('periodsCache'));
 	let actualPeriodID = allPeriods.find(period => period.actual == true).id;
 	let actualPeriod = grades.periodes.find(period => period.idPeriode == actualPeriodID);
 
@@ -602,6 +601,7 @@ function constructEDGrades(grades) {
 
 	// for each mark, add it to the corresponding subject in the array
 	marks.forEach(mark => {
+		if(mark.codePeriode != actualPeriodID) return;
 		// add mark to subject
 		let newMark = {
 			id: mark.id,
