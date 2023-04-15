@@ -3,6 +3,8 @@ import displayToast from '@/functions/utils/displayToast.js';
 
 import axios from 'axios';
 import getEDPhoto from "@/functions/fetch/getEDPhoto";
+import getEDPeriods from '@/functions/fetch/getEDPeriods.js';
+
 
 let waitingForToken = false;
 
@@ -151,7 +153,9 @@ function getEDLogin() {
     
                     // set base64 avatar
                     result.data.data.accounts[0].profile.photo = await getEDPhoto(result.data.data.accounts[0])
-    
+                    await getEDPeriods().then(periods => {
+                        result.data.data.accounts[0].periods = periods;
+                    })
                     // empty localstorage cache
                     localStorage.setItem('UserCache', JSON.stringify(result.data.data.accounts[0]));
                     localStorage.setItem('TimetableCache', JSON.stringify([]));
@@ -165,7 +169,7 @@ function getEDLogin() {
                     resolve(result.data.token);
                 } else {
                     reject(result.code, result.message)
-                    if(result.code === 505) {
+                    if(result.data.code === 505) {
                         displayToast.presentToast("Ñchec de la reconnexion", "danger", "Vos identifiants semblent invalides. Pour les mettre à jour, déconnectez-vous puis reconnectez-vous de papillon.\n" + result.data.message)
                     }
                     else {
