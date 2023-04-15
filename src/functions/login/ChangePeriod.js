@@ -2,7 +2,13 @@ import { app } from '@/main.ts'
 
 // get token
 function changePeriod(name) {
-    return changePronotePeriod(name);
+    switch(localStorage.loginService) {
+        case "pronote":    
+            return changePronotePeriod(name);
+		case "ecoledirecte":
+            return;
+    }
+    
 }
 
 // pronote : get token
