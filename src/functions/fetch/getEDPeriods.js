@@ -9,10 +9,7 @@ import GetToken from '@/functions/login/GetToken.js';
 
 async function getEDPeriods(userid, token) {
 	const EDAPI = "https://api.ecoledirecte.com/v3"
-	console.log("Getting grades from ecoledirecte")
 
-    console.log(`[${userid}] : ${token.length}`)
-    // construct url (date is a TEST date)
 	let URL = `${EDAPI}/eleves/${userid}/notes.awp?verbe=get`;
 
 	var requestOptions = {
