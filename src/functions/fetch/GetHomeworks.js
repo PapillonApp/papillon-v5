@@ -379,10 +379,18 @@ function constructEDHomework(hw) {
     const token = localStorage.getItem('token');
     const userID = JSON.parse(localStorage.UserCache).id;
     */
+
+    if(hw.length > 0) {
+        hw.forEach(homework2 => {
+            return homeworkArray.push(homework2);
+        })
+        return homeworkArray;
+    }
    
     // for each course in homework
     Object.keys(hw).forEach((date) => {
         //on obtiens une date avec une liste
+
         //2023-03-17
         hw[date].forEach((homework) => {
             console.log(homework)
@@ -422,7 +430,6 @@ function constructEDHomework(hw) {
 
 
             // construct course
-            console.log(hws)
             let newHomework = {
                 data: {
                     id: hws.id,
@@ -438,7 +445,6 @@ function constructEDHomework(hw) {
                 },
                 files: hws.aFaire.documents,
             };
-            console.log("after newhomework")
             subjectColor.setSubjectColor(newHomework.homework.subject, newHomework.data.color, true);
 
             // push course to courses
