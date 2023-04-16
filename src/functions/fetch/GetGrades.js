@@ -7,6 +7,7 @@ import GetToken from '@/functions/login/GetToken.js';
 
 import subjectColor from '@/functions/utils/subjectColor.js'
 import * as moment from "moment";
+import displayToast from "@/functions/utils/displayToast";
 // funcs
 function isFloat(n){
 	return Number(n) === n && n % 1 !== 0;
@@ -571,6 +572,13 @@ function groupEDSubjects(subjectData, markArray) {
 function constructEDGrades(grades) {   
 	console.log("Building grades") 
 	let marks = grades.notes;
+	if(!grades.periodes){
+		displayToast.presentError("Impossible de construire les notes.", "danger", "[ED] Auth failed. Essayez d'actualiser manuellement pour résoudre le problème.")
+		return {
+			marks: [],
+			averages: []
+		}
+	} 
 	let allPeriods = JSON.parse(localStorage.getItem('periodsCache'));
 	let actualPeriodID = allPeriods.find(period => period.actual == true).id;
 	let actualPeriod = grades.periodes.find(period => period.idPeriode == actualPeriodID);
