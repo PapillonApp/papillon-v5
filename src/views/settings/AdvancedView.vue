@@ -10,6 +10,7 @@
 		IonTitle,
 		IonContent,
 		IonNavLink,
+		loadingController
 	} from '@ionic/vue';
 
 	import LogView from './LogView.vue';
@@ -20,6 +21,8 @@
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	import { Dialog } from '@capacitor/dialog';
+
+	import { checkmarkOutline, informationOutline } from 'ionicons/icons';
 
 	export default defineComponent({
 		name: 'FolderPage',
@@ -38,24 +41,24 @@
 		data() {
 			return {
 				LogView: LogView,
+				
 			}
 		},
 		methods: {
 			resetColors() {
 				localStorage.removeItem('SubjectColors');
-
-				// show toast
+				displayToast.presentToastSmall("Couleurs réinitialisées.", "success", checkmarkOutline)
+				// show toast	
 				setTimeout(() => {
-					displayToast.presentNativeToast(
-						'Couleurs des matières réinitialisées'
-					);
-					
-					setTimeout(() => {
-						this.localStorageSize = this.getLocalStorageSize() + ' kb';
-					}, 1000);
-				}, 100);
+					this.localStorageSize = this.getLocalStorageSize() + ' kb';
+				}, 1000);
 			},
-			emptyCache() {
+			async emptyCache() {
+				const loading = await loadingController.create({
+					message: 'Veuillez patienter...'
+				});
+					
+				loading.present();
 				// empty cache
 				localStorage.removeItem('UserCache');
 				localStorage.removeItem('TimetableCache');
@@ -68,17 +71,15 @@
 				localStorage.removeItem('MenuCache');
 				localStorage.removeItem('ConversationsCache');
 				localStorage.removeItem('SubjectColors');
-
+				await GetToken()
+				.catch((err) => {
+					loading.dismiss()
+					displayToast.presentError("Erreur lors de la reconnexion, veuillez réessayer ultérieurement.", "danger", err)
+				})
 				// show toast
-				setTimeout(() => {
-					displayToast.presentNativeToast(
-						'Cache des données vidé'
-					);
-					
-					setTimeout(() => {
-						this.localStorageSize = this.getLocalStorageSize() + ' kb';
-					}, 1000);
-				}, 100);
+				this.localStorageSize = this.getLocalStorageSize() + ' kb';
+				loading.dismiss()
+				displayToast.presentToastSmall("Le cache a bien été vidé", "success", checkmarkOutline)
 			},
 			getLocalStorageSize() {
 				let total = 0;
@@ -101,39 +102,33 @@
 
 				if (value) {
 					localStorage.setItem('acadName', value);
-					displayToast.presentNativeToast(
-						'Nom de l\'académie enregistré'
-					);
+					displayToast.presentToastSmall("Nom de l'académie enregistré.", "success", checkmarkOutline)
 				}
 
 				if (cancelled) {
-					displayToast.presentNativeToast(
-						'Annulé'
-					);
-
-					localStorage.removeItem('acadName');
+					displayToast.presentToastSmall("Annulé", "tertiary", informationOutline)
 				}
 			},
-			refreshToken() {
-				GetToken();
-				displayToast.presentNativeToast(
-					'Nouvelles clés de connexion demandées'
-				);
-
-				// wait for tokenUpdated event
-				document.addEventListener('tokenUpdated', () => {
-					displayToast.presentNativeToast(
-						'Clés de connexion régénérées'
-					);
+			async refreshToken() {
+				const loading = await loadingController.create({
+					message: 'Reconnexion, veuillez patienter...'
 				});
+				loading.present()
+				await GetToken()
+				.then(() => {
+					displayToast.presentToastSmall("Reconnecté avec succès", "success", checkmarkOutline)
+					loading.dismiss()
+				})
+				.catch((err) => {
+					loading.dismiss()
+					displayToast.presentError("Erreur lors de la reconnexion, veuillez réessayer ultérieurement.", "danger", err)
+				})
 			},
 			clearLogs() {
 				localStorage.setItem("logs", JSON.stringify([]));
 				this.logs = [];
 
-				displayToast.presentNativeToast(
-					'Logs effacés'
-				);
+				displayToast.presentToastSmall("Logs effacés avec succès", "success", checkmarkOutline)
 			},
 			async setCustomApiUrl() {
 				const { value, cancelled } = await Dialog.prompt({
@@ -166,15 +161,18 @@
 					localStorage.removeItem('customApiUrl');
 				}
 			},
-			refreshDaysAndHolidays() {
+			async refreshDaysAndHolidays() {
+				const loading = await loadingController.create({
+					message: 'Veuillez patienter...'
+				});
+					
+				loading.present();
 				try {
-					fetchDaysOffAndHolidays();
-					displayToast.presentNativeToast(
-						'Jours fériés et vacances scolaires mis à jour'
-					);
+					await fetchDaysOffAndHolidays()
+					loading.dismiss()
+					displayToast.presentToastSmall("Jours fériés et vacances scolaires mis à jour", "success", checkmarkOutline)
 				} catch (error) {
-					console.error("[Refresh Holidays and Days off]: " + error);
-					displayToast.presentNativeToast("Une erreur est survenue lors de la récupération des jours fériés et des vacances scolaires");
+					loading.dismiss()					
 				}
 			}
 		},
@@ -197,7 +195,7 @@
 			</IonToolbar>
 		</IonHeader>
 
-		<ion-content :fullscreen="true">
+		<ion-content :fullscreen="false">
 			<IonList :inset="true" lines="inset">
 				<IonItem button @click="emptyCache()">
 					<span class="material-symbols-outlined mdls" slot="start">auto_delete</span>
