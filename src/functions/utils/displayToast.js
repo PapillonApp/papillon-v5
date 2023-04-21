@@ -114,7 +114,7 @@ async function presentError(msg, color, error) {
 			role: 'info',
 			handler: () => { 
 				if(error == "[object Object]" || error == "undefined" || error == null) {
-					error = "Impossible d'obtenir plus d'infos."
+					error = `Impossible d'obtenir plus d'infos (${error})`
 				}
 
 				alertDialogError(error)
