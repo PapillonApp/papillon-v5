@@ -153,24 +153,27 @@ function getEDLogin() {
     
                     // set base64 avatar
                     result.data.data.accounts[0].profile.photo = await getEDPhoto(result.data.data.accounts[0])
-                    await getEDPeriods().then(periods => {
-                        result.data.data.accounts[0].periods = periods;
-                    })
+
                     // empty localstorage cache
                     localStorage.setItem('UserCache', JSON.stringify(result.data.data.accounts[0]));
                     localStorage.setItem('TimetableCache', JSON.stringify([]));
+
+                    // get periods
+                    await getEDPeriods().then(periods => {
+                        result.data.data.accounts[0].periods = periods;
+                    })
     
                     // broadcast event to document
                     document.dispatchEvent(new CustomEvent('tokenUpdated'));
-    
+                    
                     // set waitingForToken to false
                     waitingForToken = false;
                     document.dispatchEvent(new CustomEvent('connectionState', { detail: 'connected' }));
                     resolve(result.data.token);
                 } else {
-                    reject(result.code, result.message)
+                    reject(result.code + ", " + result.message)
                     if(result.data.code === 505) {
-                        displayToast.presentToast("Ñchec de la reconnexion", "danger", "Vos identifiants semblent invalides. Pour les mettre à jour, déconnectez-vous puis reconnectez-vous de papillon.\n" + result.data.message)
+                        displayToast.presentToast("Échec de la reconnexion", "danger", "Vos identifiants semblent invalides. Pour les mettre à jour, déconnectez-vous puis reconnectez-vous de papillon.\n" + result.data.message)
                     }
                     else {
                         displayToast.presentError("Une erreur s'est produite.", "danger", result.error)
@@ -182,9 +185,10 @@ function getEDLogin() {
             })
             .catch(error => {
                 displayToast.presentError("Impossible de joindre le serveur.", "danger", error)
+                console.error(error)
                 console.error('[Get Token]: Unable to join server - ' + error);
                 document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
-                reject(null, error)
+                reject(`[${error.code}] ${error.name}: ${error.message}`)
             });
         }
     })
