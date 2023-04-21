@@ -79,8 +79,9 @@ const routes: Routes = [
   {
     path: '/settings',
     name: 'Settings',
-    component: () => import ('../views/settings/SettingsView.vue')
+    component: () => import ('../views/settings/SettingsSetup.vue')
   },
+  
 ]
 
 const router = createRouter({
