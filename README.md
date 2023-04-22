@@ -45,8 +45,6 @@
 
 ## About The Project
 
-![image](https://user-images.githubusercontent.com/32978709/224423590-28a7ee54-3f69-4d34-8cbb-8a5f268a025e.png)
-
 * **Features of Pronote**
     - 📆 Timetable
         + Intuitive time management
