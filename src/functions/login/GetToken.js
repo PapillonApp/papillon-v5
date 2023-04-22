@@ -155,17 +155,16 @@ function getEDLogin() {
                     result.data.data.accounts[0].profile.photo = await getEDPhoto(result.data.data.accounts[0])
 
                     // empty localstorage cache
-                    localStorage.setItem('UserCache', JSON.stringify(result.data.data.accounts[0]));
                     localStorage.setItem('TimetableCache', JSON.stringify([]));
 
                     // get periods
                     await getEDPeriods().then(periods => {
                         result.data.data.accounts[0].periods = periods;
                     })
-    
+                    localStorage.setItem('UserCache', JSON.stringify(result.data.data.accounts[0]));
                     // broadcast event to document
                     document.dispatchEvent(new CustomEvent('tokenUpdated'));
-                    
+
                     // set waitingForToken to false
                     waitingForToken = false;
                     document.dispatchEvent(new CustomEvent('connectionState', { detail: 'connected' }));
