@@ -22,7 +22,9 @@
 
 	import { Dialog } from '@capacitor/dialog';
 
-	import { checkmarkOutline, informationOutline } from 'ionicons/icons';
+	import { checkmarkOutline, informationOutline, warningOutline } from 'ionicons/icons';
+
+	import { SplashScreen } from '@capacitor/splash-screen';
 
 	export default defineComponent({
 		name: 'FolderPage',
@@ -48,7 +50,6 @@
 			resetColors() {
 				localStorage.removeItem('SubjectColors');
 				displayToast.presentToastSmall("Couleurs réinitialisées.", "success", checkmarkOutline)
-				// show toast	
 				setTimeout(() => {
 					this.localStorageSize = this.getLocalStorageSize() + ' kb';
 				}, 1000);
@@ -133,7 +134,7 @@
 			async setCustomApiUrl() {
 				const { value, cancelled } = await Dialog.prompt({
 					title: 'URL personnalisée',
-					message: 'Entrez l\'URL personnalisée de l\'API',
+					message: 'Entrez l\'URL personnalisée de l\'API (ou laissez vide pour réinitialiser)',
 					cancelable: true,
 					inputPlaceholder: 'https://api.getpapillon.xyz',
 					confirmButtonText: 'Valider',
@@ -142,9 +143,7 @@
 
 				if (value) {
 					localStorage.setItem('customApiUrl', value);
-					displayToast.presentNativeToast(
-						'URL personnalisée enregistrée'
-					);
+					displayToast.presentToastSmall("URL personnalisée enregistrée", "success", checkmarkOutline)
 
 					await Dialog.alert({
 						title: 'Attention',
@@ -152,13 +151,17 @@
 						confirmButtonText: 'OK',
 					});
 				}
-
-				if (cancelled) {
-					displayToast.presentNativeToast(
-						'Annulé'
-					);
-
+				if(!value) {
+					displayToast.presentToastSmall("L'API utilisée a été réinitialisée.", "warning", warningOutline)
 					localStorage.removeItem('customApiUrl');
+					await Dialog.alert({
+						title: 'Attention',
+						message: 'Vous devez redémarrer l\'application pour que les changements soient pris en compte',
+						confirmButtonText: 'OK',
+					});
+				}
+				if (cancelled) {
+					displayToast.presentToastSmall("Annulé", "tertiary", informationOutline)
 				}
 			},
 			async refreshDaysAndHolidays() {
@@ -174,6 +177,10 @@
 				} catch (error) {
 					loading.dismiss()					
 				}
+			},
+			async rebootApp() {
+				SplashScreen.show()
+				document.location.pathname = "/home"
 			}
 		},
 		mounted() {
@@ -262,6 +269,13 @@
 						</IonLabel>
 					</IonItem>
 				</ion-nav-link>
+				<IonItem button @click="rebootApp()">
+					<span class="material-symbols-outlined mdls" slot="start">restart_alt</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Redémarrer Papillon</h2>
+						<p>Permet de redémarrer Papillon sans le fermer, pour appliquer des changements</p>  
+					</IonLabel>
+				</IonItem>
 			</IonList>
 		</ion-content>
 </template>
