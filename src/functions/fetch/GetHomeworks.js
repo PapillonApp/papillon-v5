@@ -393,10 +393,15 @@ function constructEDHomework(hw) {
 
         //2023-03-17
         hw[date].forEach((homework) => {
-            console.log(homework)
+            console.log("le homework : " + JSON.stringify(homework))
             // get homework
             let hws = homework;
             //foreach documents
+            console.log("a faire : " + JSON.stringify(hws.aFaire))
+            if(!hws.aFaire) {
+                console.warn("Skip construct of " + JSON.stringify(homework) + " because doesn't contain any \"aFaire\" var")
+                return;
+            }
             hws.aFaire.documents.forEach((file) => {
                 // if no file.name, set it to "Document"
                 if (!file.libelle) {
@@ -410,6 +415,7 @@ function constructEDHomework(hw) {
             });
             //homework description
             hws.aFaire.contenu = atob(hws.aFaire.contenu)
+            console.log("contenu du travail : " + hws.aFaire.contenu)
             let homeworkDescription = hws.aFaire.contenu;
             /*
                 Traitement des balises HTML (<strong>, <u>)
@@ -440,7 +446,7 @@ function constructEDHomework(hw) {
                 },
                 homework: {
                     subject: hws.matiere,
-                    content: hws.description,
+                    content: hws.aFaire.contenu,
                     shortContent: homeworkDescription,
                 },
                 files: hws.aFaire.documents,
