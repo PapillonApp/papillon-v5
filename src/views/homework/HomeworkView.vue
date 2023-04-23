@@ -66,6 +66,7 @@
                 rnPickerModalOpen: false,
                 isChangingDate: false,
                 isLoading: true,
+                loginService: localStorage.getItem("loginService"),
 			}
 		},
 		methods: {
@@ -383,7 +384,15 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true" class="content">
-
+            <ion-item v-if="loginService === 'ecoledirecte'">
+                <div class="alphaMessage">
+                    <span class="material-symbols-outlined mdls icon">warning</span>
+                    <div class="alphaText">
+                        <h2>La fonctionnalité "Travail à faire" est encore en test pour EcoleDirecte.</h2>
+                        <p class="description">Certains bugs, notamment lors de l'affichage du contenu du devoir, peuvent apparaître.</p>
+                    </div>
+                </div>				
+            </ion-item>
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
@@ -487,6 +496,50 @@
 </template>
   
 <style scoped>
+
+    .alphaMessage {
+		background: var(--ion-color-warning);
+		margin: 20px;
+		border-radius: 10px;
+
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		padding: 20px;
+		gap: 20px;
+
+		color: #fff;
+	}
+
+	.alphaMessage * {
+		margin: 0;
+	}
+
+	.alphaMessage .icon {
+		height: 44px;
+		width: 44px;
+		font-size: 30px;
+		overflow: visible !important;
+
+		color: #fff;
+		opacity: 1 !important;
+	}
+
+	.alphaMessage .alphaText {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
+	.alphaMessage .alphaText h2 {
+		font-size: 18px;
+	}
+
+	.alphaMessage .alphaText .description {
+		font-size: 15px;
+		opacity: 0.7;
+	}
     .swiper {
         height: 100%;
         
