@@ -6,7 +6,7 @@ function changePeriod(name) {
         case "pronote":    
             return changePronotePeriod(name);
 		case "ecoledirecte":
-            return;
+            return changeEDPeriod(name)
     }
     
 }
@@ -34,6 +34,13 @@ function changePronotePeriod(name) {
     // get token from API
     return fetch(API + "/changePeriod", requestOptions)
     .then(response => response.json())
+}
+
+
+function changeEDPeriod(name) {
+    return new Promise((resolve, reject) => {
+        resolve({ "status": "ok", "period": name })
+    });
 }
 
 // export
