@@ -466,7 +466,7 @@ function constructEDHomework(hw) {
 // tick
 async function tickHomework(id) {
     // if id starts with "custom_"
-    if (id[0].startsWith("custom_")) {
+    if (id[0].toString().startsWith("custom_")) {
         // return custom homework
         return tickCustomHomework(id[0]);
     }
@@ -475,6 +475,9 @@ async function tickHomework(id) {
             case "pronote":
                 // return pronote homework
                 return tickPronoteHomework(id);
+            case "ecoledirecte":
+                // tick Ed homework
+                return tickEDHomework(id)
         }
     }
 }
@@ -520,6 +523,42 @@ async function tickPronoteHomework(data) {
         dateTo: dayString
     })
 }
+
+async function tickEDHomework(data) {
+    const EDAPI = "https://api.ecoledirecte.com/v3"
+    const token = localStorage.getItem('token');
+    const studentId = JSON.parse(localStorage.getItem('UserCache')).id;
+    const homework = data[2].homework
+
+    let homeworkID = data[0]
+
+    let requestOptions = {
+        headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": `${token}`},
+    };
+
+    let done, undone
+
+    if (homework.effectue) {
+        done = []
+        undone = [homeworkID]
+    } else {
+        done = [homeworkID]
+        undone = []
+    }
+
+    done = [homeworkID]
+    undone = []
+
+    let body = `data={
+                "idDevoirsEffectues": [${done}],
+                "idDevoirsNonEffectues": [${undone}]
+            }`
+
+    let URL = `${EDAPI}/Eleves/${studentId}/cahierdetexte.awp?verbe=put`;
+
+    return axios.post(URL, body, requestOptions)
+}
+
 
 // export
 export {

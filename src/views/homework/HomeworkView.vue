@@ -284,7 +284,8 @@
 
                 // new send request
                 if(!this.dontRetryCheck) {
-                    tickHomework([homeworkID, dateSet]).then(() => {
+                  console.log(homeworkID)
+                    tickHomework([homeworkID, dateSet, hw]).then(() => {
                         setTimeout(() => {
                             this.dontRetryCheck = true;
 
@@ -301,6 +302,7 @@
 
                     })
                     .catch((error) => {
+                        console.error(error)
                         // revert change
                         setTimeout(() => {
                             this.dontRetryCheck = true;
