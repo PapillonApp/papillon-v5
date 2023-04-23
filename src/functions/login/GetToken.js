@@ -158,7 +158,7 @@ function getEDLogin() {
                     localStorage.setItem('TimetableCache', JSON.stringify([]));
 
                     // get periods
-                    await getEDPeriods().then(periods => {
+                    await getEDPeriods(result.data.data.accounts[0].id, result.data.token).then(periods => {
                         result.data.data.accounts[0].periods = periods;
                     })
                     localStorage.setItem('UserCache', JSON.stringify(result.data.data.accounts[0]));
