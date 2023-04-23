@@ -30,7 +30,7 @@ const routes: Routes = [
   {
     path: '/homework',
     name: 'Homework',
-    component: () => import ('../views/homework/HomeworkView.vue')
+    component: () => import ('../views/homework/HomeworkSetup.vue')
   },
   {
     path: '/homework/hw/:hw?',
