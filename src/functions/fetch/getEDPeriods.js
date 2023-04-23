@@ -7,7 +7,9 @@ import GetToken from '@/functions/login/GetToken.js';
 
 //main function
 
-async function getEDPeriods(userid = JSON.parse(localStorage.UserCache).id, token = localStorage.getItem('token')) {
+async function getEDPeriods(userid, token) {
+	if(!userid) userid = JSON.parse(localStorage.UserCache).id
+	if(!token) token = localStorage.getItem('token')
 	const EDAPI = "https://api.ecoledirecte.com/v3"
 
 	let URL = `${EDAPI}/eleves/${userid}/notes.awp?verbe=get`;
