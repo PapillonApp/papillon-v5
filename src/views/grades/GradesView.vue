@@ -645,7 +645,7 @@
 						<ion-item>
 							<span class="material-symbols-outlined mdls" slot="start">person_add</span>
 							<ion-label>
-								<p>Moyenne la haute</p>
+								<p>Moyenne la plus haute</p>
 								<h2>{{ selectedMark.max_average }}<small>/20</small></h2>
 							</ion-label>
 						</ion-item>
