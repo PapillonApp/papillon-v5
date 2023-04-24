@@ -34,15 +34,15 @@
 			IonLabel,
 			IonChip
 		},
-        props: {
-            markID: {
-                type: String,
-                required: true,
-            }
-        },
+		props: {
+			markID: {
+				type: String,
+				required: true,
+			}
+		},
 		data() {
 			return {
-                grades: [],
+				grades: [],
 				currentGrade: null,
 				diffAvg: 0,
 				diffClassAvg: 0,
@@ -146,8 +146,8 @@
 		mounted() {
 			this.findGrade(this.markID);
 
-            return false;
-        }
+			return false;
+		}
 	});
 </script>
 
@@ -180,9 +180,10 @@
 							<h2>{{ currentGrade.grade.coefficient }}</h2>
 						</IonLabel>
 
-						<IonLabel v-if="currentGrade.info.optional || currentGrade.info.bonus">
+						<IonLabel v-if="currentGrade.info.optional || currentGrade.info.bonus || currentGrade.info.outOf20">
 							<ion-chip color="success" v-if="currentGrade.info.bonus">Bonus</ion-chip>
 							<ion-chip color="warning" v-if="currentGrade.info.optional">Optionnel</ion-chip>
+							<ion-chip color="primary" v-if="currentGrade.info.outOf20">Ramenée à 20</ion-chip>
 						</IonLabel>
 					</IonItem>
 				</IonList>

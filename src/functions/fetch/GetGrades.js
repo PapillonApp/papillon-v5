@@ -421,14 +421,6 @@ function constructPronoteGrades(grades) {
 	return finalArray;
 }
 
-
-
-
-
-
-
-
-
 // ecoledirecte : get grades
 function getEDGrades(forceReload) {
 	// gather vars
