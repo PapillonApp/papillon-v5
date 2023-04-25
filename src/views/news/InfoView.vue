@@ -111,7 +111,11 @@
 				<div class="content" v-html="openedNews.htmlContent"></div>
 
 				<div v-if="openedNews.attachments">
-					<IonList inset v-if="openedNews.attachments.length !== 0">
+					<IonLabel class="listGroupTitle" v-if="openedNews.attachments.length !== 0">
+						<p>Documents attachés</p>
+					</IonLabel>
+
+					<IonList v-if="openedNews.attachments.length !== 0" class="listGroup">
 						<IonItem v-for="attachment in openedNews.attachments" :key="attachment.id" @click="openLink(attachment.url)">
 							<span v-if="attachment.type == 1" class="material-symbols-outlined mdls" slot="start">description</span>
 							<span v-else-if="attachment.type == 0" class="material-symbols-outlined mdls" slot="start">link</span>
