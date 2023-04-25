@@ -11,7 +11,8 @@
 		IonButtons,
 		IonTitle,
 		IonContent,
-		IonSkeletonText
+		IonSkeletonText,
+		IonBackButton
 	} from '@ionic/vue';
 
 	import { Browser } from '@capacitor/browser';
@@ -24,7 +25,7 @@
 			IonHeader,
 			IonToolbar,
 			IonButtons,
-			PapillonBackButton,
+			IonBackButton,
 			IonTitle,
 			IonContent,
 			IonSkeletonText,
@@ -76,11 +77,12 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<PapillonBackButton></PapillonBackButton>
+					<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+					<IonBackButton class="only-md" @click="pop"></IonBackButton>
 				</ion-buttons>
 
-				<ion-title mode="md" v-if="openedNews">{{ openedNews.title }}</ion-title>
-				<ion-title mode="md" v-else><ion-skeleton-text style="width: 200px;"></ion-skeleton-text></ion-title>
+				<ion-title v-if="openedNews">{{ openedNews.title }}</ion-title>
+				<ion-title v-else><ion-skeleton-text style="width: 200px;"></ion-skeleton-text></ion-title>
 			</IonToolbar>
 		</IonHeader>
 

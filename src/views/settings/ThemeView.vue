@@ -49,7 +49,7 @@
 				],
 				availableColors: [
 					{ 
-						name: "Vert (Par défaut)",
+						name: "Vert",
 						color: {
 							hex: "#29947A",
 							rgb: "41, 148, 122",
@@ -60,6 +60,13 @@
 						color: {
 							hex: "#29ABE0",
 							rgb: "41, 171, 224",
+						}
+					},
+					{
+						name: "Indigo",
+						color: {
+							hex: "#4F5BD5",
+							rgb: "79, 91, 213",
 						}
 					},
 					{
@@ -89,7 +96,42 @@
 							hex: '#C53333',
 							rgb: '197, 51, 51',
 						}
-					}
+					},
+					{
+						name: 'Marron',
+						color: {
+							hex: '#A67C52',
+							rgb: '166, 124, 82',
+						}
+					},
+					{
+						name: 'Moutarde',
+						color: {
+							hex: '#D4B52A',
+							rgb: '212, 181, 42',
+						}
+					},
+					{
+						name: 'Vert citron',
+						color: {
+							hex: '#A6C52A',
+							rgb: '166, 197, 42',
+						}
+					},
+					{
+						name: 'Gris',
+						color: {
+							hex: '#8C8C8C',
+							rgb: '140, 140, 140',
+						}
+					},
+					{
+						name: 'Turquoise',
+						color: {
+							hex: '#13C5C5',
+							rgb: '19, 197, 197',
+						}
+					},
 				],
 			}
 		},
@@ -115,6 +157,7 @@
 				currentTheme: localStorage.getItem('themeMode'),
 				currentFont: defaultFont,
 				currentColor: defaultColor,
+				currentColorName: defaultColor.name,
 			}
 		},
 		methods: {
@@ -179,6 +222,8 @@
 				let colorHex = this.$refs.colorSelect.$el.value;
 
 				let color = this.availableColors.find((color) => color.color.hex == colorHex);
+
+				this.currentColorName = color.name;
 
 				document.body.style.setProperty('--ion-color-primary', color.color.hex);
 				document.body.style.setProperty('--ion-color-primary-rgb', color.color.rgb);
@@ -263,10 +308,6 @@
 			let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
 			tweakProgressBarShowPast.$el.checked = localStorage.getItem('tweakProgressBarShowPast') != 'false'; // default true
 
-			// get fillToolbar ref
-			let fillToolbar = this.$refs.fillToolbar;
-			fillToolbar.$el.checked = localStorage.getItem('fillToolbar') == 'true';
-
 			// check if custom theme mode is enabled
 			this.checkThemeMode();
 			this.checkColor();
@@ -344,27 +385,23 @@
 						</div>
 					</ion-item>
 				</ion-radio-group>
+				<ion-item color="primary" class="preview">
+					<span class="material-symbols-outlined mdls" slot="start">palette</span>
+					<ion-label class="ion-text-wrap">
+						<h2>Apercu du {{ currentColorName.toLowerCase() }}</h2>
+						<p>Ceci est une prévisualisation de la couleur que vous venez d'appliquer.</p>
+					</ion-label>
+				</ion-item>
 			</IonList>
 
-			<IonList :inset="true" lines="inset">
-				<IonItem>
-					<span class="material-symbols-outlined mdls" slot="start">home</span>
-					<IonLabel class="ion-text-wrap">
-						<h2>Utiliser la couleur sur la page d'accueil</h2>
-						<p>Votre couleur d'accentuation s'applique sur l'accueil.</p>
-					</IonLabel>
-					<IonToggle slot="end" ref="fillToolbar" @ionChange="changeTick('fillToolbar')"></IonToggle>
-				</IonItem>
-			</IonList>
-
-			<IonList :inset="true" lines="inset" v-if="availableFonts">
+			<IonList :inset="true" lines="none" v-if="availableFonts">
 				<ion-list-header>
 					<ion-label><p>Police d'écriture</p></ion-label>
 				</ion-list-header>
-				<ion-radio-group :allow-empty-selection="false" :value="currentFont" ref="fontSelect" @ionChange="fontChange">
+				<ion-radio-group mode="md" :allow-empty-selection="false" :value="currentFont" ref="fontSelect" @ionChange="fontChange">
 					<ion-item :key="i" v-for="(font, i) in availableFonts">
+						<ion-radio slot="start" :value="font.font"></ion-radio>
 						<ion-label :style="`font-family: '${font.font}';`">{{ font.name }}</ion-label>
-						<ion-radio slot="end" :value="font.font"></ion-radio>
 					</ion-item>
 				</ion-radio-group>
 			</IonList>
@@ -441,8 +478,12 @@
 	}
 
 	#colorSelect {
-		display: flex;
-		justify-content: space-between;
+		display: grid;
+
+		grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+
+		/* center */
+		justify-items: center;
 
 		width: calc(100% - 15px * 2);
 		margin: 5px 15px;
@@ -462,6 +503,8 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+
+		flex-direction: column;
 	}
 
 	#colorSelect ion-item::part(native) {
@@ -469,5 +512,10 @@
 		border-radius: 300px;
 
 		padding: 0;
+	}
+
+	.preview * {
+		--ion-text-color: #ffffff !important;
+		color : #ffffff !important;
 	}
 </style>

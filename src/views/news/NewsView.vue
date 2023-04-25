@@ -109,10 +109,10 @@
         <IonToolbar>
 
           <ion-buttons slot="start">
-            <ion-menu-button color="dark" mode="md"></ion-menu-button>
+            <ion-menu-button color="dark"></ion-menu-button>
           </ion-buttons>
 
-          <ion-title mode="md">Actualités</ion-title>
+          <ion-title>Actualités</ion-title>
         </IonToolbar>
         <IonToolbar>
             <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionInput="searchNews()"></ion-searchbar>

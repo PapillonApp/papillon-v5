@@ -470,14 +470,12 @@ export default defineComponent({
 			}, 100);
 
 			if (url == "/home") {
-				if (localStorage.getItem('fillToolbar') == 'true') {
-					StatusBar.setStyle({ style: Style.Dark })
+				StatusBar.setStyle({ style: Style.Dark })
 
-					this.changeStatusTimeout = false;
-					setTimeout(() => {
-						this.changeStatusTimeout = true;
-					}, 520);
-				}
+				this.changeStatusTimeout = false;
+				setTimeout(() => {
+					this.changeStatusTimeout = true;
+				}, 520);
 			}
 		},
 		async askNotifPerms() {
@@ -521,9 +519,6 @@ export default defineComponent({
 					const currentUrl = window.location.pathname;
 
 					if (currentUrl !== "/home") {
-						StatusBar.setStyle({ style: Style.Default })
-					}
-					else if (localStorage.getItem('fillToolbar') !== 'true') {
 						StatusBar.setStyle({ style: Style.Default })
 					}
 				}

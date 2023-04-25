@@ -610,23 +610,7 @@ export default defineComponent({
 			this.internetConnection = false;
 		}
 
-		// check toolbar color
-		if (localStorage.getItem('fillToolbar') == 'true') {
-			this.toolbarColor = 'primary';
-			StatusBar.setStyle({ style: Style.Dark })
-		}
-		else {
-			this.toolbarColor = '';
-		}
-
 		document.addEventListener('settingsUpdated', () => {
-			if (localStorage.getItem('fillToolbar') == 'true') {
-				this.toolbarColor = 'primary';
-			}
-			else {
-				this.toolbarColor = '';
-			}
-
 			this.getBoolOpts(boolOpts);
 		});
 	}
@@ -635,8 +619,8 @@ export default defineComponent({
 
 <template>
 	<ion-page ref="page">
-		<IonHeader class="AppHeader" translucent>
-			<IonToolbar class="toolbar" :color="toolbarColor">
+		<IonHeader class="AppHeader">
+			<IonToolbar class="toolbar" color="primary">
 				<ion-buttons slot="start">
 					<ion-menu-button mode="md"></ion-menu-button>
 				</ion-buttons>
@@ -657,7 +641,7 @@ export default defineComponent({
 					</ion-nav-link>
 				</ion-buttons>
 			</IonToolbar>
-			<IonToolbar class="toolbar" :color="toolbarColor" v-if="displayNextCourse">
+			<IonToolbar class="toolbar" color="primary" v-if="displayNextCourse">
 				<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
 					<div class="coursElemNext" v-for="cours in timetable" :key="cours.id"
 						:style="`--courseColor: ${cours.course.color};`">

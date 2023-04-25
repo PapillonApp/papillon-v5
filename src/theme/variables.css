@@ -59,6 +59,13 @@ http://ionicframework.com/docs/theming/ */
 	--ion-color-light-contrast-rgb: 0,0,0;
 	--ion-color-light-shade: #d7d8da;
 	--ion-color-light-tint: #f5f6f9;
+
+	--ion-color-white: #ffffff;
+	--ion-color-white-rgb: 255,255,255;
+	--ion-color-white-contrast: #000000;
+	--ion-color-white-contrast-rgb: 0,0,0;
+	--ion-color-white-shade: #ffffff;
+	--ion-color-white-tint: #ffffff;
 }
 
   body.dark {
