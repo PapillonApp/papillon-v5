@@ -114,7 +114,8 @@
 
                 <ion-buttons slot="end">
 					<ion-button v-if="custom" color="danger" @click="deleteHW($event)">
-                        <span slot="icon-only" class="material-symbols-outlined mdls">delete</span>
+                        <span slot="start" class="material-symbols-outlined mdls">delete</span>
+                        Suppr.
                     </ion-button>
 				</ion-buttons>
 			</IonToolbar>
