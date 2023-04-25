@@ -61,7 +61,7 @@ ion-title:not(.title-large), h2, h3 {
 
 input.sc-ion-searchbar-md {
     box-shadow: none !important;
-    background: var(--ion-color-step-200) !important;
+    background: var(--ion-color-step-50) !important;
     border-radius: 300px !important;
 }
 

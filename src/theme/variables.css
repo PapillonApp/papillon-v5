@@ -174,7 +174,7 @@ http://ionicframework.com/docs/theming/ */
   }
 
   body.light {
-    --ion-background-color: #F9F9FB;
+    --ion-background-color: #f9f9f9;
     --ion-background-color-rgb: 255,255,255;
 
     --ion-text-color: #181B1C;
@@ -207,6 +207,10 @@ http://ionicframework.com/docs/theming/ */
 	--ion-inset-background: #ffffff !important;
 
 	--ion-toolbar-background: #ffffff !important;
+  }
+
+  .ios .body.light {
+	--ion-background-color: #F6F6F9;
   }
 
   .ios .light ion-modal {
