@@ -388,7 +388,7 @@
 				<ion-item color="primary" class="preview">
 					<span class="material-symbols-outlined mdls" slot="start">palette</span>
 					<ion-label class="ion-text-wrap">
-						<h2>Apercu du {{ currentColorName.toLowerCase() }}</h2>
+						<h2>Aperçu du {{ currentColorName.toLowerCase() }}</h2>
 						<p>Ceci est une prévisualisation de la couleur que vous venez d'appliquer.</p>
 					</ion-label>
 				</ion-item>
