@@ -92,7 +92,7 @@ export default defineComponent({
 </script>
 
 <template>
-    <IonHeader class="AppHeader">
+    <IonHeader class="AppHeader" translucent >
         <IonToolbar>
             <ion-buttons slot="start">
                 <IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>

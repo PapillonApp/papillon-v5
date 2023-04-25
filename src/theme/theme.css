@@ -321,7 +321,7 @@ ion-toast::part(message) {
 }
 
 ion-header:not(.header-collapse-condense):not(ion-modal ion-header) {
-    --ion-toolbar-border-color: #00000020 !important;
+    --ion-toolbar-border-color: #00000030 !important;
 }
 
 ion-header:not(.header-collapse-condense):not(ion-modal ion-header) ion-toolbar:first-child {
@@ -333,7 +333,7 @@ ion-modal.modal-sheet ion-header ion-toolbar:first-child {
 }
 
 .dark .ios ion-header:not(.header-collapse-condense) {
-    --ion-toolbar-border-color: #ffffff20 !important;
+    --ion-toolbar-border-color: #ffffff30 !important;
 }
 
 ion-header ion-toolbar ion-title:not(.title-large) {

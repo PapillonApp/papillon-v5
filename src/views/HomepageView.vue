@@ -635,7 +635,7 @@ export default defineComponent({
 
 <template>
 	<ion-page ref="page">
-		<IonHeader class="AppHeader">
+		<IonHeader class="AppHeader" translucent>
 			<IonToolbar class="toolbar" :color="toolbarColor">
 				<ion-buttons slot="start">
 					<ion-menu-button mode="md"></ion-menu-button>
@@ -784,7 +784,7 @@ export default defineComponent({
 
 			<div id="components" ref="components">
 				<Transition name="ElemAnim">
-					<ion-list v-if="displayHomeworks && homeworks.length !== 0 && allLoaded && !hwloading" lines="none" id="comp-hw"
+					<ion-list v-if="displayHomeworks && allLoaded && !hwloading" lines="none" id="comp-hw"
 						ref="comp-hw" inset="true">
 						<ion-list-header class="listHeader" v-if="allLoaded && !hwloading">
 							<ion-label>
@@ -823,9 +823,9 @@ export default defineComponent({
 							<div slot="start" style="margin-left: 5px; margin-right: 20px;">
 								<span class="material-symbols-outlined mdls">done_all</span>
 							</div>
-							<ion-label>
+							<ion-label class="ion-text-wrap">
 								<h2>Pas de devoirs</h2>
-								<p>Vous n'avez aucun travail à faire pour les 7 prochains jours.</p>
+								<p>Vous n'avez aucun travail à faire pour le reste de la semaine.</p>
 							</ion-label>
 						</ion-item>
 					</ion-list>
