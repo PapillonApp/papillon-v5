@@ -90,11 +90,11 @@ export default defineComponent({
 			isMenuOpened: false,
 			changeStatusTimeout: true,
 			connectedToServer: "",
-			showTransition: undefined as any
+			showTransition: undefined as any,
+			selectedIndex: 0,
 		}
 	},
 	setup() {
-		const selectedIndex = ref(0);
 		// defines the tabs shown in the menu
 		const appPages = [
 			{
@@ -266,16 +266,10 @@ export default defineComponent({
 				})
 			}
 		}
-		// weird ionic stuff
-		const path = window.location.pathname.split('folder/')[1];
-		if (path !== undefined) {
-			selectedIndex.value = appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
-		}
 
 		const route = useRoute();
 
 		return {
-			selectedIndex,
 			appCanal: canal,
 			appVersion: version,
 			appUpdates: changelog,
@@ -462,7 +456,12 @@ export default defineComponent({
 				}
 			});
 		},
-		changePage(url: string) {
+		changePage(url: string, index: number) {
+			console.log(index);
+
+			// change index
+			this.selectedIndex = index;
+
 			// close menu
 			const menu = document.querySelector('ion-menu');
 			setTimeout(() => {
@@ -749,19 +748,10 @@ export default defineComponent({
 				</ion-header>
 				<ion-content mode="md">
 					<ion-list id="inbox-list">
-						<router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages"
-							:key="i">
-							<ion-item v-if="!p.disabled" button mode="md" lines="none" :detail="false"
-								@click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
-								<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
-								<ion-label>{{ p.title }}</ion-label>
-							</ion-item>
-							<ion-item @click="displayDevMessage()" v-if="p.disabled" button mode="md" lines="none"
-								:detail="false" :class="{ selected: selectedIndex === i }" disabled>
-								<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
-								<ion-label>{{ p.title }}</ion-label>
-							</ion-item>
-						</router-link>
+						<ion-item @click="changePage(p.url, i)" :router-link="p.url" v-for="(p, i) in appPages" :key="i" button routerDirection="root" mode="md" lines="none" :detail="false" :class="{ selected: selectedIndex === i }">
+							<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
+							<ion-label>{{ p.title }}</ion-label>
+						</ion-item>
 					</ion-list>
 
 					<ion-list id="bottomActionsList">
@@ -790,7 +780,7 @@ export default defineComponent({
 					</ion-list>
 				</ion-content>
 			</ion-menu>
-			<ion-router-outlet ref="outlet" :animated="true" :animation="transition" id="main-content"
+			<ion-router-outlet ref="outlet" :animated="true" id="main-content"
 				v-slot="{ Component }">
 				<component :is="Component" />
 			</ion-router-outlet>
@@ -1033,20 +1023,25 @@ ion-note {
 	color: var(--ion-color-medium-shade);
 }
 
-.router-link-active ion-item {
-	--color: var(--ion-color-primary);
+ion-item.selected {
+	background: rgba(var(--ion-color-primary-rgb), 0.1);
 }
 
-.router-link-active ion-item:hover {
-	background: rgba(var(--ion-color-primary-rgb), 0.1);
+ion-item.selected * {
+	--color: var(--ion-color-primary) !important;
+	color: var(--color);
+}
+
+ion-item.selected:hover {
+	background: rgba(var(--ion-color-primary-rgb), 0.2);
 	cursor: pointer;
 }
 
-a:not(.router-link-active) ion-menu-toggle ion-item {
+a:not(.selected) ion-menu-toggle ion-item {
 	--color: var(--ion-color-medium-shade);
 }
 
-a:not(.router-link-active) ion-menu-toggle ion-item:hover {
+a:not(.selected) ion-menu-toggle ion-item:hover {
 	opacity: 0.75;
 	cursor: pointer;
 }
