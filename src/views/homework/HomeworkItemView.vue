@@ -137,7 +137,11 @@
                 <div class="content" v-html="openedHomework.content"></div>
             </div>
 
-            <IonList inset v-if="openedFiles.length !== 0">
+            <IonLabel class="listGroupTitle" v-if="openedFiles.length !== 0">
+				<p>Fichiers attachés</p>
+			</IonLabel>
+
+            <IonList v-if="openedFiles.length !== 0" class="listGroup">
                 <IonItem v-for="attachment in openedFiles" :key="attachment.id" @click="openLink(attachment.url)">
                     <span v-if="attachment.type == 1" class="material-symbols-outlined mdls" slot="start">description</span>
                     <span v-else-if="attachment.type == 0" class="material-symbols-outlined mdls" slot="start">link</span>
