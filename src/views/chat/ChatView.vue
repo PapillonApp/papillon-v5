@@ -207,10 +207,10 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<ion-menu-button color="dark" mode="md"></ion-menu-button>
+					<ion-menu-button color="dark"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Conversations</ion-title>
+				<ion-title>Conversations</ion-title>
 
 			</IonToolbar>
 		</IonHeader>

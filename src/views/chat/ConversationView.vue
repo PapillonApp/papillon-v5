@@ -8,6 +8,7 @@
         IonRefresher,
 		IonRefresherContent,
         IonSkeletonText,
+        IonBackButton
 	} from '@ionic/vue';
 
     import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
@@ -26,7 +27,7 @@
             IonRefresher,
             IonRefresherContent,
             IonSkeletonText,
-            PapillonBackButton
+            IonBackButton
 		},
         props: {
             conversation: {
@@ -171,17 +172,14 @@
 		<IonToolbar>
 
 			<ion-buttons slot="start">
-				
+				<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+				<IonBackButton class="only-md" @click="pop"></IonBackButton>
+			</ion-buttons>
 
-                <IonNavLink :component="ChatView" router-direction="back">
-                    <PapillonBackButton></PapillonBackButton>
-                </IonNavLink>
-            </ion-buttons>
-
-            <ion-title mode="md" v-if="!conversation.subject">
+            <ion-title v-if="!conversation.subject">
                 <ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text>
             </ion-title>
-			<ion-title v-else mode="md">{{ conversation.subject }}</ion-title>
+			<ion-title v-else>{{ conversation.subject }}</ion-title>
 
 		</IonToolbar>
 	</IonHeader>

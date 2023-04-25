@@ -200,11 +200,7 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-			<ion-header collapse="condense">
-				<ion-toolbar>
-					<ion-title size="large">Paramètres</ion-title>
-				</ion-toolbar>
-			</ion-header>
+
 
 			<IonList :inset="true" lines="inset">
 				<ion-nav-link router-direction="forward" :component="UserView">

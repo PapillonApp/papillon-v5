@@ -407,10 +407,10 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<ion-menu-button color="dark" mode="md"></ion-menu-button>
+					<ion-menu-button color="dark"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Notes</ion-title>
+				<ion-title>Notes</ion-title>
 
 				<ion-buttons class="endBtns" slot="end">
 					<span class="selectIcon material-symbols-outlined mdls" v-if="display == 'Vue grille'">grid_view</span>
@@ -422,7 +422,7 @@
 					</ion-select>
 				</ion-buttons>
 			</IonToolbar>
-			<IonToolbar>
+			<IonToolbar class="periodSeg">
 				<ion-segment v-if="periods.length > 0" id="segment" :value="current_period.id"
 				ref="segment" @ionChange="segChange()">
 					<ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.id" :id="period.id">
@@ -978,5 +978,9 @@
 
 	.dark ion-card {
 		background: var(--ion-color-step-50);
+	}
+
+	.periodSeg {
+		padding-top: 5px;
 	}
 </style>

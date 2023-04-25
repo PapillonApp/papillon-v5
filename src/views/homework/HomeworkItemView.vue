@@ -11,7 +11,8 @@
 		IonButtons,
         IonButton,
 		IonTitle,
-		IonContent
+		IonContent,
+        IonBackButton
 	} from '@ionic/vue';
 
     import { Browser } from '@capacitor/browser';
@@ -25,7 +26,7 @@
 			IonToolbar,
 			IonButtons,
             IonButton,
-			PapillonBackButton,
+			IonBackButton,
 			IonTitle,
 			IonContent,
 			IonList,
@@ -104,16 +105,16 @@
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
 				<ion-buttons slot="start">
-					<PapillonBackButton></PapillonBackButton>
+					<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+					<IonBackButton class="only-md" @click="pop"></IonBackButton>
 				</ion-buttons>
 
-                <ion-title mode="md" v-if="openedHomework && custom">Devoir personnalisé</ion-title>
-                <ion-title mode="md" v-else>Travail à faire <span v-if="openedHomework">en {{ openedHomework.subject }}</span></ion-title>
+                <ion-title v-if="openedHomework && custom">Devoir personnalisé</ion-title>
+                <ion-title v-else>Travail à faire <span v-if="openedHomework">en {{ openedHomework.subject }}</span></ion-title>
 
                 <ion-buttons slot="end">
 					<ion-button v-if="custom" color="danger" @click="deleteHW($event)">
-                        <span slot="start" class="material-symbols-outlined mdls">delete</span>
-                        Supprimer
+                        <span slot="icon-only" class="material-symbols-outlined mdls">delete</span>
                     </ion-button>
 				</ion-buttons>
 			</IonToolbar>

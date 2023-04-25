@@ -631,13 +631,13 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<ion-menu-button color="dark" mode="md"></ion-menu-button>
+					<ion-menu-button color="dark"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Ma journée</ion-title>
+				<ion-title>Ma journée</ion-title>
 
 				<ion-buttons slot="end">
-					<ion-button mode="md" id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
+					<ion-button id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
 						<span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
 						<p>{{ rnButtonString }}</p>

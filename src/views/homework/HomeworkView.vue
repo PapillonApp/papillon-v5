@@ -364,14 +364,14 @@
 	<ion-page ref="page">
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
-				<ion-buttons slot="start"  mode="md">
-					<ion-menu-button color="dark" mode="md"></ion-menu-button>
+				<ion-buttons slot="start">
+					<ion-menu-button color="dark"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Travail à faire</ion-title>
+				<ion-title>Travail à faire</ion-title>
 
                 <ion-buttons slot="end">
-                    <ion-button mode="md" id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
+                    <ion-button id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
                     <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
                     <p>{{ rnButtonString }}</p>
