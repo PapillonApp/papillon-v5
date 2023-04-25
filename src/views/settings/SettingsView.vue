@@ -29,7 +29,6 @@
 			IonLabel,
 			IonItem,
 			IonNavLink,
-			IonPage,
 			IonChip,
 			IonSkeletonText,
 			IonAvatar
@@ -188,7 +187,6 @@
 </script>
 
 <template>
-	<ion-page ref="page">
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
 				<ion-buttons slot="start">
@@ -366,7 +364,6 @@
 				</IonItem>
 			</IonList>
 		</ion-content>
-	</ion-page>
 </template>
   
 <style scoped>

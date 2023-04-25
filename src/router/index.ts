@@ -20,7 +20,7 @@ const routes: Routes = [
   {
     path: '/home',
     name: 'Home',
-    component: () => import ('../views/HomepageView.vue')
+    component: () => import ('../views/homepage/HomepageSetup.vue')
   },
   {
     path: '/timetable',
@@ -79,7 +79,7 @@ const routes: Routes = [
   {
     path: '/settings',
     name: 'Settings',
-    component: () => import ('../views/settings/SettingsView.vue')
+    component: () => import ('../views/settings/SettingsSetup.vue')
   },
 ]
 

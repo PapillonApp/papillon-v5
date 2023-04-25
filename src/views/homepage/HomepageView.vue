@@ -33,10 +33,10 @@ import { tickHomework } from "@/functions/fetch/GetHomeworks.js";
 
 import { Network } from '@capacitor/network';
 
-import UserView from './settings/UserView.vue';
-import InfoView from './news/InfoView.vue';
-import MarkView from './grades/MarkView.vue';
-import HomeworkItemView from './homework/HomeworkItemView.vue';
+import UserView from '../settings/UserView.vue';
+import InfoView from '../news/InfoView.vue';
+import MarkView from '../grades/MarkView.vue';
+import HomeworkItemView from '../homework/HomeworkItemView.vue';
 
 import timetableEdit from '@/functions/utils/timetableEdit.js';
 import subjectColor from '@/functions/utils/subjectColor.js';
