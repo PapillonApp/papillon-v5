@@ -138,7 +138,7 @@
             </div>
 
             <IonLabel class="listGroupTitle" v-if="openedFiles.length !== 0">
-				<p>Fichiers attachés</p>
+				<p>Documents attachés</p>
 			</IonLabel>
 
             <IonList v-if="openedFiles.length !== 0" class="listGroup">
