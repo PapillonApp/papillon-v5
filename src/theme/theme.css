@@ -329,7 +329,11 @@ ion-modal.modal-sheet ion-header ion-toolbar:first-child {
 }
 
 .dark .ios ion-header:not(.header-collapse-condense) {
-    --ion-toolbar-border-color: #ffffff15 !important;
+    --ion-toolbar-border-color: #414141 !important;
+}
+
+.dark .toolbar-title-default {
+    --border-color: #414141 !important;
 }
 
 ion-header ion-toolbar ion-title:not(.title-large) {

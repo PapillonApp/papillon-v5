@@ -152,6 +152,8 @@ http://ionicframework.com/docs/theming/ */
     --ion-background-color: #111112;
 	--ion-background-color-rgb: 17,17,18;
 
+	--ion-toolbar-border-color: #1d1d1e !important;
+
 	--ion-text-color: #FFFFFF;
 	--ion-text-color-rgb: 255,255,255;
 
