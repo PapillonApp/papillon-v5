@@ -534,7 +534,7 @@
 						</IonNavLink>
 					</div>
 
-					<ion-list lines="none" class="gradesList" v-if="display == 'Vue liste'">
+					<ion-list lines="inset" class="gradesList" v-if="display == 'Vue liste'">
 						<IonNavLink v-for="(mark, i) in subject.marks" :key="i" router-direction="forward" :component="MarkView" :componentProps="{markID: mark.id}">
 							<ion-item class="gradeItem" button detail="false">
 								<ion-text slot="start" class="emoji">{{ getClosestGradeEmoji(subject.name) }}</ion-text>
