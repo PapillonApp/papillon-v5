@@ -1,5 +1,5 @@
 <script lang="ts">
-import { IonApp, IonContent, IonButton, IonButtons, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText, alertController, IonModal, IonThumbnail } from '@ionic/vue';
+import { IonApp, IonContent, IonButton, IonButtons, IonItem, IonLabel, IonList, IonMenu, IonMenuToggle, IonRouterOutlet, IonHeader, IonToolbar, IonSplitPane, toastController, IonSkeletonText, alertController, IonModal, IonThumbnail, IonTabBar, IonTabButton, IonTabs } from '@ionic/vue';
 
 import { StatusBar, Style } from '@capacitor/status-bar';
 
@@ -64,7 +64,10 @@ export default defineComponent({
 		IonModal,
 		IonThumbnail,
 		IonButtons,
-		IonButton
+		IonButton,
+		IonTabBar,
+		IonTabButton,
+		IonTabs
 	},
 	data() {
 		return {
@@ -99,7 +102,7 @@ export default defineComponent({
 		const appPages = [
 			{
 				title: 'Accueil',
-				url: '/home',
+				url: '/homepage',
 				icon: "home",
 				disabled: false
 			}
@@ -780,10 +783,21 @@ export default defineComponent({
 					</ion-list>
 				</ion-content>
 			</ion-menu>
-			<ion-router-outlet ref="outlet" :animated="true" id="main-content"
-				v-slot="{ Component }">
-				<component :is="Component" />
-			</ion-router-outlet>
+
+			<ion-tabs>
+				<ion-router-outlet ref="outlet" :animated="true" id="main-content"
+					v-slot="{ Component }">
+					<component :is="Component" />
+				</ion-router-outlet>
+			
+
+				<ion-tab-bar slot="bottom" translucent>
+					<ion-tab-button v-for="(p, i) in appPages" :key="i" :tab="p.url" :href="p.url">
+						<span class="material-symbols-outlined mdls">{{p.icon}}</span>
+						{{p.title}}
+					</ion-tab-button>
+				</ion-tab-bar>
+			</ion-tabs>
 		</ion-split-pane>
 
 		<ion-modal ref="changelogModal">

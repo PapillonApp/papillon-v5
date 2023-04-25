@@ -18,7 +18,7 @@ const routes: Routes = [
     redirect: '/home'
   },
   {
-    path: '/home',
+    path: '/homepage',
     name: 'Home',
     component: () => import ('../views/homepage/HomepageSetup.vue')
   },
