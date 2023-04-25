@@ -9,21 +9,22 @@
     import HomepageView from './HomepageView.vue';
 
     import { StatusBar, Style } from '@capacitor/status-bar';
+
+    let inner = true;
   
     export default {
       components: { IonNav, IonPage },
       data() {
         return {
           component: HomepageView,
-          inner: true,
           changeTimeout: null as any
         };
       },
       methods: {
         invertStatus() {
-            this.inner = !this.inner;
+            inner = !inner;
 
-            if(this.inner) {
+            if(inner) {
                 StatusBar.setStyle({ style: Style.Default })
             }
             else {
