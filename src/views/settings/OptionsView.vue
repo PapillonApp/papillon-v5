@@ -13,7 +13,8 @@
 		IonButtons,
 		IonTitle,
 		IonContent,
-		alertController
+		alertController,
+		IonBackButton
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -26,7 +27,7 @@
 			IonHeader,
 			IonToolbar,
 			IonButtons,
-			PapillonBackButton,
+			IonBackButton,
 			IonList,
 			IonItem,
 			IonLabel,
@@ -41,6 +42,9 @@
 			}
 		},
 		methods: {
+			pop() {
+				return false;
+			},
 			tickClick() {
 				hapticsController.impact({
 					style: 'light'
@@ -162,12 +166,12 @@
 <template>
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
-
 				<ion-buttons slot="start">
-					<PapillonBackButton></PapillonBackButton>
+					<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+					<IonBackButton class="only-md" @click="pop"></IonBackButton>
 				</ion-buttons>
 
-				<ion-title mode="md">Options</ion-title>
+				<ion-title>Options</ion-title>
 			</IonToolbar>
 		</IonHeader>
 

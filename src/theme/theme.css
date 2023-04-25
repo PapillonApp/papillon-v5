@@ -321,11 +321,10 @@ ion-toast::part(message) {
 }
 
 ion-header:not(.header-collapse-condense):not(ion-modal ion-header) {
-    --ion-toolbar-border-color: transparent !important;
-    box-shadow: 0px 1px 2px #00000010;
+    --ion-toolbar-border-color: #00000020 !important;
 }
 
-ion-header:not(ion-modal ion-header) ion-toolbar:first-child {
+ion-header:not(.header-collapse-condense):not(ion-modal ion-header) ion-toolbar:first-child {
     padding-top: var(--papillon-safe-area-top, 0) !important;
 }
 
@@ -334,7 +333,7 @@ ion-modal.modal-sheet ion-header ion-toolbar:first-child {
 }
 
 .dark .ios ion-header:not(.header-collapse-condense) {
-    border-bottom: 1px solid #ffffff15;
+    --ion-toolbar-border-color: #ffffff20 !important;
 }
 
 ion-header ion-toolbar ion-title:not(.title-large) {

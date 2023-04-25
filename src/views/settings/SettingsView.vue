@@ -191,15 +191,21 @@
 	<ion-page ref="page">
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
-				<ion-buttons slot="start"  mode="md">
-					<ion-menu-button color="dark" mode="md"></ion-menu-button>
+				<ion-buttons slot="start">
+					<ion-menu-button color="dark"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Paramètres</ion-title>
+				<ion-title>Paramètres</ion-title>
 			</IonToolbar>
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
+			<ion-header collapse="condense">
+				<ion-toolbar>
+					<ion-title size="large">Paramètres</ion-title>
+				</ion-toolbar>
+			</ion-header>
+
 			<IonList :inset="true" lines="inset">
 				<ion-nav-link router-direction="forward" :component="UserView">
 					<IonItem button>
@@ -379,16 +385,13 @@
 		opacity: 0.5;
 	}
 
-	ion-item .mdls[slot=start] {
+	ion-item .mdls[slot=start].block {
 		width: auto;
 		padding: 7px;
-		background-color: #00000012;
 		border-radius: 300px;
-
 		margin-right: 20px;
-	}
 
-	.dark ion-item .mdls[slot=start] {
-		background-color: #ffffff22;
+		background: rgba(var(--color), 15%);
+		color: rgb(var(--color));
 	}
 </style>

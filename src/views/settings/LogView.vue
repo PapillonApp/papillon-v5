@@ -22,6 +22,7 @@
 		IonTitle,
 		IonRefresher,
 		IonRefresherContent,
+		IonBackButton
 	} from '@ionic/vue';
 
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
@@ -32,7 +33,7 @@
 		components: {
 			IonHeader,
 			IonToolbar,
-			PapillonBackButton,
+			IonBackButton,
 			IonButtons,
 			IonButton,
 			IonLabel,
@@ -61,6 +62,9 @@
 			}
 		},
 		methods: {
+			pop() {
+				return false;
+			},
 			clearLog(log) {
 				this.logs = this.logs.filter(l => l !== log);
 				localStorage.setItem("logs", JSON.stringify(this.logs));
@@ -222,10 +226,11 @@ Contient **${this.logs.length}** logs
 		<IonToolbar>
 
 			<ion-buttons slot="start">
-				<PapillonBackButton></PapillonBackButton>
+				<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+				<IonBackButton class="only-md" @click="pop"></IonBackButton>
 			</ion-buttons>
 
-			<ion-title mode="md">Logs</ion-title>
+			<ion-title>Logs</ion-title>
 
 			<ion-buttons slot="end">
 				<IonButton @click="share()">

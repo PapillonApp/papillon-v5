@@ -13,7 +13,8 @@
 		IonLabel,
 		IonRadioGroup,
 		IonRadio,
-		IonToggle
+		IonToggle,
+		IonBackButton
 	} from '@ionic/vue';
 
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
@@ -32,7 +33,7 @@
 			IonListHeader,
 			IonRadioGroup,
 			IonRadio,
-			PapillonBackButton,
+			IonBackButton,
 			IonToggle
 		},
 		setup() {
@@ -117,6 +118,9 @@
 			}
 		},
 		methods: {
+			pop() {
+				return false;
+			},
 			changeTick(option) {
 				hapticsController.impact({
 					style: 'light'
@@ -290,10 +294,11 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<PapillonBackButton></PapillonBackButton>
+					<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+					<IonBackButton class="only-md" @click="pop"></IonBackButton>
 				</ion-buttons>
 
-				<ion-title mode="md">Apparence de Papillon</ion-title>
+				<ion-title>Apparence</ion-title>
 
 				<ion-buttons slot="end">
 					<IonButton @click="reset()">Réinitialiser</IonButton>

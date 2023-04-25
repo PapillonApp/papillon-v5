@@ -1,7 +1,6 @@
 <script>
 import { defineComponent } from 'vue';
-import { IonHeader, IonContent, IonToggle, IonToolbar, IonTitle, IonButtons, IonLabel, IonItem} from '@ionic/vue';
-import PapillonBackButton from '@/components/PapillonBackButton.vue';
+import { IonHeader, IonContent, IonToggle, IonToolbar, IonTitle, IonButtons, IonLabel, IonItem, IonBackButton} from '@ionic/vue';
 import hapticsController from '@/functions/utils/hapticsController.js';
 
 export default defineComponent({
@@ -10,7 +9,7 @@ export default defineComponent({
         IonHeader,
         IonToolbar,
         IonButtons,
-        PapillonBackButton,
+        IonBackButton,
         IonToggle,
         IonItem,
         IonLabel,
@@ -18,6 +17,9 @@ export default defineComponent({
         IonContent
     },
     methods: {
+        pop() {
+            return false;
+        },
         tickClick() {
             hapticsController.impact({
                 style: 'light'
@@ -90,13 +92,14 @@ export default defineComponent({
 </script>
 
 <template>
-    <IonHeader class="AppHeader" translucent>
+    <IonHeader class="AppHeader">
         <IonToolbar>
             <ion-buttons slot="start">
-                <PapillonBackButton></PapillonBackButton>
+                <IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+                <IonBackButton class="only-md" @click="pop"></IonBackButton>
             </ion-buttons>
 
-            <ion-title mode="md">Personnalisation de l'écran d'accueil</ion-title>
+            <ion-title>Écran d'accueil</ion-title>
         </IonToolbar>
     </IonHeader>
     <ion-content :fullscreen="true">
