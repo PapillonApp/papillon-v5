@@ -197,6 +197,11 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
+			<ion-header collapse="condense">
+				<ion-toolbar>
+					<ion-title size="large">Paramètres</ion-title>
+				</ion-toolbar>
+			</ion-header>
 
 			<IonLabel class="listGroupTitle">
 				<p>Utilisateur connecté</p>
