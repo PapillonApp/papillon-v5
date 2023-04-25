@@ -674,10 +674,6 @@ export default defineComponent({
 		if (localStorage.getItem('customizations')) {
 			let customizations = JSON.parse(localStorage.getItem('customizations') as string);
 
-			if (customizations.font) {
-				document.body.style.setProperty('--papillon-font', customizations.font);
-			}
-
 			if (customizations.color) {
 				document.body.style.setProperty('--ion-color-primary', customizations.color.color.hex);
 				document.body.style.setProperty('--ion-color-primary-rgb', customizations.color.color.rgb);

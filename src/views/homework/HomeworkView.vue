@@ -547,7 +547,7 @@
     }
 
     .hwListItem.add ion-item::part(native) {
-        border: 1px solid var(--ion-color-step-50) !important;
+        border: 1px solid var(--ion-color-step-100) !important;
         --background: transparent !important;
     }
 

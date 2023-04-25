@@ -31,10 +31,13 @@
             }
         },
         navWillChange() {
-            return false;
+          setTimeout(() => {
+            this.invertStatus();
+          }, 120);
+          return false;
         },
         navDidChange() {
-            this.invertStatus();
+          return false;
         }
       },
       mounted() {

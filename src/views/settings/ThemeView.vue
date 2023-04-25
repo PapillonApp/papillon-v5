@@ -38,15 +38,6 @@
 		},
 		setup() {
 			return {
-				availableFonts: [
-					{ name: "Golos Text (Par défaut)", font: "Golos Text" },
-					{ name: "Hind", font: "Hind" },
-					{ name: "Asap", font: "Asap" },
-					{ name: "Merriweather", font: "Merriweather" },
-					{ name: "Sofia Sans", font: "Sofia Sans" },
-					{ name: "OpenDyslexic (Expérimental)", font: "OpenDyslexic" },
-					{ name: "Système", font: "system-ui" },
-				],
 				availableColors: [
 					{ 
 						name: "Vert",
@@ -197,23 +188,6 @@
 				this.currentFont = this.availableFonts[0].font;
 				this.currentColor = this.availableColors[0];
 			},
-			fontChange() {
-				hapticsController.impact({
-					style: 'light'
-				});
-
-				let font = this.$refs.fontSelect.$el.value;
-				this.currentFont = font;
-
-				document.body.style.setProperty('--papillon-font', '"' + font + '"');
-
-				// save it in local storage
-				let customizations = JSON.parse(localStorage.getItem('customizations')) || {};
-
-				customizations.font = font;
-
-				localStorage.setItem('customizations', JSON.stringify(customizations));
-			},
 			colorChange() {
 				hapticsController.impact({
 					style: 'light'
@@ -296,10 +270,6 @@
 			let useScolColors = this.$refs.useScolColors;
 			useScolColors.$el.checked = localStorage.getItem('useScolColors') == 'true';
 
-			// fontSelect
-			// get --papillon-font from css
-			this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font').replace(/"/g, ''); 
-
 			// get tweakProgressBar ref
 			let tweakProgressBar = this.$refs.tweakProgressBar;
 			tweakProgressBar.$el.checked = localStorage.getItem('tweakProgressBar') == 'true';
@@ -315,12 +285,6 @@
 			// check if there are customizations
 			if(localStorage.getItem('customizations')) {
 				let customizations = JSON.parse(localStorage.getItem('customizations'));
-
-				if(customizations.font) {
-					this.currentFont = customizations.font;
-					
-					this.$refs.fontSelect.$el.value = customizations.font;
-				}
 
 				if(customizations.color) {
 					this.currentColor = customizations.color;
@@ -392,18 +356,6 @@
 						<p>Ceci est une prévisualisation de la couleur que vous venez d'appliquer.</p>
 					</ion-label>
 				</ion-item>
-			</IonList>
-
-			<IonList :inset="true" lines="none" v-if="availableFonts">
-				<ion-list-header>
-					<ion-label><p>Police d'écriture</p></ion-label>
-				</ion-list-header>
-				<ion-radio-group mode="md" :allow-empty-selection="false" :value="currentFont" ref="fontSelect" @ionChange="fontChange">
-					<ion-item :key="i" v-for="(font, i) in availableFonts">
-						<ion-radio slot="start" :value="font.font"></ion-radio>
-						<ion-label :style="`font-family: '${font.font}';`">{{ font.name }}</ion-label>
-					</ion-item>
-				</ion-radio-group>
 			</IonList>
 
 			<IonList :inset="true" lines="inset">
