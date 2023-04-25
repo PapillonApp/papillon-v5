@@ -1,6 +1,6 @@
 <script>
 import { defineComponent } from 'vue';
-import { IonHeader, IonContent, IonToggle, IonToolbar, IonTitle, IonButtons, IonLabel, IonItem, IonBackButton} from '@ionic/vue';
+import { IonHeader, IonContent, IonList, IonToggle, IonToolbar, IonTitle, IonButtons, IonLabel, IonItem, IonBackButton} from '@ionic/vue';
 import hapticsController from '@/functions/utils/hapticsController.js';
 
 export default defineComponent({
@@ -14,7 +14,8 @@ export default defineComponent({
         IonItem,
         IonLabel,
         IonTitle,
-        IonContent
+        IonContent,
+        IonList
     },
     methods: {
         pop() {
@@ -103,7 +104,11 @@ export default defineComponent({
         </IonToolbar>
     </IonHeader>
     <ion-content :fullscreen="true">
-        <IonList :inset="true" lines="none">
+        <IonLabel class="listGroupTitle">
+			<p>Sélectionnez les élements</p>
+		</IonLabel>
+
+        <IonList class="listGroup">
             <IonItem v-for="(toggle, index) in toggles" :key="toggle.name">
                 <span class="material-symbols-outlined mdls" slot="start">{{toggle.icon}}</span>
                 <IonLabel class="ion-text-wrap">

@@ -33,8 +33,7 @@
 			IonLabel,
 			IonToggle,
 			IonTitle,
-			IonContent,
-			IonListHeader
+			IonContent
 		},
 		data() {
 			return {
@@ -176,13 +175,11 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-			<IonList :inset="true" lines="inset">
-				<IonListHeader>
-					<IonLabel>
-						<p>Onglet Notes</p>
-					</IonLabel>
-				</IonListHeader>
+			<IonLabel class="listGroupTitle">
+				<p>Onlget Notes</p>
+			</IonLabel>
 
+			<IonList class="listGroup" lines="inset">
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">nest_thermostat_zirconium_eu</span>
 					<IonLabel class="ion-text-wrap">
@@ -202,13 +199,11 @@
 				</IonItem>
 			</IonList>
 
-			<IonList :inset="true" lines="inset">
-				<IonListHeader>
-					<IonLabel>
-						<p>Onglets et calendrier</p>
-					</IonLabel>
-				</IonListHeader>
+			<IonLabel class="listGroupTitle">
+				<p>Onglets & calendrier</p>
+			</IonLabel>
 
+			<IonList class="listGroup" lines="inset">
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">holiday_village</span>
 					<IonLabel class="ion-text-wrap">
@@ -236,13 +231,11 @@
 				</IonItem>
 			</IonList>
 
-			<IonList :inset="true" lines="inset">
-				<IonListHeader>
-					<IonLabel>
-						<p>Page d'accueil</p>
-					</IonLabel>
-				</IonListHeader>
+			<IonLabel class="listGroupTitle">
+				<p>Page d'accueil</p>
+			</IonLabel>
 
+			<IonList class="listGroup" lines="inset">
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">celebration</span>
 					<IonLabel class="ion-text-wrap">

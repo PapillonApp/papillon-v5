@@ -203,7 +203,11 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-			<IonList :inset="true" lines="inset">
+			<IonLabel class="listGroupTitle">
+				<p>Options disponibles</p>
+			</IonLabel>
+
+			<IonList class="listGroup" lines="inset">
 				<IonItem button @click="emptyCache()">
 					<span class="material-symbols-outlined mdls" slot="start">auto_delete</span>
 					<IonLabel class="ion-text-wrap">

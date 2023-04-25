@@ -25,7 +25,6 @@
 			IonMenuButton,
 			IonButtons,
 			IonList,
-			IonListHeader,
 			IonLabel,
 			IonItem,
 			IonNavLink,
@@ -199,13 +198,15 @@
 
 		<ion-content :fullscreen="true">
 
+			<IonLabel class="listGroupTitle">
+				<p>Utilisateur connecté</p>
+			</IonLabel>
 
-			<IonList :inset="true" lines="inset">
+			<IonList class="listGroup" lines="none">
 				<ion-nav-link router-direction="forward" :component="UserView">
 					<IonItem button>
 						<img :src="userAvatar" slot="start" class="avatar" />
 						<IonLabel>
-							<p>Utilisateur connecté</p>
 							<h2>{{ userName }}</h2>
 							<p>{{ userClass }} - {{ userSchool }}</p>
 						</IonLabel>
@@ -214,7 +215,11 @@
 				</ion-nav-link>
 			</IonList>
 
-			<IonList :inset="true" lines="none">
+			<IonLabel class="listGroupTitle">
+				<p>Paramètres de base</p>
+			</IonLabel>
+
+			<IonList class="listGroup contains-nav-link">
 				<ion-nav-link router-direction="forward" :component="OptionsView">
 					<IonItem button>
 						<span class="material-symbols-outlined mdls" slot="start">tune</span>
@@ -247,7 +252,11 @@
 				</ion-nav-link>
 			</IonList>
 
-			<IonList :inset="true" lines="none">
+			<IonLabel class="listGroupTitle">
+				<p>Options avancées</p>
+			</IonLabel>
+
+			<IonList class="listGroup contains-nav-link">
 				<IonItem button @click="logout()">
 					<span class="material-symbols-outlined mdls" slot="start">logout</span>
 					<IonLabel class="ion-text-wrap">
@@ -268,13 +277,11 @@
 				</ion-nav-link>
 			</IonList>
 
-			<IonList :inset="true" lines="inset">
-				<IonListHeader>
-					<IonLabel>
-						<p>Contributeurs les plus actifs</p>
-					</IonLabel>
-				</IonListHeader>
+			<IonLabel class="listGroupTitle">
+				<p>Contributeurs les plus actifs</p>
+			</IonLabel>
 
+			<IonList class="listGroup">
 				<div v-if="contributors != null && !contributorsLoading">
 					<IonItem v-for="(contributor, i) in contributors" :key="i" button @click="openURL(contributor.html_url)">
 						<img :src="contributor.avatar_url" slot="start" class="avatar" />
@@ -299,7 +306,11 @@
 				</div>
 			</IonList>
 
-			<IonList :inset="true" lines="inset">
+			<IonLabel class="listGroupTitle">
+				<p>Communauté & liens externes</p>
+			</IonLabel>
+
+			<IonList class="listGroup">
 				<IonItem button @click="openURL('https://ko-fi.com/thepapillonapp')" class="only-md">
 					<span class="material-symbols-outlined mdls" slot="start">volunteer_activism</span>
 					<IonLabel>
@@ -331,7 +342,11 @@
 				</IonItem>
 			</IonList>
 
-			<IonList :inset="true" lines="inset">
+			<IonLabel class="listGroupTitle">
+				<p>A propos de l'app</p>
+			</IonLabel>
+
+			<IonList class="listGroup">
 				<IonItem @click="showChangelog">
 					<span class="material-symbols-outlined mdls" slot="start">security_update_good</span>
 					<IonLabel>

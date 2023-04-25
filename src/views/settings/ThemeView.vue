@@ -30,7 +30,6 @@
 			IonLabel,
 			IonItem,
 			IonList,
-			IonListHeader,
 			IonRadioGroup,
 			IonRadio,
 			IonBackButton,
@@ -127,15 +126,10 @@
 			}
 		},
 		data() {
-			let defaultFont = this.availableFonts[0].font;
 			let defaultColor = this.availableColors[0];
 
 			if(localStorage.getItem('customizations')) {
 				let customizations = JSON.parse(localStorage.getItem('customizations'));
-
-				if(customizations.font) {
-					defaultFont = customizations.font;
-				}
 
 				if(customizations.color) {
 					defaultColor = customizations.color;
@@ -146,7 +140,6 @@
 			return {
 				customThemeModeList: localStorage.getItem('customThemeMode') == 'true',
 				currentTheme: localStorage.getItem('themeMode'),
-				currentFont: defaultFont,
 				currentColor: defaultColor,
 				currentColorName: defaultColor.name,
 			}
@@ -184,8 +177,7 @@
 				// reset the css variables
 				document.body.style = '';
 
-				// reset the font select
-				this.currentFont = this.availableFonts[0].font;
+				// reset the select
 				this.currentColor = this.availableColors[0];
 			},
 			colorChange() {
@@ -314,7 +306,11 @@
 
 		<ion-content :fullscreen="true">
 
-			<IonList :inset="true" lines="inset">
+			<IonLabel class="listGroupTitle">
+				<p>Sélection du thème</p>
+			</IonLabel>
+
+			<IonList class="listGroup" lines="inset">
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">contrast</span>
 					<IonLabel class="ion-text-wrap">
@@ -338,10 +334,11 @@
 				</ion-radio-group>
 			</IonList>
 
-			<IonList :inset="true" lines="none" v-if="availableColors">
-				<ion-list-header>
-					<ion-label><p>Couleur d'accentuation</p></ion-label>
-				</ion-list-header>
+			<IonLabel class="listGroupTitle">
+				<p>Couleur d'accuentuation</p>
+			</IonLabel>
+
+			<IonList class="listGroup" lines="none" v-if="availableColors">
 				<ion-radio-group mode="md" :allow-empty-selection="false" :value="currentColor.color.hex" ref="colorSelect" @ionChange="colorChange" id="colorSelect">
 					<ion-item :key="i" v-for="(color, i) in availableColors">
 						<div class="preRadio">
@@ -358,7 +355,11 @@
 				</ion-item>
 			</IonList>
 
-			<IonList :inset="true" lines="inset">
+			<IonLabel class="listGroupTitle">
+				<p>Paramètres du thème</p>
+			</IonLabel>
+
+			<IonList class="listGroup" lines="inset">
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">invert_colors</span>
 					<IonLabel class="ion-text-wrap">
@@ -430,12 +431,13 @@
 	}
 
 	#colorSelect {
+		padding-top: 5px;
 		display: grid;
 
 		grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
 
 		/* center */
-		justify-items: center;
+		justify-items: space-between;
 
 		width: calc(100% - 15px * 2);
 		margin: 5px 15px;

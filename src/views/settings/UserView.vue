@@ -161,7 +161,11 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-            <IonList :inset="true" lines="inset">
+            <IonLabel class="listGroupTitle">
+				<p>Photo de profil</p>
+			</IonLabel>
+
+            <IonList class="listGroup" lines="inset">
                 <IonItem button @click="tweakChangeAvatar()">
                     <span class="material-symbols-outlined mdls" slot="start">person_pin</span>
                     <IonLabel>
@@ -178,8 +182,12 @@
                     </IonLabel>
                 </IonItem>
             </IonList>
+            
+            <IonLabel class="listGroupTitle">
+				<p>Nom utilisé</p>
+			</IonLabel>
 
-            <IonList inset>
+            <IonList class="listGroup" lines="inset">
                 <IonItem button @click="tweakChangeName()">
                     <span class="material-symbols-outlined mdls" slot="start">drive_file_rename_outline</span>
                     <IonLabel>

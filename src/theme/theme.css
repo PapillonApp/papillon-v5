@@ -520,3 +520,34 @@ a.inherit {
     border-radius: 0;
     font-size: 16px;
 }
+
+ion-list.listGroup {
+    background: var(--ion-plain-background-color) !important;
+}
+
+ion-list.listGroup ion-item {
+    --background: var(--ion-plain-background-color);
+    --border-color: var(--ion-color-step-150);
+}
+
+.ios ion-list.listGroup {
+    border-top: 1px solid var(--ion-color-step-100);
+    border-bottom: 1px solid var(--ion-color-step-100);
+}
+
+ion-list.listGroup.contains-nav-link ion-nav-link:last-child ion-item {
+    --border-color: transparent;
+}
+
+ion-list.listGroup:not(.contains-nav-link) ion-item:last-child {
+    --border-color: transparent;
+}
+
+.listGroupTitle p {
+    padding-top: 20px !important;
+}
+
+.listGroupTitle p {
+    padding: 10px 0px;
+    padding-left: 16px;
+}
