@@ -1,8 +1,10 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput, IonProgressBar, alertController } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput, IonProgressBar, alertController, IonNavLink } from '@ionic/vue';
 
   import { Share } from '@capacitor/share';
+
+  import CoursView from './CoursView.vue';
 
   import { App } from '@capacitor/app';
   import { Network } from '@capacitor/network';
@@ -49,6 +51,7 @@
 		IonFab,
 		IonInput,
 		IonProgressBar,
+		IonNavLink
 	},
 	setup() {
 		return {
@@ -452,65 +455,6 @@
 			// refresh timetable
 			this.getTimetables(true);
 		},
-		async setNotif(course) {
-			try {
-				let subject = course.data.subject;
-				let room = course.data.rooms[0] || "salle inconnue";
-				let teacher = course.data.teachers[0];
-
-				let time = new Date(course.time.start);
-				time.setMinutes(time.getMinutes() - 5);
-
-				// check if time is in the future
-				if(time.getTime() < new Date().getTime()) {
-					displayToast.presentToastFull(
-						'Impossible de vous notifier pour ' + subject,
-						'Le cours a déjà commencé ou est terminé.',
-						'danger',
-						notifications
-					);
-				}
-				else {
-					// Check permission
-					const permission = await LocalNotifications.checkPermissions();
-					if (permission != 'granted') {
-						try {
-							await LocalNotifications.requestPermissions();
-						} catch (error) {
-							displayToast.presentError("Impossible d'activer les notifications", "danger", error);
-							return;
-						}
-					}
-
-					await LocalNotifications.schedule({
-						notifications: [
-							{
-								title: `${subject} - Ça commence bientôt !`,
-								body: `Vous êtes en ${room} avec ${teacher}. Le cours commence dans 5 minutes.`,
-								id: 1,
-								schedule: { at: time },
-								sound: "tone.ogg",
-								attachments: null,
-								actionTypeId: "",
-								extra: null
-							}
-						]
-					});
-					
-					// notify user
-					this.selectedCourse.notificationEnabled = true;
-
-					displayToast.presentToastFull(
-						'Notifications activées pour ' + subject,
-						'Vous receverez une notification 5 minutes avant le début du cours',
-						'light',
-						notifications
-					);
-				}
-			} catch (error) {
-				displayToast.presentError("Une erreur est survenue lors de l'activation des notifications", "danger", error);
-			}
-		},
 		async unsetNotif(course) {
 			// find notification
 			await LocalNotifications.getPending().then((res) => {
@@ -556,6 +500,7 @@
 		);
 
 		return {
+			CoursView: CoursView,
 			baseRn: new Date(),
 			slides,
 			currentIndex: this.baseIndex,
@@ -676,7 +621,8 @@
 				:virtualIndex="index"
 				>
 				<IonList>
-						<CoursElement v-for="cours in days[`${index}`]" :key="cours.id"
+					<IonNavLink v-for="cours in days[`${index}`]" :key="cours.id" router-direction="forward" :component="CoursView" :componentProps="{urlCours: encodeURIComponent(JSON.stringify(cours))}">
+						<CoursElement
 							:subject="cours.data.subject"
 							:teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
 							:rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
@@ -693,8 +639,8 @@
 							:isTest="cours.status.isTest"
 							:distance="cours.course.distance"
 							:lengthCours="cours.course.lengthCours"
-							@open="openCoursModal(cours)"
 						/>
+					</IonNavLink>
 
 						<div v-if="days[`${index}`]">
 							<div class="NoCours" v-if="days[`${index}`].length == 0 && !days[`${index}`].error && !days[`${index}`].loading">
@@ -802,7 +748,7 @@
 				</ion-content>
 			</IonModal>
 
-			<IonModal ref="coursModal" class="coursModal" :keep-contents-mounted="true" :initial-breakpoint="0.6" :breakpoints="[0, 0.6, 0.9]" :handle="true" :canDismiss="true">
+			<IonModal ref="coursModal" class="coursModal" :keep-contents-mounted="true" :presenting-element="presentingElement" :handle="true" :canDismiss="true">
 				<IonHeader>
 					<IonToolbar>
 					<ion-title>{{selectedCourse.name}}</ion-title>
