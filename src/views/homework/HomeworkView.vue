@@ -66,6 +66,7 @@
                 rnPickerModalOpen: false,
                 isChangingDate: false,
                 isLoading: true,
+                baseRn: new Date(),
 			}
 		},
 		methods: {
@@ -168,7 +169,7 @@
                     let indexDiff = this.baseIndex - index;
 
                     // get rn
-                    let selectedRN = new Date();
+                    let selectedRN = new Date(this.baseRn);
 
                     if(goTo) {
                         selectedRN = new Date(this.$rn);
@@ -243,6 +244,7 @@
 
                     // update rn
                     this.$rn = newDate;
+                    this.baseRn = newDate;
 
                     // reset swiper
                     this.$refs.swiper.$el.swiper.slideTo(this.baseIndex, 0, false);

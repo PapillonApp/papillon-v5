@@ -80,9 +80,13 @@
 
 				// update rn
 				this.$rn = newDate;
+				this.baseRn = newDate;
 
 				// reset swiper
 				this.$refs.swiper.$el.swiper.slideTo(this.baseIndex, 0, false);
+
+				// reset days
+				this.days = [];
 
 				// emit event
 				document.dispatchEvent(new CustomEvent('rnChanged', { detail: newDate }));
@@ -156,7 +160,7 @@
 				let indexDiff = this.baseIndex - index;
 
 				// get rn
-				let selectedRN = new Date();
+				let selectedRN = new Date(this.baseRn);
 
 				if(goTo) {
 					selectedRN = new Date(this.$rn);
@@ -552,6 +556,7 @@
 		);
 
 		return {
+			baseRn: new Date(),
 			slides,
 			currentIndex: this.baseIndex,
 			rnButtonString: this.createDateString(this.$rn),
