@@ -581,7 +581,7 @@
 	},
 	mounted() {
 		// sets presentingElement
-		this.presentingElement = this.$refs.page.$el;
+		this.presentingElement = this.$refs.pageHere.$el;
 
 		// on rnChanged, update rnButtonString
 		document.addEventListener('rnChanged', (e) => {
@@ -626,7 +626,7 @@
 </script>
 
 <template>
-	<ion-page ref="page">
+	<ion-page ref="pageHere">
 		<IonHeader class="AppHeader">
 			<IonToolbar>
 

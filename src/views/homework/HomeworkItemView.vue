@@ -40,7 +40,17 @@
             }
         },
 		data() {
+            let backTitle = 'Retour';
+
+			// get current route
+			let currentRoute = this.$router.currentRoute.value;
+
+			if(currentRoute.name == "Homework") {
+				backTitle = 'Devoirs';
+			}
+
 			return {
+                backTitle: backTitle,
                 openedHw: [],
                 openedData: [],
                 openedHomework: [],
@@ -105,7 +115,7 @@
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
 				<ion-buttons slot="start">
-					<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+					<IonBackButton class="only-ios" :text="backTitle" @click="pop"></IonBackButton>
 					<IonBackButton class="only-md" @click="pop"></IonBackButton>
 				</ion-buttons>
 

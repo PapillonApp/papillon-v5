@@ -19,7 +19,7 @@
 		IonModal,
 		IonSelect,
 		IonNavLink,
-		IonProgressBar
+		IonSpinner
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -28,6 +28,8 @@
 
 	import GetGrades from '@/functions/fetch/GetGrades.js';
 	import ChangePeriod from '@/functions/login/ChangePeriod.js';
+
+	import { Capacitor } from '@capacitor/core';
 
 	import { Share } from '@capacitor/share';
 
@@ -52,12 +54,17 @@
 			IonSelect,
 			IonText,
 			IonNavLink,
-			IonProgressBar
+			IonSpinner
 		},
 		data() {
-			let gradesDisplay = localStorage.getItem('gradesDisplay') || 'Vue liste';
+			let gradesDisplay = localStorage.getItem('gradesDisplay') || 'Liste';
+
+			let isAndroid = Capacitor.getPlatform() !== "ios";
+
+			console.log(isAndroid);
 
 			return {
+				md: isAndroid,
 				MarkView: MarkView,
 				display: gradesDisplay,
 				grades: [],
@@ -413,28 +420,45 @@
 				<ion-title>Notes</ion-title>
 
 				<ion-buttons class="endBtns" slot="end">
-					<span class="selectIcon material-symbols-outlined mdls" v-if="display == 'Vue grille'">grid_view</span>
-					<span class="selectIcon material-symbols-outlined mdls" v-if="display == 'Vue liste'">list</span>
 
-					<ion-select ref="displaySel" @ionChange="changeDisplay($event)" interface="popover" placeholder="Affichage" :value="display">
-						<ion-select-option value="Vue grille">Vue grille</ion-select-option>
-						<ion-select-option value="Vue liste">Vue liste</ion-select-option>
-					</ion-select>
+					<div id="selectionMode">
+						<span class="selectIcon material-symbols-outlined mdls" v-if="display == 'Grille'">grid_view</span>
+						<span class="selectIcon material-symbols-outlined mdls" v-if="display == 'Liste'">list</span>
+
+						<ion-select class="displaySel" ref="displaySel" @ionChange="changeDisplay($event)" interface="popover" placeholder="Affichage" :value="display">
+							<ion-select-option value="Grille">Grille</ion-select-option>
+							<ion-select-option value="Liste">Liste</ion-select-option>
+						</ion-select>
+					</div>
+
+					<ion-spinner v-if="isLoading"></ion-spinner>
 				</ion-buttons>
 			</IonToolbar>
-			<IonToolbar class="periodSeg">
+			<IonToolbar v-if="md">
 				<ion-segment v-if="periods.length > 0" id="segment" :value="current_period.id"
-				ref="segment" @ionChange="segChange()">
+						ref="segment" @ionChange="segChange()">
 					<ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.id" :id="period.id">
 						<ion-label>{{period.name}}</ion-label>
 					</ion-segment-button>
 				</ion-segment>
-
-				<ion-progress-bar v-if="isLoading" type="indeterminate"></ion-progress-bar>
 			</IonToolbar>
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
+			<ion-header collapse="condense">
+				<ion-toolbar>
+					<ion-title size="large">Notes</ion-title>
+				</ion-toolbar>
+				<IonToolbar v-if="!md">
+					<ion-segment v-if="periods.length > 0" id="segment" :value="current_period.id"
+						ref="segment" @ionChange="segChange()">
+						<ion-segment-button v-for="(period, i) in periods" :key="i" :value="period.id" :id="period.id">
+							<ion-label>{{period.name}}</ion-label>
+						</ion-segment-button>
+					</ion-segment>
+				</IonToolbar>
+			</ion-header>
+			
 			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
@@ -447,7 +471,7 @@
 						<ion-skeleton-text :animated="true" style="width: 50%;"></ion-skeleton-text>
 						<ion-skeleton-text class="avg" :animated="true" style="width: 20%;"></ion-skeleton-text>
 					</div>
-					<div class="grades" v-if="display == 'Vue grille'">
+					<div class="grades" v-if="display == 'Grille'">
 						<ion-card class="grade" v-for="i in 3" v-bind:key="i">
 							<div class="myGrade" style="width: 135px;">
 								<ion-skeleton-text :animated="true" style="width: 50%;"></ion-skeleton-text>
@@ -466,7 +490,7 @@
 				</ion-card>
 			</div> -->
 
-			<transition-group name="ElemAnim" tag="div">
+			<transition-group name="ElemAnim" tag="div" id="NotesData">
 				<ion-item v-if="loginService === 'ecoledirecte'">
 					<div class="alphaMessage">
 						<span class="material-symbols-outlined mdls icon">warning</span>
@@ -487,7 +511,7 @@
 						<p class="avg" v-if="!subject.significant">{{subject.significantReason}}<small>/20</small></p>
 					</div>
 
-					<div class="grades" v-if="display == 'Vue grille'">
+					<div class="grades" v-if="display == 'Grille'">
 						<IonNavLink v-for="(mark, i) in subject.marks" :key="i" router-direction="forward" :component="MarkView" :componentProps="{markID: mark.id}">
 							<ion-card class="grade">
 								<div class="myGrade">
@@ -534,7 +558,7 @@
 						</IonNavLink>
 					</div>
 
-					<ion-list lines="inset" class="gradesList" v-if="display == 'Vue liste'">
+					<ion-list lines="inset" class="gradesList" v-if="display == 'Liste'">
 						<IonNavLink v-for="(mark, i) in subject.marks" :key="i" router-direction="forward" :component="MarkView" :componentProps="{markID: mark.id}">
 							<ion-item class="gradeItem" button detail="false">
 								<ion-text slot="start" class="emoji">{{ getClosestGradeEmoji(subject.name) }}</ion-text>
@@ -548,8 +572,10 @@
 								<ion-label slot="end" class="markLabel" style="text-align: right;">
 									<h2 v-if="mark.info.significant && !mark.grade.updated_value">{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></h2>
 									<h2 v-else-if="mark.grade.updated_value && mark.info.significant">{{mark.grade.updated_value}}<small>/{{mark.grade.updated_out_of}}</small></h2>
-									<p class="coef" v-if="mark.grade.updated_value && mark.info.significant">
-										{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small></p>
+
+									<p class="coef" v-if="mark.grade.updated_value && mark.grade.out_of != 20 && mark.info.significant">
+										{{mark.grade.value}}<small>/{{mark.grade.out_of}}</small>
+									</p>
 
 									<!-- si absent -->
 									<h2 v-if="!mark.info.significant">{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></h2>
@@ -900,11 +926,10 @@
 		color: #fff !important;
 	}
 
-	#segment {
+	.ios #segment {
 		width: calc(100vw - 24px);
 		margin: 0 12px;
-
-		margin-top: -12px;
+		margin-top: -8px;
 	}
 
 	.md .grade {
@@ -945,22 +970,6 @@
 		font-weight: 500 !important;
 	}
 
-	.endBtns {
-		border: 1px solid var(--ion-color-step-200);
-
-		padding-left: 7px;
-		border-radius: 300px;
-
-		max-height: 32px !important;
-		min-height: 32px !important;
-		overflow: hidden;
-	}
-
-	.endBtns ion-select {
-		padding-top: 0 !important;
-		padding-bottom: 0 !important;
-	}
-
 	.selectIcon {
 		margin-right: -12px;
 		opacity: 48%;
@@ -982,5 +991,45 @@
 
 	.periodSeg {
 		padding-top: 5px;
+	}
+
+	.ios #NotesData {
+		margin-top: -15px;
+	}
+
+	#selectionMode {
+		display: flex;
+		align-items: center;
+
+		gap: 5px;
+		padding: 3px 8px;
+
+		background: rgba(var(--ion-text-color-rgb), 0.08);
+		border-radius: 8px;
+	}
+
+	.md #selectionMode {
+		border-radius: 300px;
+		margin-top: -2px;
+
+		background: none;
+		border: 1px solid rgba(var(--ion-text-color-rgb), 0.15);
+	}
+
+	.displaySel {
+		padding: 0;
+	}
+
+	#selectionMode * {
+		margin: 0;
+	}
+
+	#selectionMode .mdls {
+		height: fit-content;
+		width: fit-content;
+	}
+
+	ion-spinner {
+		margin-left: 15px;
 	}
 </style>

@@ -216,6 +216,12 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
+			<ion-header collapse="condense">
+				<ion-toolbar>
+					<ion-title size="large">Conversations</ion-title>
+				</ion-toolbar>
+			</ion-header>
+
 			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>

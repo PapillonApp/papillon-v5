@@ -42,7 +42,17 @@
 			}
 		},
 		data() {
+			let backTitle = 'Retour';
+
+			// get current route
+			let currentRoute = this.$router.currentRoute.value;
+
+			if(currentRoute.name == "Grades") {
+				backTitle = 'Notes';
+			}
+
 			return {
+				backTitle: backTitle,
 				grades: [],
 				currentGrade: null,
 				diffAvg: 0,
@@ -157,7 +167,7 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+					<IonBackButton class="only-ios" :text="backTitle" @click="pop"></IonBackButton>
 					<IonBackButton class="only-md" @click="pop"></IonBackButton>
 				</ion-buttons>
 

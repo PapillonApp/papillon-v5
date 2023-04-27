@@ -46,10 +46,17 @@
 						}
 					},
 					{
-						name: "Bleu",
+						name: "Ciel",
 						color: {
 							hex: "#29ABE0",
 							rgb: "41, 171, 224",
+						}
+					},
+					{
+						name: "Bleu",
+						color: {
+							hex: "#007AFF",
+							rgb: "0, 122, 255",
 						}
 					},
 					{

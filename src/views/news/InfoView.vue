@@ -5,6 +5,7 @@
 	import {
 		IonHeader,
 		IonToolbar,
+		IonAvatar,
 		IonList,
 		IonItem,
 		IonLabel,
@@ -31,7 +32,7 @@
 			IonSkeletonText,
 			IonList,
 			IonItem,
-			IonLabel,
+			IonLabel
 		},
 		props: {
 			urlNews: {
@@ -40,8 +41,19 @@
 			}
 		},
 		data() {
+			let backTitle = 'Retour';
+
+			// get current route
+			let currentRoute = this.$router.currentRoute.value;
+
+			if(currentRoute.name == "News") {
+				backTitle = 'Actualités';
+			}
+
 			return {
-				openedNews: []
+				backTitle: backTitle,
+				openedNews: [],
+				shortName: '',
 			}
 		},
 		methods: {
@@ -51,6 +63,21 @@
 					presentationStyle: 'popover',
 				});
 			},
+			getLettersFromName(name) {
+				// if first letter is M, remove first word
+				if (name[0] == 'M') {
+					name = name.split(' ').slice(1).join(' ');
+				}
+
+				let shortName = name.match(/\b(\w)/g).join('');
+
+				// if shortName > 2, return first 2 letters
+				if (shortName.length > 2) {
+					return shortName.slice(0, 2);
+				}
+
+				return shortName;
+			}
 		},
 		mounted() {
 			// if urlNews prop is set
@@ -65,6 +92,9 @@
 
 				// open urlNews
 				this.openedNews = parsed;
+
+				// get short name
+				this.shortName = this.getLettersFromName(this.openedNews.author);
 			}
 
 			return false;
@@ -77,7 +107,7 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+					<IonBackButton class="only-ios" :text="backTitle" @click="pop"></IonBackButton>
 					<IonBackButton class="only-md" @click="pop"></IonBackButton>
 				</ion-buttons>
 
@@ -88,12 +118,31 @@
 
 		<ion-content :fullscreen="true">
 			<div v-if="openedNews">
+				<ion-header collapse="condense">
+					<ion-toolbar>
+						<h1 class="mainTitle">{{ openedNews.title }}</h1>
+					</ion-toolbar>
+					<ion-toolbar>
+						<IonItem>
+							<div class="avatar" slot="start">
+								{{ shortName }}
+							</div>
+							<IonLabel>
+								<h2>{{ openedNews.author }}</h2>
+								<p>{{ openedNews.dateString }}</p>
+							</IonLabel>
+						</IonItem>
+					</ion-toolbar>
+				</ion-header>
 
-				<IonList>
+				<IonList class="only-md">
 					<IonItem>
+						<div class="avatar" slot="start">
+							{{ shortName }}
+						</div>
 						<IonLabel>
-							<h1 class="newsTitle">{{ openedNews.title }}</h1>
-							<p>{{ openedNews.author }} - {{ openedNews.dateString }}</p>
+							<h2>{{ openedNews.author }}</h2>
+							<p>{{ openedNews.dateString }}</p>
 						</IonLabel>
 					</IonItem>
 				</IonList>
@@ -132,11 +181,37 @@
 </template>
 
 <style scoped>
-	.newsTitle {
-		font-weight: 500 !important;
+	.mainTitle {
+		margin-top: 0px;
+		margin: auto 16px !important;
 	}
 
 	.content {
 		margin: 10px 20px;
+	}
+
+	.avatar {
+		width: 38px;
+		height: 38px;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		background: linear-gradient(180deg, #b4b4b4 0%,#7e7e7e 100%);
+		border-radius: 50%;
+
+		color: #fff;
+
+		font-weight: 500;
+		font-size: 1.05rem;
+
+		padding-bottom: 1px;
+	}
+
+	.md .avatar {
+		background: rgba(var(--ion-color-primary-rgb), 0.2);
+		color: var(--ion-color-primary);
+		margin-right: 15px;
 	}
 </style>

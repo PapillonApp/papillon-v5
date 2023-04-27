@@ -742,9 +742,9 @@ export default defineComponent({
 						</div>
 					</div>
 				</ion-header>
-				<ion-content mode="md">
+				<ion-content>
 					<ion-list id="inbox-list">
-						<ion-item @click="changePage(p.url, i)" :router-link="p.url" v-for="(p, i) in appPages" :key="i" button routerDirection="root" mode="md" lines="none" :detail="false" :class="{ selected: selectedIndex === i }">
+						<ion-item mode="md" @click="changePage(p.url, i)" :router-link="p.url" v-for="(p, i) in appPages" :key="i" button routerDirection="root" lines="none" :detail="false" :class="{ selected: selectedIndex === i }">
 							<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
 							<ion-label>{{ p.title }}</ion-label>
 						</ion-item>
@@ -932,7 +932,7 @@ ion-menu ion-content {
 }
 
 ion-menu ion-content {
-	--padding-start: 8px;
+	--padding-start: 0px;
 	--padding-end: 8px;
 	--padding-top: 8px;
 	--padding-bottom: 20px;
@@ -973,9 +973,12 @@ ion-item *:not(span) {
 }
 
 ion-menu ion-item {
-	--padding-start: 15px;
+	--padding-start: 20px;
 	--padding-end: 10px;
-	border-radius: 300px;
+
+	border-top-right-radius: 300px;
+	border-bottom-right-radius: 300px;
+
 	isolation: isolate;
 }
 
@@ -1138,6 +1141,6 @@ a:not(.selected) ion-menu-toggle ion-item:hover {
 	bottom: 0;
 	left: 0;
 
-	padding-left: 10px;
+	padding-left: 0px;
 	padding-right: 10px;
 }</style>
