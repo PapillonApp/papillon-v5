@@ -294,20 +294,36 @@
                             }
                         }
 
-                        await LocalNotifications.schedule({
-                            notifications: [
-                                {
-                                    title: `${subject} - Ça commence bientôt !`,
-                                    body: `Vous êtes en ${room} avec ${teacher}. Le cours commence dans 5 minutes.`,
-                                    id: 1,
-                                    schedule: { at: time },
-                                    sound: "tone.ogg",
-                                    attachments: null,
-                                    actionTypeId: "",
-                                    extra: null
-                                }
-                            ]
-                        });
+                        try{
+                            await LocalNotifications.schedule({
+                                notifications: [
+                                    {
+                                        title: `${subject} - Ça commence bientôt !`,
+                                        body: `Vous êtes en ${room} avec ${teacher}. Le cours commence dans 5 minutes.`,
+                                        id: 1,
+                                        schedule: { at: time },
+                                        sound: "tone.ogg",
+                                        attachments: null,
+                                        actionTypeId: "",
+                                        extra: null
+                                    }
+                                ]
+                            });
+                        }
+                        catch(error) {
+                            // dialog
+                            await Dialog.alert({
+                                title: 'Erreur',
+                                message: 'Une erreur est survenue lors de la création de la notification. Veuillez réessayer.',
+                            });
+
+                            // untoggle switch
+                            this.notificationEnabled = false;
+                            this.$refs.notifSwitch.checked = false;
+
+                            return;
+                        }
+
                         
                         // notify user
                         this.notificationEnabled = true;
@@ -452,19 +468,21 @@
                     <p>Horaires</p>
                 </IonLabel>
 
-                <IonList class="listGroup">
+                <IonList class="listGroup times" lines="none">
                     <ion-item class="info-item">
 						<span class="material-symbols-outlined mdls" slot="start">schedule</span>
 						<ion-label>
-							<p>Heure de début</p>
+							<p>Début</p>
 							<h2>{{ new Date(openCours_time.start).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</h2>
+                            <h4>{{ new Date(openCours_time.start).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) }}</h4>
 						</ion-label>
 					</ion-item>
                     <ion-item class="info-item">
 						<span class="material-symbols-outlined mdls" slot="start">schedule</span>
 						<ion-label>
-							<p>Heure de fin</p>
+							<p>Fin</p>
 							<h2>{{ new Date(openCours_time.end).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</h2>
+                            <h4>{{ new Date(openCours_time.end).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) }}</h4>
 						</ion-label>
 					</ion-item>
                 </IonList>
@@ -518,4 +536,7 @@
 </template>
 
 <style scoped>
+.listGroup.times {
+    display: flex;
+}
 </style>
