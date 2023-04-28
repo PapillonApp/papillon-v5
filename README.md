@@ -34,6 +34,7 @@
 
 - [Table Of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
+- [Screenshots](#screenshots)
 - [Built With](#built-with)
 - [Getting Started](#getting-started)
 	- [Prerequisites](#prerequisites)
@@ -72,6 +73,13 @@
 * **Extensions and customisation**
     - 🕺 Customisable font and interface colour
     - 🤯 Extends the functionality of the app
+
+## Screenshots
+
+### iPhone 14 (iOS 16.3.1) (version 5.6.0 - light mode)
+|Home|Timetable|Homework|Grades|Settings|
+|--|--|--|--|--|
+|![Home](https://user-images.githubusercontent.com/32978709/235216860-3d1ac944-4b84-442f-a12e-96257601bc6f.png)|![image](https://user-images.githubusercontent.com/32978709/235217012-af405e9d-78c4-41d8-ad75-926418d9882b.png)|![image](https://user-images.githubusercontent.com/32978709/235217024-5d85adf0-fae3-45ff-b4bf-d7f7d465fc09.png)|![image](https://user-images.githubusercontent.com/32978709/235217038-ec69fb3e-130a-4948-a638-fa8eb34c6771.png)|![image](https://user-images.githubusercontent.com/32978709/235217060-683ef8d0-f32c-438d-b232-7d8f23d3a8b8.png)|
 
 ## Built With
 
