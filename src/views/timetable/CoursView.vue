@@ -25,6 +25,8 @@
 
 	import { Browser } from '@capacitor/browser';
 
+    import { CapacitorCalendar } from 'capacitor-calendar';
+
     import { Share } from '@capacitor/share';
 
     import { LocalNotifications } from '@capacitor/local-notifications';
@@ -75,6 +77,93 @@
 			}
 		},
 		methods: {
+            async addToCalendar() {
+                if (Capacitor.isNativePlatform()) {
+                    // create calendar event on mobile
+                    let result = { availableCalendars: [] };
+
+                    try {
+                        // the first time, the user will be prompted to grant permission
+                        result = await CapacitorCalendar.getAvailableCalendars();
+                    } catch(e) {
+                        // if the user denied permission, we'll end up here
+                        console.log('Error', e);
+                        return;
+                    }
+
+                    if (result?.availableCalendars.length) {
+                        try {
+                            // ask which calendar to use
+                            const opts = [];
+
+                            for (const cal of result.availableCalendars) {
+                                opts.push({
+                                    title: cal.name,
+                                });
+                            }
+
+                            opts.push({
+                                title: 'Annuler',
+                                style: ActionSheetButtonStyle.Cancel,
+                            });
+
+                            const selected = await ActionSheet.showActions({
+                                title: 'Sélectionnez un calendrier',
+                                message: 'Choisissez le calendrier dans lequel ajouter le cours.',
+                                options: opts,
+                            });
+
+                            if (selected.index === opts.length - 1) {
+                                return;
+                            }
+
+                            let selectedCalendar = result.availableCalendars[selected.index];
+
+                            // get data
+                            let id = this.openCours_course.id;
+
+                            let subject = this.openCours_data.subject;
+                            let teachers = this.teachers;
+                            let rooms = this.rooms;
+
+                            let status = "Le cours se déroule normalement.";
+                            if(this.openCours_status.status) {
+                                status = this.openCours_status.status;
+                            }
+
+                            let finalStatus = `Vous êtes avec ${teachers} en ${rooms}. ${status}`;
+
+                            let startMillis = new Date(this.openCours_time.start).getTime();
+
+                            let endMillis = new Date(this.openCours_time.end).getTime();
+
+                            // use default calendar
+                            await CapacitorCalendar.createEvent({
+                                id: id,
+                                title: subject,
+                                location: rooms,
+                                notes: finalStatus,
+                                startDate: startMillis,
+                                endDate: endMillis,
+                                calendarId: selectedCalendar.id,
+                            });
+                            
+                            // dialog
+                            await Dialog.alert({
+                                title: 'Cours ajouté',
+                                message: 'Le cours a bien été ajouté à votre calendrier.',
+                            });
+                        } catch (e) {
+                            console.error('Error creating calendar event', e);
+                            // dialog
+                            await Dialog.alert({
+                                title: 'Erreur',
+                                message: 'Une erreur est survenue lors de l\'ajout du cours à votre calendrier.',
+                            });
+                        }
+                    }
+                }
+            },
             async deleteCustomCourse() {
                 if (Capacitor.isNative) {
                     ActionSheet.showActions({
@@ -403,7 +492,7 @@
                         <span class="material-symbols-outlined mdls" slot="start">notifications</span>
                         <ion-label class="ion-text-wrap">
                             <h2>Activer les notifications</h2>
-                            <p>Vous allez recevoir une notification 5 minutes avant le début du cours.</p>
+                            <p>Vous allez recevoir une notification 5 minutes avant le début du cours</p>
                         </ion-label>
 
                         <ion-toggle @ionChange="changeNotif($event)" slot="end" :value="notificationEnabled" ref="toggle"></ion-toggle>
@@ -412,7 +501,14 @@
                         <span class="material-symbols-outlined mdls" slot="start">delete</span>
                         <ion-label class="ion-text-wrap">
                             <h2>Supprimer le cours personnalisé</h2>
-                            <p>Supprime le cours personnalisé de votre emploi du temps.</p>
+                            <p>Supprime le cours personnalisé de votre emploi du temps</p>
+                        </ion-label>
+                    </IonItem>
+                    <IonItem button  @click="addToCalendar()">
+                        <span class="material-symbols-outlined mdls" slot="start">event</span>
+                        <ion-label class="ion-text-wrap">
+                            <h2>Ajouter au calendrier</h2>
+                            <p>Ajouter ce cours au calendrier par défaut de votre appareil</p>
                         </ion-label>
                     </IonItem>
                 </IonList>
