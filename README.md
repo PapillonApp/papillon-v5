@@ -11,21 +11,24 @@
     <br/>
     <br/>
     <a href="https://docs.getpapillon.xyz/"><strong>Explore the docs »</strong></a>
-    <br/>
-    <br/>
-    <a href="https://github.com/PapillonApp/Papillon/issues">Report Bug</a>
-    |
-    <a href="https://github.com/PapillonApp/Papillon/issues">Request Feature</a>
-    <br/>
-    <br/>
-    
   </p>
+
+  <div class="badges" align="center">
+        <img alt="Downloads" src="https://img.shields.io/github/downloads/PapillonApp/Papillon/total">
+        <img alt="Contributors" src="https://img.shields.io/github/contributors/PapillonApp/Papillon?color=dark-green">
+        <img alt="Issues" src="https://img.shields.io/github/issues/PapillonApp/Papillon">
+        <img alt="License" src="https://img.shields.io/github/license/PapillonApp/Papillon">
+        <br />
+        <a href="https://discord.gg/vFmCwSzvAp">
+            <img src="https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=flat&amp;logo=discord&amp;logoColor=white" alt="Join our Discord server">
+        </a>
+        <a href="https://www.instagram.com/thepapillonapp/">
+            <img src="https://img.shields.io/badge/Instagram-thepapillonapp-E4405F?style=flat&amp;logo=instagram&amp;logoColor=white" alt="Follow us on Instagram">
+        </a>
+    </div>
 </p>
 
-[![](https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=flat&logo=discord&logoColor=white)](https://discord.gg/vFmCwSzvAp)
-[![](https://img.shields.io/badge/Instagram-thepapillonapp-E4405F?style=flat&logo=instagram&logoColor=white)](https://www.instagram.com/thepapillonapp/)
 
-![Downloads](https://img.shields.io/github/downloads/PapillonApp/Papillon/total) ![Contributors](https://img.shields.io/github/contributors/PapillonApp/Papillon?color=dark-green) ![Issues](https://img.shields.io/github/issues/PapillonApp/Papillon) ![License](https://img.shields.io/github/license/PapillonApp/Papillon) 
 
 ## Table Of Contents
 
