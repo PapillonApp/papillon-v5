@@ -3,7 +3,6 @@
 </template>
   
 <script lang="ts">
-  console.log("loginsetup used")
     import { IonNav } from '@ionic/vue';
     import SettingsView from './SettingsView.vue';
   
