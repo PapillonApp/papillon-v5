@@ -556,6 +556,9 @@ export default defineComponent({
 			opts.forEach(opt => this.getBoolOpt(opt));
 		}
 	},
+	ionViewDidEnter() {
+		StatusBar.setStyle({ style: Style.Dark })
+	},
 	async mounted() {
 		const boolOpts = [
 			'displayNextCourse',

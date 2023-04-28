@@ -157,7 +157,7 @@
 			}, 500);
 
 			for (let i = 0; i < 3; i++) {
-				let index = this.$refs.swiper.$el.swiper.realIndex + (i - 1);
+				let index = this.swiper.realIndex + (i - 1);
 
 				// get index diff
 				let indexDiff = this.baseIndex - index;
@@ -527,9 +527,12 @@
 			rnPickerModalOpen: false,
 			isChangingDate: false,
 			isLoading: true,
+			swiper: null,
 		}
 	},
 	mounted() {
+		this.swiper = this.$refs.swiper.$el.swiper;
+		
 		// sets presentingElement
 		this.presentingElement = this.$refs.pageHere.$el;
 
@@ -548,9 +551,8 @@
 		});
 
 		// detect swiper slide change
-		let swiper = this.$refs.swiper.$el.swiper;
 
-		swiper.on('slideChangeTransitionEnd', () => {
+		this.swiper.on('slideChangeTransitionEnd', () => {
 			// reset swiper
 			this.resetSwiper()
 			// isChangingDate
@@ -559,8 +561,8 @@
 			this.getTimetables();
 		});
 
-		swiper.on('activeIndexChange', () => {
-			this.currentIndex = swiper.activeIndex;
+		this.swiper.on('activeIndexChange', () => {
+			this.currentIndex = this.swiper.activeIndex;
 		});
 
 		App.addListener('backButton', () => {
