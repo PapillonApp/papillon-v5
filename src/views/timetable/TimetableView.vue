@@ -557,33 +557,35 @@
 
 
 						for (const course of todayCourses) {
-							// create event
-							let id = course.course.id;
-							let subject = course.data.subject;
-							let rooms = course.data.rooms.join(', ');
-							let teachers = course.data.teachers.join(', ');
-							
-							let startMillis = new Date(course.time.start).getTime();
-							let endMillis = new Date(course.time.end).getTime();
+							if(!course.status.isCancelled) {
+								// create event
+								let id = course.course.id;
+								let subject = course.data.subject;
+								let rooms = course.data.rooms.join(', ');
+								let teachers = course.data.teachers.join(', ');
+								
+								let startMillis = new Date(course.time.start).getTime();
+								let endMillis = new Date(course.time.end).getTime();
 
-							let status = "Le cours se déroule normalement.";
-                            if(course.status.status) {
-                                status = course.status.status;
-                            }
+								let status = "Le cours se déroule normalement.";
+								if(course.status.status) {
+									status = course.status.status;
+								}
 
-                            let finalStatus = `Vous êtes avec ${teachers} en ${rooms}. ${status}`;
+								let finalStatus = `Vous êtes avec ${teachers} en ${rooms}. ${status}`;
 
-							// add event to calendar
-							// use default calendar
-                            await CapacitorCalendar.createEvent({
-                                id: id,
-                                title: subject,
-                                location: rooms,
-                                notes: finalStatus,
-                                startDate: startMillis,
-                                endDate: endMillis,
-                                calendarId: selectedCalendar.id,
-                            });
+								// add event to calendar
+								// use default calendar
+								await CapacitorCalendar.createEvent({
+									id: id,
+									title: subject,
+									location: rooms,
+									notes: finalStatus,
+									startDate: startMillis,
+									endDate: endMillis,
+									calendarId: selectedCalendar.id,
+								});
+							}
 						}
 
 						await Dialog.alert({
