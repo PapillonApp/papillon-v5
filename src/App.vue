@@ -561,8 +561,27 @@ export default defineComponent({
 			const changelogModal = (this.$refs.changelogModal as any).$el;
 			changelogModal.dismiss();
 		},
+		setSelectedIndex(path: string) {
+			// find index of page in appPages
+			let index = this.appPages.findIndex((page) => {
+				return page.url == path;
+			});
+
+			// change index
+			this.selectedIndex = index;
+		},
+	},
+	watch: {
+		$route(to, from) {
+			let path = to.path;
+			this.setSelectedIndex(path);
+		}
 	},
 	mounted() {
+		// get current page from URL
+		const currentUrl = window.location.pathname;
+		this.setSelectedIndex(currentUrl);
+
 		// hide splash screen when dom is loaded
 		this.$nextTick(function () {
 			setTimeout(() => {
