@@ -25,7 +25,7 @@ const routes: Routes = [
   {
     path: '/timetable',
     name: 'Timetable',
-    component: () => import ('../views/timetable/TimetableView.vue')
+    component: () => import ('../views/timetable/TimetableSetup.vue')
   },
   {
     path: '/homework',

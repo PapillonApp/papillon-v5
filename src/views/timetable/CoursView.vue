@@ -17,6 +17,12 @@
         IonToggle
 	} from '@ionic/vue';
 
+    import { Capacitor } from '@capacitor/core';
+
+    import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
+
+    import { Dialog } from '@capacitor/dialog';
+
 	import { Browser } from '@capacitor/browser';
 
     import { Share } from '@capacitor/share';
@@ -69,6 +75,43 @@
 			}
 		},
 		methods: {
+            async deleteCustomCourse() {
+                if (Capacitor.isNative) {
+                    ActionSheet.showActions({
+                        title: 'Êtes-vous sûr de vouloir supprimer ce cours ?',
+                        message: 'Ce cours devra être recréé si vous souhaitez le récupérer.',
+                        options: [
+                            {
+                                title: 'Supprimer',
+                                style: ActionSheetButtonStyle.Destructive,
+                            },
+                            {
+                                title: 'Annuler',
+                                style: ActionSheetButtonStyle.Cancel,
+                            },
+                        ],
+                    }).then((result) => {
+                        if(result.index == 0) {
+                            this.deleteCourse()
+                        }
+                    });
+                } else {
+                    this.deleteCourse()
+                }
+            },
+            async deleteCourse() {
+                let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
+
+                customCourses = customCourses.filter(course => course.course.course.id != this.openCours_course.id);
+
+                localStorage.setItem('customCourses', JSON.stringify(customCourses));
+
+                // dialog
+                await Dialog.alert({
+                    title: 'Cours supprimé',
+                    message: 'Le cours a bien été supprimé.',
+                });
+            },
 			async openLink(url) {
 				await Browser.open({
 					url: url,
@@ -365,6 +408,13 @@
 
                         <ion-toggle @ionChange="changeNotif($event)" slot="end" :value="notificationEnabled" ref="toggle"></ion-toggle>
                     </ion-item>
+                    <IonItem v-if="openCours_status.isCustom" button  @click="deleteCustomCourse()">
+                        <span class="material-symbols-outlined mdls" slot="start">delete</span>
+                        <ion-label class="ion-text-wrap">
+                            <h2>Supprimer le cours personnalisé</h2>
+                            <p>Supprime le cours personnalisé de votre emploi du temps.</p>
+                        </ion-label>
+                    </IonItem>
                 </IonList>
 
 			</div>
