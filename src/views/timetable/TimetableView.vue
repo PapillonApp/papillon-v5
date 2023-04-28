@@ -1,8 +1,13 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput, IonProgressBar, alertController, IonNavLink } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput, IonProgressBar, alertController, IonNavLink, IonPopover } from '@ionic/vue';
 
   import { Share } from '@capacitor/share';
+  import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
+  import { Dialog } from '@capacitor/dialog';
+
+  import { CapacitorCalendar } from 'capacitor-calendar';
+  import { Capacitor } from '@capacitor/core';
 
   import CoursView from './CoursView.vue';
 
@@ -51,7 +56,8 @@
 		IonFab,
 		IonInput,
 		IonProgressBar,
-		IonNavLink
+		IonNavLink,
+		IonPopover
 	},
 	setup() {
 		return {
@@ -492,6 +498,108 @@
 				});
 
 				await alert.present();
+		},
+		async addDayToCalendar() {
+			if (Capacitor.isNativePlatform()) {
+				// create calendar event on mobile
+				let result = { availableCalendars: [] };
+
+				try {
+					// the first time, the user will be prompted to grant permission
+					result = await CapacitorCalendar.getAvailableCalendars();
+				} catch(e) {
+					// if the user denied permission, we'll end up here
+					console.log('Error', e);
+					return;
+				}
+
+				if (result?.availableCalendars.length) {
+                    try {
+						// ask which calendar to use
+						const opts = [];
+
+						for (const cal of result.availableCalendars) {
+							opts.push({
+								title: cal.name,
+							});
+						}
+
+						opts.push({
+							title: 'Annuler',
+							style: ActionSheetButtonStyle.Cancel,
+						});
+
+						const selected = await ActionSheet.showActions({
+							title: 'Sélectionnez un calendrier',
+							message: 'Choisissez le calendrier dans lequel ajouter le cours.',
+							options: opts,
+						});
+
+						if (selected.index === opts.length - 1) {
+							return;
+						}
+
+						let selectedCalendar = result.availableCalendars[selected.index];
+
+						// for each course of the day
+						let todayCourses = this.days[this.currentIndex];
+
+						if(todayCourses.length <= 0) {
+							await Dialog.alert({
+								title: 'Aucun cours',
+								message: 'Il n\'y a aucun cours à ajouter au calendrier.',
+								mode: 'md',
+								buttons: ['Ok']
+							});
+
+							return;
+						}
+
+
+						for (const course of todayCourses) {
+							// create event
+							let id = course.course.id;
+							let subject = course.data.subject;
+							let rooms = course.data.rooms.join(', ');
+							let teachers = course.data.teachers.join(', ');
+							
+							let startMillis = new Date(course.time.start).getTime();
+							let endMillis = new Date(course.time.end).getTime();
+
+							let status = "Le cours se déroule normalement.";
+                            if(course.status.status) {
+                                status = course.status.status;
+                            }
+
+                            let finalStatus = `Vous êtes avec ${teachers} en ${rooms}. ${status}`;
+
+							// add event to calendar
+							// use default calendar
+                            await CapacitorCalendar.createEvent({
+                                id: id,
+                                title: subject,
+                                location: rooms,
+                                notes: finalStatus,
+                                startDate: startMillis,
+                                endDate: endMillis,
+                                calendarId: selectedCalendar.id,
+                            });
+						}
+
+						await Dialog.alert({
+                            title: 'Tous les cours ont été ajoutés !',
+                            message: 'Votre journée a bien été ajoutée à votre calendrier.',
+                        });
+					} catch (e) {
+                        console.error('Error creating calendar event', e);
+                        // dialog
+                        await Dialog.alert({
+                            title: 'Erreur',
+                            message: 'Une erreur est survenue lors de l\'ajout des cours à votre calendrier.',
+                        });
+                    }
+				}
+			}
 		}
 	},
 	data() {
@@ -586,7 +694,19 @@
 					<ion-menu-button color="dark"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title>Ma journée</ion-title>
+				<ion-title id="title">
+					Ma journée
+
+					<span class="expand_title material-symbols-outlined mdls">expand_more</span>
+				</ion-title>
+
+				<ion-popover trigger="title" trigger-action="click">
+					<ion-list lines="none">
+						<ion-item @click="addDayToCalendar()" :button="true" :detail="false">
+							Ajouter au calendrier
+						</ion-item>
+					</ion-list>
+				</ion-popover>
 
 				<ion-buttons slot="end">
 					<ion-button id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
@@ -957,5 +1077,10 @@
 
 	.md .newCoursModal ion-list {
 		padding: 0 15px;
+	}
+
+	.expand_title {
+		height: 18px !important;
+		opacity: 0.4;
 	}
 </style>
