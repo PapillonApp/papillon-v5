@@ -11,34 +11,38 @@
     <br/>
     <br/>
     <a href="https://docs.getpapillon.xyz/"><strong>Explore the docs »</strong></a>
-    <br/>
-    <br/>
-    <a href="https://github.com/PapillonApp/Papillon/issues">Report Bug</a>
-    |
-    <a href="https://github.com/PapillonApp/Papillon/issues">Request Feature</a>
-    <br/>
-    <br/>
-    
   </p>
+
+  <div class="badges" align="center">
+        <img alt="Downloads" src="https://img.shields.io/github/downloads/PapillonApp/Papillon/total">
+        <img alt="Contributors" src="https://img.shields.io/github/contributors/PapillonApp/Papillon?color=dark-green">
+        <img alt="Issues" src="https://img.shields.io/github/issues/PapillonApp/Papillon">
+        <img alt="License" src="https://img.shields.io/github/license/PapillonApp/Papillon">
+        <br />
+        <a href="https://discord.gg/vFmCwSzvAp">
+            <img src="https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=flat&amp;logo=discord&amp;logoColor=white" alt="Join our Discord server">
+        </a>
+        <a href="https://www.instagram.com/thepapillonapp/">
+            <img src="https://img.shields.io/badge/Instagram-thepapillonapp-E4405F?style=flat&amp;logo=instagram&amp;logoColor=white" alt="Follow us on Instagram">
+        </a>
+    </div>
 </p>
 
-[![](https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=flat&logo=discord&logoColor=white)](https://discord.gg/vFmCwSzvAp)
-[![](https://img.shields.io/badge/Instagram-thepapillonapp-E4405F?style=flat&logo=instagram&logoColor=white)](https://www.instagram.com/thepapillonapp/)
 
-![Downloads](https://img.shields.io/github/downloads/PapillonApp/Papillon/total) ![Contributors](https://img.shields.io/github/contributors/PapillonApp/Papillon?color=dark-green) ![Issues](https://img.shields.io/github/issues/PapillonApp/Papillon) ![License](https://img.shields.io/github/license/PapillonApp/Papillon) 
 
 ## Table Of Contents
 
 - [Table Of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
+- [Screenshots](#screenshots)
 - [Built With](#built-with)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
+	- [Prerequisites](#prerequisites)
+	- [Installation](#installation)
 - [Usage](#usage)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
-  - [Creating A Pull Request](#creating-a-pull-request)
+	- [Creating A Pull Request](#creating-a-pull-request)
 - [License](#license)
 - [Authors](#authors)
 - [Acknowledgements](#acknowledgements)
@@ -69,6 +73,13 @@
 * **Extensions and customisation**
     - 🕺 Customisable font and interface colour
     - 🤯 Extends the functionality of the app
+
+## Screenshots
+
+### iPhone 14 (iOS 16.3.1) (version 5.6.0 - light mode)
+|Home|Timetable|Homework|Grades|Settings|
+|--|--|--|--|--|
+|![Home](https://user-images.githubusercontent.com/32978709/235216860-3d1ac944-4b84-442f-a12e-96257601bc6f.png)|![image](https://user-images.githubusercontent.com/32978709/235217012-af405e9d-78c4-41d8-ad75-926418d9882b.png)|![image](https://user-images.githubusercontent.com/32978709/235217024-5d85adf0-fae3-45ff-b4bf-d7f7d465fc09.png)|![image](https://user-images.githubusercontent.com/32978709/235217038-ec69fb3e-130a-4948-a638-fa8eb34c6771.png)|![image](https://user-images.githubusercontent.com/32978709/235217060-683ef8d0-f32c-438d-b232-7d8f23d3a8b8.png)|
 
 ## Built With
 

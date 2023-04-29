@@ -37,10 +37,14 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>On ajoute tes cours a ton calendrier pour te permettre d'accéder a ton emploi du temps dans ton app d'agenda.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>On utilise ta localisation pour déterminer automatiquement ton établissement.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -73,7 +77,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
 </dict>
 </plist>

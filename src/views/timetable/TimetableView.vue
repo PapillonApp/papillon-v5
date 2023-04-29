@@ -1,8 +1,15 @@
 <script>
   import { defineComponent } from 'vue';
-  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput, IonProgressBar, alertController } from '@ionic/vue';
+  import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput, IonProgressBar, alertController, IonNavLink, IonPopover } from '@ionic/vue';
 
   import { Share } from '@capacitor/share';
+  import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
+  import { Dialog } from '@capacitor/dialog';
+
+  import { CapacitorCalendar } from 'capacitor-calendar';
+  import { Capacitor } from '@capacitor/core';
+
+  import CoursView from './CoursView.vue';
 
   import { App } from '@capacitor/app';
   import { Network } from '@capacitor/network';
@@ -49,6 +56,8 @@
 		IonFab,
 		IonInput,
 		IonProgressBar,
+		IonNavLink,
+		IonPopover
 	},
 	setup() {
 		return {
@@ -80,9 +89,13 @@
 
 				// update rn
 				this.$rn = newDate;
+				this.baseRn = newDate;
 
 				// reset swiper
 				this.$refs.swiper.$el.swiper.slideTo(this.baseIndex, 0, false);
+
+				// reset days
+				this.days = [];
 
 				// emit event
 				document.dispatchEvent(new CustomEvent('rnChanged', { detail: newDate }));
@@ -150,13 +163,13 @@
 			}, 500);
 
 			for (let i = 0; i < 3; i++) {
-				let index = this.$refs.swiper.$el.swiper.realIndex + (i - 1);
+				let index = this.swiper.realIndex + (i - 1);
 
 				// get index diff
 				let indexDiff = this.baseIndex - index;
 
 				// get rn
-				let selectedRN = new Date();
+				let selectedRN = new Date(this.baseRn);
 
 				if(goTo) {
 					selectedRN = new Date(this.$rn);
@@ -448,65 +461,6 @@
 			// refresh timetable
 			this.getTimetables(true);
 		},
-		async setNotif(course) {
-			try {
-				let subject = course.data.subject;
-				let room = course.data.rooms[0] || "salle inconnue";
-				let teacher = course.data.teachers[0];
-
-				let time = new Date(course.time.start);
-				time.setMinutes(time.getMinutes() - 5);
-
-				// check if time is in the future
-				if(time.getTime() < new Date().getTime()) {
-					displayToast.presentToastFull(
-						'Impossible de vous notifier pour ' + subject,
-						'Le cours a déjà commencé ou est terminé.',
-						'danger',
-						notifications
-					);
-				}
-				else {
-					// Check permission
-					const permission = await LocalNotifications.checkPermissions();
-					if (permission != 'granted') {
-						try {
-							await LocalNotifications.requestPermissions();
-						} catch (error) {
-							displayToast.presentError("Impossible d'activer les notifications", "danger", error);
-							return;
-						}
-					}
-
-					await LocalNotifications.schedule({
-						notifications: [
-							{
-								title: `${subject} - Ça commence bientôt !`,
-								body: `Vous êtes en ${room} avec ${teacher}. Le cours commence dans 5 minutes.`,
-								id: 1,
-								schedule: { at: time },
-								sound: "tone.ogg",
-								attachments: null,
-								actionTypeId: "",
-								extra: null
-							}
-						]
-					});
-					
-					// notify user
-					this.selectedCourse.notificationEnabled = true;
-
-					displayToast.presentToastFull(
-						'Notifications activées pour ' + subject,
-						'Vous receverez une notification 5 minutes avant le début du cours',
-						'light',
-						notifications
-					);
-				}
-			} catch (error) {
-				displayToast.presentError("Une erreur est survenue lors de l'activation des notifications", "danger", error);
-			}
-		},
 		async unsetNotif(course) {
 			// find notification
 			await LocalNotifications.getPending().then((res) => {
@@ -544,6 +498,110 @@
 				});
 
 				await alert.present();
+		},
+		async addDayToCalendar() {
+			if (Capacitor.isNativePlatform()) {
+				// create calendar event on mobile
+				let result = { availableCalendars: [] };
+
+				try {
+					// the first time, the user will be prompted to grant permission
+					result = await CapacitorCalendar.getAvailableCalendars();
+				} catch(e) {
+					// if the user denied permission, we'll end up here
+					console.log('Error', e);
+					return;
+				}
+
+				if (result?.availableCalendars.length) {
+                    try {
+						// ask which calendar to use
+						const opts = [];
+
+						for (const cal of result.availableCalendars) {
+							opts.push({
+								title: cal.name,
+							});
+						}
+
+						opts.push({
+							title: 'Annuler',
+							style: ActionSheetButtonStyle.Cancel,
+						});
+
+						const selected = await ActionSheet.showActions({
+							title: 'Sélectionnez un calendrier',
+							message: 'Choisissez le calendrier dans lequel ajouter le cours.',
+							options: opts,
+						});
+
+						if (selected.index === opts.length - 1) {
+							return;
+						}
+
+						let selectedCalendar = result.availableCalendars[selected.index];
+
+						// for each course of the day
+						let todayCourses = this.days[this.currentIndex];
+
+						if(todayCourses.length <= 0) {
+							await Dialog.alert({
+								title: 'Aucun cours',
+								message: 'Il n\'y a aucun cours à ajouter au calendrier.',
+								mode: 'md',
+								buttons: ['Ok']
+							});
+
+							return;
+						}
+
+
+						for (const course of todayCourses) {
+							if(!course.status.isCancelled) {
+								// create event
+								let id = course.course.id;
+								let subject = course.data.subject;
+								let rooms = course.data.rooms.join(', ');
+								let teachers = course.data.teachers.join(', ');
+								
+								let startMillis = new Date(course.time.start).getTime();
+								let endMillis = new Date(course.time.end).getTime();
+
+								let status = "Le cours se déroule normalement.";
+								if(course.status.status) {
+									status = course.status.status;
+								}
+
+								let finalStatus = `Vous êtes avec ${teachers} en ${rooms}. ${status}`;
+
+								// add event to calendar
+								// use default calendar
+								await CapacitorCalendar.createEvent({
+									id: id,
+									title: subject,
+									location: rooms,
+									notes: finalStatus,
+									startDate: startMillis,
+									endDate: endMillis,
+									calendarId: selectedCalendar.id,
+								});
+							}
+						}
+
+						await Dialog.alert({
+                            title: 'Tous les cours ont été ajoutés !',
+                            message: 'Votre journée a bien été ajoutée à votre calendrier.',
+                        });
+					} catch (e) {
+                        console.error('Error creating calendar event', e);
+                        // dialog
+                        await Dialog.alert({
+                            title: 'Erreur',
+                            message: 'Une erreur est survenue lors de l\'ajout des cours à votre calendrier.',
+                        });
+                    }
+				}
+			}
 		}
 	},
 	data() {
@@ -552,6 +610,8 @@
 		);
 
 		return {
+			CoursView: CoursView,
+			baseRn: new Date(),
 			slides,
 			currentIndex: this.baseIndex,
 			rnButtonString: this.createDateString(this.$rn),
@@ -577,11 +637,14 @@
 			rnPickerModalOpen: false,
 			isChangingDate: false,
 			isLoading: true,
+			swiper: null,
 		}
 	},
 	mounted() {
+		this.swiper = this.$refs.swiper.$el.swiper;
+		
 		// sets presentingElement
-		this.presentingElement = this.$refs.page.$el;
+		this.presentingElement = this.$refs.pageHere.$el;
 
 		// on rnChanged, update rnButtonString
 		document.addEventListener('rnChanged', (e) => {
@@ -598,9 +661,8 @@
 		});
 
 		// detect swiper slide change
-		let swiper = this.$refs.swiper.$el.swiper;
 
-		swiper.on('slideChangeTransitionEnd', () => {
+		this.swiper.on('slideChangeTransitionEnd', () => {
 			// reset swiper
 			this.resetSwiper()
 			// isChangingDate
@@ -609,8 +671,8 @@
 			this.getTimetables();
 		});
 
-		swiper.on('activeIndexChange', () => {
-			this.currentIndex = swiper.activeIndex;
+		this.swiper.on('activeIndexChange', () => {
+			this.currentIndex = this.swiper.activeIndex;
 		});
 
 		App.addListener('backButton', () => {
@@ -626,18 +688,30 @@
 </script>
 
 <template>
-	<ion-page ref="page">
+	<ion-page ref="pageHere">
 		<IonHeader class="AppHeader">
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<ion-menu-button color="dark" mode="md"></ion-menu-button>
+					<ion-menu-button color="dark"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Ma journée</ion-title>
+				<ion-title id="title">
+					Ma journée
+
+					<span class="expand_title material-symbols-outlined mdls">expand_more</span>
+				</ion-title>
+
+				<ion-popover trigger="title" trigger-action="click">
+					<ion-list lines="none">
+						<ion-item @click="addDayToCalendar()" :button="true" :detail="false">
+							Ajouter au calendrier
+						</ion-item>
+					</ion-list>
+				</ion-popover>
 
 				<ion-buttons slot="end">
-					<ion-button mode="md" id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
+					<ion-button id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
 						<span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
 						<p>{{ rnButtonString }}</p>
@@ -671,7 +745,8 @@
 				:virtualIndex="index"
 				>
 				<IonList>
-						<CoursElement v-for="cours in days[`${index}`]" :key="cours.id"
+					<IonNavLink v-for="cours in days[`${index}`]" :key="cours.id" router-direction="forward" :component="CoursView" :componentProps="{urlCours: encodeURIComponent(JSON.stringify(cours))}">
+						<CoursElement
 							:subject="cours.data.subject"
 							:teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
 							:rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
@@ -688,8 +763,8 @@
 							:isTest="cours.status.isTest"
 							:distance="cours.course.distance"
 							:lengthCours="cours.course.lengthCours"
-							@open="openCoursModal(cours)"
 						/>
+					</IonNavLink>
 
 						<div v-if="days[`${index}`]">
 							<div class="NoCours" v-if="days[`${index}`].length == 0 && !days[`${index}`].error && !days[`${index}`].loading">
@@ -797,7 +872,7 @@
 				</ion-content>
 			</IonModal>
 
-			<IonModal ref="coursModal" class="coursModal" :keep-contents-mounted="true" :initial-breakpoint="0.6" :breakpoints="[0, 0.6, 0.9]" :handle="true" :canDismiss="true">
+			<IonModal ref="coursModal" class="coursModal" :keep-contents-mounted="true" :presenting-element="presentingElement" :handle="true" :canDismiss="true">
 				<IonHeader>
 					<IonToolbar>
 					<ion-title>{{selectedCourse.name}}</ion-title>
@@ -1004,5 +1079,10 @@
 
 	.md .newCoursModal ion-list {
 		padding: 0 15px;
+	}
+
+	.expand_title {
+		height: 18px !important;
+		opacity: 0.4;
 	}
 </style>

@@ -1,7 +1,7 @@
 {
-  "name": "Papillon",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "vue"
+	"name": "Papillon",
+	"integrations": {
+		"capacitor": {}
+	},
+	"type": "vue"
 }

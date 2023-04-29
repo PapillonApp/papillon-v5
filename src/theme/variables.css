@@ -59,6 +59,13 @@ http://ionicframework.com/docs/theming/ */
 	--ion-color-light-contrast-rgb: 0,0,0;
 	--ion-color-light-shade: #d7d8da;
 	--ion-color-light-tint: #f5f6f9;
+
+	--ion-color-white: #ffffff;
+	--ion-color-white-rgb: 255,255,255;
+	--ion-color-white-contrast: #000000;
+	--ion-color-white-contrast-rgb: 0,0,0;
+	--ion-color-white-shade: #ffffff;
+	--ion-color-white-tint: #ffffff;
 }
 
   body.dark {
@@ -145,6 +152,8 @@ http://ionicframework.com/docs/theming/ */
     --ion-background-color: #111112;
 	--ion-background-color-rgb: 17,17,18;
 
+	--ion-toolbar-border-color: #1d1d1e !important;
+
 	--ion-text-color: #FFFFFF;
 	--ion-text-color-rgb: 255,255,255;
 
@@ -207,6 +216,10 @@ http://ionicframework.com/docs/theming/ */
 	--ion-inset-background: #ffffff !important;
 
 	--ion-toolbar-background: #ffffff !important;
+  }
+
+  .ios .body.light {
+	--ion-background-color: #F6F6F9;
   }
 
   .ios .light ion-modal {

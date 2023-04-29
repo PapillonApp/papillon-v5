@@ -13,7 +13,8 @@
 		IonLabel,
 		IonRadioGroup,
 		IonRadio,
-		IonToggle
+		IonToggle,
+		IonBackButton
 	} from '@ionic/vue';
 
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
@@ -29,36 +30,40 @@
 			IonLabel,
 			IonItem,
 			IonList,
-			IonListHeader,
 			IonRadioGroup,
 			IonRadio,
-			PapillonBackButton,
+			IonBackButton,
 			IonToggle
 		},
 		setup() {
 			return {
-				availableFonts: [
-					{ name: "Golos Text (Par défaut)", font: "Golos Text" },
-					{ name: "Hind", font: "Hind" },
-					{ name: "Asap", font: "Asap" },
-					{ name: "Merriweather", font: "Merriweather" },
-					{ name: "Sofia Sans", font: "Sofia Sans" },
-					{ name: "OpenDyslexic (Expérimental)", font: "OpenDyslexic" },
-					{ name: "Système", font: "system-ui" },
-				],
 				availableColors: [
 					{ 
-						name: "Vert (Par défaut)",
+						name: "Vert",
 						color: {
 							hex: "#29947A",
 							rgb: "41, 148, 122",
 						}
 					},
 					{
-						name: "Bleu",
+						name: "Ciel",
 						color: {
 							hex: "#29ABE0",
 							rgb: "41, 171, 224",
+						}
+					},
+					{
+						name: "Bleu",
+						color: {
+							hex: "#007AFF",
+							rgb: "0, 122, 255",
+						}
+					},
+					{
+						name: "Indigo",
+						color: {
+							hex: "#4F5BD5",
+							rgb: "79, 91, 213",
 						}
 					},
 					{
@@ -88,20 +93,50 @@
 							hex: '#C53333',
 							rgb: '197, 51, 51',
 						}
-					}
+					},
+					{
+						name: 'Marron',
+						color: {
+							hex: '#A67C52',
+							rgb: '166, 124, 82',
+						}
+					},
+					{
+						name: 'Moutarde',
+						color: {
+							hex: '#D4B52A',
+							rgb: '212, 181, 42',
+						}
+					},
+					{
+						name: 'Vert citron',
+						color: {
+							hex: '#A6C52A',
+							rgb: '166, 197, 42',
+						}
+					},
+					{
+						name: 'Gris',
+						color: {
+							hex: '#8C8C8C',
+							rgb: '140, 140, 140',
+						}
+					},
+					{
+						name: 'Turquoise',
+						color: {
+							hex: '#13C5C5',
+							rgb: '19, 197, 197',
+						}
+					},
 				],
 			}
 		},
 		data() {
-			let defaultFont = this.availableFonts[0].font;
 			let defaultColor = this.availableColors[0];
 
 			if(localStorage.getItem('customizations')) {
 				let customizations = JSON.parse(localStorage.getItem('customizations'));
-
-				if(customizations.font) {
-					defaultFont = customizations.font;
-				}
 
 				if(customizations.color) {
 					defaultColor = customizations.color;
@@ -112,11 +147,14 @@
 			return {
 				customThemeModeList: localStorage.getItem('customThemeMode') == 'true',
 				currentTheme: localStorage.getItem('themeMode'),
-				currentFont: defaultFont,
 				currentColor: defaultColor,
+				currentColorName: defaultColor.name,
 			}
 		},
 		methods: {
+			pop() {
+				return false;
+			},
 			changeTick(option) {
 				hapticsController.impact({
 					style: 'light'
@@ -146,26 +184,8 @@
 				// reset the css variables
 				document.body.style = '';
 
-				// reset the font select
-				this.currentFont = this.availableFonts[0].font;
+				// reset the select
 				this.currentColor = this.availableColors[0];
-			},
-			fontChange() {
-				hapticsController.impact({
-					style: 'light'
-				});
-
-				let font = this.$refs.fontSelect.$el.value;
-				this.currentFont = font;
-
-				document.body.style.setProperty('--papillon-font', '"' + font + '"');
-
-				// save it in local storage
-				let customizations = JSON.parse(localStorage.getItem('customizations')) || {};
-
-				customizations.font = font;
-
-				localStorage.setItem('customizations', JSON.stringify(customizations));
 			},
 			colorChange() {
 				hapticsController.impact({
@@ -175,6 +195,8 @@
 				let colorHex = this.$refs.colorSelect.$el.value;
 
 				let color = this.availableColors.find((color) => color.color.hex == colorHex);
+
+				this.currentColorName = color.name;
 
 				document.body.style.setProperty('--ion-color-primary', color.color.hex);
 				document.body.style.setProperty('--ion-color-primary-rgb', color.color.rgb);
@@ -247,10 +269,6 @@
 			let useScolColors = this.$refs.useScolColors;
 			useScolColors.$el.checked = localStorage.getItem('useScolColors') == 'true';
 
-			// fontSelect
-			// get --papillon-font from css
-			this.currentFont = getComputedStyle(document.body).getPropertyValue('--papillon-font').replace(/"/g, ''); 
-
 			// get tweakProgressBar ref
 			let tweakProgressBar = this.$refs.tweakProgressBar;
 			tweakProgressBar.$el.checked = localStorage.getItem('tweakProgressBar') == 'true';
@@ -259,10 +277,6 @@
 			let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
 			tweakProgressBarShowPast.$el.checked = localStorage.getItem('tweakProgressBarShowPast') != 'false'; // default true
 
-			// get fillToolbar ref
-			let fillToolbar = this.$refs.fillToolbar;
-			fillToolbar.$el.checked = localStorage.getItem('fillToolbar') == 'true';
-
 			// check if custom theme mode is enabled
 			this.checkThemeMode();
 			this.checkColor();
@@ -270,12 +284,6 @@
 			// check if there are customizations
 			if(localStorage.getItem('customizations')) {
 				let customizations = JSON.parse(localStorage.getItem('customizations'));
-
-				if(customizations.font) {
-					this.currentFont = customizations.font;
-					
-					this.$refs.fontSelect.$el.value = customizations.font;
-				}
 
 				if(customizations.color) {
 					this.currentColor = customizations.color;
@@ -290,10 +298,11 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<PapillonBackButton></PapillonBackButton>
+					<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+					<IonBackButton class="only-md" @click="pop"></IonBackButton>
 				</ion-buttons>
 
-				<ion-title mode="md">Apparence de Papillon</ion-title>
+				<ion-title>Apparence</ion-title>
 
 				<ion-buttons slot="end">
 					<IonButton @click="reset()">Réinitialiser</IonButton>
@@ -304,7 +313,11 @@
 
 		<ion-content :fullscreen="true">
 
-			<IonList :inset="true" lines="inset">
+			<IonLabel class="listGroupTitle">
+				<p>Sélection du thème</p>
+			</IonLabel>
+
+			<IonList class="listGroup" lines="inset">
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">contrast</span>
 					<IonLabel class="ion-text-wrap">
@@ -328,10 +341,11 @@
 				</ion-radio-group>
 			</IonList>
 
-			<IonList :inset="true" lines="none" v-if="availableColors">
-				<ion-list-header>
-					<ion-label><p>Couleur d'accentuation</p></ion-label>
-				</ion-list-header>
+			<IonLabel class="listGroupTitle">
+				<p>Couleur d'accuentuation</p>
+			</IonLabel>
+
+			<IonList class="listGroup" lines="none" v-if="availableColors">
 				<ion-radio-group mode="md" :allow-empty-selection="false" :value="currentColor.color.hex" ref="colorSelect" @ionChange="colorChange" id="colorSelect">
 					<ion-item :key="i" v-for="(color, i) in availableColors">
 						<div class="preRadio">
@@ -339,32 +353,20 @@
 						</div>
 					</ion-item>
 				</ion-radio-group>
+				<ion-item color="primary" class="preview">
+					<span class="material-symbols-outlined mdls" slot="start">palette</span>
+					<ion-label class="ion-text-wrap">
+						<h2>Aperçu du {{ currentColorName.toLowerCase() }}</h2>
+						<p>Ceci est une prévisualisation de la couleur que vous venez d'appliquer.</p>
+					</ion-label>
+				</ion-item>
 			</IonList>
 
-			<IonList :inset="true" lines="inset">
-				<IonItem>
-					<span class="material-symbols-outlined mdls" slot="start">home</span>
-					<IonLabel class="ion-text-wrap">
-						<h2>Utiliser la couleur sur la page d'accueil</h2>
-						<p>Votre couleur d'accentuation s'applique sur l'accueil.</p>
-					</IonLabel>
-					<IonToggle slot="end" ref="fillToolbar" @ionChange="changeTick('fillToolbar')"></IonToggle>
-				</IonItem>
-			</IonList>
+			<IonLabel class="listGroupTitle">
+				<p>Paramètres du thème</p>
+			</IonLabel>
 
-			<IonList :inset="true" lines="inset" v-if="availableFonts">
-				<ion-list-header>
-					<ion-label><p>Police d'écriture</p></ion-label>
-				</ion-list-header>
-				<ion-radio-group :allow-empty-selection="false" :value="currentFont" ref="fontSelect" @ionChange="fontChange">
-					<ion-item :key="i" v-for="(font, i) in availableFonts">
-						<ion-label :style="`font-family: '${font.font}';`">{{ font.name }}</ion-label>
-						<ion-radio slot="end" :value="font.font"></ion-radio>
-					</ion-item>
-				</ion-radio-group>
-			</IonList>
-
-			<IonList :inset="true" lines="inset">
+			<IonList class="listGroup" lines="inset">
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">invert_colors</span>
 					<IonLabel class="ion-text-wrap">
@@ -436,8 +438,13 @@
 	}
 
 	#colorSelect {
-		display: flex;
-		justify-content: space-between;
+		padding-top: 5px;
+		display: grid;
+
+		grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+
+		/* center */
+		justify-items: space-between;
 
 		width: calc(100% - 15px * 2);
 		margin: 5px 15px;
@@ -457,6 +464,8 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+
+		flex-direction: column;
 	}
 
 	#colorSelect ion-item::part(native) {
@@ -464,5 +473,10 @@
 		border-radius: 300px;
 
 		padding: 0;
+	}
+
+	.preview * {
+		--ion-text-color: #ffffff !important;
+		color : #ffffff !important;
 	}
 </style>

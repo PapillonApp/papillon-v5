@@ -6,13 +6,13 @@
   
 <script lang="ts">
     import { IonNav, IonPage } from '@ionic/vue';
-    import SettingsView from './SettingsView.vue';
+    import TimetableView from './TimetableView.vue';
   
     export default {
       components: { IonNav, IonPage },
       data() {
         return {
-          component: SettingsView,
+          component: TimetableView,
         };
       }
     };

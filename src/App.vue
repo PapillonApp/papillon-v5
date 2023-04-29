@@ -90,11 +90,11 @@ export default defineComponent({
 			isMenuOpened: false,
 			changeStatusTimeout: true,
 			connectedToServer: "",
-			showTransition: undefined as any
+			showTransition: undefined as any,
+			selectedIndex: 0,
 		}
 	},
 	setup() {
-		const selectedIndex = ref(0);
 		// defines the tabs shown in the menu
 		const appPages = [
 			{
@@ -266,16 +266,10 @@ export default defineComponent({
 				})
 			}
 		}
-		// weird ionic stuff
-		const path = window.location.pathname.split('folder/')[1];
-		if (path !== undefined) {
-			selectedIndex.value = appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
-		}
 
 		const route = useRoute();
 
 		return {
-			selectedIndex,
 			appCanal: canal,
 			appVersion: version,
 			appUpdates: changelog,
@@ -462,7 +456,12 @@ export default defineComponent({
 				}
 			});
 		},
-		changePage(url: string) {
+		changePage(url: string, index: number) {
+			console.log(index);
+
+			// change index
+			this.selectedIndex = index;
+
 			// close menu
 			const menu = document.querySelector('ion-menu');
 			setTimeout(() => {
@@ -470,14 +469,12 @@ export default defineComponent({
 			}, 100);
 
 			if (url == "/home") {
-				if (localStorage.getItem('fillToolbar') == 'true') {
-					StatusBar.setStyle({ style: Style.Dark })
+				StatusBar.setStyle({ style: Style.Dark })
 
-					this.changeStatusTimeout = false;
-					setTimeout(() => {
-						this.changeStatusTimeout = true;
-					}, 520);
-				}
+				this.changeStatusTimeout = false;
+				setTimeout(() => {
+					this.changeStatusTimeout = true;
+				}, 520);
 			}
 		},
 		async askNotifPerms() {
@@ -523,9 +520,6 @@ export default defineComponent({
 					if (currentUrl !== "/home") {
 						StatusBar.setStyle({ style: Style.Default })
 					}
-					else if (localStorage.getItem('fillToolbar') !== 'true') {
-						StatusBar.setStyle({ style: Style.Default })
-					}
 				}
 
 				setTimeout(() => {
@@ -567,8 +561,27 @@ export default defineComponent({
 			const changelogModal = (this.$refs.changelogModal as any).$el;
 			changelogModal.dismiss();
 		},
+		setSelectedIndex(path: string) {
+			// find index of page in appPages
+			let index = this.appPages.findIndex((page) => {
+				return page.url == path;
+			});
+
+			// change index
+			this.selectedIndex = index;
+		},
+	},
+	watch: {
+		$route(to, from) {
+			let path = to.path;
+			this.setSelectedIndex(path);
+		}
 	},
 	mounted() {
+		// get current page from URL
+		const currentUrl = window.location.pathname;
+		this.setSelectedIndex(currentUrl);
+
 		// hide splash screen when dom is loaded
 		this.$nextTick(function () {
 			setTimeout(() => {
@@ -680,10 +693,6 @@ export default defineComponent({
 		if (localStorage.getItem('customizations')) {
 			let customizations = JSON.parse(localStorage.getItem('customizations') as string);
 
-			if (customizations.font) {
-				document.body.style.setProperty('--papillon-font', customizations.font);
-			}
-
 			if (customizations.color) {
 				document.body.style.setProperty('--ion-color-primary', customizations.color.color.hex);
 				document.body.style.setProperty('--ion-color-primary-rgb', customizations.color.color.rgb);
@@ -752,21 +761,12 @@ export default defineComponent({
 						</div>
 					</div>
 				</ion-header>
-				<ion-content mode="md">
+				<ion-content>
 					<ion-list id="inbox-list">
-						<router-link @click="changePage(p.url)" class="navLink" :to="`${p.url}`" v-for="(p, i) in appPages"
-							:key="i">
-							<ion-item v-if="!p.disabled" button mode="md" lines="none" :detail="false"
-								@click="selectedIndex = i" :class="{ selected: selectedIndex === i }">
-								<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
-								<ion-label>{{ p.title }}</ion-label>
-							</ion-item>
-							<ion-item @click="displayDevMessage()" v-if="p.disabled" button mode="md" lines="none"
-								:detail="false" :class="{ selected: selectedIndex === i }" disabled>
-								<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
-								<ion-label>{{ p.title }}</ion-label>
-							</ion-item>
-						</router-link>
+						<ion-item mode="md" @click="changePage(p.url, i)" :router-link="p.url" v-for="(p, i) in appPages" :key="i" button routerDirection="root" lines="none" :detail="false" :class="{ selected: selectedIndex === i }">
+							<span class="material-symbols-outlined mdls" slot="start">{{ p.icon }}</span>
+							<ion-label>{{ p.title }}</ion-label>
+						</ion-item>
 					</ion-list>
 
 					<ion-list id="bottomActionsList">
@@ -950,7 +950,7 @@ ion-menu ion-content {
 }
 
 ion-menu ion-content {
-	--padding-start: 8px;
+	--padding-start: 0px;
 	--padding-end: 8px;
 	--padding-top: 8px;
 	--padding-bottom: 20px;
@@ -991,9 +991,12 @@ ion-item *:not(span) {
 }
 
 ion-menu ion-item {
-	--padding-start: 15px;
+	--padding-start: 20px;
 	--padding-end: 10px;
-	border-radius: 300px;
+
+	border-top-right-radius: 300px;
+	border-bottom-right-radius: 300px;
+
 	isolation: isolate;
 }
 
@@ -1037,20 +1040,25 @@ ion-note {
 	color: var(--ion-color-medium-shade);
 }
 
-.router-link-active ion-item {
-	--color: var(--ion-color-primary);
+ion-item.selected {
+	background: rgba(var(--ion-color-primary-rgb), 0.1);
 }
 
-.router-link-active ion-item:hover {
-	background: rgba(var(--ion-color-primary-rgb), 0.1);
+ion-item.selected * {
+	--color: var(--ion-color-primary) !important;
+	color: var(--color);
+}
+
+ion-item.selected:hover {
+	background: rgba(var(--ion-color-primary-rgb), 0.2);
 	cursor: pointer;
 }
 
-a:not(.router-link-active) ion-menu-toggle ion-item {
+a:not(.selected) ion-menu-toggle ion-item {
 	--color: var(--ion-color-medium-shade);
 }
 
-a:not(.router-link-active) ion-menu-toggle ion-item:hover {
+a:not(.selected) ion-menu-toggle ion-item:hover {
 	opacity: 0.75;
 	cursor: pointer;
 }
@@ -1151,6 +1159,6 @@ a:not(.router-link-active) ion-menu-toggle ion-item:hover {
 	bottom: 0;
 	left: 0;
 
-	padding-left: 10px;
+	padding-left: 0px;
 	padding-right: 10px;
 }</style>

@@ -67,6 +67,7 @@
                 isChangingDate: false,
                 isLoading: true,
                 loginService: localStorage.getItem("loginService"),
+                baseRn: new Date(),
 			}
 		},
 		methods: {
@@ -169,7 +170,7 @@
                     let indexDiff = this.baseIndex - index;
 
                     // get rn
-                    let selectedRN = new Date();
+                    let selectedRN = new Date(this.baseRn);
 
                     if(goTo) {
                         selectedRN = new Date(this.$rn);
@@ -244,6 +245,7 @@
 
                     // update rn
                     this.$rn = newDate;
+                    this.baseRn = newDate;
 
                     // reset swiper
                     this.$refs.swiper.$el.swiper.slideTo(this.baseIndex, 0, false);
@@ -367,14 +369,14 @@
 	<ion-page ref="page">
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
-				<ion-buttons slot="start"  mode="md">
-					<ion-menu-button color="dark" mode="md"></ion-menu-button>
+				<ion-buttons slot="start">
+					<ion-menu-button color="dark"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Travail à faire</ion-title>
+				<ion-title>Travail à faire</ion-title>
 
                 <ion-buttons slot="end">
-                    <ion-button mode="md" id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
+                    <ion-button id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
                     <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
                     <p>{{ rnButtonString }}</p>
@@ -590,6 +592,7 @@
 
     .hwListItem {
         margin: 6px 12px;
+        margin-bottom: 10px;
     }
 
     .hwContent {
@@ -602,7 +605,7 @@
     }
 
     .hwListItem.add ion-item::part(native) {
-        border: 1px solid var(--ion-color-step-50) !important;
+        border: 1px solid var(--ion-color-step-100) !important;
         --background: transparent !important;
     }
 

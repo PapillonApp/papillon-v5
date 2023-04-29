@@ -20,12 +20,12 @@ const routes: Routes = [
   {
     path: '/home',
     name: 'Home',
-    component: () => import ('../views/HomepageView.vue')
+    component: () => import ('../views/homepage/HomepageSetup.vue')
   },
   {
     path: '/timetable',
     name: 'Timetable',
-    component: () => import ('../views/TimetableView.vue')
+    component: () => import ('../views/timetable/TimetableSetup.vue')
   },
   {
     path: '/homework',

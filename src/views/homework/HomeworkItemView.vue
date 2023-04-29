@@ -11,7 +11,8 @@
 		IonButtons,
         IonButton,
 		IonTitle,
-		IonContent
+		IonContent,
+        IonBackButton
 	} from '@ionic/vue';
 
     import { Browser } from '@capacitor/browser';
@@ -25,7 +26,7 @@
 			IonToolbar,
 			IonButtons,
             IonButton,
-			PapillonBackButton,
+			IonBackButton,
 			IonTitle,
 			IonContent,
 			IonList,
@@ -39,7 +40,17 @@
             }
         },
 		data() {
+            let backTitle = 'Retour';
+
+			// get current route
+			let currentRoute = this.$router.currentRoute.value;
+
+			if(currentRoute.name == "Homework") {
+				backTitle = 'Devoirs';
+			}
+
 			return {
+                backTitle: backTitle,
                 openedHw: [],
                 openedData: [],
                 openedHomework: [],
@@ -106,16 +117,17 @@
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
 				<ion-buttons slot="start">
-					<PapillonBackButton></PapillonBackButton>
+					<IonBackButton class="only-ios" :text="backTitle" @click="pop"></IonBackButton>
+					<IonBackButton class="only-md" @click="pop"></IonBackButton>
 				</ion-buttons>
 
-                <ion-title mode="md" v-if="openedHomework && custom">Devoir personnalisé</ion-title>
-                <ion-title mode="md" v-else>Travail à faire <span v-if="openedHomework">en {{ openedHomework.subject }}</span></ion-title>
+                <ion-title v-if="openedHomework && custom">Devoir personnalisé</ion-title>
+                <ion-title v-else>Travail à faire <span v-if="openedHomework">en {{ openedHomework.subject }}</span></ion-title>
 
                 <ion-buttons slot="end">
 					<ion-button v-if="custom" color="danger" @click="deleteHW($event)">
                         <span slot="start" class="material-symbols-outlined mdls">delete</span>
-                        Supprimer
+                        Suppr.
                     </ion-button>
 				</ion-buttons>
 			</IonToolbar>
@@ -137,7 +149,11 @@
                 <div class="content" v-html="openedHomework.content"></div>
             </div>
 
-            <IonList inset v-if="openedFiles.length !== 0">
+            <IonLabel class="listGroupTitle" v-if="openedFiles.length !== 0">
+				<p>Documents attachés</p>
+			</IonLabel>
+
+            <IonList v-if="openedFiles.length !== 0" class="listGroup">
                 <IonItem v-for="attachment in openedFiles" :key="attachment.id" @click="openLink(attachment.url)">
                     <span v-if="attachment.type == 1" class="material-symbols-outlined mdls" slot="start">description</span>
                     <span v-else-if="attachment.type == 0" class="material-symbols-outlined mdls" slot="start">link</span>

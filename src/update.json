@@ -1,21 +1,21 @@
 {
-    "changelog": {
-        "features": [
-            {
-                "icon": "wifi_tethering",
-                "name": "Ajout de Skolengo",
-                "description": "Ajout de l'API de Skolengo pour les établissements scolaires. Cette fonctionnalité est en ALPHA et comporte des bugs. Si vous rencontrez des problèmes, merci de nous contacter sur Discord ou GitHub. Les bugs peuvent aussi toucher les autres fonctionnalités de l'application dont Pronote."
-            },
-            {
-                "name": "Correction de bugs et améliorations",
-                "description": "De multiples corrections de bugs et améliorations ont été apportées à l'application. L'interface a été légèrement modifiée pour être plus claire et plus agréable à utiliser.",
-                "icon": "brush"
-            },
-            {
-                "name": "Changement du système de navigation",
-                "description": "Le système de navigation a été changé pour être plus fluide et plus rapide. Des soucis peuvent encore apparaître, merci de nous contacter sur Discord ou GitHub.",
-                "icon": "navigation"
-            }
-        ]
-    }
+	"changelog": {
+		"features": [
+			{
+				"icon": "wifi_tethering",
+				"name": "Ajout de Skolengo",
+				"description": "Ajout de l'API de Skolengo pour les établissements scolaires. Cette fonctionnalité est en ALPHA et comporte des bugs. Si vous rencontrez des problèmes, merci de nous contacter sur Discord ou GitHub. Les bugs peuvent aussi toucher les autres fonctionnalités de l'application dont Pronote."
+			},
+			{
+				"name": "Correction de bugs et améliorations",
+				"description": "De multiples corrections de bugs et améliorations ont été apportées à l'application. L'interface a été légèrement modifiée pour être plus claire et plus agréable à utiliser.",
+				"icon": "brush"
+			},
+			{
+				"name": "Changement du système de navigation",
+				"description": "Le système de navigation a été changé pour être plus fluide et plus rapide. Des soucis peuvent encore apparaître, merci de nous contacter sur Discord ou GitHub.",
+				"icon": "navigation"
+			}
+		]
+	}
 }

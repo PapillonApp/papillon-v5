@@ -41,19 +41,15 @@ ion-content::-webkit-scrollbar {
 }
 
 :root {
-    --papillon-font: 'Golos Text';
+    --papillon-font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     --ion-box-shadow: 0 1px 2px #00000005, 0 2px 6px #00000005;
-}
-
-ion-title:not(.title-large), h1, h2, h3, ion-button {
-    font-family: var(--papillon-font), sans-serif;
 }
 
 h1, h2, h3 {
     font-weight: 700 !important;
 }
 
-ion-title:not(.title-large), h2, h3 {
+h2, h3 {
     font-weight: 600 !important;
 }
 
@@ -61,7 +57,7 @@ ion-title:not(.title-large), h2, h3 {
 
 input.sc-ion-searchbar-md {
     box-shadow: none !important;
-    background: var(--ion-color-step-200) !important;
+    background: var(--ion-color-step-50) !important;
     border-radius: 300px !important;
 }
 
@@ -321,11 +317,10 @@ ion-toast::part(message) {
 }
 
 ion-header:not(.header-collapse-condense):not(ion-modal ion-header) {
-    --ion-toolbar-border-color: transparent !important;
-    box-shadow: 0px 1px 2px #00000010;
+    --ion-toolbar-border-color: #cacbd0 !important;
 }
 
-ion-header:not(ion-modal ion-header) ion-toolbar:first-child {
+ion-header:not(.header-collapse-condense):not(ion-modal ion-header) ion-toolbar:first-child {
     padding-top: var(--papillon-safe-area-top, 0) !important;
 }
 
@@ -334,7 +329,11 @@ ion-modal.modal-sheet ion-header ion-toolbar:first-child {
 }
 
 .dark .ios ion-header:not(.header-collapse-condense) {
-    border-bottom: 1px solid #ffffff15;
+    --ion-toolbar-border-color: #414141 !important;
+}
+
+.dark .toolbar-title-default {
+    --border-color: #414141 !important;
 }
 
 ion-header ion-toolbar ion-title:not(.title-large) {
@@ -524,4 +523,35 @@ a.inherit {
 .md .alert-input {
     border-radius: 0;
     font-size: 16px;
+}
+
+ion-list.listGroup {
+    background: var(--ion-plain-background-color) !important;
+}
+
+ion-list.listGroup ion-item {
+    --background: var(--ion-plain-background-color);
+    --border-color: var(--ion-color-step-150);
+}
+
+.ios ion-list.listGroup {
+    border-top: 1px solid var(--ion-color-step-100);
+    border-bottom: 1px solid var(--ion-color-step-100);
+}
+
+ion-list.listGroup.contains-nav-link ion-nav-link:last-child ion-item {
+    --border-color: transparent;
+}
+
+ion-list.listGroup:not(.contains-nav-link) ion-item:last-child {
+    --border-color: transparent;
+}
+
+.listGroupTitle p {
+    padding-top: 20px !important;
+}
+
+.listGroupTitle p {
+    padding: 10px 0px;
+    padding-left: 16px;
 }

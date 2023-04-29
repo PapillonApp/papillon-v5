@@ -33,10 +33,10 @@ import { tickHomework } from "@/functions/fetch/GetHomeworks.js";
 
 import { Network } from '@capacitor/network';
 
-import UserView from './settings/UserView.vue';
-import InfoView from './news/InfoView.vue';
-import MarkView from './grades/MarkView.vue';
-import HomeworkItemView from './homework/HomeworkItemView.vue';
+import UserView from '../settings/UserView.vue';
+import InfoView from '../news/InfoView.vue';
+import MarkView from '../grades/MarkView.vue';
+import HomeworkItemView from '../homework/HomeworkItemView.vue';
 
 import timetableEdit from '@/functions/utils/timetableEdit.js';
 import subjectColor from '@/functions/utils/subjectColor.js';
@@ -556,6 +556,9 @@ export default defineComponent({
 			opts.forEach(opt => this.getBoolOpt(opt));
 		}
 	},
+	ionViewDidEnter() {
+		StatusBar.setStyle({ style: Style.Dark })
+	},
 	async mounted() {
 		const boolOpts = [
 			'displayNextCourse',
@@ -610,23 +613,7 @@ export default defineComponent({
 			this.internetConnection = false;
 		}
 
-		// check toolbar color
-		if (localStorage.getItem('fillToolbar') == 'true') {
-			this.toolbarColor = 'primary';
-			StatusBar.setStyle({ style: Style.Dark })
-		}
-		else {
-			this.toolbarColor = '';
-		}
-
 		document.addEventListener('settingsUpdated', () => {
-			if (localStorage.getItem('fillToolbar') == 'true') {
-				this.toolbarColor = 'primary';
-			}
-			else {
-				this.toolbarColor = '';
-			}
-
 			this.getBoolOpts(boolOpts);
 		});
 	}
@@ -636,7 +623,7 @@ export default defineComponent({
 <template>
 	<ion-page ref="page">
 		<IonHeader class="AppHeader">
-			<IonToolbar class="toolbar" :color="toolbarColor">
+			<IonToolbar class="toolbar" color="primary">
 				<ion-buttons slot="start">
 					<ion-menu-button mode="md"></ion-menu-button>
 				</ion-buttons>
@@ -657,7 +644,7 @@ export default defineComponent({
 					</ion-nav-link>
 				</ion-buttons>
 			</IonToolbar>
-			<IonToolbar class="toolbar" :color="toolbarColor" v-if="displayNextCourse">
+			<IonToolbar class="toolbar" color="primary" v-if="displayNextCourse">
 				<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
 					<div class="coursElemNext" v-for="cours in timetable" :key="cours.id"
 						:style="`--courseColor: ${cours.course.color};`">
@@ -784,7 +771,7 @@ export default defineComponent({
 
 			<div id="components" ref="components">
 				<Transition name="ElemAnim">
-					<ion-list v-if="displayHomeworks && homeworks.length !== 0 && allLoaded && !hwloading" lines="none" id="comp-hw"
+					<ion-list v-if="displayHomeworks && allLoaded && !hwloading" lines="none" id="comp-hw"
 						ref="comp-hw" inset="true">
 						<ion-list-header class="listHeader" v-if="allLoaded && !hwloading">
 							<ion-label>
@@ -823,9 +810,9 @@ export default defineComponent({
 							<div slot="start" style="margin-left: 5px; margin-right: 20px;">
 								<span class="material-symbols-outlined mdls">done_all</span>
 							</div>
-							<ion-label>
+							<ion-label class="ion-text-wrap">
 								<h2>Pas de devoirs</h2>
-								<p>Vous n'avez aucun travail à faire pour les 7 prochains jours.</p>
+								<p>Vous n'avez aucun travail à faire pour le reste de la semaine.</p>
 							</ion-label>
 						</ion-item>
 					</ion-list>
