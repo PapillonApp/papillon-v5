@@ -10,7 +10,7 @@
 		IonTitle,
 		IonContent,
 		IonNavLink,
-		loadingController
+		loadingController,
 		IonBackButton
 	} from '@ionic/vue';
 
