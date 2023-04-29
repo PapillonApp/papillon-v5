@@ -422,14 +422,6 @@ function constructPronoteGrades(grades) {
 	return finalArray;
 }
 
-
-
-
-
-
-
-
-
 // ecoledirecte : get grades
 function getEDGrades(forceReload) {
 	// gather vars
@@ -609,7 +601,7 @@ function constructEDGrades(grades) {
 
 	// for each mark, add it to the corresponding subject in the array
 	marks.forEach(mark => {
-		if(mark.codePeriode != actualPeriodID) return;
+		if(mark.codePeriode != JSON.parse(localStorage.getItem("currentPeriod")).id) return;
 		// add mark to subject
 		let newMark = {
 			id: mark.id,
