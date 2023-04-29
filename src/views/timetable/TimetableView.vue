@@ -571,9 +571,13 @@
 								if(course.status.status) {
 									status = course.status.status;
 								}
-
-								let finalStatus = `Vous êtes avec ${teachers} en ${rooms}. ${status}`;
-
+								
+								let finalStatus;
+								if(teachers && rooms === null){
+									finalStatus = `Ce cours n'a ni salle et ni prof attribué à celui-ci. ${status}`
+								} else {
+									finalStatus = `Vous êtes avec ${teachers} en ${rooms}. ${status}`;
+								}
 								// add event to calendar
 								// use default calendar
 								await CapacitorCalendar.createEvent({
