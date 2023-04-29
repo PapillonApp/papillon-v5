@@ -188,7 +188,7 @@
 				</IonList>
 
 				<IonList inset>
-					<IonItem class="avgs">
+					<IonItem class="avgs" v-if="!isNaN(currentGrade.grade.min)">
 						<IonLabel>
 							<p>Note -</p>
 							<h2>{{ parseFloat(currentGrade.grade.min).toFixed(2) }}<small>/{{ currentGrade.grade.out_of }}</small></h2>
@@ -201,6 +201,9 @@
 							<p>Note +</p>
 							<h2>{{ parseFloat(currentGrade.grade.max).toFixed(2) }}<small>/{{ currentGrade.grade.out_of }}</small></h2>
 						</IonLabel>
+					</IonItem>
+					<IonItem class="avgs" v-if="isNaN(currentGrade.grade.min)">
+						<h2><small>Les moyennes ne sont pas disponibles pour cette note</small></h2>
 					</IonItem>
 				</IonList>
 
@@ -223,19 +226,19 @@
 					<IonItem>
 						<IonLabel><p>Influence sur la moyenne</p></IonLabel>
 
-						<IonLabel v-if="diffAvg > 0" class="posMoyAdd" slot="end"><h2>+{{ diffAvg.toFixed(2) }} pts</h2></IonLabel>
-						<IonLabel v-else class="negMoyAdd" slot="end"><h2>{{ diffAvg.toFixed(2) }} pts</h2></IonLabel>
+						<IonLabel v-if="diffAvg > 0 && !isNaN(currentGrade.grade.min)" class="posMoyAdd" slot="end"><h2>+{{ diffAvg.toFixed(2) }} pts</h2></IonLabel>
+						<IonLabel v-else class="negMoyAdd" slot="end"><h2>{{ isNaN(currentGrade.grade.min) ? "Moyenne indisponible" : diffAvg.toFixed(2) + " pts" }} </h2></IonLabel>
 					</IonItem>
 					<IonItem v-if="!isNaN(diffSubjectAvg)">
 						<IonLabel><p>Influence sur la matière</p></IonLabel>
-						<IonLabel slot="end"><span v-if="diffSubjectAvg > 0">+</span>{{ diffSubjectAvg.toFixed(2) }} pts</IonLabel>
+						<IonLabel slot="end"><span v-if="diffSubjectAvg > 0">+</span>{{ isNaN(currentGrade.grade.min) ? "Moyenne indisponible" : diffSubjectAvg.toFixed(2) + " pts" }}</IonLabel>
 					</IonItem>
 				</IonList>
 
 				<IonList inset>
 					<IonItem>
 						<IonLabel><p>Influence sur la classe</p></IonLabel>
-						<IonLabel slot="end"><span v-if="diffClassAvg > 0">+</span>{{ diffClassAvg.toFixed(2) }} pts</IonLabel>
+						<IonLabel slot="end"><span v-if="diffClassAvg > 0">+</span>{{ isNaN(currentGrade.grade.min) ? "Moyenne indisponible" : diffClassAvg.toFixed(2) + " pts" }}</IonLabel>
 					</IonItem>
 				</IonList>
 			</div>
