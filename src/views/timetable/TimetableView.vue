@@ -574,7 +574,7 @@
 								
 								let finalStatus;
 								if(teachers && rooms === null){
-									finalStatus = `Ce cours n'a ni salle et ni prof attribué à celui-ci. ${status}`
+									finalStatus = `Ce cours n'a ni salle et ni professeur attribué à celui-ci. ${status}`
 								} else {
 									finalStatus = `Vous êtes avec ${teachers} en ${rooms}. ${status}`;
 								}
