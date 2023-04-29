@@ -606,7 +606,7 @@ function constructEDGrades(grades) {
 		let newMark = {
 			id: mark.id,
 			info: {
-				subject: mark.libelle,
+				subject: mark.libelleMatiere,
 				date: mark.date,
 				description: mark.devoir || "Pas d'intitulé",
 				significant: true
@@ -627,11 +627,11 @@ function constructEDGrades(grades) {
 			newMark.grade.value = 0;
 		}
 
-		/*if (!newMark.info.significant && mark.grade.average == -1) {
+		if (!newMark.info.significant && newMark.grade.average == -1) {
 			newMark.info.significantAverage = false;
 		} else {
 			newMark.info.significantAverage = true;
-		}*/
+		}
 
 		if (!newMark.info.significant && newMark.info.significantReason == null) {
 			return; // It's an empty mark so don't show it on the tab
