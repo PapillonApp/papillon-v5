@@ -505,7 +505,7 @@
 										{{ mark.info.significantReason }}<small>/{{mark.grade.out_of}}</small></p>
 									<p class="coef" v-if="mark.grade.updated_value && !mark.info.significant"><br /></p>
 								</div>
-								<div class="averages" v-if="mark.info.significantAverage">
+								<div class="averages" v-if="mark.info.significantAverage && !isNaN(mark.grade.min)">
 									<div class="average">
 										<p class="grd">{{mark.grade.min}}<small>/{{mark.grade.out_of}}</small></p>
 										<p>Min.</p>
@@ -522,10 +522,16 @@
 									</div>
 								</div>
 
-								<div class="averages" v-if="!mark.info.significantAverage">
+								<div class="averages" v-if="!mark.info.significantAverage && !isNaN(mark.grade.min)">
 									<div class="average unique">
 										<p class="grd">{{ mark.info.significantReason }}</p>
 										<p>Classe</p>
+									</div>
+								</div>
+
+								<div class="averages" v-if="isNaN(mark.grade.min)">
+									<div class="average unique">
+										<p class="grd">Moyennes non dispo.</p>
 									</div>
 								</div>
 
