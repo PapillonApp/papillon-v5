@@ -379,16 +379,29 @@ function constructEDHomework(hw) {
     const token = localStorage.getItem('token');
     const userID = JSON.parse(localStorage.UserCache).id;
     */
+
+    if(hw.length > 0) {
+        hw.forEach(homework2 => {
+            return homeworkArray.push(homework2);
+        })
+        return homeworkArray;
+    }
    
     // for each course in homework
     Object.keys(hw).forEach((date) => {
         //on obtiens une date avec une liste
+
         //2023-03-17
         hw[date].forEach((homework) => {
-            console.log(homework)
+            console.log("le homework : " + JSON.stringify(homework))
             // get homework
             let hws = homework;
             //foreach documents
+            console.log("a faire : " + JSON.stringify(hws.aFaire))
+            if(!hws.aFaire) {
+                console.warn("Skip construct of " + JSON.stringify(homework) + " because doesn't contain any \"aFaire\" var")
+                return;
+            }
             hws.aFaire.documents.forEach((file) => {
                 // if no file.name, set it to "Document"
                 if (!file.libelle) {
@@ -402,6 +415,7 @@ function constructEDHomework(hw) {
             });
             //homework description
             hws.aFaire.contenu = atob(hws.aFaire.contenu)
+            console.log("contenu du travail : " + hws.aFaire.contenu)
             let homeworkDescription = hws.aFaire.contenu;
             /*
                 Traitement des balises HTML (<strong>, <u>)
@@ -422,7 +436,6 @@ function constructEDHomework(hw) {
 
 
             // construct course
-            console.log(hws)
             let newHomework = {
                 data: {
                     id: hws.id,
@@ -433,12 +446,11 @@ function constructEDHomework(hw) {
                 },
                 homework: {
                     subject: hws.matiere,
-                    content: hws.description,
+                    content: hws.aFaire.contenu,
                     shortContent: homeworkDescription,
                 },
                 files: hws.aFaire.documents,
             };
-            console.log("after newhomework")
             subjectColor.setSubjectColor(newHomework.homework.subject, newHomework.data.color, true);
 
             // push course to courses
@@ -454,7 +466,7 @@ function constructEDHomework(hw) {
 // tick
 async function tickHomework(id) {
     // if id starts with "custom_"
-    if (id[0].startsWith("custom_")) {
+    if (id[0].toString().startsWith("custom_")) {
         // return custom homework
         return tickCustomHomework(id[0]);
     }
@@ -463,6 +475,9 @@ async function tickHomework(id) {
             case "pronote":
                 // return pronote homework
                 return tickPronoteHomework(id);
+            case "ecoledirecte":
+                // tick Ed homework
+                return tickEDHomework(id)
         }
     }
 }
@@ -508,6 +523,42 @@ async function tickPronoteHomework(data) {
         dateTo: dayString
     })
 }
+
+async function tickEDHomework(data) {
+    const EDAPI = "https://api.ecoledirecte.com/v3"
+    const token = localStorage.getItem('token');
+    const studentId = JSON.parse(localStorage.getItem('UserCache')).id;
+    const homework = data[2].homework
+
+    let homeworkID = data[0]
+
+    let requestOptions = {
+        headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": `${token}`},
+    };
+
+    let done, undone
+
+    if (homework.effectue) {
+        done = []
+        undone = [homeworkID]
+    } else {
+        done = [homeworkID]
+        undone = []
+    }
+
+    done = [homeworkID]
+    undone = []
+
+    let body = `data={
+                "idDevoirsEffectues": [${done}],
+                "idDevoirsNonEffectues": [${undone}]
+            }`
+
+    let URL = `${EDAPI}/Eleves/${studentId}/cahierdetexte.awp?verbe=put`;
+
+    return axios.post(URL, body, requestOptions)
+}
+
 
 // export
 export {

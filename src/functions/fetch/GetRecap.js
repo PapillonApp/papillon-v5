@@ -207,11 +207,11 @@ function getEDRecap(force) {
             }
         });
 
-		/*// news
+		// news
 		getNews(force).then((response) => {
 			news = response;
 			requestsDone++;
-		});*/
+		});
 
         // wait for all requests to be done
         let interval = setInterval(() => {

@@ -66,7 +66,9 @@
                 rnPickerModalOpen: false,
                 isChangingDate: false,
                 isLoading: true,
+                loginService: localStorage.getItem("loginService"),
                 baseRn: new Date(),
+                swiper: null,
 			}
 		},
 		methods: {
@@ -247,7 +249,7 @@
                     this.baseRn = newDate;
 
                     // reset swiper
-                    this.$refs.swiper.$el.swiper.slideTo(this.baseIndex, 0, false);
+                    this.swiper.slideTo(this.baseIndex, 0, false);
 
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: newDate }));
@@ -285,7 +287,8 @@
 
                 // new send request
                 if(!this.dontRetryCheck) {
-                    tickHomework([homeworkID, dateSet]).then(() => {
+                  console.log(homeworkID)
+                    tickHomework([homeworkID, dateSet, hw]).then(() => {
                         setTimeout(() => {
                             this.dontRetryCheck = true;
 
@@ -302,6 +305,7 @@
 
                     })
                     .catch((error) => {
+                        console.error(error)
                         // revert change
                         setTimeout(() => {
                             this.dontRetryCheck = true;
@@ -331,6 +335,8 @@
             }
 		},
 		mounted() {
+            this.swiper = this.$refs.swiper.$el.swiper;
+
             document.addEventListener('rnChanged', (e) => {
                 this.rnButtonString = this.createDateString(e.detail);
                 this.getHomeworks(false, e.detail);
@@ -344,9 +350,7 @@
             });
 
             // detect swiper slide change
-            let swiper = this.$refs.swiper.$el.swiper;
-
-            swiper.on('slideChangeTransitionEnd', () => {
+            this.swiper.on('slideChangeTransitionEnd', () => {
                 // reset swiper
                 this.resetSwiper()
                 // isChangingDate
@@ -355,8 +359,8 @@
                 this.getHomeworks();
             });
 
-            swiper.on('activeIndexChange', () => {
-                this.currentIndex = swiper.activeIndex;
+            this.swiper.on('activeIndexChange', () => {
+                this.currentIndex = this.swiper.activeIndex;
             });
 		}
 	});
@@ -385,12 +389,15 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true" class="content">
-            <ion-header collapse="condense">
-				<ion-toolbar>
-					<ion-title size="large">Travail à faire</ion-title>
-				</ion-toolbar>
-			</ion-header>
-
+            <ion-item v-if="loginService === 'ecoledirecte'">
+                <div class="alphaMessage">
+                    <span class="material-symbols-outlined mdls icon">warning</span>
+                    <div class="alphaText">
+                        <h2>La fonctionnalité "Travail à faire" est encore en test pour EcoleDirecte.</h2>
+                        <p class="description">Certains bugs, notamment lors de l'affichage du contenu du devoir, peuvent apparaître.</p>
+                    </div>
+                </div>				
+            </ion-item>
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
@@ -494,6 +501,50 @@
 </template>
   
 <style scoped>
+
+    .alphaMessage {
+		background: var(--ion-color-warning);
+		margin: 20px;
+		border-radius: 10px;
+
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		padding: 20px;
+		gap: 20px;
+
+		color: #fff;
+	}
+
+	.alphaMessage * {
+		margin: 0;
+	}
+
+	.alphaMessage .icon {
+		height: 44px;
+		width: 44px;
+		font-size: 30px;
+		overflow: visible !important;
+
+		color: #fff;
+		opacity: 1 !important;
+	}
+
+	.alphaMessage .alphaText {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
+	.alphaMessage .alphaText h2 {
+		font-size: 18px;
+	}
+
+	.alphaMessage .alphaText .description {
+		font-size: 15px;
+		opacity: 0.7;
+	}
     .swiper {
         height: 100%;
         

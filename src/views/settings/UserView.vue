@@ -17,6 +17,8 @@
 	import displayToast from '@/functions/utils/displayToast.js';
     import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
+    import { checkmarkOutline, informationOutline, warningOutline } from 'ionicons/icons';
+
     const FastAverageColor = require('fast-average-color').FastAverageColor;
     const fac = new FastAverageColor();
 
@@ -84,9 +86,7 @@
                                 console.log(e);
                             });
 
-                        displayToast.presentNativeToast(
-                            'Photo de profil modifiée.'
-                        );
+                            displayToast.presentToastSmall("Photo de profil modifiée", "success", checkmarkOutline)
                     }
                 }
                 catch (error) {
@@ -152,7 +152,7 @@
 			<IonToolbar>
 
                 <ion-buttons slot="start">
-                    <IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+                    <IonBackButton class="only-ios" text="Paramètres" @click="pop"></IonBackButton>
                     <IonBackButton class="only-md" @click="pop"></IonBackButton>
                 </ion-buttons>
 
@@ -161,6 +161,12 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
+            <ion-header collapse="condense">
+				<ion-toolbar>
+					<ion-title size="large">Profil</ion-title>
+				</ion-toolbar>
+			</ion-header>
+
             <IonLabel class="listGroupTitle">
 				<p>Photo de profil</p>
 			</IonLabel>

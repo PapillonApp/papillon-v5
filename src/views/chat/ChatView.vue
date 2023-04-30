@@ -279,7 +279,7 @@
 							<IonInput ref="newChatSubject" placeholder="Sujet"></IonInput>
 						</IonItem>
 						<IonItem>
-							<IonTextarea ref="newChatMsg" placeholder="Contenu du 1er message"></IonTextarea>
+							<IonTextarea class="newChatMsg" ref="newChatMsg" placeholder="Contenu du 1er message"></IonTextarea>
 						</IonItem>
 					</IonList>
 
@@ -313,5 +313,10 @@
 	.newCoursBtn {
 		width: 56px;
 		height: 56px;
+	}
+
+	.newChatMsg {
+		padding-top: 10px;
+		height: 100px;
 	}
 </style>

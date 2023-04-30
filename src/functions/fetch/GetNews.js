@@ -14,7 +14,7 @@ async function getNews(forceReload) {
             // return pronote news
             return getPronoteNews(forceReload);
         case "ecoledirecte":
-            return;
+            return getEDNews(forceReload)
         case 'skolengo':
             return getSkolengoNews(forceReload)
     }
@@ -182,6 +182,13 @@ function constructPronoteNews(news) {
 
     return newsArray;
 }
+//ED: return empty array temporarily to display homepage
+function getEDNews(forceReload) {
+    return new Promise((resolve) => {
+        resolve([])
+    })
+}
+
 
 // export
 export default getNews
