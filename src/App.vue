@@ -795,12 +795,11 @@ export default defineComponent({
 					</ion-list>
 				</ion-content>
 			</ion-menu>
-			<ion-router-outlet ref="outlet" :animated="true" id="main-content"
-				v-slot="{ Component }">
+			<ion-router-outlet ref="outlet" :animated="true" :animation="transition" id="main-content" v-slot="{ Component }">
 				<component :is="Component" />
 			</ion-router-outlet>
 		</ion-split-pane>
-
+		
 		<ion-modal ref="changelogModal">
 			<ion-header>
 				<ion-toolbar>

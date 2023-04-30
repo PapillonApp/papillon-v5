@@ -7,6 +7,7 @@ import GetToken from '@/functions/login/GetToken.js';
 
 import subjectColor from '@/functions/utils/subjectColor.js'
 import * as moment from "moment";
+import displayToast from "@/functions/utils/displayToast";
 // funcs
 function isFloat(n){
 	return Number(n) === n && n % 1 !== 0;
@@ -563,8 +564,14 @@ function groupEDSubjects(subjectData, markArray) {
 function constructEDGrades(grades) {   
 	console.log("Building grades") 
 	let marks = grades.notes;
-
-	let allPeriods = JSON.parse(localStorage.getItem('userData')).periods;
+	if(!grades.periodes){
+		displayToast.presentError("Impossible de construire les notes.", "danger", "[ED] Auth failed. Essayez d'actualiser manuellement pour résoudre le problème.")
+		return {
+			marks: [],
+			averages: []
+		}
+	} 
+	let allPeriods = JSON.parse(localStorage.getItem('periodsCache'));
 	let actualPeriodID = allPeriods.find(period => period.actual == true).id;
 	let actualPeriod = grades.periodes.find(period => period.idPeriode == actualPeriodID);
 
@@ -594,11 +601,12 @@ function constructEDGrades(grades) {
 
 	// for each mark, add it to the corresponding subject in the array
 	marks.forEach(mark => {
+		if(mark.codePeriode != JSON.parse(localStorage.getItem("currentPeriod")).id) return;
 		// add mark to subject
 		let newMark = {
 			id: mark.id,
 			info: {
-				subject: mark.libelle,
+				subject: mark.libelleMatiere,
 				date: mark.date,
 				description: mark.devoir || "Pas d'intitulé",
 				significant: true
@@ -619,11 +627,11 @@ function constructEDGrades(grades) {
 			newMark.grade.value = 0;
 		}
 
-		/*if (!newMark.info.significant && mark.grade.average == -1) {
+		if (!newMark.info.significant && newMark.grade.average == -1) {
 			newMark.info.significantAverage = false;
 		} else {
 			newMark.info.significantAverage = true;
-		}*/
+		}
 
 		if (!newMark.info.significant && newMark.info.significantReason == null) {
 			return; // It's an empty mark so don't show it on the tab
