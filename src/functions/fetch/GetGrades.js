@@ -421,14 +421,6 @@ function constructPronoteGrades(grades) {
 	return finalArray;
 }
 
-
-
-
-
-
-
-
-
 // ecoledirecte : get grades
 function getEDGrades(forceReload) {
 	// gather vars
@@ -499,6 +491,10 @@ function getEDGrades(forceReload) {
 	})
 }
 
+/*
+=================================
+PLEASE UNCOMMENT THIS WHEN NEEDED
+=================================
 
 function groupEDSubjects(subjectData, markArray) {
 	let subject = []
@@ -550,7 +546,7 @@ function groupEDSubjects(subjectData, markArray) {
 				subjectId = generateRandomId();
 			}
 		}
-	}*/
+	}
 
 	return {
 		subject: subject, 
@@ -560,6 +556,8 @@ function groupEDSubjects(subjectData, markArray) {
 		excluded: excluded
 	}
 }
+
+*/
 
 // ecoledirecte : construct grades
 function constructEDGrades(grades) {   
@@ -681,11 +679,6 @@ function constructEDGrades(grades) {
 			else subject.class.max = 0;
 
 		} else {
-			let studentAverage = 0;
-			let classAverage = 0;
-			let classMin = 0;
-			let classMax = 0;
-
 			subject.marks.forEach(mark => {
 				let coef = mark.grade.coefficient;
 

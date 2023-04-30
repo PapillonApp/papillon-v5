@@ -1,6 +1,6 @@
 <script>
     import { defineComponent } from 'vue';
-    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonButton, IonList, IonLabel, IonItem, IonModal, IonSpinner, IonSearchbar, IonNavLink } from '@ionic/vue';
+    import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonLabel, IonItem, IonSpinner, IonSearchbar, IonNavLink } from '@ionic/vue';
     
     import { Browser } from '@capacitor/browser';
 
@@ -109,17 +109,23 @@
         <IonToolbar>
 
           <ion-buttons slot="start">
-            <ion-menu-button color="dark" mode="md"></ion-menu-button>
+            <ion-menu-button color="dark"></ion-menu-button>
           </ion-buttons>
 
-          <ion-title mode="md">Actualités</ion-title>
-        </IonToolbar>
-        <IonToolbar>
-            <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionInput="searchNews()"></ion-searchbar>
+          <ion-title>Actualités</ion-title>
         </IonToolbar>
       </IonHeader>
       
       <ion-content :fullscreen="true">
+        <ion-header collapse="condense">
+			<ion-toolbar>
+				<ion-title size="large">Actualités</ion-title>
+			</ion-toolbar>
+            <IonToolbar>
+                <ion-searchbar ref="searchBar" placeholder="Rechercher une actualité, une personne..." @ionInput="searchNews()"></ion-searchbar>
+            </IonToolbar>
+		</ion-header>
+
         <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
             <ion-refresher-content></ion-refresher-content>
         </ion-refresher>

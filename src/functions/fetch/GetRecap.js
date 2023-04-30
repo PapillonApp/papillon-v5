@@ -144,7 +144,7 @@ function getPronoteRecap(force) {
 // ed : get timetable
 function getEDRecap(force) {
     // promise
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         // vars
         let timetable = []
         let homeworks = []

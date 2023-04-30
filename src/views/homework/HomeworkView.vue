@@ -1,20 +1,17 @@
 <script>
-	import { defineComponent, refs } from 'vue';
-	import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonListHeader, IonLabel, IonItem, actionSheetController, IonNavLink, IonChip, IonSkeletonText, IonAvatar, IonRefresher, IonRefresherContent, IonCheckbox, IonButton, IonModal, IonDatetime, IonRippleEffect } from '@ionic/vue';
+	import { defineComponent } from 'vue';
+	import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonLabel, IonItem, IonNavLink, IonRefresher, IonRefresherContent, IonCheckbox, IonButton, IonModal, IonDatetime, alertController } from '@ionic/vue';
 
-    import { checkmark, alertCircle } from 'ionicons/icons';
+    import { alertCircle } from 'ionicons/icons';
 
     import { Virtual } from 'swiper'
     import { Swiper, SwiperSlide } from 'swiper/vue';
     import 'swiper/css';
 
-    import axios from 'axios';
-
     import HomeworkItemView from './HomeworkItemView.vue';
 
     import GetHomeworks from "@/functions/fetch/GetHomeworks.js";
     import { tickHomework } from "@/functions/fetch/GetHomeworks.js";
-    import GetToken from "@/functions/login/GetToken.js";
 
     import displayToast from '@/functions/utils/displayToast.js';
     import hapticsController from '@/functions/utils/hapticsController.js';
@@ -69,9 +66,94 @@
                 rnPickerModalOpen: false,
                 isChangingDate: false,
                 isLoading: true,
+                baseRn: new Date(),
 			}
 		},
 		methods: {
+            async addHomework() {
+                const alert = await alertController.create({
+                    header: 'Ajouter un devoir',
+                    subHeader: 'Entrez ici le contenu de votre devoir',
+                    inputs: [
+                        {
+                            name: 'subject',
+                            type: 'input',
+                            placeholder: 'Matière (optionnel)'
+                        },
+                        {
+                            name: 'content',
+                            type: 'textarea',
+                            placeholder: 'Contenu du devoir'
+                        },
+                    ],
+                    buttons: [
+                        {
+                            text: 'Annuler',
+                            role: 'cancel',
+                        },
+                        {
+                            text: 'Ajouter',
+                            handler: async (data) => {
+                                let text = data.content;
+                                let subject = data.subject;
+
+                                if (!subject) {
+                                    subject = "DEVOIR PERSONNALISÉ"
+                                }
+
+                                if (!text) {
+                                    return;
+                                }
+
+                                // get --ion-color-primary
+                                let color = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-primary');
+
+                                // get homework description
+                                let shortText = text;
+
+                                if (shortText.length > 80) {
+                                    shortText = shortText.substring(0, 80) + '...';
+                                }
+
+                                let newHomework = {
+                                    data: {
+                                        id: "custom_" + Math.random().toString(36).substr(2, 9),
+                                        date: this.$rn.toISOString().split('T')[0].replace(/-/g, "/") + " 00:00",
+                                        color: color,
+                                        done: false,
+                                    },
+                                    homework: {
+                                        subject: subject.toUpperCase(),
+                                        content: text,
+                                        shortContent: shortText,
+                                    },
+                                    files: [],
+                                };
+
+                                // add homework to homeworks
+                                let customHomeworks = [];
+
+                                if (localStorage.customHomeworks) {
+                                    customHomeworks = JSON.parse(localStorage.customHomeworks);
+                                }
+
+                                customHomeworks.push({
+                                    date: this.$rn,
+                                    homework: newHomework
+                                })
+
+                                localStorage.customHomeworks = JSON.stringify(customHomeworks);
+
+                                // refresh homeworks
+                                this.handleRefresh();
+                            }
+                        }
+                    ],
+                    mode: 'md'
+                });
+
+                await alert.present();
+            },
             isED() {
               return localStorage.loginService === 'ecoledirecte'
             },
@@ -87,7 +169,7 @@
                     let indexDiff = this.baseIndex - index;
 
                     // get rn
-                    let selectedRN = new Date();
+                    let selectedRN = new Date(this.baseRn);
 
                     if(goTo) {
                         selectedRN = new Date(this.$rn);
@@ -162,6 +244,7 @@
 
                     // update rn
                     this.$rn = newDate;
+                    this.baseRn = newDate;
 
                     // reset swiper
                     this.$refs.swiper.$el.swiper.slideTo(this.baseIndex, 0, false);
@@ -202,7 +285,7 @@
 
                 // new send request
                 if(!this.dontRetryCheck) {
-                    tickHomework([homeworkID, dateSet]).then((response) => {
+                    tickHomework([homeworkID, dateSet]).then(() => {
                         setTimeout(() => {
                             this.dontRetryCheck = true;
 
@@ -283,14 +366,14 @@
 	<ion-page ref="page">
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
-				<ion-buttons slot="start"  mode="md">
-					<ion-menu-button color="dark" mode="md"></ion-menu-button>
+				<ion-buttons slot="start">
+					<ion-menu-button color="dark"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Travail à faire</ion-title>
+				<ion-title>Travail à faire</ion-title>
 
                 <ion-buttons slot="end">
-                    <ion-button mode="md" id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
+                    <ion-button id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
                     <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
                     <p>{{ rnButtonString }}</p>
@@ -302,6 +385,11 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true" class="content">
+            <ion-header collapse="condense">
+				<ion-toolbar>
+					<ion-title size="large">Travail à faire</ion-title>
+				</ion-toolbar>
+			</ion-header>
 
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
@@ -314,9 +402,8 @@
                 v-for="(slideContent, index) in slides"
                 :key="index"
                 :virtualIndex="index">
-
-                    <IonList>
-                        <IonItem button v-for="homework in days[`${index}`]" :key="homework.id">
+                    <IonList v-for="homework in days[`${index}`]" :key="homework.id" inset class="hwListItem">
+                        <IonItem button >
                             <div slot="start">
                                 <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
                             </div>
@@ -326,6 +413,10 @@
                                     <p><span class="courseColor"></span> {{ homework.homework.subject }}</p>
                                     <h5 v-if="isED()" v-html="homework.homework.shortContent" class="hwContent"></h5>
                                     <h5 v-else class="hwContent">{{ homework.homework.shortContent }}</h5>
+
+                                    <p v-if="homework.files.length > 0">
+                                        <span>{{ homework.files[0].name }}</span>
+                                    </p>
                                 </IonLabel>
                             </IonNavLink>
                         </IonItem>
@@ -357,6 +448,18 @@
                             <IonSpinner></IonSpinner>
                         </div>
                     </div>
+
+                    <IonList inset class="hwListItem add">
+                        <IonItem button detail="false" @click="addHomework($event)">
+                            <span class="material-symbols-outlined mdls" slot="start">add</span>
+                            <IonNavLink class="navLink" router-direction="forward" :component="AddHomeworkView">
+                                <IonLabel>
+                                    <h2>Ajouter un devoir</h2>
+                                    <p>Ajouter un devoir manuellement</p>
+                                </IonLabel>
+                            </IonNavLink>
+                        </IonItem>
+                    </IonList>
 
                 </swiper-slide>
             </swiper>
@@ -434,5 +537,29 @@
 
     .navLink {
         margin: 10px 0px;
+        width: 100%;
+    }
+
+    .hwListItem {
+        margin: 6px 12px;
+        margin-bottom: 10px;
+    }
+
+    .hwContent {
+        font-weight: 500;
+    }
+
+    .hwListItem.add {
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+
+    .hwListItem.add ion-item::part(native) {
+        border: 1px solid var(--ion-color-step-100) !important;
+        --background: transparent !important;
+    }
+
+    .ios .hwListItem.add ion-item::part(native) {
+        border-radius: 12px !important;
     }
 </style>

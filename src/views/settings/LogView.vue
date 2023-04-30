@@ -5,7 +5,7 @@
 	import { Share } from '@capacitor/share';
 	import displayToast from '@/functions/utils/displayToast.js';
 
-	import { version, canal } from '/package'
+	import packageInfo from '/package'
 
 	import {
 		IonHeader,
@@ -22,6 +22,8 @@
 		IonTitle,
 		IonRefresher,
 		IonRefresherContent,
+		IonBackButton,
+		IonSearchbar
 	} from '@ionic/vue';
 
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
@@ -32,7 +34,7 @@
 		components: {
 			IonHeader,
 			IonToolbar,
-			PapillonBackButton,
+			IonBackButton,
 			IonButtons,
 			IonButton,
 			IonLabel,
@@ -45,11 +47,14 @@
 			IonTitle,
 			IonRefresher,
 			IonRefresherContent,
+			IonSearchbar,
 		},
 		data() {
 			return {
+				baseLogs: [],
 				logs: [],
-				channel: canal,
+				searching: false,
+				channel: packageInfo.canal,
 				apiVersion: this.getApiVersion(),
 				localStorageSize : this.getLocalStorageSize(),
 				account: {
@@ -61,9 +66,32 @@
 			}
 		},
 		methods: {
+			pop() {
+				return false;
+			},
 			clearLog(log) {
 				this.logs = this.logs.filter(l => l !== log);
+				this.baseLogs = this.logs;
 				localStorage.setItem("logs", JSON.stringify(this.logs));
+			},
+			searchLogs(event) {
+				this.searching = true;
+				const query = event.target.value.toLowerCase();
+				
+				this.logs = this.baseLogs.filter(log => {
+					try {
+						let lowerLog = log.message.toLowerCase();
+						return lowerLog.includes(query);
+					}
+					catch {
+						return false;
+					}
+				});
+
+				if (query == "") {
+					this.logs = this.baseLogs;
+					this.searching = false;
+				}
 			},
 			getAccountInfo() {
 				try {
@@ -156,7 +184,7 @@
 Contient **${this.logs.length}** logs
 
 *Application* :
-> **Version** : ${version}
+> **Version** : ${packageInfo.version}
 > **Canal** : ${this.channel}
 > **Type de plateforme** : ${Capacitor.getPlatform()}
 > **Version API** : ${this.apiVersion}
@@ -189,11 +217,11 @@ Contient **${this.logs.length}** logs
 				event.target.complete();
 			},
 			getCanal() {
-				if (canal == 'dev') {
+				if (packageInfo.canal == 'dev') {
 					this.channel = "Développement";
-				} else if (canal == 'beta') {
+				} else if (packageInfo.canal == 'beta') {
 					this.channel = "Bêta";
-				} else if (canal == 'prod') {
+				} else if (packageInfo.canal == 'prod') {
 					this.channel = "Stable";
 				} else {
 					this.channel = "Inconnu";
@@ -207,6 +235,8 @@ Contient **${this.logs.length}** logs
 						return new Date(b.date) - new Date(a.date);
 					});
 				}
+
+				this.baseLogs = this.logs;
 			}
 		},
 		mounted() {
@@ -222,10 +252,11 @@ Contient **${this.logs.length}** logs
 		<IonToolbar>
 
 			<ion-buttons slot="start">
-				<PapillonBackButton></PapillonBackButton>
+				<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+				<IonBackButton class="only-md" @click="pop"></IonBackButton>
 			</ion-buttons>
 
-			<ion-title mode="md">Logs</ion-title>
+			<ion-title>Logs</ion-title>
 
 			<ion-buttons slot="end">
 				<IonButton @click="share()">
@@ -234,16 +265,27 @@ Contient **${this.logs.length}** logs
 			</ion-buttons>
 
 		</IonToolbar>
-
+		<ion-toolbar class="only-md">
+			<ion-searchbar placeholder="Rechercher dans les logs" @ionInput="searchLogs($event)"></ion-searchbar>
+		</ion-toolbar>
 
 	</IonHeader>
 
 	<ion-content :fullscreen="true">
+		<ion-header collapse="condense">
+			<ion-toolbar>
+				<ion-title size="large">Logs</ion-title>
+			</ion-toolbar>
+			<ion-toolbar>
+				<ion-searchbar class="only-ios" placeholder="Rechercher dans les logs" @ionInput="searchLogs($event)"></ion-searchbar>
+			</ion-toolbar>
+		</ion-header>
+
 		<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 			<ion-refresher-content></ion-refresher-content>
 		</ion-refresher>
 
-		<div class="NoCours" v-if="logs.length == 0">
+		<div class="NoCours" v-if="logs.length == 0 && !searching">
 			<span class="material-symbols-outlined mdls">developer_mode</span>
 			<h2>Aucun rapport n'a été enregistré.</h2>
 			<p>C'est parfait, il n'y a aucun problème sur l'application (ou alors vous les avez effacés). Détendez-vous, profitez-en !</p>
@@ -253,8 +295,8 @@ Contient **${this.logs.length}** logs
 			<ion-item-sliding v-for="log in logs" :key="log.id">
 				<ion-item>
 					<ion-label class="ion-text-wrap" :color="getTypeColor(log.type)">
-						<h2>{{ log.message }}</h2>
-						<p>{{ new Date(log.date).toLocaleString("fr-fr", {dateStyle: 'long', timeStyle: 'short'}) }}</p>
+						<div class="log">{{ log.message }}</div>
+						<p><span class="type">{{ log.type }}</span> |  {{ new Date(log.date).toLocaleString("fr-fr", {dateStyle: 'long', timeStyle: 'short'}) }}</p>
 					</ion-label>
 				</ion-item>
 
@@ -278,5 +320,25 @@ Contient **${this.logs.length}** logs
 <style scoped>
 	.md .paddingFixMd {
 		padding-left: 15px;
+	}
+
+	.type {
+		font-weight: 500;
+		color: var(--ion-text-color);
+	}
+
+	.log {
+		background-color: var(--ion-color-step-50);
+		border: 1px solid var(--ion-color-step-100);
+		padding: 8px 10px;
+		width: 100%;
+		border-radius: 8px;
+		margin-bottom: 10px;
+	}
+
+	.log {
+		font-size: 16px;
+		font-family: monospace;
+		font-weight: 500;
 	}
 </style>

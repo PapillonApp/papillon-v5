@@ -11,6 +11,7 @@
         IonButtons,
         IonTitle,
         IonContent,
+        IonBackButton
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -29,7 +30,7 @@
 			IonHeader,
 			IonToolbar,
             IonButtons,
-            PapillonBackButton,
+            IonBackButton,
             IonList,
             IonItem,
             IonLabel,
@@ -42,6 +43,9 @@
 			}
 		},
 		methods: {
+            pop() {
+                return false;
+            },
             async tweakChangeAvatar() {
                 try {
                     const result = await FilePicker.pickImages({
@@ -147,16 +151,21 @@
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
 
-				<ion-buttons slot="start">
-					<PapillonBackButton></PapillonBackButton>
-				</ion-buttons>
+                <ion-buttons slot="start">
+                    <IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+                    <IonBackButton class="only-md" @click="pop"></IonBackButton>
+                </ion-buttons>
 
-				<ion-title mode="md">Personnaliser mon profil</ion-title>
+				<ion-title>Profil</ion-title>
 			</IonToolbar>
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-            <IonList :inset="true" lines="inset">
+            <IonLabel class="listGroupTitle">
+				<p>Photo de profil</p>
+			</IonLabel>
+
+            <IonList class="listGroup" lines="inset">
                 <IonItem button @click="tweakChangeAvatar()">
                     <span class="material-symbols-outlined mdls" slot="start">person_pin</span>
                     <IonLabel>
@@ -173,8 +182,12 @@
                     </IonLabel>
                 </IonItem>
             </IonList>
+            
+            <IonLabel class="listGroupTitle">
+				<p>Nom utilisé</p>
+			</IonLabel>
 
-            <IonList inset>
+            <IonList class="listGroup" lines="inset">
                 <IonItem button @click="tweakChangeName()">
                     <span class="material-symbols-outlined mdls" slot="start">drive_file_rename_outline</span>
                     <IonLabel>

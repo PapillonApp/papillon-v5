@@ -202,7 +202,13 @@ async function getEDUser(force) {
     const EDAPI = "https://api.ecoledirecte.com/v3"//app.config.globalProperties.$api;
 
     // get token
+    
+    /*
+    ==============================================
+    UNUSED VARIABLE | PLEASE UNCOMMENT WHEN NEEDED
+    ==============================================
     const token = localStorage.getItem('token');
+    */
 
     // construct url
     let URL = `${EDAPI}/login.awp`;

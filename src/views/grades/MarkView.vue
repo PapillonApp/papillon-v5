@@ -6,20 +6,16 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
 		IonLabel,
-		IonToggle,
 		IonButtons,
 		IonTitle,
 		IonContent,
-		alertController,
 		IonSkeletonText,
-		IonChip
+		IonChip,
+		IonBackButton
 	} from '@ionic/vue';
 
-	import displayToast from '@/functions/utils/displayToast.js';
-	import hapticsController from '@/functions/utils/hapticsController.js';
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	import GetGrades from '@/functions/fetch/GetGrades.js';
@@ -30,7 +26,7 @@
 			IonHeader,
 			IonToolbar,
 			IonButtons,
-			PapillonBackButton,
+			IonBackButton,
 			IonTitle,
 			IonContent,
 			IonSkeletonText,
@@ -39,15 +35,25 @@
 			IonLabel,
 			IonChip
 		},
-        props: {
-            markID: {
-                type: String,
-                required: true,
-            }
-        },
+		props: {
+			markID: {
+				type: String,
+				required: true,
+			}
+		},
 		data() {
+			let backTitle = 'Retour';
+
+			// get current route
+			let currentRoute = this.$router.currentRoute.value;
+
+			if(currentRoute.name == "Grades") {
+				backTitle = 'Notes';
+			}
+
 			return {
-                grades: [],
+				backTitle: backTitle,
+				grades: [],
 				currentGrade: null,
 				diffAvg: 0,
 				diffClassAvg: 0,
@@ -151,21 +157,22 @@
 		mounted() {
 			this.findGrade(this.markID);
 
-            return false;
-        }
+			return false;
+		}
 	});
 </script>
 
 <template>
-		<IonHeader class="AppHeader" translucent>
+		<IonHeader class="AppHeader" translucent collapse="fade">
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<PapillonBackButton></PapillonBackButton>
+					<IonBackButton class="only-ios" :text="backTitle" @click="pop"></IonBackButton>
+					<IonBackButton class="only-md" @click="pop"></IonBackButton>
 				</ion-buttons>
 
-				<ion-title mode="md" v-if="currentGrade">{{ currentGrade.info.description }}</ion-title>
-				<ion-title mode="md" v-else><ion-skeleton-text style="width: 200px;"></ion-skeleton-text></ion-title>
+				<ion-title v-if="currentGrade">{{ currentGrade.info.description }}</ion-title>
+				<ion-title v-else><ion-skeleton-text style="width: 200px;"></ion-skeleton-text></ion-title>
 			</IonToolbar>
 		</IonHeader>
 
@@ -185,9 +192,10 @@
 							<h2>{{ currentGrade.grade.coefficient }}</h2>
 						</IonLabel>
 
-						<IonLabel v-if="currentGrade.info.optional || currentGrade.info.bonus">
+						<IonLabel v-if="currentGrade.info.optional || currentGrade.info.bonus || currentGrade.info.outOf20">
 							<ion-chip color="success" v-if="currentGrade.info.bonus">Bonus</ion-chip>
 							<ion-chip color="warning" v-if="currentGrade.info.optional">Optionnel</ion-chip>
+							<ion-chip color="primary" v-if="currentGrade.info.outOf20">Ramenée à 20</ion-chip>
 						</IonLabel>
 					</IonItem>
 				</IonList>

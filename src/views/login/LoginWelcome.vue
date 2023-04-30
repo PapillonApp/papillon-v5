@@ -5,7 +5,7 @@
         alertController
     } from '@ionic/vue';
 
-    import { version } from '/package'
+    import packageInfo from '/package'
     import { Capacitor } from '@capacitor/core';
 
     import { Browser } from '@capacitor/browser';
@@ -63,7 +63,7 @@
             async displayServiceMsg() {
                 const alert = await alertController.create({
                     header: 'Vous ne voyez pas votre service scolaire',
-                    message: 'Papillon fonctionne grâce à une équipe de développeurs volontaires. <br/><br/> Si vous pensez pouvoir ajouter un service à Papillon, n\'hésitez pas à contribuer.',
+                    message: `Papillon fonctionne grâce à une équipe de développeurs volontaires. Si vous pensez pouvoir ajouter un service à Papillon, n'hésitez pas à contribuer.`,
                     mode: 'md',
                     buttons: [
                         {
@@ -85,7 +85,7 @@
         data() {
             return {
                 LoginSelect: LoginSelect,
-                appVersion: version,
+                appVersion: packageInfo.version,
                 appPlatform: Capacitor.getPlatform(),
                 status: "",
             }
@@ -116,7 +116,7 @@
                     <ion-button mode="md" color="dark" fill="solid" @click="goNormalStatusBar">
                         Se connecter avec
                         
-                        <div class="logo_services" slot="end">
+                        <div class="logo_services">
                             <img alt="Logo" src="/assets/welcome/pronote_logo.png" />
                             <img alt="Logo" src="/assets/welcome/ecoledirecte_logo.png" />
                             <img alt="Logo" src="/assets/welcome/skolengo_logo.png" />

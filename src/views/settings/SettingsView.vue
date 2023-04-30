@@ -6,10 +6,11 @@
 
 	import ThemeView from './ThemeView.vue';
 	import OptionsView from './OptionsView.vue';
+	import HomeCustomView from './HomeCustomView.vue';
 	import UserView from './UserView.vue';
 	import AdvancedView from './AdvancedView.vue';
 
-	import { version, canal } from '/package'
+	import packageInfo from '/package'
 	import { Capacitor } from '@capacitor/core';
 
 	import getContributors from '@/functions/fetch/GetContributors';
@@ -24,19 +25,17 @@
 			IonMenuButton,
 			IonButtons,
 			IonList,
-			IonListHeader,
 			IonLabel,
 			IonItem,
 			IonNavLink,
-			IonPage,
 			IonChip,
 			IonSkeletonText,
 			IonAvatar
 		},
 		setup() {
 			return { 
-				appVersion: version,
-				appCanal: canal,
+				appVersion: packageInfo.version,
+				appCanal: packageInfo.canal,
 				appPlatform: Capacitor.getPlatform(),
 				localStorageSize: '',
 			}
@@ -48,6 +47,7 @@
 				userAvatar: '',
 				ThemeView: ThemeView,
 				OptionsView: OptionsView,
+				HomeCustomView: HomeCustomView,
 				UserView: UserView,
 				AdvancedView: AdvancedView,
 				randomTextWidth: [],
@@ -186,24 +186,32 @@
 </script>
 
 <template>
-	<ion-page ref="page">
 		<IonHeader class="AppHeader" translucent>
 			<IonToolbar>
-				<ion-buttons slot="start"  mode="md">
-					<ion-menu-button color="dark" mode="md"></ion-menu-button>
+				<ion-buttons slot="start">
+					<ion-menu-button color="dark"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Paramètres</ion-title>
+				<ion-title>Paramètres</ion-title>
 			</IonToolbar>
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-			<IonList :inset="true" lines="inset">
+			<ion-header collapse="condense">
+				<ion-toolbar>
+					<ion-title size="large">Paramètres</ion-title>
+				</ion-toolbar>
+			</ion-header>
+
+			<IonLabel class="listGroupTitle">
+				<p>Utilisateur connecté</p>
+			</IonLabel>
+
+			<IonList class="listGroup" lines="none">
 				<ion-nav-link router-direction="forward" :component="UserView">
 					<IonItem button>
 						<img :src="userAvatar" slot="start" class="avatar" />
 						<IonLabel>
-							<p>Utilisateur connecté</p>
 							<h2>{{ userName }}</h2>
 							<p>{{ userClass }} - {{ userSchool }}</p>
 						</IonLabel>
@@ -212,13 +220,27 @@
 				</ion-nav-link>
 			</IonList>
 
-			<IonList :inset="true" lines="none">
+			<IonLabel class="listGroupTitle">
+				<p>Paramètres de base</p>
+			</IonLabel>
+
+			<IonList class="listGroup contains-nav-link">
 				<ion-nav-link router-direction="forward" :component="OptionsView">
 					<IonItem button>
 						<span class="material-symbols-outlined mdls" slot="start">tune</span>
 						<IonLabel class="ion-text-wrap">
 							<h2>Options de Papillon</h2>
 							<p>Modifier le comportement de Papillon</p>
+						</IonLabel>
+						<span class="only-md next-md-icon material-symbols-outlined mdls" slot="end">navigate_next</span>
+					</IonItem>
+				</ion-nav-link>
+				<ion-nav-link router-direction="forward" :component="HomeCustomView">
+					<IonItem button>
+						<span class="material-symbols-outlined mdls" slot="start">home</span>
+						<IonLabel class="ion-text-wrap">
+							<h2>Personnalisation de l'écran d'accueil</h2>
+							<p>Affichez ou masquez les informations à votre guise sur l'écran d'accueil !</p>
 						</IonLabel>
 						<span class="only-md next-md-icon material-symbols-outlined mdls" slot="end">navigate_next</span>
 					</IonItem>
@@ -235,7 +257,11 @@
 				</ion-nav-link>
 			</IonList>
 
-			<IonList :inset="true" lines="none">
+			<IonLabel class="listGroupTitle">
+				<p>Options avancées</p>
+			</IonLabel>
+
+			<IonList class="listGroup contains-nav-link">
 				<IonItem button @click="logout()">
 					<span class="material-symbols-outlined mdls" slot="start">logout</span>
 					<IonLabel class="ion-text-wrap">
@@ -256,13 +282,11 @@
 				</ion-nav-link>
 			</IonList>
 
-			<IonList :inset="true" lines="inset">
-				<IonListHeader>
-					<IonLabel>
-						<p>Contributeurs les plus actifs</p>
-					</IonLabel>
-				</IonListHeader>
+			<IonLabel class="listGroupTitle">
+				<p>Contributeurs les plus actifs</p>
+			</IonLabel>
 
+			<IonList class="listGroup">
 				<div v-if="contributors != null && !contributorsLoading">
 					<IonItem v-for="(contributor, i) in contributors" :key="i" button @click="openURL(contributor.html_url)">
 						<img :src="contributor.avatar_url" slot="start" class="avatar" />
@@ -287,7 +311,11 @@
 				</div>
 			</IonList>
 
-			<IonList :inset="true" lines="inset">
+			<IonLabel class="listGroupTitle">
+				<p>Communauté & liens externes</p>
+			</IonLabel>
+
+			<IonList class="listGroup">
 				<IonItem button @click="openURL('https://ko-fi.com/thepapillonapp')" class="only-md">
 					<span class="material-symbols-outlined mdls" slot="start">volunteer_activism</span>
 					<IonLabel>
@@ -319,7 +347,11 @@
 				</IonItem>
 			</IonList>
 
-			<IonList :inset="true" lines="inset">
+			<IonLabel class="listGroupTitle">
+				<p>A propos de l'app</p>
+			</IonLabel>
+
+			<IonList class="listGroup">
 				<IonItem @click="showChangelog">
 					<span class="material-symbols-outlined mdls" slot="start">security_update_good</span>
 					<IonLabel>
@@ -352,7 +384,6 @@
 				</IonItem>
 			</IonList>
 		</ion-content>
-	</ion-page>
 </template>
   
 <style scoped>

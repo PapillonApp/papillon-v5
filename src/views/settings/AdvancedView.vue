@@ -10,6 +10,7 @@
 		IonTitle,
 		IonContent,
 		IonNavLink,
+		IonBackButton
 	} from '@ionic/vue';
 
 	import LogView from './LogView.vue';
@@ -27,7 +28,7 @@
 			IonHeader,
 			IonToolbar,
 			IonButtons,
-			PapillonBackButton,
+			IonBackButton,
 			IonList,
 			IonItem,
 			IonLabel,
@@ -41,6 +42,9 @@
 			}
 		},
 		methods: {
+			pop() {
+				return false;
+			},
 			resetColors() {
 				localStorage.removeItem('SubjectColors');
 
@@ -190,15 +194,20 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<PapillonBackButton></PapillonBackButton>
+					<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+					<IonBackButton class="only-md" @click="pop"></IonBackButton>
 				</ion-buttons>
 
-				<ion-title mode="md">Options avancées</ion-title>
+				<ion-title>Options avancées</ion-title>
 			</IonToolbar>
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
-			<IonList :inset="true" lines="inset">
+			<IonLabel class="listGroupTitle">
+				<p>Options disponibles</p>
+			</IonLabel>
+
+			<IonList class="listGroup" lines="inset">
 				<IonItem button @click="emptyCache()">
 					<span class="material-symbols-outlined mdls" slot="start">auto_delete</span>
 					<IonLabel class="ion-text-wrap">
