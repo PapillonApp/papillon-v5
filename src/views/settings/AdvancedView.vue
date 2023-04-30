@@ -199,7 +199,7 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+					<IonBackButton class="only-ios" text="Paramètres" @click="pop"></IonBackButton>
 					<IonBackButton class="only-md" @click="pop"></IonBackButton>
 				</ion-buttons>
 
@@ -208,6 +208,12 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
+			<ion-header collapse="condense">
+				<ion-toolbar>
+					<ion-title size="large">Options avancées</ion-title>
+				</ion-toolbar>
+			</ion-header>
+
 			<IonLabel class="listGroupTitle">
 				<p>Options disponibles</p>
 			</IonLabel>
@@ -269,6 +275,14 @@
 					</IonLabel>
 				</IonItem>
 
+				<IonItem button @click="rebootApp()">
+					<span class="material-symbols-outlined mdls" slot="start">restart_alt</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Redémarrer Papillon</h2>
+						<p>Permet de redémarrer Papillon sans le fermer, pour appliquer des changements</p>  
+					</IonLabel>
+				</IonItem>
+
 				<ion-nav-link router-direction="forward" :component="LogView">
 					<IonItem button>
 						<span class="material-symbols-outlined mdls" slot="start">developer_mode</span>
@@ -278,13 +292,6 @@
 						</IonLabel>
 					</IonItem>
 				</ion-nav-link>
-				<IonItem button @click="rebootApp()">
-					<span class="material-symbols-outlined mdls" slot="start">restart_alt</span>
-					<IonLabel class="ion-text-wrap">
-						<h2>Redémarrer Papillon</h2>
-						<p>Permet de redémarrer Papillon sans le fermer, pour appliquer des changements</p>  
-					</IonLabel>
-				</IonItem>
 			</IonList>
 		</ion-content>
 </template>
