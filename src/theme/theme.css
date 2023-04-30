@@ -572,3 +572,7 @@ ion-list.listGroup:not(.contains-nav-link) ion-item:last-child {
     padding: 10px 0px;
     padding-left: 16px;
 }
+
+ion-toolbar.toolbar-title-default {
+    --min-height: 46px;
+}
