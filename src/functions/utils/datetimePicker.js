@@ -105,13 +105,13 @@ function fetchDaysOffAndHolidays() {
 					});
 			
 					localStorage.setItem("holidays", JSON.stringify(holidays));
-					resolve()
+					resolve(JSON.stringify(holidays))
 				})
 				.catch(error => console.error("[Fetch Holidays]: " + error));
 		} catch (error) {
 			console.error("[datetimePicker Fetching]: " + error);
-			displayToast.presentToast("Erreur lors de la récupération des jours fériés et des vacances scolaires", "danger")
-			reject()
+			displayToast.presentToast("Erreur lors de la récupération des jours fériés et des vacances scolaires", "danger", error)
+			reject(error)
 		}
 	})
 }

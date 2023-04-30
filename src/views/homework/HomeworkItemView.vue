@@ -93,7 +93,7 @@
 
                 // parse json
                 let parsed = JSON.parse(decoded);
-
+                console.log(parsed)
                 // open urlHw
                 this.openedHw = parsed;
                 this.openedData = parsed.data;
@@ -101,8 +101,10 @@
                 this.openedFiles = parsed.files;
 
                 // if parsed.data.id starts with "custom"
-                if(parsed.data.id.startsWith("custom")) {
-                    this.custom = true;
+                if(typeof parsed.data.id !== "number") {
+                    if(parsed.data.id.startsWith("custom")) {
+                        this.custom = true;
+                    }
                 }
             }
 

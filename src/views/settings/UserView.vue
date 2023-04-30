@@ -17,6 +17,8 @@
 	import displayToast from '@/functions/utils/displayToast.js';
     import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
+    import { checkmarkOutline, informationOutline, warningOutline } from 'ionicons/icons';
+
     const FastAverageColor = require('fast-average-color').FastAverageColor;
     const fac = new FastAverageColor();
 
@@ -84,9 +86,7 @@
                                 console.log(e);
                             });
 
-                        displayToast.presentNativeToast(
-                            'Photo de profil modifiée.'
-                        );
+                            displayToast.presentToastSmall("Photo de profil modifiée", "success", checkmarkOutline)
                     }
                 }
                 catch (error) {
