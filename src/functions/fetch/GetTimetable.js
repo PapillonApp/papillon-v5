@@ -48,7 +48,7 @@ function getSkolengoTimetable(date, forceReload) {
             resolve(constructSkolengoTimetable(timetable?.listeSeances || []));
         });
     } else {
-        const user = new Kdecole(token, ApiVersion[ent], 0, 'https://cors.api.getpapillon.xyz/' + ApiUrl[ent])
+        const user = new Kdecole(token, ApiVersion[ent], 0, app.config.globalProperties.$proxyPrefix + ApiUrl[ent])
 
         return user.getCalendrier().then(calendrier => {
             if (calendrier.cdtOuvert === false) throw new Error("Le calendrier n'est pas ouvert.")

@@ -22,6 +22,7 @@ import {
     serverSharp
 } from 'ionicons/icons';
 
+import {app} from '@/main.ts'
 import displayToast from '@/functions/utils/displayToast.js';
 import {ApiUrl, ApiVersion, ApiName, Kdecole} from 'kdecole-api'
 
@@ -105,7 +106,7 @@ export default defineComponent({
             loading.present();
 
             if (password.length === 125) {
-                const user = new Kdecole(password, ApiVersion[ent], 0, 'https://cors.api.getpapillon.xyz/' + ApiUrl[ent])
+                const user = new Kdecole(password, ApiVersion[ent], 0, app.config.globalProperties.$proxyPrefix + ApiUrl[ent])
                 user.starting().then(() => {
                     localStorage.token = password
                     localStorage.loggedIn = true
@@ -117,7 +118,7 @@ export default defineComponent({
                     displayToast.presentError(`${e.message}`, "danger", e)
                 })
             } else {
-                Kdecole.login(username, password, ApiVersion[ent], 'https://cors.api.getpapillon.xyz/' + ApiUrl[ent]).then(token => {
+                Kdecole.login(username, password, ApiVersion[ent], app.config.globalProperties.$proxyPrefix + ApiUrl[ent]).then(token => {
                     localStorage.token = token
                     localStorage.loggedIn = true
                     localStorage.loginService = "skolengo";

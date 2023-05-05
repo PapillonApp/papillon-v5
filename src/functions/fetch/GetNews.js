@@ -23,7 +23,7 @@ async function getNews(forceReload) {
 function getSkolengoNews(forceReload) {
     const token = localStorage.getItem('token');
     const ent = localStorage.getItem('ent');
-    const etudiant = new Kdecole(token, ApiVersion[ent], 0, 'https://cors.api.getpapillon.xyz/' + ApiUrl[ent])
+    const etudiant = new Kdecole(token, ApiVersion[ent], 0, app.config.globalProperties.$proxyPrefix + ApiUrl[ent])
 
     let newsCache = localStorage.getItem('NewsCache');
     if (newsCache != null && !forceReload) {

@@ -38,7 +38,7 @@ async function getSkolengoUser(force) {
             resolve(constructSkolengoUser(user));
         });
     } else {
-        const etudiant = new Kdecole(token, ApiVersion[ent], 0, 'https://cors.api.getpapillon.xyz/' + ApiUrl[ent])
+        const etudiant = new Kdecole(token, ApiVersion[ent], 0, app.config.globalProperties.$proxyPrefix + ApiUrl[ent])
         return etudiant.getInfoUtilisateur().then(infoUser => {
             localStorage.setItem('avatarCache', 'data:image/png;base64,' + defaultAvatar);
             const user = constructSkolengoUser(infoUser)
@@ -114,7 +114,7 @@ async function getPronoteUser(force) {
                     return constructPronoteUser(user);
                 }
                 // download avatar
-                let url = `https://cors.api.getpapillon.xyz/` + avatar;
+                let url = app.config.globalProperties.$proxyPrefix + avatar;
                 axios.get(url, {responseType: 'blob'})
                     .then((response) => {
                         // get blob
