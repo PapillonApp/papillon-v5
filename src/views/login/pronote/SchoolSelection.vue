@@ -151,7 +151,6 @@
 			getPostal(e) {
 				console.log(e)
 
-				if(this.permissionDeny) return;
 				let postal = e.detail.value
 
 				if (postal.trim().length != 5) {
