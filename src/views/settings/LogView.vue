@@ -26,9 +26,6 @@
 		IonSearchbar
 	} from '@ionic/vue';
 
-	import PapillonBackButton from '@/components/PapillonBackButton.vue';
-
-
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
