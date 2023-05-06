@@ -6,7 +6,6 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
 		IonButtons,
 		IonButton,
@@ -17,7 +16,6 @@
 		IonBackButton
 	} from '@ionic/vue';
 
-	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 	import hapticsController from '@/functions/utils/hapticsController.js';
 
 	export default defineComponent({
