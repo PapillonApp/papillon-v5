@@ -6,7 +6,6 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
 		IonLabel,
 		IonToggle,
@@ -19,7 +18,6 @@
 
 	import displayToast from '@/functions/utils/displayToast.js';
 	import hapticsController from '@/functions/utils/hapticsController.js';
-	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	export default defineComponent({
 		name: 'FolderPage',
