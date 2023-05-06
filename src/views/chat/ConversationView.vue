@@ -17,7 +17,6 @@
     import GetConversations from '@/functions/fetch/GetConversations.js';
 
     import ChatView from './ChatView.vue';
-    import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	export default defineComponent({
 		name: 'FolderPage',
