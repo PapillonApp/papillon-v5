@@ -38,7 +38,7 @@ function changePronotePeriod(name) {
 
 
 function changeEDPeriod(name) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         resolve({ "status": "ok", "period": name })
     });
 }
