@@ -16,8 +16,6 @@
 		IonBackButton
 	} from '@ionic/vue';
 
-	import PapillonBackButton from '@/components/PapillonBackButton.vue';
-
 	import GetGrades from '@/functions/fetch/GetGrades.js';
 
 	export default defineComponent({
