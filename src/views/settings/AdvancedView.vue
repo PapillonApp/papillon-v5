@@ -19,7 +19,6 @@
 	import displayToast from '@/functions/utils/displayToast.js';
 	import GetToken from '@/functions/login/GetToken.js';
 	import { fetchDaysOffAndHolidays } from '@/functions/utils/datetimePicker.js';
-	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	import { Dialog } from '@capacitor/dialog';
 
