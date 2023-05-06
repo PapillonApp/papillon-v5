@@ -11,7 +11,7 @@ import { Capacitor } from '@capacitor/core';
 
 const { version, canal } = require('/package')
 
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import { useRoute } from 'vue-router';
 
 const { changelog } = require('/src/update')
@@ -572,7 +572,7 @@ export default defineComponent({
 		},
 	},
 	watch: {
-		$route(to, from) {
+		$route(to, /*from*/) {
 			let path = to.path;
 			this.setSelectedIndex(path);
 		}
