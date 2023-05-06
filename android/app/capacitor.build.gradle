@@ -31,6 +31,7 @@ dependencies {
     implementation project(':hugotomazi-capacitor-navigation-bar')
     implementation project(':transistorsoft-capacitor-background-fetch')
     implementation project(':capacitor-android-shortcuts')
+    implementation project(':capacitor-calendar')
     implementation project(':capacitor-notification-badge')
     implementation project(':capacitor-plugin-safe-area')
 
