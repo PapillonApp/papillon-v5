@@ -183,7 +183,7 @@ function constructPronoteNews(news) {
     return newsArray;
 }
 //ED: return empty array temporarily to display homepage
-function getEDNews(forceReload) {
+function getEDNews(/*forceReload*/) {
     return new Promise((resolve) => {
         resolve([])
     })
