@@ -598,10 +598,28 @@ function constructEDGrades(grades) {
 		}
 		markArray.push(subject);
 	})
-
+	let currentPeriod;
+	if(localStorage.getItem("currentPeriod")) {
+		let currentPeriodConstruct = JSON.parse(localStorage.getItem("currentPeriod"))
+		let currentPeriodConstruct1 = grades.periodes.filter(p => p.idPeriode === currentPeriodConstruct.id)
+		currentPeriod = {
+			...currentPeriodConstruct,
+			...currentPeriodConstruct1
+		}
+	}
+	else {
+		let allPeriods = JSON.parse(localStorage.getItem('userData')).periods;
+		let actualPeriod = allPeriods.find(period => period.actual == true);
+		let actualPeriod1 = grades.periodes.filter(p => p.idPeriode === actualPeriod.id)
+		currentPeriod = {
+			...actualPeriod,
+			...actualPeriod1
+		}
+	}
+	console.log(currentPeriod)
 	// for each mark, add it to the corresponding subject in the array
 	marks.forEach(mark => {
-		if(mark.codePeriode != JSON.parse(localStorage.getItem("currentPeriod")).id) return;
+		if(mark.codePeriode != currentPeriod.id) return;
 		// add mark to subject
 		let newMark = {
 			id: mark.id,
@@ -705,14 +723,12 @@ function constructEDGrades(grades) {
 	});
 
 	// calculate averages for each subject in markArray
-	let period = grades.periodes.filter(p => p.cloture === false)
-	period = period[0]
 	
-	let studentAverage = parseFloat(period.ensembleMatieres.moyenneGenerale.replace(",", "."));
-	let classAverage = parseFloat(period.ensembleMatieres.moyenneClasse.replace(",", "."));
-	let classMin = parseFloat(period.ensembleMatieres.moyenneMin.replace(",", "."));
-	let classMax = parseFloat(period.ensembleMatieres.moyenneMax.replace(",", "."));
-	let averagesCalculate = [moment(period.ensembleMatieres.dateCalcul).format("DD/MM/YYYY"), period.ensembleMatieres.dateCalcul.split(' ')[1] ]//moment(period.ensembleMatieres.dateCalcul).format("HH:MM")]
+	let studentAverage = parseFloat(currentPeriod[0].ensembleMatieres.moyenneGenerale.replace(",", "."));
+	let classAverage = parseFloat(currentPeriod[0].ensembleMatieres.moyenneClasse.replace(",", "."));
+	let classMin = parseFloat(currentPeriod[0].ensembleMatieres.moyenneMin.replace(",", "."));
+	let classMax = parseFloat(currentPeriod[0].ensembleMatieres.moyenneMax.replace(",", "."));
+	let averagesCalculate = [moment(currentPeriod[0].ensembleMatieres.dateCalcul).format("DD/MM/YYYY"), currentPeriod[0].ensembleMatieres.dateCalcul.split(' ')[1] ]//moment(period.ensembleMatieres.dateCalcul).format("HH:MM")]
 	/*
 	markArray.forEach(subject => {
 		console.log(subject.class)
