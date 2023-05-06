@@ -919,7 +919,7 @@ export default defineComponent({
 
 .profile .name h3 {
 	font-size: 17.5px;
-	font-weight: 600;
+	font-weight: 600 !important;
 }
 
 .userAvatar {

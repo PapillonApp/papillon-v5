@@ -732,7 +732,7 @@ export default defineComponent({
 <template>
 	<ion-app>
 		<div id="debug_banner" v-if="appCanal == 'dev'" @click="displayDevMsg">
-			DEVBUILD
+			Devbuild
 		</div>
 
 		<ion-split-pane content-id="main-content">

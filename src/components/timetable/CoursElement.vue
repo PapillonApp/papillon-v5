@@ -397,7 +397,7 @@
 
 	.CoursName {
 		font-size: 18px;
-		font-weight: 600 !important;
+		font-weight: 500 !important;
 		margin-top: 1px;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -566,11 +566,11 @@
 		margin-bottom: 3px;
 
 		font-size: 1.1em;
-		font-weight: 600;
+		font-weight: 500;
 
 		font-family: var(--papillon-font);
 		font-feature-settings: 'tnum' on, 'lnum' on !important;
-		letter-spacing: -0.6px;
+		letter-spacing: -0.3px;
 	}
 
 	.CoursTime .end {

@@ -152,7 +152,7 @@
 			<IonToolbar>
 
                 <ion-buttons slot="start">
-                    <IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+                    <IonBackButton class="only-ios" text="Paramètres" @click="pop"></IonBackButton>
                     <IonBackButton class="only-md" @click="pop"></IonBackButton>
                 </ion-buttons>
 
@@ -161,6 +161,12 @@
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
+            <ion-header collapse="condense">
+				<ion-toolbar>
+					<ion-title size="large">Profil</ion-title>
+				</ion-toolbar>
+			</ion-header>
+
             <IonLabel class="listGroupTitle">
 				<p>Photo de profil</p>
 			</IonLabel>

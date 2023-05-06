@@ -68,6 +68,7 @@
                 isLoading: true,
                 loginService: localStorage.getItem("loginService"),
                 baseRn: new Date(),
+                swiper: null,
 			}
 		},
 		methods: {
@@ -248,7 +249,7 @@
                     this.baseRn = newDate;
 
                     // reset swiper
-                    this.$refs.swiper.$el.swiper.slideTo(this.baseIndex, 0, false);
+                    this.swiper.slideTo(this.baseIndex, 0, false);
 
                     // emit event
                     document.dispatchEvent(new CustomEvent('rnChanged', { detail: newDate }));
@@ -334,6 +335,8 @@
             }
 		},
 		mounted() {
+            this.swiper = this.$refs.swiper.$el.swiper;
+
             document.addEventListener('rnChanged', (e) => {
                 this.rnButtonString = this.createDateString(e.detail);
                 this.getHomeworks(false, e.detail);
@@ -347,9 +350,7 @@
             });
 
             // detect swiper slide change
-            let swiper = this.$refs.swiper.$el.swiper;
-
-            swiper.on('slideChangeTransitionEnd', () => {
+            this.swiper.on('slideChangeTransitionEnd', () => {
                 // reset swiper
                 this.resetSwiper()
                 // isChangingDate
@@ -358,8 +359,8 @@
                 this.getHomeworks();
             });
 
-            swiper.on('activeIndexChange', () => {
-                this.currentIndex = swiper.activeIndex;
+            this.swiper.on('activeIndexChange', () => {
+                this.currentIndex = this.swiper.activeIndex;
             });
 		}
 	});

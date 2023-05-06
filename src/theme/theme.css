@@ -41,16 +41,29 @@ ion-content::-webkit-scrollbar {
 }
 
 :root {
-    --papillon-font: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --papillon-font: 'Golos Text', sans-serif;
     --ion-box-shadow: 0 1px 2px #00000005, 0 2px 6px #00000005;
 }
 
 h1, h2, h3 {
-    font-weight: 700 !important;
+    font-weight: 600 !important;
+    font-family: var(--papillon-font);
 }
 
 h2, h3 {
+    font-weight: 500 !important;
+}
+
+ion-title.title-large {
+    font-family: var(--papillon-font);
+    font-weight: 300 !important;
+    letter-spacing: -0.5px;
+}
+
+ion-title.title-default {
+    font-family: var(--papillon-font);
     font-weight: 600 !important;
+    font-size: 17px !important;
 }
 
 /* (MD) Searchbar */
@@ -84,8 +97,8 @@ body.dark .header-md {
 
 /* (MD) Calendar button */
 #rnPickerModalButton {
-    background: var(--ion-color-step-50) !important;
-    border-radius: 300px;
+    background: var(--ion-color-step-100) !important;
+    border-radius: 8px;
 
     height: 36px;
 
@@ -93,6 +106,10 @@ body.dark .header-md {
     isolation: isolate;
 
     transition: background 0.2s;
+
+    margin-right: 5px;
+
+    padding: 0px 2px !important;
 }
 
 body.dark #rnPickerModalButton {
@@ -242,7 +259,7 @@ ion-item .mdls[slot="start"] {
 
 .NoCours h2 {
     font-style: normal;
-    font-weight: 600;
+    font-weight: 600 !important;
     font-size: 20px;
     line-height: 22px;
     text-align: center;
@@ -476,6 +493,7 @@ ion-fab .mdls {
 
     font-size: 11px;
     font-weight: 600;
+    text-transform: uppercase;
 
     box-shadow: 1px 1px 5px #00000055;
 }

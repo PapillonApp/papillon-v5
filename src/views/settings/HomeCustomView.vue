@@ -96,7 +96,7 @@ export default defineComponent({
     <IonHeader class="AppHeader" translucent >
         <IonToolbar>
             <ion-buttons slot="start">
-                <IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+                <IonBackButton class="only-ios" text="Paramètres" @click="pop"></IonBackButton>
                 <IonBackButton class="only-md" @click="pop"></IonBackButton>
             </ion-buttons>
 
@@ -104,6 +104,12 @@ export default defineComponent({
         </IonToolbar>
     </IonHeader>
     <ion-content :fullscreen="true">
+        <ion-header collapse="condense">
+			<ion-toolbar>
+				<ion-title size="large">Écran d'accueil</ion-title>
+			</ion-toolbar>
+		</ion-header>
+
         <IonLabel class="listGroupTitle">
 			<p>Sélectionnez les élements</p>
 		</IonLabel>

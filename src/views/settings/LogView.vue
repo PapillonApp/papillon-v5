@@ -252,7 +252,7 @@ Contient **${this.logs.length}** logs
 		<IonToolbar>
 
 			<ion-buttons slot="start">
-				<IonBackButton class="only-ios" text="Retour" @click="pop"></IonBackButton>
+				<IonBackButton class="only-ios" text="Avancé" @click="pop"></IonBackButton>
 				<IonBackButton class="only-md" @click="pop"></IonBackButton>
 			</ion-buttons>
 
@@ -265,9 +265,6 @@ Contient **${this.logs.length}** logs
 			</ion-buttons>
 
 		</IonToolbar>
-		<ion-toolbar class="only-md">
-			<ion-searchbar placeholder="Rechercher dans les logs" @ionInput="searchLogs($event)"></ion-searchbar>
-		</ion-toolbar>
 
 	</IonHeader>
 
