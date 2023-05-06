@@ -5,7 +5,6 @@
 	import {
 		IonHeader,
 		IonToolbar,
-		IonAvatar,
 		IonList,
 		IonItem,
 		IonLabel,
@@ -17,8 +16,6 @@
 	} from '@ionic/vue';
 
 	import { Browser } from '@capacitor/browser';
-
-	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	export default defineComponent({
 		name: 'FolderPage',
