@@ -155,7 +155,7 @@
 						confirmButtonText: 'OK',
 					});
 				}
-				if(!value) {
+				if(!value && !cancelled) {
 					displayToast.presentToastSmall("L'API utilisée a été réinitialisée.", "warning", warningOutline)
 					localStorage.removeItem('customApiUrl');
 					await Dialog.alert({
@@ -292,13 +292,6 @@
 						</IonLabel>
 					</IonItem>
 				</ion-nav-link>
-				<IonItem button @click="rebootApp()">
-					<span class="material-symbols-outlined mdls" slot="start">restart_alt</span>
-					<IonLabel class="ion-text-wrap">
-						<h2>Redémarrer Papillon</h2>
-						<p>Permet de redémarrer Papillon sans le fermer, pour appliquer des changements</p>  
-					</IonLabel>
-				</IonItem>
 			</IonList>
 		</ion-content>
 </template>
