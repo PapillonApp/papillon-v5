@@ -52,7 +52,7 @@ const routes: Routes = [
   {
     path: '/schoollife',
     name: 'Schoollife',
-    component: () => import ('../views/SchoollifeView.vue')
+    component: () => import ('../views/schoollife/SchoollifeSetup.vue')
   },
   {
     path: '/conversations',
