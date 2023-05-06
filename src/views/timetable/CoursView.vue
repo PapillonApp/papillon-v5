@@ -5,7 +5,6 @@
 	import {
 		IonHeader,
 		IonToolbar,
-		IonAvatar,
 		IonList,
 		IonItem,
 		IonLabel,
@@ -30,8 +29,6 @@
     import { Share } from '@capacitor/share';
 
     import { LocalNotifications } from '@capacitor/local-notifications';
-
-	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	export default defineComponent({
 		name: 'FolderPage',
