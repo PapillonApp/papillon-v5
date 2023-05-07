@@ -528,7 +528,7 @@ export default defineComponent({
 		async displayDevMsg() {
 			const alert = await alertController.create({
 				header: 'Version de développement',
-				message: 'Papillon fonctionne actuellement en mode développement. <br/><br/> Certaines fonctionnalités ne sont pas encore terminées et risquent de ne pas fonctionner correctement.',
+				message: 'Papillon fonctionne actuellement en mode développement. Certaines fonctionnalités ne sont pas encore terminées et risquent de ne pas fonctionner correctement.',
 				mode: 'md',
 				buttons: ['Je comprends']
 			});
