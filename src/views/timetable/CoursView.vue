@@ -487,16 +487,23 @@
 					</ion-item>
 				</IonList>
 
-				<IonLabel class="listGroupTitle" v-if="openCours_status.status">
+				<IonLabel class="listGroupTitle" v-if="openCours_status.status || openCours_data.memo">
 					<p>Statut du cours</p>
 				</IonLabel>
 
-				<IonList class="listGroup" v-if="openCours_status.status">
-					<ion-item class="info-item">
+				<IonList class="listGroup">
+					<ion-item class="info-item" v-if="openCours_status.status">
 						<span class="material-symbols-outlined mdls" slot="start">schedule</span>
-						<ion-label>
+						<ion-label class="ion-text-wrap">
 							<p>Statut du cours</p>
 							<h2>{{ openCours_status.status }}</h2>
+						</ion-label>
+					</ion-item>
+					<ion-item class="info-item" v-if="openCours_data.memo">
+						<span class="material-symbols-outlined mdls" slot="start">sticky_note_2</span>
+						<ion-label class="ion-text-wrap">
+							<p>Mémo</p>
+							<h2>{{ openCours_data.memo }}</h2>
 						</ion-label>
 					</ion-item>
 				</IonList>
