@@ -492,11 +492,12 @@
 				</IonLabel>
 
 				<IonList class="listGroup">
-					<ion-item class="info-item" v-if="openCours_status.status">
+					<ion-item class="info-item" v-if="openCours_status.status" :class="{ cancelled: openCours_status.isCancelled }">
 						<span class="material-symbols-outlined mdls" slot="start">information-circle</span>
 						<ion-label class="ion-text-wrap">
 							<p>Statut du cours</p>
-							<h2>{{ openCours_status.status }}</h2>
+							<h2 v-if="openCours_status.isCancelled">Ce cours n'est pas maintenu.<br/>Motif : {{ openCours_status.status }}</h2>
+							<h2 v-else>{{ openCours_status.status }}</h2>
 						</ion-label>
 					</ion-item>
 					<ion-item class="info-item" v-if="openCours_data.memo">
@@ -545,5 +546,9 @@
 <style scoped>
 .listGroup.times {
 	display: flex;
+}
+
+.info-item.cancelled {
+	color: var(--ion-color-danger);
 }
 </style>
