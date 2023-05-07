@@ -60,7 +60,7 @@
 			// get current route
 			let currentRoute = this.$router.currentRoute.value;
 
-			if(currentRoute.name == "Trimetable") {
+			if(currentRoute.name == "Timetable") {
 				backTitle = 'Emp. du temps';
 			}
 
@@ -445,21 +445,21 @@
 						<span class="material-symbols-outlined mdls" slot="start">history_edu</span>
 						<ion-label>
 							<p>Nom de la matière</p>
-							<h2>{{openCours_data.subject}}</h2>
+							<h2>{{openCours_data.subject || "Pas de matière"}}</h2>
 						</ion-label>
 					</ion-item>
 					<ion-item class="info-item">
 						<span class="material-symbols-outlined mdls" slot="start">face</span>
 						<ion-label>
 							<p>Professeurs</p>
-							<h2>{{teachers}}</h2>
+							<h2>{{teachers || "Pas de professeur"}}</h2>
 						</ion-label>
 					</ion-item>
 					<ion-item class="info-item">
 						<span class="material-symbols-outlined mdls" slot="start">meeting_room</span>
 						<ion-label>
 							<p>Salle</p>
-							<h2>{{rooms}}</h2>
+							<h2>{{rooms || "Pas de salle" }}</h2>
 						</ion-label>
 					</ion-item>
 				</IonList>
