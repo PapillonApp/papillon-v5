@@ -493,7 +493,7 @@
 
 				<IonList class="listGroup">
 					<ion-item class="info-item" v-if="openCours_status.status">
-						<span class="material-symbols-outlined mdls" slot="start">schedule</span>
+						<span class="material-symbols-outlined mdls" slot="start">information-circle</span>
 						<ion-label class="ion-text-wrap">
 							<p>Statut du cours</p>
 							<h2>{{ openCours_status.status }}</h2>
