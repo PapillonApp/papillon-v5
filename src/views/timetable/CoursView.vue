@@ -13,22 +13,22 @@
 		IonContent,
 		IonSkeletonText,
 		IonBackButton,
-        IonToggle
+		IonToggle
 	} from '@ionic/vue';
 
-    import { Capacitor } from '@capacitor/core';
+	import { Capacitor } from '@capacitor/core';
 
-    import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
+	import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
 
-    import { Dialog } from '@capacitor/dialog';
+	import { Dialog } from '@capacitor/dialog';
 
 	import { Browser } from '@capacitor/browser';
 
-    import { CapacitorCalendar } from 'capacitor-calendar';
+	import { CapacitorCalendar } from 'capacitor-calendar';
 
-    import { Share } from '@capacitor/share';
+	import { Share } from '@capacitor/share';
 
-    import { LocalNotifications } from '@capacitor/local-notifications';
+	import { LocalNotifications } from '@capacitor/local-notifications';
 
 	export default defineComponent({
 		name: 'FolderPage',
@@ -43,7 +43,7 @@
 			IonList,
 			IonItem,
 			IonLabel,
-            IonToggle
+			IonToggle
 		},
 		props: {
 			urlCours: {
@@ -57,309 +57,309 @@
 			// get current route
 			let currentRoute = this.$router.currentRoute.value;
 
-			if(currentRoute.name == "Trimetable") {
+			if(currentRoute.name == "Timetable") {
 				backTitle = 'Emp. du temps';
 			}
 
 			return {
 				backTitle: backTitle,
 				openedCours: [],
-                openCours_course: [],
-                openCours_data: [],
-                openCours_status: [],
-                openCours_time: [],
-                teachers: "",
-                rooms: "",
-                notificationEnabled: false,
+				openCours_course: [],
+				openCours_data: [],
+				openCours_status: [],
+				openCours_time: [],
+				teachers: "",
+				rooms: "",
+				notificationEnabled: false,
 			}
 		},
 		methods: {
-            async addToCalendar() {
-                if (Capacitor.isNativePlatform()) {
-                    // create calendar event on mobile
-                    let result = { availableCalendars: [] };
+			async addToCalendar() {
+				if (Capacitor.isNativePlatform()) {
+					// create calendar event on mobile
+					let result = { availableCalendars: [] };
 
-                    try {
-                        // the first time, the user will be prompted to grant permission
-                        result = await CapacitorCalendar.getAvailableCalendars();
-                    } catch(e) {
-                        // if the user denied permission, we'll end up here
-                        console.log('Error', e);
-                        return;
-                    }
+					try {
+						// the first time, the user will be prompted to grant permission
+						result = await CapacitorCalendar.getAvailableCalendars();
+					} catch(e) {
+						// if the user denied permission, we'll end up here
+						console.log('Error', e);
+						return;
+					}
 
-                    if (result?.availableCalendars.length) {
-                        try {
-                            // ask which calendar to use
-                            const opts = [];
+					if (result?.availableCalendars.length) {
+						try {
+							// ask which calendar to use
+							const opts = [];
 
-                            for (const cal of result.availableCalendars) {
-                                opts.push({
-                                    title: cal.name,
-                                });
-                            }
+							for (const cal of result.availableCalendars) {
+								opts.push({
+									title: cal.name,
+								});
+							}
 
-                            opts.push({
-                                title: 'Annuler',
-                                style: ActionSheetButtonStyle.Cancel,
-                            });
+							opts.push({
+								title: 'Annuler',
+								style: ActionSheetButtonStyle.Cancel,
+							});
 
-                            const selected = await ActionSheet.showActions({
-                                title: 'Sélectionnez un calendrier',
-                                message: 'Choisissez le calendrier dans lequel ajouter le cours.',
-                                options: opts,
-                            });
+							const selected = await ActionSheet.showActions({
+								title: 'Sélectionnez un calendrier',
+								message: 'Choisissez le calendrier dans lequel ajouter le cours.',
+								options: opts,
+							});
 
-                            if (selected.index === opts.length - 1) {
-                                return;
-                            }
+							if (selected.index === opts.length - 1) {
+								return;
+							}
 
-                            let selectedCalendar = result.availableCalendars[selected.index];
+							let selectedCalendar = result.availableCalendars[selected.index];
 
-                            // get data
-                            let id = this.openCours_course.id;
+							// get data
+							let id = this.openCours_course.id;
 
-                            let subject = this.openCours_data.subject;
-                            let teachers = this.teachers;
-                            let rooms = this.rooms;
+							let subject = this.openCours_data.subject;
+							let teachers = this.teachers;
+							let rooms = this.rooms;
 
-                            let status = "Le cours se déroule normalement.";
-                            if(this.openCours_status.status) {
-                                status = this.openCours_status.status;
-                            }
+							let status = "Le cours se déroule normalement.";
+							if(this.openCours_status.status) {
+								status = this.openCours_status.status;
+							}
 
-                            let finalStatus = `Vous êtes avec ${teachers} en ${rooms}. ${status}`;
+							let finalStatus = `Vous êtes avec ${teachers} en ${rooms}. ${status}`;
 
-                            let startMillis = new Date(this.openCours_time.start).getTime();
+							let startMillis = new Date(this.openCours_time.start).getTime();
 
-                            let endMillis = new Date(this.openCours_time.end).getTime();
+							let endMillis = new Date(this.openCours_time.end).getTime();
 
-                            // use default calendar
-                            await CapacitorCalendar.createEvent({
-                                id: id,
-                                title: subject,
-                                location: rooms,
-                                notes: finalStatus,
-                                startDate: startMillis,
-                                endDate: endMillis,
-                                calendarId: selectedCalendar.id,
-                            });
-                            
-                            // dialog
-                            await Dialog.alert({
-                                title: 'Cours ajouté',
-                                message: 'Le cours a bien été ajouté à votre calendrier.',
-                            });
-                        } catch (e) {
-                            console.error('Error creating calendar event', e);
-                            // dialog
-                            await Dialog.alert({
-                                title: 'Erreur',
-                                message: 'Une erreur est survenue lors de l\'ajout du cours à votre calendrier.',
-                            });
-                        }
-                    }
-                }
-            },
-            async deleteCustomCourse() {
-                if (Capacitor.isNative) {
-                    ActionSheet.showActions({
-                        title: 'Êtes-vous sûr de vouloir supprimer ce cours ?',
-                        message: 'Ce cours devra être recréé si vous souhaitez le récupérer.',
-                        options: [
-                            {
-                                title: 'Supprimer',
-                                style: ActionSheetButtonStyle.Destructive,
-                            },
-                            {
-                                title: 'Annuler',
-                                style: ActionSheetButtonStyle.Cancel,
-                            },
-                        ],
-                    }).then((result) => {
-                        if(result.index == 0) {
-                            this.deleteCourse()
-                        }
-                    });
-                } else {
-                    this.deleteCourse()
-                }
-            },
-            async deleteCourse() {
-                let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
+							// use default calendar
+							await CapacitorCalendar.createEvent({
+								id: id,
+								title: subject,
+								location: rooms,
+								notes: finalStatus,
+								startDate: startMillis,
+								endDate: endMillis,
+								calendarId: selectedCalendar.id,
+							});
+							
+							// dialog
+							await Dialog.alert({
+								title: 'Cours ajouté',
+								message: 'Le cours a bien été ajouté à votre calendrier.',
+							});
+						} catch (e) {
+							console.error('Error creating calendar event', e);
+							// dialog
+							await Dialog.alert({
+								title: 'Erreur',
+								message: 'Une erreur est survenue lors de l\'ajout du cours à votre calendrier.',
+							});
+						}
+					}
+				}
+			},
+			async deleteCustomCourse() {
+				if (Capacitor.isNative) {
+					ActionSheet.showActions({
+						title: 'Êtes-vous sûr de vouloir supprimer ce cours ?',
+						message: 'Ce cours devra être recréé si vous souhaitez le récupérer.',
+						options: [
+							{
+								title: 'Supprimer',
+								style: ActionSheetButtonStyle.Destructive,
+							},
+							{
+								title: 'Annuler',
+								style: ActionSheetButtonStyle.Cancel,
+							},
+						],
+					}).then((result) => {
+						if(result.index == 0) {
+							this.deleteCourse()
+						}
+					});
+				} else {
+					this.deleteCourse()
+				}
+			},
+			async deleteCourse() {
+				let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
 
-                customCourses = customCourses.filter(course => course.course.course.id != this.openCours_course.id);
+				customCourses = customCourses.filter(course => course.course.course.id != this.openCours_course.id);
 
-                localStorage.setItem('customCourses', JSON.stringify(customCourses));
+				localStorage.setItem('customCourses', JSON.stringify(customCourses));
 
-                // dialog
-                await Dialog.alert({
-                    title: 'Cours supprimé',
-                    message: 'Le cours a bien été supprimé.',
-                });
-            },
+				// dialog
+				await Dialog.alert({
+					title: 'Cours supprimé',
+					message: 'Le cours a bien été supprimé.',
+				});
+			},
 			async openLink(url) {
 				await Browser.open({
 					url: url,
 					presentationStyle: 'popover',
 				});
 			},
-            getStringToAsciiArray(string) {
-                let charCodeArr = [];
-                for(let i = 0; i < string.length; i++){
-                    let code = string.charCodeAt(i);
-                    charCodeArr.push(code);
-                }
+			getStringToAsciiArray(string) {
+				let charCodeArr = [];
+				for(let i = 0; i < string.length; i++){
+					let code = string.charCodeAt(i);
+					charCodeArr.push(code);
+				}
 
-                return charCodeArr;
-            },
-            async shareCours() {
-                let sharedCourse = {
-                    name: this.openedCours.data.subject,
-                    teachers: this.openedCours.data.teachers.join(', ') || "Aucun professeur",
-                    rooms: this.openedCours.data.rooms.join(', ') || "Aucune salle",
-                    start: new Date(this.openedCours.time.start).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-                    end: new Date(this.openedCours.time.end).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
-                    status: this.openedCours.status.status,
-                    color: this.openedCours.course.color,
-                    memo: this.openedCours.data.memo || "none"
-                }
+				return charCodeArr;
+			},
+			async shareCours() {
+				let sharedCourse = {
+					name: this.openedCours.data.subject,
+					teachers: this.openedCours.data.teachers.join(', ') || "Aucun professeur",
+					rooms: this.openedCours.data.rooms.join(', ') || "Aucune salle",
+					start: new Date(this.openedCours.time.start).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+					end: new Date(this.openedCours.time.end).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+					status: this.openedCours.status.status,
+					color: this.openedCours.course.color,
+					memo: this.openedCours.data.memo || "none"
+				}
 
-                // get first name of user
-                let firstName = JSON.parse(localStorage.getItem("userData")).student.name;
-                firstName = firstName.split(" ")[firstName.split(" ").length - 1];
+				// get first name of user
+				let firstName = JSON.parse(localStorage.getItem("userData")).student.name;
+				firstName = firstName.split(" ")[firstName.split(" ").length - 1];
 
-                // if custom name is set, use it instead
-                if(localStorage.getItem("customName")) {
-                    firstName = localStorage.getItem("customName").split(" ")[localStorage.getItem("customName").split(" ").length - 1];
-                }
+				// if custom name is set, use it instead
+				if(localStorage.getItem("customName")) {
+					firstName = localStorage.getItem("customName").split(" ")[localStorage.getItem("customName").split(" ").length - 1];
+				}
 
-                // Set customizable data to ascii
-                firstName = this.getStringToAsciiArray(firstName).join('-');
-                sharedCourse.name = this.getStringToAsciiArray(sharedCourse.name).join('-');
-                sharedCourse.teachers = this.getStringToAsciiArray(sharedCourse.teachers).join('-');
-                sharedCourse.rooms = this.getStringToAsciiArray(sharedCourse.rooms).join('-');
-                if (sharedCourse.status != null) {
-                    sharedCourse.status = this.getStringToAsciiArray(sharedCourse.status).join('-');
-                } else {
-                    sharedCourse.status = this.getStringToAsciiArray("null").join('-');
-                }
+				// Set customizable data to ascii
+				firstName = this.getStringToAsciiArray(firstName).join('-');
+				sharedCourse.name = this.getStringToAsciiArray(sharedCourse.name).join('-');
+				sharedCourse.teachers = this.getStringToAsciiArray(sharedCourse.teachers).join('-');
+				sharedCourse.rooms = this.getStringToAsciiArray(sharedCourse.rooms).join('-');
+				if (sharedCourse.status != null) {
+					sharedCourse.status = this.getStringToAsciiArray(sharedCourse.status).join('-');
+				} else {
+					sharedCourse.status = this.getStringToAsciiArray("null").join('-');
+				}
 
-                let urlElems = "";
-                urlElems += firstName + "$"; // first name
-                urlElems += sharedCourse.name + "$";
-                urlElems += sharedCourse.teachers + "$";
-                urlElems += sharedCourse.rooms + "$";
-                urlElems += sharedCourse.start + "$";
-                urlElems += sharedCourse.end + "$";
-                urlElems += sharedCourse.color + "$";
-                urlElems += sharedCourse.status + "$";
-                urlElems += sharedCourse.memo;
+				let urlElems = "";
+				urlElems += firstName + "$"; // first name
+				urlElems += sharedCourse.name + "$";
+				urlElems += sharedCourse.teachers + "$";
+				urlElems += sharedCourse.rooms + "$";
+				urlElems += sharedCourse.start + "$";
+				urlElems += sharedCourse.end + "$";
+				urlElems += sharedCourse.color + "$";
+				urlElems += sharedCourse.status + "$";
+				urlElems += sharedCourse.memo;
 
-                // base64 encode urlElems
-                let url = "https://getpapillon.xyz/course?c=" + btoa(urlElems);
+				// base64 encode urlElems
+				let url = "https://getpapillon.xyz/course?c=" + btoa(urlElems);
 
-                // share url
-                await Share.share({
-                    url: url,
-                    dialogTitle: "Partager votre cours de " + this.openedCours.data.subject
-                });
-            },
-            async setNotif() {
-                let course = this.openedCours;
+				// share url
+				await Share.share({
+					url: url,
+					dialogTitle: "Partager votre cours de " + this.openedCours.data.subject
+				});
+			},
+			async setNotif() {
+				let course = this.openedCours;
 
-                try {
-                    let subject = course.data.subject;
-                    let room = course.data.rooms[0] || "salle inconnue";
-                    let teacher = course.data.teachers[0];
+				try {
+					let subject = course.data.subject;
+					let room = course.data.rooms[0] || "salle inconnue";
+					let teacher = course.data.teachers[0];
 
-                    let time = new Date(course.time.start);
-                    time.setMinutes(time.getMinutes() - 5);
+					let time = new Date(course.time.start);
+					time.setMinutes(time.getMinutes() - 5);
 
-                    // check if time is in the future
-                    if(time.getTime() < new Date().getTime()) {
-                        return false;
-                    }
-                    else {
-                        // Check permission
-                        const permission = await LocalNotifications.checkPermissions();
-                        if (permission != 'granted') {
-                            try {
-                                await LocalNotifications.requestPermissions();
-                            } catch (error) {
-                                return;
-                            }
-                        }
+					// check if time is in the future
+					if(time.getTime() < new Date().getTime()) {
+						return false;
+					}
+					else {
+						// Check permission
+						const permission = await LocalNotifications.checkPermissions();
+						if (permission != 'granted') {
+							try {
+								await LocalNotifications.requestPermissions();
+							} catch (error) {
+								return;
+							}
+						}
 
-                        try{
-                            await LocalNotifications.schedule({
-                                notifications: [
-                                    {
-                                        title: `${subject} - Ça commence bientôt !`,
-                                        body: `Vous êtes en ${room} avec ${teacher}. Le cours commence dans 5 minutes.`,
-                                        id: 1,
-                                        schedule: { at: time },
-                                        sound: "tone.ogg",
-                                        attachments: null,
-                                        actionTypeId: "",
-                                        extra: null
-                                    }
-                                ]
-                            });
-                        }
-                        catch(error) {
-                            // dialog
-                            await Dialog.alert({
-                                title: 'Erreur',
-                                message: 'Une erreur est survenue lors de la création de la notification. Veuillez réessayer.',
-                            });
+						try{
+							await LocalNotifications.schedule({
+								notifications: [
+									{
+										title: `${subject} - Ça commence bientôt !`,
+										body: `Vous êtes en ${room} avec ${teacher}. Le cours commence dans 5 minutes.`,
+										id: 1,
+										schedule: { at: time },
+										sound: "tone.ogg",
+										attachments: null,
+										actionTypeId: "",
+										extra: null
+									}
+								]
+							});
+						}
+						catch(error) {
+							// dialog
+							await Dialog.alert({
+								title: 'Erreur',
+								message: 'Une erreur est survenue lors de la création de la notification. Veuillez réessayer.',
+							});
 
-                            // untoggle switch
-                            this.notificationEnabled = false;
-                            this.$refs.notifSwitch.checked = false;
+							// untoggle switch
+							this.notificationEnabled = false;
+							this.$refs.notifSwitch.checked = false;
 
-                            return;
-                        }
+							return;
+						}
 
-                        
-                        // notify user
-                        this.notificationEnabled = true;
-                    }
-                } catch (error) {
-                    console.error(error);
-                }
-            },
-            async unsetNotif() {
-                let course = this.openedCours;
+						
+						// notify user
+						this.notificationEnabled = true;
+					}
+				} catch (error) {
+					console.error(error);
+				}
+			},
+			async unsetNotif() {
+				let course = this.openedCours;
 
-                // find notification
-                await LocalNotifications.getPending().then((res) => {
-                    let notifs = res.notifications;
+				// find notification
+				await LocalNotifications.getPending().then((res) => {
+					let notifs = res.notifications;
 
-                    let time = new Date(course.time.start);
-                    time.setMinutes(time.getMinutes() - 5);
+					let time = new Date(course.time.start);
+					time.setMinutes(time.getMinutes() - 5);
 
-                    // check if time = schedule.at
-                    notifs.forEach(async (notif) => {
-                        let notifTime = new Date(notif.schedule.at);
+					// check if time = schedule.at
+					notifs.forEach(async (notif) => {
+						let notifTime = new Date(notif.schedule.at);
 
-                        if(notifTime.getTime() == time.getTime()) {
-                            await LocalNotifications.cancel({ notifications: [notif] });
+						if(notifTime.getTime() == time.getTime()) {
+							await LocalNotifications.cancel({ notifications: [notif] });
 
-                            // notify user
-                            this.notificationEnabled = false;
-                        }
-                    });
-                });
-            },
-            changeNotif(event) {
-                if(event.target.checked) {
-                    this.setNotif();
-                }
-                else {
-                    this.unsetNotif();
-                }
-            }
+							// notify user
+							this.notificationEnabled = false;
+						}
+					});
+				});
+			},
+			changeNotif(event) {
+				if(event.target.checked) {
+					this.setNotif();
+				}
+				else {
+					this.unsetNotif();
+				}
+			}
 		},
 		async mounted() {
 			// if urlNews prop is set
@@ -375,34 +375,34 @@
 				// open urlNews
 				this.openedCours = parsed;
 
-                this.openCours_course = parsed.course;
-                this.openCours_data = parsed.data;
-                this.openCours_status = parsed.status;
-                this.openCours_time = parsed.time;
+				this.openCours_course = parsed.course;
+				this.openCours_data = parsed.data;
+				this.openCours_status = parsed.status;
+				this.openCours_time = parsed.time;
 
-                this.teachers = parsed.data.teachers.join(', ');
-                this.rooms = parsed.data.rooms.join(', ');
+				this.teachers = parsed.data.teachers.join(', ');
+				this.rooms = parsed.data.rooms.join(', ');
 
-                // check notifs
+				// check notifs
 
-                await LocalNotifications.getPending().then((res) => {
-                    let notifs = res.notifications;
+				await LocalNotifications.getPending().then((res) => {
+					let notifs = res.notifications;
 
-                    console.log(notifs);
+					console.log(notifs);
 
-                    let time = new Date(this.openCours_time.start);
-                    time.setMinutes(time.getMinutes() - 5);
+					let time = new Date(this.openCours_time.start);
+					time.setMinutes(time.getMinutes() - 5);
 
-                    // check if time = schedule.at
-                    notifs.forEach((notif) => {
-                        let notifTime = new Date(notif.schedule.at);
+					// check if time = schedule.at
+					notifs.forEach((notif) => {
+						let notifTime = new Date(notif.schedule.at);
 
-                        if(notifTime.getTime() == time.getTime()) {
-                            this.notificationEnabled = true;
-                            this.$refs.toggle.$el.checked = true;
-                        }
-                    });
-                });
+						if(notifTime.getTime() == time.getTime()) {
+							this.notificationEnabled = true;
+							this.$refs.toggle.$el.checked = true;
+						}
+					});
+				});
 			}
 
 			return false;
@@ -422,111 +422,119 @@
 				<ion-title v-if="openedCours">{{ openCours_data.subject }}</ion-title>
 				<ion-title v-else><ion-skeleton-text style="width: 200px;"></ion-skeleton-text></ion-title>
 
-                <ion-buttons slot="end">
-                    <ion-button class="itemBtn" @click="shareCours()">
-                        Partager
-                    </ion-button>
-                </ion-buttons>
+				<ion-buttons slot="end">
+					<ion-button class="itemBtn" @click="shareCours()">
+						Partager
+					</ion-button>
+				</ion-buttons>
 			</IonToolbar>
 		</IonHeader>
 
 		<ion-content :fullscreen="true">
 			<div v-if="openedCours">
 
-                <IonLabel class="listGroupTitle">
-                    <p>Détails du cours</p>
-                </IonLabel>
+				<IonLabel class="listGroupTitle">
+					<p>Détails du cours</p>
+				</IonLabel>
 
-                <IonList class="listGroup">     
-                    <ion-item class="info-item">
+				<IonList class="listGroup">     
+					<ion-item class="info-item">
 						<span class="material-symbols-outlined mdls" slot="start">history_edu</span>
 						<ion-label>
 							<p>Nom de la matière</p>
-							<h2>{{openCours_data.subject}}</h2>
+							<h2>{{openCours_data.subject || "Pas de matière"}}</h2>
 						</ion-label>
 					</ion-item>
-                    <ion-item class="info-item">
+					<ion-item class="info-item">
 						<span class="material-symbols-outlined mdls" slot="start">face</span>
 						<ion-label>
 							<p>Professeurs</p>
-							<h2>{{teachers}}</h2>
+							<h2>{{teachers || "Pas de professeur"}}</h2>
 						</ion-label>
 					</ion-item>
-                    <ion-item class="info-item">
+					<ion-item class="info-item">
 						<span class="material-symbols-outlined mdls" slot="start">meeting_room</span>
 						<ion-label>
 							<p>Salle</p>
-							<h2>{{rooms}}</h2>
+							<h2>{{rooms || "Pas de salle" }}</h2>
 						</ion-label>
 					</ion-item>
-                </IonList>
+				</IonList>
 
-                <IonLabel class="listGroupTitle">
-                    <p>Horaires</p>
-                </IonLabel>
+				<IonLabel class="listGroupTitle">
+					<p>Horaires</p>
+				</IonLabel>
 
-                <IonList class="listGroup times" lines="none">
-                    <ion-item class="info-item">
+				<IonList class="listGroup times" lines="none">
+					<ion-item class="info-item">
 						<span class="material-symbols-outlined mdls" slot="start">schedule</span>
 						<ion-label>
 							<p>Début</p>
 							<h2>{{ new Date(openCours_time.start).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</h2>
-                            <h4>{{ new Date(openCours_time.start).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) }}</h4>
+							<h4>{{ new Date(openCours_time.start).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) }}</h4>
 						</ion-label>
 					</ion-item>
-                    <ion-item class="info-item">
+					<ion-item class="info-item">
 						<span class="material-symbols-outlined mdls" slot="start">schedule</span>
 						<ion-label>
 							<p>Fin</p>
 							<h2>{{ new Date(openCours_time.end).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</h2>
-                            <h4>{{ new Date(openCours_time.end).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) }}</h4>
+							<h4>{{ new Date(openCours_time.end).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) }}</h4>
 						</ion-label>
 					</ion-item>
-                </IonList>
+				</IonList>
 
-                <IonLabel class="listGroupTitle" v-if="openCours_status.status">
-                    <p>Statut du cours</p>
-                </IonLabel>
+				<IonLabel class="listGroupTitle" v-if="openCours_status.status || openCours_data.memo">
+					<p>Statut du cours</p>
+				</IonLabel>
 
-                <IonList class="listGroup" v-if="openCours_status.status">
-                    <ion-item class="info-item">
-						<span class="material-symbols-outlined mdls" slot="start">schedule</span>
-						<ion-label>
+				<IonList class="listGroup">
+					<ion-item class="info-item" v-if="openCours_status.status" :class="{ cancelled: openCours_status.isCancelled }">
+						<span class="material-symbols-outlined mdls" slot="start">information-circle</span>
+						<ion-label class="ion-text-wrap">
 							<p>Statut du cours</p>
-							<h2>{{ openCours_status.status }}</h2>
+							<h2 v-if="openCours_status.isCancelled">Ce cours n'est pas maintenu.<br/>Motif : {{ openCours_status.status }}</h2>
+							<h2 v-else>{{ openCours_status.status }}</h2>
 						</ion-label>
 					</ion-item>
-                </IonList>
+					<ion-item class="info-item" v-if="openCours_data.memo">
+						<span class="material-symbols-outlined mdls" slot="start">sticky_note_2</span>
+						<ion-label class="ion-text-wrap">
+							<p>Mémo</p>
+							<h2>{{ openCours_data.memo }}</h2>
+						</ion-label>
+					</ion-item>
+				</IonList>
 
-                <IonLabel class="listGroupTitle">
-                    <p>Actions</p>
-                </IonLabel>
+				<IonLabel class="listGroupTitle">
+					<p>Actions</p>
+				</IonLabel>
 
-                <IonList class="listGroup">
-                    <ion-item>
-                        <span class="material-symbols-outlined mdls" slot="start">notifications</span>
-                        <ion-label class="ion-text-wrap">
-                            <h2>Activer les notifications</h2>
-                            <p>Vous allez recevoir une notification 5 minutes avant le début du cours</p>
-                        </ion-label>
+				<IonList class="listGroup">
+					<ion-item>
+						<span class="material-symbols-outlined mdls" slot="start">notifications</span>
+						<ion-label class="ion-text-wrap">
+							<h2>Activer les notifications</h2>
+							<p>Vous allez recevoir une notification 5 minutes avant le début du cours</p>
+						</ion-label>
 
-                        <ion-toggle @ionChange="changeNotif($event)" slot="end" :value="notificationEnabled" ref="toggle"></ion-toggle>
-                    </ion-item>
-                    <IonItem v-if="openCours_status.isCustom" button  @click="deleteCustomCourse()">
-                        <span class="material-symbols-outlined mdls" slot="start">delete</span>
-                        <ion-label class="ion-text-wrap">
-                            <h2>Supprimer le cours personnalisé</h2>
-                            <p>Supprime le cours personnalisé de votre emploi du temps</p>
-                        </ion-label>
-                    </IonItem>
-                    <IonItem button  @click="addToCalendar()">
-                        <span class="material-symbols-outlined mdls" slot="start">event</span>
-                        <ion-label class="ion-text-wrap">
-                            <h2>Ajouter au calendrier</h2>
-                            <p>Ajouter ce cours au calendrier par défaut de votre appareil</p>
-                        </ion-label>
-                    </IonItem>
-                </IonList>
+						<ion-toggle @ionChange="changeNotif($event)" slot="end" :value="notificationEnabled" ref="toggle"></ion-toggle>
+					</ion-item>
+					<IonItem v-if="openCours_status.isCustom" button  @click="deleteCustomCourse()">
+						<span class="material-symbols-outlined mdls" slot="start">delete</span>
+						<ion-label class="ion-text-wrap">
+							<h2>Supprimer le cours personnalisé</h2>
+							<p>Supprime le cours personnalisé de votre emploi du temps</p>
+						</ion-label>
+					</IonItem>
+					<IonItem button  @click="addToCalendar()">
+						<span class="material-symbols-outlined mdls" slot="start">event</span>
+						<ion-label class="ion-text-wrap">
+							<h2>Ajouter au calendrier</h2>
+							<p>Ajouter ce cours au calendrier par défaut de votre appareil</p>
+						</ion-label>
+					</IonItem>
+				</IonList>
 
 			</div>
 		</ion-content>
@@ -534,6 +542,10 @@
 
 <style scoped>
 .listGroup.times {
-    display: flex;
+	display: flex;
+}
+
+.info-item.cancelled {
+	color: var(--ion-color-danger);
 }
 </style>
