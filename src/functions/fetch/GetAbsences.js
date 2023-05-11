@@ -86,7 +86,8 @@ function constructPronoteAbsences(absences) {
 				id: absence.id,
 				isJustified: absence.justified,
 				reasons: absence.reasons,
-				hours: absence.hours
+				hours: absence.hours,
+				type: "Absence"
 			},
 			date: {
 				from: new Date(absence.from),
