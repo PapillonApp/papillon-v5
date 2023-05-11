@@ -505,7 +505,6 @@ function groupEDSubjects(subjectData, markArray) {
 	let excluded = false;
 
 	console.log("GROUP ED SUBJECTS")
-	console.log(subjectData)
 
 	if (localStorage.getItem('groupSubjects') != 'true') {
 		subject = markArray.find(subject => subject.id == subjectData.id);
@@ -715,7 +714,6 @@ function constructEDGrades(grades) {
 	let averagesCalculate = [moment(period.ensembleMatieres.dateCalcul).format("DD/MM/YYYY"), period.ensembleMatieres.dateCalcul.split(' ')[1] ]//moment(period.ensembleMatieres.dateCalcul).format("HH:MM")]
 	/*
 	markArray.forEach(subject => {
-		console.log(subject.class)
 		studentAverage += subject.average;
 		classAverage += subject.class.average;
 		classMin += subject.class.min;

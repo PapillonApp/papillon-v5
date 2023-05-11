@@ -538,8 +538,6 @@ export default defineComponent({
 			// get userData
 			this.userData = JSON.parse(localStorage.userData);
 
-			console.log(this.userData)
-
 			this.userName = JSON.parse(localStorage.userData).student.name.split(" ")[JSON.parse(localStorage.userData).student.name.split(" ").length - 1]
 			this.userFullName = JSON.parse(localStorage.userData).student.name
 		},
