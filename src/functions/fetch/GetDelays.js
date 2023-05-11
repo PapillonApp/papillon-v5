@@ -86,6 +86,7 @@ function constructPronoteDelays(delays) {
 				isJustified: delay.justified,
 				justification: delay.justification,
 				reasons: delay.reasons,
+				type: "Retard"
 			},
 			date: {
 				date: new Date(delay.date),
