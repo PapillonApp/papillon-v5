@@ -3,7 +3,8 @@ import axios from 'axios';
 
 // vars
 import GetToken from '@/functions/login/GetToken.js';
-
+import * as moment from "moment";
+moment.locale("fr")
 
 //main function
 
@@ -94,34 +95,85 @@ function constructEDSchoollife(schoollife) {
         "punishments": [],
         "encouragements": [],
     }
+    let mois = {
+        "janvier": "01",
+        "février": "02",
+        "mars": "03",
+        "avril": "04",
+        "mai": "05",
+        "juin": "06",
+        "juillet": "07",
+        "août": "08",
+        "septembre": "09",
+        "octobre": 10,
+        "novembre": 11,
+        "décembre": 12
+    }
 	schoollife.absencesRetards.forEach((absDelays) => {
         if(absDelays.typeElement == "Retard") {
+            let splitDate = absDelays.displayDate.split(" ")
+            let fromDate
+            let fromHours
+            let toDate
+            let toHours
+            if(absDelays.displayDate.includes("le")) {
+                fromDate = `${splitDate[4]}-${mois[splitDate[3]]}-${splitDate[2]}`
+                fromHours = `${splitDate[6]}`
+                toDate = fromDate
+                toHours = `${splitDate[8]}`
+            }
+            else {
+                fromDate = `${mois[splitDate[3]]}/${splitDate[2]}/${splitDate[4]}`
+                fromHours = `${splitDate[6]}`
+                toDate = `${mois[splitDate[11]]}/${splitDate[12]}/${splitDate[13]}`
+                toHours = `${splitDate[15]}`
+            }
             let newDelays = {
                 data: {
                     id: absDelays.id,
                     isJustified: absDelays.justifie,
                     justification: absDelays.commentaire || "Aucun commentaire",
                     reasons: [ absDelays.motif ],
+                    type: "Retard"
                 },
                 date: {
-                    date: new Date(absDelays.date),
+                    date: fromDate + " " + fromHours,
                     duration: absDelays.libelle,
+                    to: toDate + " " + toHours
                 }
             }
             schlife.delays.push(newDelays)
         }
 		
         if(absDelays.typeElement == "Absence") {
+            let splitDate = absDelays.displayDate.split(" ")
+            let fromDate
+            let fromHours
+            let toDate
+            let toHours
+            if(absDelays.displayDate.includes("le")) {
+                fromDate = `${splitDate[4]}-${mois[splitDate[3]]}-${splitDate[2]}`
+                fromHours = `${splitDate[6]}`
+                toDate = fromDate
+                toHours = `${splitDate[8]}`
+            }
+            else {
+                fromDate = `${mois[splitDate[3]]}/${splitDate[2]}/${splitDate[4]}`
+                fromHours = `${splitDate[6]}`
+                toDate = `${mois[splitDate[11]]}/${splitDate[12]}/${splitDate[13]}`
+                toHours = `${splitDate[15]}`
+            }
             let newAbsence = {
                 data: {
                     id: absDelays.id,
                     isJustified: absDelays.justifie,
                     reasons: [ absDelays.motif ],
-                    hours: absDelays.hours
+                    hours: absDelays.libelle,
+                    type: "Absence"
                 },
                 date: {
-                    from: new Date(absDelays.from),
-                    to: new Date(absDelays.to),
+                    from: fromDate + " " + fromHours,
+                    to: toDate + " " + toHours,
                 }
             }
             schlife.absences.push(newAbsence)
@@ -146,7 +198,9 @@ function constructEDSchoollife(schoollife) {
                     schedules: sctEncour.schedule,
                     duration: sctEncour.duration
                 },
-                homeworks: sctEncour.aFaire || "Aucun devoir à faire",
+                homeworks: {
+                    text: sctEncour.motif
+                },
                 status: {
                     isSchedulable: sctEncour.schedulable || false,
                     isExclusion: sctEncour.exclusion || false,
