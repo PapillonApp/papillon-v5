@@ -91,7 +91,6 @@
 
                 // parse json
                 let parsed = JSON.parse(decoded);
-                console.log(parsed)
                 // open urlHw
                 this.openedHw = parsed;
                 this.openedData = parsed.data;

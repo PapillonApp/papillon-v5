@@ -103,7 +103,6 @@
 						this.permissionDeny = true
 					}
 				})
-				console.log(coordinates)
 				let lat = coordinates.coords.latitude;
 				let lon = coordinates.coords.longitude;
 
@@ -149,8 +148,6 @@
 				await actionSheet.present();
 			},
 			getPostal(e) {
-				console.log(e)
-
 				let postal = e.detail.value
 
 				if (postal.trim().length != 5) {

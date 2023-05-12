@@ -388,8 +388,6 @@
 				await LocalNotifications.getPending().then((res) => {
 					let notifs = res.notifications;
 
-					console.log(notifs);
-
 					let time = new Date(this.openCours_time.start);
 					time.setMinutes(time.getMinutes() - 5);
 
