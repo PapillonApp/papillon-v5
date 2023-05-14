@@ -21,20 +21,7 @@
         };
       },
       methods: {
-        invertStatus() {
-            inner = !inner;
-
-            if(inner) {
-                StatusBar.setStyle({ style: Style.Default })
-            }
-            else {
-                StatusBar.setStyle({ style: Style.Dark })
-            }
-        },
         navWillChange() {
-          setTimeout(() => {
-            this.invertStatus();
-          }, 120);
           return false;
         },
         navDidChange() {
@@ -42,7 +29,7 @@
         }
       },
       mounted() {
-        StatusBar.setStyle({ style: Style.Dark })
+        return false;
       }
     };
 </script>

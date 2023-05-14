@@ -116,9 +116,6 @@ export default defineComponent({
 	},
 	methods: {
 		goto(url) {
-			setTimeout(() => {
-				StatusBar.setStyle({ style: Style.Default })
-			}, 100);
 			document.dispatchEvent(new CustomEvent('navTransitionEnable'));
 			this.$router.push(url);
 		},
@@ -555,7 +552,7 @@ export default defineComponent({
 		}
 	},
 	ionViewDidEnter() {
-		StatusBar.setStyle({ style: Style.Dark })
+		return false;
 	},
 	async mounted() {
 		const boolOpts = [
@@ -620,8 +617,8 @@ export default defineComponent({
 
 <template>
 	<ion-page ref="page">
-		<IonHeader class="AppHeader">
-			<IonToolbar class="toolbar" color="primary">
+		<IonHeader class="AppHeader" translucent>
+			<IonToolbar class="toolbar">
 				<ion-buttons slot="start">
 					<ion-menu-button mode="md"></ion-menu-button>
 				</ion-buttons>
@@ -642,7 +639,7 @@ export default defineComponent({
 					</ion-nav-link>
 				</ion-buttons>
 			</IonToolbar>
-			<IonToolbar class="toolbar" color="primary" v-if="displayNextCourse">
+			<IonToolbar class="toolbar" v-if="displayNextCourse">
 				<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
 					<div class="coursElemNext" v-for="cours in timetable" :key="cours.id"
 						:style="`--courseColor: ${cours.course.color};`">
@@ -974,14 +971,9 @@ export default defineComponent({
 	border-radius: 10px;
 	overflow: hidden !important;
 
-	box-shadow:
-		0px 0px 1px #00000020,
-		0px 1px 5px #00000010;
-	border-top: 0.5px solid #00000010;
-
 	margin: 0px 12px;
 
-	--ion-item-background: #fff;
+	--ion-item-background: var(--ion-color-step-50);
 	--ion-text-color: #000;
 }
 

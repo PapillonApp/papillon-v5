@@ -463,15 +463,6 @@ export default defineComponent({
 			setTimeout(() => {
 				menu?.toggle();
 			}, 100);
-
-			if (url == "/home") {
-				StatusBar.setStyle({ style: Style.Dark })
-
-				this.changeStatusTimeout = false;
-				setTimeout(() => {
-					this.changeStatusTimeout = true;
-				}, 520);
-			}
 		},
 		async askNotifPerms() {
 			await LocalNotifications.requestPermissions();
@@ -510,12 +501,7 @@ export default defineComponent({
 			}
 			else {
 				if (this.changeStatusTimeout) {
-					// get current page from URL
-					const currentUrl = window.location.pathname;
-
-					if (currentUrl !== "/home") {
-						StatusBar.setStyle({ style: Style.Default })
-					}
+					StatusBar.setStyle({ style: Style.Default })
 				}
 
 				setTimeout(() => {
