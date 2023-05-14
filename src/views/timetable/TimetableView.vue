@@ -92,7 +92,7 @@
 				this.baseRn = newDate;
 
 				// reset swiper
-				this.$refs.swiper.$el.swiper.slideTo(this.baseIndex, 0, false);
+				this.swiper.slideTo(this.baseIndex, 0, false);
 
 				// reset days
 				this.days = [];
@@ -151,7 +151,7 @@
 			return timetable;
 		},
 		resetSwiper() {
-			// this.$refs.swiper.$el.swiper.slideTo(1, 0);
+			// this.swiper.slideTo(1, 0);
 
 			this.day1.error = "STILL_LOADING";
 			this.day0.error = "STILL_LOADING";

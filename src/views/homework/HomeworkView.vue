@@ -165,7 +165,7 @@
                 }, 500);
 
                 for (let i = 0; i < 3; i++) {
-                    let index = this.$refs.swiper.$el.swiper.realIndex + (i - 1);
+                    let index = this.swiper.realIndex + (i - 1);
 
                     // get index diff
                     let indexDiff = this.baseIndex - index;
@@ -265,7 +265,7 @@
                 this.$refs.rnPickerModal.$el.present();
             },
             resetSwiper() {
-                // this.$refs.swiper.$el.swiper.slideTo(1, 0);
+                // this.swiper.slideTo(1, 0);
                 return false;
             },
             handleRefresh(event) {
