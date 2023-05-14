@@ -971,14 +971,9 @@ export default defineComponent({
 	border-radius: 10px;
 	overflow: hidden !important;
 
-	box-shadow:
-		0px 0px 1px #00000020,
-		0px 1px 5px #00000010;
-	border-top: 0.5px solid #00000010;
-
 	margin: 0px 12px;
 
-	--ion-item-background: #fff;
+	--ion-item-background: var(--ion-color-step-50);
 	--ion-text-color: #000;
 }
 
