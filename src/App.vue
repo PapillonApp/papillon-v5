@@ -96,6 +96,7 @@ export default defineComponent({
 	},
 	setup() {
 		// defines the tabs shown in the menu
+		// GLOBAL - Accueil
 		const appPages = [
 			{
 				title: 'Accueil',
@@ -104,13 +105,15 @@ export default defineComponent({
 				disabled: false
 			}
 		];
+
+		// SKOLENGO
 		if (localStorage.getItem("loginService") === "skolengo") {
 			appPages.push({
-				title: 'Emploi du temps',
-				url: '/timetable',
-				icon: "calendar_month",
-				disabled: false,
-			},
+					title: 'Emploi du temps',
+					url: '/timetable',
+					icon: "calendar_month",
+					disabled: false,
+				},
 				{
 					title: 'Travail à faire',
 					url: '/homework',
@@ -122,21 +125,17 @@ export default defineComponent({
 					url: '/news',
 					icon: "newspaper",
 					disabled: false,
-				},
-				{
-					title: 'Paramètres',
-					url: '/settings',
-					icon: "settings",
-					disabled: false
 				})
 		}
+
+		// PRONOTE
 		if (localStorage.getItem("loginService") === "pronote") {
 			appPages.push({
-				title: 'Emploi du temps',
-				url: '/timetable',
-				icon: "calendar_month",
-				disabled: false,
-			},
+					title: 'Emploi du temps',
+					url: '/timetable',
+					icon: "calendar_month",
+					disabled: false,
+				},
 				{
 					title: 'Travail à faire',
 					url: '/homework',
@@ -148,14 +147,17 @@ export default defineComponent({
 					url: '/grades',
 					icon: "insights",
 					disabled: false,
-				},
-				{
+				})
+
+			if (localStorage.getItem('viescolaireEnabled') == 'true') {
+				appPages.push({
 					title: 'Vie scolaire',
 					url: '/schoollife',
 					icon: "gavel",
 					disabled: false,
-				},
-				{
+				})
+			}
+			appPages.push({
 					title: 'Actualités',
 					url: '/news',
 					icon: "newspaper",
@@ -166,19 +168,10 @@ export default defineComponent({
 					url: '/conversations',
 					icon: "forum",
 					disabled: false,
-				},
-				{
-					title: 'Paramètres',
-					url: '/settings',
-					icon: "settings",
-					disabled: false
 				})
 		}
-		// hides some tabs when they are not anabled
-		if (localStorage.getItem('viescolaireEnabled') !== 'true') {
-			// remove school life tab
-			appPages.splice(4, 1);
-		}
+
+		// ECOLEDIRECTE
 		if (localStorage.getItem("loginService") === "ecoledirecte") {
 			let usercache = localStorage.getItem("UserCache");
 			if (usercache != null) {
@@ -258,14 +251,17 @@ export default defineComponent({
 							break;
 					}
 				})
-				appPages.push({
-					title: 'Paramètres',
-					url: '/settings',
-					icon: "settings",
-					disabled: false
-				})
+
 			}
 		}
+
+		// GLOBAL - Paramètres
+		appPages.push({
+			title: 'Paramètres',
+			url: '/settings',
+			icon: "settings",
+			disabled: false
+		})
 
 		const route = useRoute();
 
@@ -467,15 +463,6 @@ export default defineComponent({
 			setTimeout(() => {
 				menu?.toggle();
 			}, 100);
-
-			if (url == "/home") {
-				StatusBar.setStyle({ style: Style.Dark })
-
-				this.changeStatusTimeout = false;
-				setTimeout(() => {
-					this.changeStatusTimeout = true;
-				}, 520);
-			}
 		},
 		async askNotifPerms() {
 			await LocalNotifications.requestPermissions();
@@ -514,12 +501,7 @@ export default defineComponent({
 			}
 			else {
 				if (this.changeStatusTimeout) {
-					// get current page from URL
-					const currentUrl = window.location.pathname;
-
-					if (currentUrl !== "/home") {
-						StatusBar.setStyle({ style: Style.Default })
-					}
+					StatusBar.setStyle({ style: Style.Default })
 				}
 
 				setTimeout(() => {
@@ -532,7 +514,7 @@ export default defineComponent({
 		async displayDevMsg() {
 			const alert = await alertController.create({
 				header: 'Version de développement',
-				message: 'Papillon fonctionne actuellement en mode développement. <br/><br/> Certaines fonctionnalités ne sont pas encore terminées et risquent de ne pas fonctionner correctement.',
+				message: 'Papillon fonctionne actuellement en mode développement. Certaines fonctionnalités ne sont pas encore terminées et risquent de ne pas fonctionner correctement.',
 				mode: 'md',
 				buttons: ['Je comprends']
 			});
@@ -732,7 +714,7 @@ export default defineComponent({
 <template>
 	<ion-app>
 		<div id="debug_banner" v-if="appCanal == 'dev'" @click="displayDevMsg">
-			DEVBUILD
+			Devbuild
 		</div>
 
 		<ion-split-pane content-id="main-content">

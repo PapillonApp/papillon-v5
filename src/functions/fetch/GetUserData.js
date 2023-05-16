@@ -256,39 +256,6 @@ async function getEDUser(force) {
                     return constructEDUser(user);
                 }
                 // download avatar
-                /*let url = `https://cors.api.getpapillon.xyz/` + avatar;
-                axios.get(url, { responseType: 'blob' })
-                    .then((response) => {
-                        // get blob
-                        let blob = response.data;
-
-                        // create reader
-                        let reader = new FileReader();
-                        reader.readAsDataURL(blob);
-
-                        // read blob
-                        reader.onloadend = async function () {
-                            // get base64
-                            let base64 = reader.result;
-
-                            // save in cache
-                            let avatarURL = `${base64}`;
-
-                            // get average color
-                            fac.getColorAsync(avatarURL)
-                                .then(color => {
-                                    localStorage.setItem('averageColor', JSON.stringify(color));
-
-                                    document.dispatchEvent(new CustomEvent('averageColorUpdated'));
-                                })
-                                .catch(e => {
-                                    console.log(e);
-                                });
-
-                            // save in cache
-                            localStorage.setItem('avatarCache', avatarURL);
-                        }
-                    });*/
                 //FETCH PERIODS
                 await getEDPeriods().then(periods => {
                     user.periods = periods;
