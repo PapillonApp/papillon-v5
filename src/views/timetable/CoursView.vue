@@ -65,6 +65,7 @@
 			}
 
 			return {
+				pageTitle: 'Cours',
 				backTitle: backTitle,
 				openedCours: [],
 				openCours_course: [],
@@ -386,12 +387,22 @@
 				this.teachers = parsed.data.teachers.join(', ');
 				this.rooms = parsed.data.rooms.join(', ');
 
+				this.pageTitle = this.openCours_data.subject;
+
+				// if this.pageTitle is over 11 chars
+				if(this.pageTitle.length > 11) {
+					
+					if(this.backTitle == "Emp. du temps") {
+						this.backTitle = "Ma journ.";
+					}
+
+					this.pageTitle = this.pageTitle.substring(0, 16) + "...";
+				}
+
 				// check notifs
 
 				await LocalNotifications.getPending().then((res) => {
 					let notifs = res.notifications;
-
-					console.log(notifs);
 
 					let time = new Date(this.openCours_time.start);
 					time.setMinutes(time.getMinutes() - 5);
@@ -422,7 +433,7 @@
 					<IonBackButton class="only-md" @click="pop"></IonBackButton>
 				</ion-buttons>
 
-				<ion-title v-if="openedCours">{{ openCours_data.subject }}</ion-title>
+				<ion-title v-if="openedCours">{{ pageTitle }}</ion-title>
 				<ion-title v-else><ion-skeleton-text style="width: 200px;"></ion-skeleton-text></ion-title>
 
 				<ion-buttons slot="end">
@@ -491,7 +502,7 @@
 					<p>Statut du cours</p>
 				</IonLabel>
 
-				<IonList class="listGroup">
+				<IonList class="listGroup" v-if="openCours_status.status || openCours_data.memo">
 					<ion-item class="info-item" v-if="openCours_status.status" :class="{ cancelled: openCours_status.isCancelled }">
 						<span class="material-symbols-outlined mdls" slot="start">information-circle</span>
 						<ion-label class="ion-text-wrap">

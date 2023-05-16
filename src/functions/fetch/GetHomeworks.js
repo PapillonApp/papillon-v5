@@ -335,8 +335,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
         
                                 let homework = response2.data.data;
                                 all_homeworks[date] = homework.matieres;
-                                console.log(`[${date}] ${JSON.stringify(homework.matieres)}`)
-        
+
                                 resolve(all_homeworks)
                             })
                         })
@@ -393,13 +392,11 @@ function constructEDHomework(hw) {
 
         //2023-03-17
         hw[date].forEach((homework) => {
-            console.log("le homework : " + JSON.stringify(homework))
             // get homework
             let hws = homework;
             //foreach documents
-            console.log("a faire : " + JSON.stringify(hws.aFaire))
             if(!hws.aFaire) {
-                console.warn("Skip construct of " + JSON.stringify(homework) + " because doesn't contain any \"aFaire\" var")
+                console.warn("Skip construct of homework because doesn't contain any \"aFaire\" var")
                 return;
             }
             hws.aFaire.documents.forEach((file) => {
@@ -415,7 +412,6 @@ function constructEDHomework(hw) {
             });
             //homework description
             hws.aFaire.contenu = atob(hws.aFaire.contenu)
-            console.log("contenu du travail : " + hws.aFaire.contenu)
             let homeworkDescription = hws.aFaire.contenu;
             /*
                 Traitement des balises HTML (<strong>, <u>)
@@ -502,8 +498,6 @@ async function tickCustomHomework(id) {
 
 // tick pronote homework
 async function tickPronoteHomework(data) {
-    console.log(data)
-
     let homeworkID = data[0];
     let dateSet = data[1];
 
