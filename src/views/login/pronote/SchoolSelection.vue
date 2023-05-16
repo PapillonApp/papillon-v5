@@ -383,8 +383,14 @@
 					if(cas_host.includes("pronote.toutatice.fr")) {
 						cas_host = "www.toutatice.fr";
 					}
-					
-					let all_cas_same_host = this.ents.filter(cas => cas.url == cas_host);
+
+					let all_cas_same_host = this.ents.filter(cas => {
+						if(cas.url.includes("*.")) {
+							cas_host = cas_host.split('.')[1];
+							cas.url = cas.url.split('.')[1];
+						}
+						return cas.url == cas_host
+					});
 
 					let cas = all_cas_same_host[0];
 					if (all_cas_same_host.length == 0) {
