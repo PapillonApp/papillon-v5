@@ -27,7 +27,7 @@ import { NotificationBadge } from 'capacitor-notification-badge';
 
 import hapticsController from '@/functions/utils/hapticsController.js';
 
-import { StatusBar, Style } from '@capacitor/status-bar';
+//import { StatusBar, Style } from '@capacitor/status-bar';
 
 import { tickHomework } from "@/functions/fetch/GetHomeworks.js";
 

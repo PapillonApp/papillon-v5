@@ -2,7 +2,7 @@
   import { defineComponent } from 'vue';
   import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput, IonProgressBar, alertController, IonNavLink, IonPopover } from '@ionic/vue';
 
-  import { Share } from '@capacitor/share';
+  //import { Share } from '@capacitor/share';
   import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
   import { Dialog } from '@capacitor/dialog';
 

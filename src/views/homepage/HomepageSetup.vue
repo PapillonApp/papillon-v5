@@ -8,9 +8,9 @@
     import { IonNav, IonPage } from '@ionic/vue';
     import HomepageView from './HomepageView.vue';
 
-    import { StatusBar, Style } from '@capacitor/status-bar';
+    //import { StatusBar, Style } from '@capacitor/status-bar';
 
-    let inner = true;
+    //let inner = true;
   
     export default {
       components: { IonNav, IonPage },
