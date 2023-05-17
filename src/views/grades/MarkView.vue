@@ -136,12 +136,6 @@
 				// get difference
 				let difference = currentAverage - newAverage;
 
-				console.table({
-					currentAverage: currentAverage,
-					newAverage: newAverage,
-					difference: difference
-				});
-
 				this.diffAvg = difference;
 			},
 			getAverageClassInfluence() {
