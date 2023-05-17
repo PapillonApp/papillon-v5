@@ -794,7 +794,7 @@
 					</ion-list>
 
 					<div class="loginConditions">
-						Vos données ne sont pas stockées sur nos serveurs. En vous connectant avec cette application, vous acceptez les <a href="https://getpapillon.xyz/privacy.pdf">conditions d'utilisation</a> de Papillon.
+						Vos données ne sont pas stockées sur nos serveurs. En vous connectant avec cette application, vous acceptez les <a href="https://docs.getpapillon.xyz/documents/politique-de-confidentialite-et-mentions-legales">conditions d'utilisation</a> de Papillon.
 					</div>
 
 				</div>
