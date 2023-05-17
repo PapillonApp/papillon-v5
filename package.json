@@ -43,6 +43,7 @@
     "capacitor-calendar": "^1.0.6",
     "capacitor-notification-badge": "^1.0.6",
     "capacitor-plugin-safe-area": "^1.0.1",
+    "chart.js": "^4.3.0",
     "core-js": "^3.6.5",
     "fast-average-color": "^9.3.0",
     "install": "^0.13.0",
@@ -57,6 +58,7 @@
     "swiper": "^8.4.5",
     "values.js": "^2.1.1",
     "vue": "^3.2.47",
+    "vue-chartjs": "^5.2.0",
     "vue-lazyload": "^3.0.0-rc.2",
     "vue-router": "^4.1.6",
     "xml2js": "^0.5.0"
