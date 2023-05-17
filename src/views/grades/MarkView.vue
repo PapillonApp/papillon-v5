@@ -81,8 +81,7 @@
 				});
 			},
 			getAverage(grades, classAvg) {
-				let allGrades = 0;
-				let count = 0;
+				let allGrades = {};
 
 				for (let i = 0; i < grades.length; i++) {
 					if(grades[i].info.significant === false && grades[i].info.significantZero === false) continue;
@@ -95,11 +94,33 @@
 
 					let out20 = (val / out_of) * 20;
 
-					allGrades += out20 * grades[i].grade.coefficient;
-					count += grades[i].grade.coefficient;
+					// create key if not exists
+					if(!allGrades[grades[i].info.subject]) {
+						allGrades[grades[i].info.subject] = {};
+
+						allGrades[grades[i].info.subject].grades = 0;
+						allGrades[grades[i].info.subject].count = 0;
+					}
+
+					allGrades[grades[i].info.subject].grades += out20 * grades[i].grade.coefficient;
+					allGrades[grades[i].info.subject].count += grades[i].grade.coefficient;
 				}
 
-				return allGrades / count;
+				// calculate average of each subject
+				for (const subject in allGrades) {
+					allGrades[subject].average = allGrades[subject].grades / allGrades[subject].count;
+				}
+
+				// calculate average of all subjects
+				let total = 0;
+				let count = 0;
+
+				for (const subject in allGrades) {
+					total += allGrades[subject].average;
+					count++;
+				}
+
+				return total / count;
 			},
 			getAverageInfluence() {
 				// get current average
@@ -114,6 +135,12 @@
 
 				// get difference
 				let difference = currentAverage - newAverage;
+
+				console.table({
+					currentAverage: currentAverage,
+					newAverage: newAverage,
+					difference: difference
+				});
 
 				this.diffAvg = difference;
 			},
