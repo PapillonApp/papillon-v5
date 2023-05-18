@@ -928,7 +928,7 @@ ion-menu ion-list {
 }
 
 ion-menu ion-content {
-	--background: var(--ion-item-background, var(--ion-background-color, #fff));
+	--background: var(--ion-toolbar-background);
 }
 
 ion-menu ion-content {
@@ -1132,7 +1132,7 @@ a:not(.selected) ion-menu-toggle ion-item:hover {
 
 #bottomActionsList {
 	width: 100%;
-	background: var(--ion-background-color);
+	background: var(--ion-toolbar-background);
 
 	position: fixed;
 	padding-bottom: calc(var(--papillon-safe-area-bottom) + 20px) !important;

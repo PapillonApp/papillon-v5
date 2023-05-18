@@ -908,13 +908,14 @@ export default defineComponent({
 }
 
 .profile .name p {
-	font-size: 15.5px;
+	font-size: 15px;
 	opacity: 0.5;
+	font-weight: 500;
 }
 
 .profile .name h3 {
 	font-size: 17.5px;
-	font-weight: 600 !important;
+	font-weight: 300 !important;
 }
 
 .userAvatar {
@@ -973,13 +974,18 @@ export default defineComponent({
 
 	margin: 0px 12px;
 
-	--ion-item-background: var(--ion-color-step-50);
+	--ion-item-background: var(--ion-inset-background);
 	--ion-text-color: #000;
+
+	box-shadow: 0px 1px 5px #00000005;
+
+	border: 0.5px solid #00000010;
 }
 
 .dark .nextCours {
 	--ion-text-color: #fff;
 	--ion-item-background: var(--ion-color-step-100) !important;
+	border: 0.5px solid #ffffff16;
 }
 
 .nextCours::part(native) {
