@@ -910,12 +910,12 @@ export default defineComponent({
 .profile .name p {
 	font-size: 15px;
 	opacity: 0.5;
-	font-weight: 500;
+	font-weight: 400;
 }
 
 .profile .name h3 {
 	font-size: 17.5px;
-	font-weight: 300 !important;
+	font-weight: 500 !important;
 }
 
 .userAvatar {
