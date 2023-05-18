@@ -19,13 +19,14 @@
 		IonModal,
 		IonSelect,
 		IonNavLink,
-		IonSpinner
+		IonSpinner,
+		IonChip
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
 
 	import MarkView from './MarkView.vue';
-
+	import GradesInsightsView from './GradesInsightsView.vue';
 	import GetGrades from '@/functions/fetch/GetGrades.js';
 	import ChangePeriod from '@/functions/login/ChangePeriod.js';
 
@@ -43,6 +44,7 @@
 			IonMenuButton,
 			IonPage,
 			IonButtons,
+			IonChip,
 			IonCard,
 			IonItem,
 			IonLabel,
@@ -66,6 +68,7 @@
 			return {
 				md: isAndroid,
 				MarkView: MarkView,
+				GradesInsightsView: GradesInsightsView,
 				display: gradesDisplay,
 				grades: [],
 				fullGrades: [],
@@ -598,6 +601,19 @@
 					<p>Réesayez avec une autre période à l'aide du sélecteur.</p>
 				</div>
 			</div>
+
+			<ion-list inset>
+				<IonNavLink router-direction="forward" :component="GradesInsightsView">
+					<IonItem button>
+						<span class="material-symbols-outlined mdls" slot="start">query_stats</span>
+						<IonLabel class="ion-text-wrap">
+							<h2>Papillon Insights <ion-chip class="small_chip" color="warning">Nouveau</ion-chip></h2>
+							<p>Statistiques, analyses et données complémentaires sur vos notes</p>  
+						</IonLabel>
+
+					</IonItem>
+				</IonNavLink>
+			</ion-list>
 
 			<IonList v-if="this.grades.length != 0 && averages.average != -1">
 				<IonListHeader>
