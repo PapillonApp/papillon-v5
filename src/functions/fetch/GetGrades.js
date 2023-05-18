@@ -615,7 +615,7 @@ function constructEDGrades(grades) {
 			...actualPeriod1
 		}
 	}
-	console.log(currentPeriod)
+	
 	// for each mark, add it to the corresponding subject in the array
 	marks.forEach(mark => {
 		if(mark.codePeriode != currentPeriod.id) return;
