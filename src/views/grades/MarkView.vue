@@ -16,6 +16,8 @@
 		IonBackButton
 	} from '@ionic/vue';
 
+	import PapillonBackButton from '@/components/PapillonBackButton.vue';
+
 	import GetGrades from '@/functions/fetch/GetGrades.js';
 
 	export default defineComponent({
@@ -95,45 +97,56 @@
 					// create key if not exists
 					if(!allGrades[grades[i].info.subject]) {
 						allGrades[grades[i].info.subject] = {};
+
 						allGrades[grades[i].info.subject].grades = 0;
 						allGrades[grades[i].info.subject].count = 0;
 					}
+
 					allGrades[grades[i].info.subject].grades += out20 * grades[i].grade.coefficient;
 					allGrades[grades[i].info.subject].count += grades[i].grade.coefficient;
 				}
+
 				// calculate average of each subject
 				for (const subject in allGrades) {
 					allGrades[subject].average = allGrades[subject].grades / allGrades[subject].count;
 				}
+
 				// calculate average of all subjects
 				let total = 0;
 				let count = 0;
+
 				for (const subject in allGrades) {
 					total += allGrades[subject].average;
 					count++;
 				}
 
-				return total / count;return total / count;
+				return total / count;
 			},
 			getSimpleAverage(grades) {
 				let allGrades = {
 					grades: 0,
 					count: 0
 				};
+
 				for (let i = 0; i < grades.length; i++) {
 					if(grades[i].info.significant === false && grades[i].info.significantZero === false) continue;
+
 					let val = parseFloat(grades[i].grade.value);
+
 					let out_of = parseInt(grades[i].grade.out_of);
+
 					let out20 = (val / out_of) * 20;
+
 					allGrades.grades += out20 * grades[i].grade.coefficient;
 					allGrades.count += grades[i].grade.coefficient;
 				}
+
 				return allGrades.grades / allGrades.count;
 			},
 			getAverageInfluence() {
 				// get current average
 				let currentAverage = this.getAverage(this.grades, false);
-				
+
 				// get average without current mark
 				let newGrades = this.grades.filter((grade) => {
 					return grade.id !== this.currentGrade.id;
@@ -148,14 +161,14 @@
 			},
 			getAverageClassInfluence() {
 				// get current average
-				let currentAverage = this.getSimpleAverage(subjectGrades, false);
+				let currentAverage = this.getAverage(this.grades, true);
 
 				// get average without current mark
 				let newGrades = this.grades.filter((grade) => {
 					return grade.id !== this.currentGrade.id;
 				});
 
-				let newAverage = this.getSimpleAverage(newGrades, false);
+				let newAverage = this.getAverage(newGrades, true);
 
 				// get difference
 				let difference = currentAverage - newAverage;
@@ -168,14 +181,14 @@
 				});
 
 				// get current average
-				let currentAverage = this.getAverage(subjectGrades, false);
+				let currentAverage = this.getSimpleAverage(subjectGrades, false);
 
 				// get average without current mark
 				let newGrades = subjectGrades.filter((grade) => {
 					return grade.id !== this.currentGrade.id;
 				});
 
-				let newAverage = this.getAverage(newGrades, false);
+				let newAverage = this.getSimpleAverage(newGrades, false);
 
 				// get difference
 				let difference = currentAverage - newAverage;
