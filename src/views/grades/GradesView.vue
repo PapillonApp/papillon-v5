@@ -409,7 +409,7 @@
 					this.classAverages = data.averages.class;
 				});
 			});
-		}
+		},
 		async displayBiasedMsg() {
 			const alert = await alertController.create({
 					header: 'Comprendre la moyenne +/-',
