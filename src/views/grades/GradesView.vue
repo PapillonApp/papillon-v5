@@ -410,17 +410,17 @@
 				});
 			});
 		}
+		async displayBiasedMsg() {
+			const alert = await alertController.create({
+					header: 'Comprendre la moyenne +/-',
+					message: 'Les moyennes maximale et minimale de classe sont calculées à partir des moyennes maximale et minimale de groupe uniquement pour les enseignements que tu suis. Cela peut alors fausser les résultats, et elles ne sont présentes qu\'à titre indicatif et non réel.',
+					mode: 'md',
+					buttons: ['Je comprends']
+				});
+	
+				await alert.present();
+		}
 	});
-	async displayBiasedMsg() {
-		const alert = await alertController.create({
-				header: 'Comprendre la moyenne +/-',
-				message: 'Les moyennes maximale et minimale de classe sont calculées à partir des moyennes maximale et minimale de groupe uniquement pour les enseignements que tu suis. Cela peut alors fausser les résultats, et elles ne sont présentes qu\'à titre indicatif et non réel.',
-				mode: 'md',
-				buttons: ['Je comprends']
-			});
-
-			await alert.present();
-	}
 </script>
 
 <template>
