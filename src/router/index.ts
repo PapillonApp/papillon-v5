@@ -41,7 +41,7 @@ const routes: Routes = [
   {
     path: '/grades',
     name: 'Grades',
-    component: () => import ('../views/grades/GradesView.vue')
+    component: () => import ('../views/grades/GradesSetup.vue')
   },
   {
     path: '/grades/:markID',
