@@ -10,7 +10,8 @@
 		IonItem,
 		IonChip,
 		IonPage,
-		alertController
+		alertController,
+		IonLabel
 	} from '@ionic/vue';
 
 	import GetAbsences from '@/functions/fetch/GetAbsences.js';
@@ -27,10 +28,10 @@
 			IonHeader,
 			IonToolbar,
 			IonList,
-			IonListHeader,
 			IonItem,
 			IonChip,
 			IonPage,
+			IonLabel
 		},
 		setup() {
 			return {
@@ -141,24 +142,40 @@
 			<IonToolbar>
 
 				<ion-buttons slot="start">
-					<ion-menu-button color="dark" mode="md"></ion-menu-button>
+					<ion-menu-button color="dark"></ion-menu-button>
 				</ion-buttons>
 
-				<ion-title mode="md">Vie scolaire</ion-title>
+				<ion-title>Vie scolaire</ion-title>
 
 			</IonToolbar>
 		</IonHeader>
 
 		<ion-content>
+			<ion-header collapse="condense">
+				<ion-toolbar>
+					<ion-title size="large">Vie scolaire</ion-title>
+				</ion-toolbar>
+			</ion-header>
+
 			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
 
-			<ion-list>
-				<ion-list-header>
-					<ion-label>Absences</ion-label>
-				</ion-list-header>
+			<ion-list inset>
+				<ion-item color="primary">
+					<span class="material-symbols-outlined mdls" slot="start">gavel</span>
+					<ion-label class="ion-text-wrap">
+						<h2>L'onglet vie scolaire est en développement</h2>
+						<p>Il est possible que certaines fonctionnalités ne soient pas disponibles.</p>
+					</ion-label>
+				</ion-item>
+			</ion-list>
 
+			<IonLabel class="listGroupTitle">
+				<p>Absences</p>
+			</IonLabel>
+
+			<ion-list class="listGroup">
 				<ion-item v-if="absError">
 					<ion-label>
 						<p>Impossible de récupérer les absences pour le moment.</p>
@@ -198,11 +215,11 @@
 				</IonList>
 			</ion-list>
 
-			<ion-list>
-				<ion-list-header>
-					<ion-label>Punitions</ion-label>
-				</ion-list-header>
+			<IonLabel class="listGroupTitle">
+				<p>Punitions</p>
+			</IonLabel>
 
+			<ion-list class="listGroup">
 				<ion-item v-if="punishmentsError">
 					<ion-label>
 						<p>Impossible de récupérer les punitions pour le moment.</p>
@@ -228,11 +245,11 @@
 				</ion-item>
 			</ion-list>
 
-			<ion-list>
-				<ion-list-header>
-					<ion-label>Retards</ion-label>
-				</ion-list-header>
+			<IonLabel class="listGroupTitle">
+				<p>Retards</p>
+			</IonLabel>
 
+			<ion-list class="listGroup">
 				<ion-item v-if="delaysError">
 					<ion-label>
 						<p>Impossible de récupérer les retards pour le moment.</p>

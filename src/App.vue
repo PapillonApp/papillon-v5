@@ -794,6 +794,8 @@ export default defineComponent({
 			<ion-content class="update">
 				<div class="update_inner">
 					<div id="update-header">
+						<img class="logoPapillon" src="/assets/icons/icon-192.webp" />
+
 						<h1>Quoi de neuf dans Papillon ?</h1>
 						<p>Voici les dernières nouveautés de Papillon.</p>
 					</div>
@@ -928,7 +930,7 @@ ion-menu ion-list {
 }
 
 ion-menu ion-content {
-	--background: var(--ion-item-background, var(--ion-background-color, #fff));
+	--background: var(--ion-toolbar-background);
 }
 
 ion-menu ion-content {
@@ -1073,6 +1075,7 @@ a:not(.selected) ion-menu-toggle ion-item:hover {
 	border-radius: 10px;
 
 	margin-bottom: 30px;
+	margin-top: 30px;
 }
 
 .dark #update-header {
@@ -1101,6 +1104,18 @@ a:not(.selected) ion-menu-toggle ion-item:hover {
 #update-header p {
 	font-size: 16px;
 	opacity: 0.5;
+}
+
+#update-header .logoPapillon {
+	height: 56px;
+
+	border-radius: 12px;
+
+	margin-bottom: 10px !important;
+}
+
+.md #update-header .logoPapillon {
+	border-radius: 56px;
 }
 
 .update .warning {
@@ -1132,7 +1147,7 @@ a:not(.selected) ion-menu-toggle ion-item:hover {
 
 #bottomActionsList {
 	width: 100%;
-	background: var(--ion-background-color);
+	background: var(--ion-toolbar-background);
 
 	position: fixed;
 	padding-bottom: calc(var(--papillon-safe-area-bottom) + 20px) !important;

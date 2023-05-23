@@ -235,7 +235,6 @@
 						<IonLabel v-if="currentGrade.info.optional || currentGrade.info.bonus || currentGrade.info.outOf20">
 							<ion-chip color="success" v-if="currentGrade.info.bonus">Bonus</ion-chip>
 							<ion-chip color="warning" v-if="currentGrade.info.optional">Optionnel</ion-chip>
-							<ion-chip color="primary" v-if="currentGrade.info.outOf20">Ramenée à 20</ion-chip>
 						</IonLabel>
 					</IonItem>
 				</IonList>
