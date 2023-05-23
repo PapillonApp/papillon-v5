@@ -6,7 +6,6 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
 		IonChip,
 		IonPage,
