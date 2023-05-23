@@ -94,12 +94,15 @@ function getPronoteLogin() {
                     console.error('[Get Token]: Return to login page - ' + result);
     
                     document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
+                    waitingForToken = false;
                 }
             })
             .catch(error => {
-                displayToast.presentError("Impossible de joindre le serveur.", "danger", error)
+                displayToast.presentError("Impossible de joindre le serveur.", "danger", "" + error + "")
                 console.error('[Get Token]: Unable to join server - ' + error);
-                reject(error)
+                document.dispatchEvent(new CustomEvent('connectionState', { detail: 'disconnected' }));
+                waitingForToken = false;
+                reject("" + error + "")
             });
         }
     })
