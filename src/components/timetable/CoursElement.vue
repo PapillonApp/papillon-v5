@@ -28,6 +28,11 @@
 				required: false,
 				default: "Pas de salle",
 			},
+			groupNames: {
+				type: String,
+				required: false,
+				default: null,
+			},
 			memo: {
 				type: Boolean,
 				required: false,
@@ -102,6 +107,7 @@
 				coursPourcentVisible: false,
 				intervalUpdateProgressDiv: null,
 				showPastProgress: localStorage.getItem("tweakProgressBarShowPast") != "false",
+				disableShowGroup: localStorage.getItem('disableShowGroup'),
 			};
 		},
 		setup() {
@@ -258,17 +264,27 @@
 				<div class="CoursData">
 					<h3 class="CoursName">{{ subject }}</h3>
 
-					<div class="CoursInfoContainer">
-						<div class="CoursInfo room" v-if="rooms !== null">
-							<span class="material-symbols-outlined smol" slot="start">location_on</span>
+					<div>
+						<div class="CoursInfoContainer">
+							<div class="CoursInfo room" v-if="rooms !== null">
+								<span class="material-symbols-outlined smol" slot="start">location_on</span>
 
-							<p>{{ rooms }}</p>
+								<p>{{ rooms }}</p>
+							</div>
+							<div class="separator" v-if="rooms !== null"></div>
+							<div class="CoursInfo">
+								<span class="material-symbols-outlined smol" slot="start">face</span>
+
+								<p>{{ teachers }}</p>
+							</div>
 						</div>
-						<div class="separator" v-if="rooms !== null"></div>
-						<div class="CoursInfo">
-							<span class="material-symbols-outlined smol" slot="start">face</span>
 
-							<p>{{ teachers }}</p>
+						<div class="CoursInfoContainer" v-if="disableShowGroup == 'true' && groupNames !== null">
+							<div class="CoursInfo">
+								<span class="material-symbols-outlined smol" slot="start">groups</span>
+
+								<p>{{ groupNames.startsWith("[") ? groupNames.slice(1, -1).replace(/_/g, ' ') : groupNames.replace(/_/g, ' ') }}</p>
+							</div>
 						</div>
 					</div>
 
