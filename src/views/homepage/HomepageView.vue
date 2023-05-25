@@ -977,9 +977,9 @@ export default defineComponent({
 	--ion-item-background: var(--ion-inset-background);
 	--ion-text-color: #000;
 
-	box-shadow: 0px 1px 5px #00000005;
+	box-shadow: 0px 1px 5px #00000010;
 
-	border: 0.5px solid #00000010;
+	border: 0.5px solid #00000012;
 }
 
 .dark .nextCours {
