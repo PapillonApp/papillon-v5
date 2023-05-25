@@ -205,11 +205,11 @@ export default defineComponent({
 				// if less than 60 mins
 				if (mins < 60 && mins >= 0) {
 					if (mins > 1) {
-						this.nextCoursTime = `dans ${mins} minutes`
+						this.nextCoursTime = `dans ${mins+1} minutes`
 					} else if (mins == 0) {
 						this.nextCoursTime = `dans moins d'une minute`
 					} else {
-						this.nextCoursTime = `dans ${mins} minute`
+						this.nextCoursTime = `dans ${mins+1} minute(s)`
 					}
 
 					this.nextCoursStarted = false;
