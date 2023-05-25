@@ -155,9 +155,13 @@
 			let disableHolidays = this.$refs.disableHolidays;
 			disableHolidays.$el.checked = localStorage.getItem('disableHolidays') == 'true';
 
-			// get changePeriodSelection ref
+			// get disableConfetti ref
 			let disableConfetti = this.$refs.disableConfetti;
 			disableConfetti.$el.checked = localStorage.getItem('disableConfetti') == 'true';
+
+			// get disableShowGroup ref
+			let disableShowGroup = this.$refs.disableShowGroup;
+			disableShowGroup.$el.checked = localStorage.getItem('disableShowGroup') == 'true';
 		}
 	});
 </script>
@@ -234,6 +238,21 @@
 						<p>Active l'onglet de vie scolaire</p>
 					</IonLabel>
 					<IonToggle slot="end" ref="viescolaireEnabled" @ionChange="changeTick('viescolaireEnabled')"></IonToggle>
+				</IonItem>
+			</IonList>
+
+			<IonLabel class="listGroupTitle">
+				<p>Emploi du temps</p>
+			</IonLabel>
+
+			<IonList class="listGroup" lines="inset">
+				<IonItem>
+					<span class="material-symbols-outlined mdls" slot="start">groups</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Afficher le groupe pour les cours</h2>
+						<p>Autorise le groupe d'un cours à s'afficher dans l'emploi du temps</p>
+					</IonLabel>
+					<IonToggle slot="end" ref="disableShowGroup" @ionChange="changeTick('disableShowGroup')"></IonToggle>
 				</IonItem>
 			</IonList>
 
