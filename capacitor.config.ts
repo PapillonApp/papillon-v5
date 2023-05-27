@@ -19,6 +19,9 @@ const config: CapacitorConfig = {
 		Keyboard: {
 			resize: KeyboardResize.Ionic,
 		},
+		"CapacitorHttp": {
+			"enabled": true
+		}
 	},
 	server : {
 		url: "http://localhost:8100/" // Address of the server running locally
