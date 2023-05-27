@@ -413,7 +413,7 @@
 		async displayBiasedMsg() {
 			const alert = await alertController.create({
 					header: 'Comprendre la moyenne +/-',
-					message: 'Les moyennes maximales et minimales de la classe sont calculées à partir des moyennes maximales et minimales de chaque groupe, uniquement pour les enseignements que vous suivez. Cela peut fausser les chiffres qui sont affichés qu\'à titre indicatif uniquement.',
+					message: 'Les moyennes maximales et minimales de la classe sont calculées à partir des moyennes maximales et minimales de chaque groupe, uniquement pour les enseignements que vous suivez. Cela peut fausser les chiffres qui ne sont affichés qu\'à titre indicatif uniquement.',
 					mode: 'md',
 					buttons: ['Je comprends']
 				});
