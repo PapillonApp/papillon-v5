@@ -658,10 +658,12 @@ export default defineComponent({
 			// if viescolaireEnabled is set to false, remove school life tab
 			if (localStorage.getItem('viescolaireEnabled') !== 'true') {
 				// remove school life tab
+				if(!this.appPages.find(p => p.title === "Vie scolaire")) return;
 				this.appPages.splice(3, 1);
 			}
 			else {
 				// add school life tab
+				if(this.appPages.find(p => p.title === "Vie scolaire")) return;
 				this.appPages.splice(3, 0, {
 					title: 'Vie scolaire',
 					url: '/schoollife',
