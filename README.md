@@ -98,21 +98,21 @@ To get a local copy up and running follow these simple steps.
 First, grab a copy of this repo and install the needed dependencies to run Papillon locally.
 
 ```sh
-npm install -g @ionic/cli
 npm i
 ```
 
 ### Installation
-
+*PS: In an older version of this file, you had to install the `@ionic/cli` package. This package is no longer needed, and if you installed it only for Papillon, you can remove it with `npm uninstall -g @ionic/cli`.*
+*We removed it to fix a bug with "Waiting for connectivity with vue-cli-service" message which was CPU intensive.*
 To run papillon, simply run
 ```sh
-ionic serve
+npm run serve
 ```
 
 To build papillon, you need **Android Studio** or *Xcode** installed.
 Android SDK or Xcode command line tools needs to be configured. All the prerequisites for building are available on https://capacitorjs.com/docs/getting-started/environment-setup
 ```sh
-ionic build
+npm run build
 npx cap sync
 # then build using Android Studio or Xcode
 ```
