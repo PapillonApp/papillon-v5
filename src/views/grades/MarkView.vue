@@ -234,7 +234,7 @@
 							<h2>{{ currentGrade.grade.coefficient }}</h2>
 						</IonLabel>
 
-						<IonLabel v-if="currentGrade.info.optional || currentGrade.info.bonus || currentGrade.info.outOf20">
+						<IonLabel v-if="currentGrade.info.optional || currentGrade.info.bonus">
 							<ion-chip color="success" v-if="currentGrade.info.bonus">Bonus</ion-chip>
 							<ion-chip color="warning" v-if="currentGrade.info.optional">Optionnel</ion-chip>
 						</IonLabel>
