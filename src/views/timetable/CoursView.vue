@@ -74,7 +74,9 @@
 				openCours_time: [],
 				teachers: "",
 				rooms: "",
+				groupNames: "",
 				notificationEnabled: false,
+				disableShowGroup: localStorage.getItem('disableShowGroup'),
 			}
 		},
 		methods: {
@@ -386,6 +388,8 @@
 
 				this.teachers = parsed.data.teachers.join(', ');
 				this.rooms = parsed.data.rooms.join(', ');
+				this.groupNames = parsed.data.groupNames.join(', ');
+				this.groupNames = this.groupNames.startsWith("[") ? this.groupNames.slice(1, -1).replace(/_/g, ' ') : this.groupNames.replace(/_/g, ' ')
 
 				this.pageTitle = this.openCours_data.subject;
 
@@ -471,6 +475,13 @@
 						<ion-label>
 							<p>Salle</p>
 							<h2>{{rooms || "Pas de salle" }}</h2>
+						</ion-label>
+					</ion-item>
+					<ion-item class="info-item" v-if="disableShowGroup == 'true' && groupNames.length">
+						<span class="material-symbols-outlined mdls" slot="start">groups</span>
+						<ion-label>
+							<p>Groupe</p>
+							<h2>{{groupNames || "Pas de groupe" }}</h2>
 						</ion-label>
 					</ion-item>
 				</IonList>

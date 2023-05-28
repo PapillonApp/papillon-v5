@@ -76,10 +76,10 @@
 
 ## Screenshots
 
-### iPhone 14 (iOS 16.3.1) (version 5.6.0 - light mode)
+### iPhone XR (iOS 16.3.1) (version 5.7.0 - light mode)
 |Home|Timetable|Homework|Grades|Settings|
 |--|--|--|--|--|
-|![Home](https://user-images.githubusercontent.com/32978709/235216860-3d1ac944-4b84-442f-a12e-96257601bc6f.png)|![image](https://user-images.githubusercontent.com/32978709/235217012-af405e9d-78c4-41d8-ad75-926418d9882b.png)|![image](https://user-images.githubusercontent.com/32978709/235217024-5d85adf0-fae3-45ff-b4bf-d7f7d465fc09.png)|![image](https://user-images.githubusercontent.com/32978709/235217038-ec69fb3e-130a-4948-a638-fa8eb34c6771.png)|![image](https://user-images.githubusercontent.com/32978709/235217060-683ef8d0-f32c-438d-b232-7d8f23d3a8b8.png)|
+|![Home](https://media.discordapp.net/attachments/1001198944220627025/1110961162067116072/IMG_3352.png)|![image](https://media.discordapp.net/attachments/1001198944220627025/1110961162360729600/IMG_3353.png)|![image](https://media.discordapp.net/attachments/1001198944220627025/1110961162729816204/IMG_3354.png)|![image](https://media.discordapp.net/attachments/1001198944220627025/1110961163065372743/IMG_3356.png)|![image](https://media.discordapp.net/attachments/1001198944220627025/1110961163413487636/IMG_3357.png)|
 
 ## Built With
 
@@ -127,7 +127,7 @@ See the [open issues](https://github.com/PapillonApp/Papillon/issues) for a list
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open source community such an amazing place to be, learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 * If you have suggestions for adding or removing projects, feel free to [open an issue](https://github.com/PapillonApp/Papillon/issues/new) to discuss it, or directly create a pull request after you edit the *README.md* file with necessary changes.
 * Please make sure you check your spelling and grammar.
 * Create individual PR for each suggestion.

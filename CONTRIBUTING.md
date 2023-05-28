@@ -2,7 +2,7 @@
 Nous sommes ravis que vous souhaitiez contribuer à notre projet open source de gestion de vie étudiante Papillon ! Voici quelques éléments à prendre en compte avant de commencer :
 
 ## Code de conduite
-Nous attendons de tous les contributeurs qu'ils respectent notre code de conduite. Veuillez lire attentivement le fichier CODE_OF_CONDUCT.md avant de contribuer.
+Nous attendons de tous les contributeurs qu'ils respectent notre code de conduite. Veuillez lire attentivement le fichier [CODE_OF_CONDUCT.md](https://github.com/PapillonApp/Papillon/blob/development/CODE_OF_CONDUCT.md) avant de contribuer.
 
 ## Comment contribuer
 Nous sommes heureux de recevoir des contributions de toutes formes et tailles. Voici quelques suggestions pour commencer :

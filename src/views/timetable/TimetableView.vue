@@ -494,6 +494,7 @@
 				name: '',
 				teacher: '',
 				room: '',
+				groupNames: '',
 				start: '',
 				end: '',
 				length: '',
@@ -617,6 +618,7 @@
 							:subject="cours.data.subject"
 							:teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
 							:rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
+							:groupNames="cours.data.groupNames.join('') || null"
 							:memo="cours.data.hasMemo"
 							:start="cours.time.start"
 							:end="cours.time.end"
