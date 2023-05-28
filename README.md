@@ -102,8 +102,6 @@ npm i
 ```
 
 ### Installation
-*PS: In an older version of this file, you had to install the `@ionic/cli` package. This package is no longer needed, and if you installed it only for Papillon, you can remove it with `npm uninstall -g @ionic/cli`.*
-*We removed it to fix a bug with "Waiting for connectivity with vue-cli-service" message which was CPU intensive.*
 To run papillon, simply run
 ```sh
 npm run serve
