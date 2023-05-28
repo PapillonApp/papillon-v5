@@ -249,7 +249,7 @@
                     <span class="material-symbols-outlined mdls" slot="start">query_stats</span>
                     <IonLabel class="ion-text-wrap">
                         <h2>Insights est une fonctionnalité expérimentale</h2>
-                        <p>Les données affichées peuvent être erronées et des bugs peuvent survenir</p>
+                        <p>Les données affichées peuvent être erronées et des bugs peuvent survenir.</p>
                     </IonLabel>
                 </IonItem>
             </IonList>

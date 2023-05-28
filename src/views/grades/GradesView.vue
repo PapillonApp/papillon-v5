@@ -20,7 +20,8 @@
 		IonSelect,
 		IonNavLink,
 		IonSpinner,
-		IonChip
+		IonChip,
+		alertController
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -407,6 +408,16 @@
 					this.classAverages = data.averages.class;
 				});
 			});
+		},
+		async displayBiasedMsg() {
+			const alert = await alertController.create({
+					header: 'Comprendre la moyenne +/-',
+					message: 'Les moyennes maximales et minimales de la classe sont calculées à partir des moyennes maximales et minimales de chaque groupe, uniquement pour les enseignements que vous suivez. Cela peut fausser les chiffres qui ne sont affichés qu\'à titre indicatif uniquement.',
+					mode: 'md',
+					buttons: ['Je comprends']
+				});
+	
+				await alert.present();
 		}
 	});
 </script>
@@ -636,7 +647,7 @@
 						<h2>{{ classAverages.average.toFixed(2) }}<small>/20</small></h2>
 					</IonLabel>
 				</IonItem>
-				<div style="display:flex">
+				<div style="display:flex" @click="displayBiasedMsg">
 					<IonItem>
 						<span class="material-symbols-outlined mdls" slot="start">swap_vert</span>
 						<IonLabel>
