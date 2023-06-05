@@ -178,10 +178,10 @@
         line-height: 20px;
         
         margin-top: 15px;
-
-	-webkit-user-select: text;
-     	-moz-user-select: text;
-    	-ms-user-select: text;
-    	user-select: text;
+        
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
     }
 </style>
