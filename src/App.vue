@@ -575,7 +575,7 @@ export default defineComponent({
 		this.$nextTick(function () {
 			setTimeout(() => {
 				SplashScreen.hide();
-			}, 200);
+			}, 220);
 		})
 
 		// shortcuts
