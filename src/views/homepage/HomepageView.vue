@@ -418,11 +418,22 @@ export default defineComponent({
 
 			let disableConfetti = localStorage.getItem("disableConfetti");
 
+			// check if confettiEmoji is set
+			let confettiEmoji = '✅🍾🎊';
+
+			if(localStorage.getItem("confettiEmoji")) {
+				confettiEmoji = localStorage.getItem("confettiEmoji");
+			}
+
+			let confettiEmojiArray = unescape(confettiEmoji).split();
+
+			console.log(confettiEmojiArray);
+
 			// if checked
 			if (event.target.checked) {
 				if (disableConfetti != "true") {
 					jsConfetti.addConfetti({
-						emojis: ['✅', '🍾', '🎊'],
+						emojis: confettiEmojiArray[0],
 						confettiNumber: 20,
 					})
 

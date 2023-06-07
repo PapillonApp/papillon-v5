@@ -14,7 +14,8 @@
 		IonTitle,
 		IonContent,
 		alertController,
-		IonBackButton
+		IonBackButton,
+		IonInput
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
@@ -33,11 +34,12 @@
 			IonLabel,
 			IonToggle,
 			IonTitle,
-			IonContent
+			IonContent,
+			IonInput
 		},
 		data() {
 			return {
-
+				emojis: unescape(localStorage.getItem("confettiEmoji")) || '✅🍾🎊',
 			}
 		},
 		methods: {
@@ -48,6 +50,20 @@
 				hapticsController.impact({
 					style: 'light'
 				});
+			},
+			emojiChange($event) {
+				let emoji = escape($event.target.value);
+				localStorage.setItem('confettiEmoji', emoji);
+			},
+			resetEmoji() {
+				this.emojis = escape('✅🍾🎊');
+				localStorage.setItem('confettiEmoji', this.emojis);
+
+				this.$refs.inputEmoji.$el.value = unescape(this.emojis);
+
+				displayToast.presentNativeToast(
+					'Les emojis ont été réinitialisés'
+				);
 			},
 			changeTick(option) {
 				this.tickClick();
@@ -261,6 +277,20 @@
 			</IonLabel>
 
 			<IonList class="listGroup" lines="inset">
+				<ionItem>
+					<span class="material-symbols-outlined mdls" slot="start">mood</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Personnaliser les émojis</h2>
+						<p>Choisir les émojis des confettis sur l'accueil</p>
+					</IonLabel>
+					<ion-input ref="inputEmoji" @ionInput="emojiChange($event)" maxlength="4" class="emojis" slot="end" type="text" :value="emojis"></ion-input>
+				</ionItem>
+				<ionItem button @click="resetEmoji">
+					<span class="material-symbols-outlined mdls" slot="start">restart_alt</span>
+					<IonLabel class="ion-text-wrap">
+						<h2>Réinitialiser les émojis</h2>
+					</IonLabel>
+				</ionItem>
 				<IonItem>
 					<span class="material-symbols-outlined mdls" slot="start">celebration</span>
 					<IonLabel class="ion-text-wrap">
@@ -289,5 +319,19 @@
 
 	.dark ion-item .mdls[slot=start] {
 		background-color: #ffffff22;
+	}
+
+	.emojis {
+		text-align: center;
+		border-radius: 8px;
+		padding: 0 !important;
+		padding-left: 5px !important;
+
+		font-size: 24px;
+		letter-spacing: 10px;
+	}
+
+	.emojis * {
+		padding: 0 !important;
 	}
 </style>
