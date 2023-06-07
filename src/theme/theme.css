@@ -436,6 +436,10 @@ ion-list.list-inset.md ion-list-header {
     border-radius: 12px !important;
 }
 
+ion-modal.ios ion-list.list-inset {
+    box-shadow: none !important;
+}
+
 /* action sheet */
 ion-action-sheet {
     --ion-color-primary: #0075ff !important;

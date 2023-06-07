@@ -258,11 +258,16 @@
 				return;
 			}
 
+			let color = this.$refs.newCoursColorRef.value;
+			if(color !== "#000000") {
+				subjectColor.getSubjectColor(this.$refs.newCoursNameRef.$el.value, color, true);
+			}
+
 			// create new cours
 			let newCourse = {
 				course: {
 					id: Math.floor(Math.random() * 10000000),
-					color: "#0066ff",
+					color: color,
 					num: Math.floor(Math.random() * 10000000),
 				},
 				data: {
@@ -671,7 +676,11 @@
 						<ion-buttons slot="start">
 							<ion-button @click="setNewCoursModalOpen(false)">Annuler</ion-button>
 						</ion-buttons>
-						<ion-title>Ajouter un cours</ion-title>
+
+						<ion-title>
+							<ion-input type="text" name="CourseTitle" ref="newCoursNameRef" placeholder="Nom du cours"></ion-input>
+						</ion-title>
+
 						<ion-buttons slot="end">
 							<ion-button @click="addNewCours()" color="primary">Ajouter</ion-button>
 						</ion-buttons>
@@ -679,18 +688,13 @@
 				</IonHeader>
 				<ion-content>
 					<ion-list inset>
-						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:5px">edit</span>
-							<ion-input type="text" name="CourseTitle" ref="newCoursNameRef" placeholder="Nom du cours"></ion-input>
-						</ion-item>
-
-						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:5px">pin_drop</span>
+						<ion-item class="textInput">
+							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:15px">location_on</span>
 							<ion-input type="text" name="Place" ref="newCoursRoomRef" placeholder="Lieu"></ion-input>
 						</ion-item>
 
-						<ion-item>
-							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:5px">Person</span>
+						<ion-item class="textInput">
+							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:15px">face</span>
 							<ion-input type="text" name="Person" ref="newCoursTeacherRef" placeholder="Professeur"></ion-input>
 						</ion-item>
 					</ion-list>
@@ -709,6 +713,16 @@
 							<ion-label>Heure de fin</ion-label>
 							<div class="timeInput" slot="end">
 								<ion-input class="timeInInput" name="End" ref="newCoursEndRef" type="time" value="13:30"></ion-input>
+							</div>
+						</ion-item>
+					</ion-list>
+
+					<ion-list inset class="only-md">
+						<ion-item class="input">
+							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:15px">palette</span>
+							<ion-label>Couleur</ion-label>
+							<div slot="end">
+								<input type="color" ref="newCoursColorRef"/>
 							</div>
 						</ion-item>
 					</ion-list>
@@ -896,8 +910,12 @@
 		--border-width: 0 0 0 0 !important;
 	}
 
+	.ios .newCoursModal {
+		--ion-toolbar-background: var(--ion-color-step-25, #f9f9f9) !important;
+	}
+
 	.ios .newCoursModal ion-content::part(scroll) {
-		background: var(--ion-toolbar-background, var(--ion-color-step-50, #f7f7f7));
+		background: var(--ion-color-step-25, #f9f9f9);
 	}
 
 	.ios .newCoursModal ion-list.list-inset {
@@ -906,7 +924,7 @@
 	}
 
 	.ios .newCoursModal ion-list.list-inset > * {
-		--background : var(--ion-background-color) !important;
+		--background : var(--ion-plain-background-color) !important;
 	}
 
 	.dark .ios .newCoursModal ion-list.list-inset {
@@ -919,6 +937,14 @@
 
 	.dark .ios .newCoursModal .timeInput {
 		background: var(--ion-color-step-150) !important;
+	}
+
+	.ios .newCoursModal {
+		margin-left: 5px;
+	}
+
+	.ios .newCoursModal .mdls {
+		opacity: 0.5 !important;
 	}
 
 	.ios .newCoursModal .timeInput {
