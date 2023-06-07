@@ -1007,7 +1007,6 @@ export default defineComponent({
 .dark .nextCours {
 	--ion-text-color: #fff;
 	--ion-item-background: var(--ion-color-step-100) !important;
-	border: 0.5px solid #ffffff16;
 }
 
 .nextCours::part(native) {
