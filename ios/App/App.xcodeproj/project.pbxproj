@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2FAD9763203C412B000D30F8 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = 2FAD9762203C412B000D30F8 /* config.xml */; };
-		47D1BEF12A30B6CF00962D88 /* scaled_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 47D1BEF02A30B6CF00962D88 /* scaled_logo.png */; };
+		47CB1F1D2A3105C900FCDEF5 /* scaled_credit.png in Resources */ = {isa = PBXBuildFile; fileRef = 47CB1F1B2A3105C900FCDEF5 /* scaled_credit.png */; };
+		47CB1F1E2A3105C900FCDEF5 /* scaled_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 47CB1F1C2A3105C900FCDEF5 /* scaled_logo.png */; };
 		50379B232058CBB4000EE86E /* capacitor.config.json in Resources */ = {isa = PBXBuildFile; fileRef = 50379B222058CBB4000EE86E /* capacitor.config.json */; };
 		504EC3081FED79650016851F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504EC3071FED79650016851F /* AppDelegate.swift */; };
 		504EC30D1FED79650016851F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30B1FED79650016851F /* Main.storyboard */; };
@@ -22,7 +23,8 @@
 		03F4F21CC19F8D5E85EA1339 /* Pods_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2FAD9762203C412B000D30F8 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = config.xml; sourceTree = "<group>"; };
 		355D21C4BA1473007655FDCF /* Pods-App.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-App.release.xcconfig"; path = "Target Support Files/Pods-App/Pods-App.release.xcconfig"; sourceTree = "<group>"; };
-		47D1BEF02A30B6CF00962D88 /* scaled_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = scaled_logo.png; path = ../../../../../../Desktop/scaled_logo.png; sourceTree = "<group>"; };
+		47CB1F1B2A3105C900FCDEF5 /* scaled_credit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scaled_credit.png; sourceTree = "<group>"; };
+		47CB1F1C2A3105C900FCDEF5 /* scaled_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = scaled_logo.png; sourceTree = "<group>"; };
 		50379B222058CBB4000EE86E /* capacitor.config.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = capacitor.config.json; sourceTree = "<group>"; };
 		504EC3041FED79650016851F /* App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		504EC3071FED79650016851F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -69,7 +71,8 @@
 		504EC3061FED79650016851F /* App */ = {
 			isa = PBXGroup;
 			children = (
-				47D1BEF02A30B6CF00962D88 /* scaled_logo.png */,
+				47CB1F1B2A3105C900FCDEF5 /* scaled_credit.png */,
+				47CB1F1C2A3105C900FCDEF5 /* scaled_logo.png */,
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
 				504EC30B1FED79650016851F /* Main.storyboard */,
@@ -172,8 +175,9 @@
 				50B271D11FEDC1A000F3C39B /* public in Resources */,
 				504EC30F1FED79650016851F /* Assets.xcassets in Resources */,
 				50379B232058CBB4000EE86E /* capacitor.config.json in Resources */,
+				47CB1F1D2A3105C900FCDEF5 /* scaled_credit.png in Resources */,
 				504EC30D1FED79650016851F /* Main.storyboard in Resources */,
-				47D1BEF12A30B6CF00962D88 /* scaled_logo.png in Resources */,
+				47CB1F1E2A3105C900FCDEF5 /* scaled_logo.png in Resources */,
 				2FAD9763203C412B000D30F8 /* config.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
