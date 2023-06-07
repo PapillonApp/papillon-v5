@@ -954,4 +954,12 @@
 		height: 18px !important;
 		opacity: 0.4;
 	}
+
+	#title.md {
+		margin-top: -4px !important;
+	}
+
+	#title.ios {
+		margin-top: -2px !important;
+	}
 </style>

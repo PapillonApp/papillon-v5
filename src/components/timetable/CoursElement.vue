@@ -449,7 +449,7 @@
 	.CoursInfoContainer {
 		margin-top: 2px;
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		gap: 10px;
 
 		width: calc(100vw - 145px);
@@ -457,8 +457,15 @@
 
 	.CoursInfoContainer .separator {
 		width: 2px;
-		height: 90%;
-		background: #00000010;
+		height: 15px;
+
+		border-radius: 300px;
+		margin-top: -3px;
+		
+		background: var(--backgroundColor);
+		filter: brightness(0.6);
+
+		opacity: 0.25;
 	}
 
 	.dark .CoursInfoContainer .separator {
@@ -498,6 +505,7 @@
 	.CoursInfo p {
 		font-family: var(--papillon-font) !important;
 		font-size: 16px;
+		line-height: 16px;
 	}
 
 	.CoursInfo span {
@@ -570,7 +578,8 @@
 		padding: 0px 0px;
 		padding-left: 5px;
 
-		width: 60px;
+		min-width: 50px !important;
+		max-width: 50px !important;
 	}
 
 	.CoursTime * {
@@ -579,22 +588,22 @@
 	}
 
 	.CoursTime .start {
-		margin-bottom: 3px;
+		margin-bottom: 1px;
 
-		font-size: 1.1em;
+		font-size: 1.15em;
 		font-weight: 500;
 
+		letter-spacing: 0.2px;
+
 		font-family: var(--papillon-font);
-		font-feature-settings: 'tnum' on, 'lnum' on !important;
-		letter-spacing: -0.3px;
 	}
 
 	.CoursTime .end {
 		opacity: 0.7;
 		font-size: 0.85em;
+		letter-spacing: 0.3px;
 		font-weight: 400;
 		font-family: var(--papillon-font);
-		font-feature-settings: 'tnum' on, 'lnum' on !important;
 	}
 
 	.progressDiv {

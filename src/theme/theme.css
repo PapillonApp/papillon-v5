@@ -56,14 +56,15 @@ h2, h3 {
 
 ion-title.title-large {
     font-family: var(--papillon-font);
-    font-weight: 300 !important;
+    font-weight: 500 !important;
     letter-spacing: -0.5px;
 }
 
 ion-title.title-default {
     font-family: var(--papillon-font);
-    font-weight: 600 !important;
+    font-weight: 500 !important;
     font-size: 17px !important;
+    line-height: 17px !important;
 }
 
 /* (MD) Searchbar */
@@ -325,6 +326,7 @@ ion-item .mdls[slot="start"] {
 
 ion-toast::part(header) {
     font-size: 16px;
+    line-height: 19px !important;
     font-weight: 500;
     font-family: var(--papillon-font) !important;
 }
@@ -351,11 +353,6 @@ ion-modal.modal-sheet ion-header ion-toolbar:first-child {
 
 .dark .toolbar-title-default {
     --border-color: #414141 !important;
-}
-
-ion-header ion-toolbar ion-title:not(.title-large) {
-    font-size: 17px;
-    font-weight: 500 !important;
 }
 
 ion-header ion-toolbar ion-title ion-chip {

@@ -536,7 +536,14 @@ export default defineComponent({
 			this.userData = JSON.parse(localStorage.userData);
 
 			this.userName = JSON.parse(localStorage.userData).student.name.split(" ")[JSON.parse(localStorage.userData).student.name.split(" ").length - 1]
-			this.userFullName = JSON.parse(localStorage.userData).student.name
+			this.userFullName = JSON.parse(localStorage.userData).student.name;
+
+			// put last word of userFullName first
+			let name = this.userFullName.split(" ");
+			let lastName = name[name.length - 1];
+			name.pop();
+			name.unshift(lastName);
+			this.userFullName = name.join(" ");
 		},
 		getBoolOpt(opt, defaultVal = true) {
 			if (localStorage.getItem(opt)) {
@@ -622,25 +629,32 @@ export default defineComponent({
 				<ion-buttons slot="start">
 					<ion-menu-button mode="md"></ion-menu-button>
 				</ion-buttons>
-
-				<div class="profile">
-					<ion-avatar class="userAvatar" v-if="displayAvatar">
-						<img :src="avatar" />
-					</ion-avatar>
-
-					<div class="name">
+				
+				<ion-title mode="md">
+					<div class="profile">
 						<p>{{ displayFirstName ? userFullName : userName }}</p>
-						<h3>Page d'accueil</h3>
+						<h3>Vue d'ensemble</h3>
 					</div>
-				</div>
+				</ion-title>
+
 				<ion-buttons slot="end">
 					<ion-nav-link v-if="avatar" router-direction="forward" :component="UserView">
-
+						<ion-avatar class="userAvatar" v-if="displayAvatar">
+							<img :src="avatar" />
+						</ion-avatar>
 					</ion-nav-link>
 				</ion-buttons>
 			</IonToolbar>
-			<IonToolbar class="toolbar" v-if="displayNextCourse">
-				<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none">
+		</IonHeader>
+
+		<ion-content :fullscreen="true">
+			<ion-header collapse="condense" class="HomeHeader">
+				<ion-toolbar class="welcomeHeader">
+					<ion-title size="large" v-if="userName">Bonjour, {{ userName }} !</ion-title>
+					<ion-title size="large" v-else>Vue d'ensemble</ion-title>
+				</ion-toolbar>
+				<ion-toolbar>
+					<ion-list id="comp-tt" class="nextCourse" ref="comp-tt" lines="none" inset="true">
 					<div class="coursElemNext" v-for="cours in timetable" :key="cours.id"
 						:style="`--courseColor: ${cours.course.color};`">
 						<ion-item class="nextCours" button :detail="false" mode="md" lines="none" @click="goto('timetable')"
@@ -736,11 +750,12 @@ export default defineComponent({
 							<p><ion-skeleton-text :animated="true" style="width: 80%;"></ion-skeleton-text></p>
 						</ion-label>
 					</ion-item>
-				</ion-list>
-			</IonToolbar>
-		</IonHeader>
+					</ion-list>
+				</ion-toolbar>
+			</ion-header>
 
-		<ion-content :fullscreen="true">
+			
+
 			<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 				<ion-refresher-content></ion-refresher-content>
 			</ion-refresher>
@@ -891,36 +906,29 @@ export default defineComponent({
 </template>
 
 <style scoped>
-.profile {
-	display: flex;
-	gap: 16px;
-	margin-left: 12px;
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-
 .profile * {
 	margin: 0;
+	padding: 0;
 }
 
-.profile .name {
-	margin-top: -2.5px;
+.profile {
+	/* margin-top: -2.5px; */
 }
 
-.profile .name p {
+.profile p {
 	font-size: 15px;
 	opacity: 0.5;
 	font-weight: 400;
 }
 
-.profile .name h3 {
+.profile h3 {
 	font-size: 17.5px;
-	font-weight: 600 !important;
+	font-weight: 500 !important;
 }
 
 .userAvatar {
-	height: 38px;
-	width: 38px;
+	height: 32px;
+	width: 32px;
 }
 
 .iconDisplay {
@@ -960,26 +968,40 @@ export default defineComponent({
 }
 
 .nextCourse {
-	overflow: visible;
+	overflow: visible !important;
 	background: none;
 	padding: 0;
 	z-index: 99999;
+
+	margin: 0 12px !important;
+}
+
+.md .nextCourse {
+	margin: 0 16px !important;
+}
+
+.coursElemNext {
+	overflow: visible !important;
+}
+
+.coursElemNext {
+	overflow: visible !important;
 }
 
 .nextCours {
 	margin-top: 0 !important;
-	margin-bottom: 10px !important;
+	margin-bottom: 0px !important;
 	border-radius: 10px;
 	overflow: hidden !important;
 
-	margin: 0px 12px;
+	margin: 0px 0px;
 
 	--ion-item-background: var(--ion-inset-background);
 	--ion-text-color: #000;
 
-	box-shadow: 0px 1px 5px #00000010;
+	/* box-shadow: var(--ion-box-shadow); */
 
-	border: 0.5px solid #00000012;
+	/* border: 0.5px solid #00000012; */
 }
 
 .dark .nextCours {
@@ -1097,7 +1119,7 @@ export default defineComponent({
 .homepage_divider {
 	display: flex;
 	align-items: center;
-	padding: 5px 18px;
+	padding: 3.5px 18px;
 	width: 210px;
 	background: #EADBFC;
 	border-radius: 0px 300px 300px 0px;
@@ -1119,7 +1141,8 @@ export default defineComponent({
 }
 
 .homepage_divider p span {
-	font-weight: 600;
+	font-weight: 500;
+	font-family: var(--papillon-font) !important;
 }
 
 .hw_group {
@@ -1268,5 +1291,25 @@ ion-buttons[slot=end] {
 	font-size: 22px !important;
 	margin-left: 2px;
 	margin-top: 2px;
+}
+
+.md .HomeHeader {
+	display: block !important;
+	box-shadow: none !important;
+	--border-color: transparent !important;
+	--border-width: 0 !important;
+	border-bottom: none !important;
+}
+
+.md .HomeHeader ion-toolbar {
+	--background: transparent;
+	--border-color: transparent;
+	--border-width: 0;
+
+	padding-top: 16px;
+}
+
+.md .welcomeHeader {
+	display: none;
 }
 </style>
