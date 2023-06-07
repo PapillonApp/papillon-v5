@@ -362,6 +362,21 @@ ion-header ion-toolbar ion-title ion-chip {
     margin-top: 1px !important;
 }
 
+ion-chip .mdls {
+    margin-right: 5px !important;
+}
+
+ion-chip.small {
+    padding: 3px 8px;
+    height: fit-content;
+}
+
+ion-chip.small .mdls {
+    font-size: 20px;
+    height: 20px;
+    width: 20px;
+}
+
 .ios ion-header ion-toolbar ion-title {
     margin-top: -1px;
 }
