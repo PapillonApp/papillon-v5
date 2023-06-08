@@ -281,7 +281,13 @@ Contient **${this.logs.length}** logs
 		<ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
 			<ion-refresher-content></ion-refresher-content>
 		</ion-refresher>
-
+		<IonItem color="primary">
+                    <span class="material-symbols-outlined mdls" slot="start">live_help</span>
+                    <IonLabel class="ion-text-wrap">
+                        <h2>Aidez les développeurs !</h2>
+                        <p>Partagez vos logs sur le <a href="https://discord.gg/9bS5C9Fnvj" style="color:black;">Discord</a> ou sur le <a href="https://github.com/PapillonApp/Papillon" style="color:black;">Github</a> aux développeurs en cas de problème.</p>
+                    </IonLabel>
+                </IonItem>
 		<div class="NoCours" v-if="logs.length == 0 && !searching">
 			<span class="material-symbols-outlined mdls">developer_mode</span>
 			<h2>Aucun rapport n'a été enregistré.</h2>
