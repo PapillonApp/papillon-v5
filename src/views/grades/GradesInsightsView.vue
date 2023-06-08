@@ -16,7 +16,7 @@
         IonRange
 	} from '@ionic/vue';
 
-    import { Line } from 'vue-chartjs'
+    import { Line as ChartLine } from 'vue-chartjs'
     
     import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement} from 'chart.js'
     ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, PointElement, LineElement)
@@ -39,7 +39,7 @@
 			IonList,
 			IonItem,
 			IonLabel,
-            Line,
+            ChartLine,
             IonRange
 		},
 		data() {
@@ -280,7 +280,7 @@
                     </IonLabel>
                 </IonItem>
 
-                <Line class="chartCanvas" ref="chart" id="my-chart-id" :data="chartData" :options="chartOptions" />
+                <ChartLine class="chartCanvas" ref="chart" id="my-chart-id" :data="chartData" :options="chartOptions" />
 
                 <IonItem>
                     <div class="zoom" slot="end">
