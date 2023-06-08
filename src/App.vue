@@ -751,6 +751,7 @@ export default defineComponent({
 							</div>
 						</div>
 					</div>
+					<div class="completeMenuNavBar"></div>
 				</ion-header>
 				<ion-content>
 					<ion-list id="inbox-list">
@@ -1167,4 +1168,8 @@ a:not(.selected) ion-menu-toggle ion-item:hover {
 
 	padding-left: 0px;
 	padding-right: 10px;
-}</style>
+}
+.completeMenuNavBar {
+	height: 120px;
+}
+</style>
