@@ -18,6 +18,8 @@
 
 	import hapticsController from '@/functions/utils/hapticsController.js';
 
+	import CoursesColorView from '@/views/settings/CoursesColorView.vue';
+
 	export default defineComponent({
 		name: 'FolderPage',
 		components: {
@@ -35,6 +37,7 @@
 		},
 		setup() {
 			return {
+				CoursesColorView: CoursesColorView,
 				availableColors: [
 					{ 
 						name: "Vert",
@@ -363,6 +366,22 @@
 						<p>Ceci est une prévisualisation de la couleur que vous venez d'appliquer.</p>
 					</ion-label>
 				</ion-item>
+			</IonList>
+
+			<IonLabel class="listGroupTitle">
+				<p>Matières</p>
+			</IonLabel>
+
+			<IonList class="listGroup" lines="inset">
+				<ion-nav-link router-direction="forward" :component="CoursesColorView">
+					<IonItem button>
+						<span class="material-symbols-outlined mdls" slot="start">palette</span>
+						<IonLabel class="ion-text-wrap">
+							<h2>Couleur des matières</h2>
+							<p>Personnalisez la couleur de chaque matière</p>
+						</IonLabel>
+					</IonItem>
+				</ion-nav-link>
 			</IonList>
 
 			<IonLabel class="listGroupTitle">

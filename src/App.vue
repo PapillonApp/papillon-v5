@@ -450,6 +450,13 @@ export default defineComponent({
 
 					document.dispatchEvent(new CustomEvent('userDataLoaded'));
 				}
+
+				// put last word of this.userData.student.name first
+				const name = this.userData.student.name.split(' ');
+				const lastName = name[name.length - 1];
+				name.pop();
+				name.unshift(lastName);
+				this.userData.student.name = name.join(' ');
 			});
 		},
 		changePage(url: string, index: number) {
@@ -568,7 +575,7 @@ export default defineComponent({
 		this.$nextTick(function () {
 			setTimeout(() => {
 				SplashScreen.hide();
-			}, 100);
+			}, 220);
 		})
 
 		// shortcuts

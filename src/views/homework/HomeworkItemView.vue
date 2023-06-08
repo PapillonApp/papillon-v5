@@ -176,5 +176,8 @@
         line-height: 20px;
         
         margin-top: 15px;
+        
+        -webkit-user-select: text;
+        user-select: text;
     }
 </style>

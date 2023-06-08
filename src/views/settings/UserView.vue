@@ -39,8 +39,20 @@
             IonContent,
 		},
 		data() {
+            let backTitle = 'Retour';
+
+			// get current route
+			let currentRoute = this.$router.currentRoute.value;
+
+			if(currentRoute.name == "Settings") {
+				backTitle = 'Paramètres';
+			}
+            else if(currentRoute.name == "Home") {
+				backTitle = 'Vue d\'ensemble';
+			}
+
 			return {
-                
+                backTitle: backTitle,
 			}
 		},
 		methods: {
@@ -148,7 +160,7 @@
 			<IonToolbar>
 
                 <ion-buttons slot="start">
-                    <IonBackButton class="only-ios" text="Paramètres" @click="pop"></IonBackButton>
+                    <IonBackButton class="only-ios" :text="backTitle" @click="pop"></IonBackButton>
                     <IonBackButton class="only-md" @click="pop"></IonBackButton>
                 </ion-buttons>
 

@@ -183,6 +183,7 @@ http://ionicframework.com/docs/theming/ */
 	  --ion-text-color-transparent: #00000050;
 	  --ion-text-color-transparent-rgb: 0,0,0,0.31;
   
+	  --ion-color-step-25: #f5f5f5;
 	  --ion-color-step-50: #f2f2f2;
 	  --ion-color-step-100: #e6e6e6;
 	  --ion-color-step-150: #d9d9d9;

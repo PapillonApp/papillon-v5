@@ -11,7 +11,8 @@
 		IonButtons,
 		IonTitle,
 		IonContent,
-        IonBackButton
+        IonBackButton,
+        IonRange
 	} from '@ionic/vue';
 
     import { Line } from 'vue-chartjs'
@@ -33,7 +34,8 @@
 			IonList,
 			IonItem,
 			IonLabel,
-            Line
+            Line,
+            IonRange
 		},
 		data() {
             let backTitle = 'Retour';
@@ -107,6 +109,7 @@
             };
 
 			return {
+                scale: 5,
                 backTitle: backTitle,
                 grades: [],
                 chartData: data,
@@ -174,7 +177,9 @@
 
                 let lastAverage = 0;
                 let i = 0;
-                let max = 15;
+                let max = this.scale;
+
+                console.log(this.scale);
 
                 // get average of 15 last days
                 while(i < max) {
@@ -212,6 +217,13 @@
                 this.$refs.chart.chart.data.datasets[0].data = values;
 
                 this.$refs.chart.chart.update();
+            },
+            changeScale($event) {
+                let scale = $event.target.value;
+
+                this.scale = (this.grades.length - 10) - Math.round(scale);
+
+                this.getAverageEvolution();
             }
 		},
 		mounted() {
@@ -220,10 +232,11 @@
 				data.marks.forEach((subject) => {
 					subject.marks.forEach((mark) => {
 						this.grades.push(mark);
+
+                        this.scale = Math.round((this.grades.length - 10) / 2);
+                        this.getAverageEvolution();
 					});
 				});
-
-                this.getAverageEvolution();
             });
 
             return false;
@@ -261,7 +274,18 @@
                         <p>sur les notes les plus récentes</p>
                     </IonLabel>
                 </IonItem>
+
                 <Line class="chartCanvas" ref="chart" id="my-chart-id" :data="chartData" :options="chartOptions" />
+
+                <IonItem>
+                    <div class="zoom" slot="end">
+                        <span class="material-symbols-outlined mdls">zoom_out</span>
+
+                        <IonRange class="range" @ionChange="changeScale($event)" :min="0" :max="this.grades.length - 12" :value="Math.round((this.grades.length - 10) / 2)"></IonRange>
+
+                        <span class="material-symbols-outlined mdls">zoom_in</span>
+                    </div>
+                </IonItem>
             </IonList>
 		</ion-content>
 </template>
@@ -278,5 +302,23 @@
     .chartList .chartCanvas {
         margin: 5px;
         margin-top: 0px;
+    }
+
+    .range {
+        height: 10px;
+    }
+
+    .zoom {
+        margin-top: -15px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 60%;
+
+        background: var(--ion-color-step-50);
+        border-radius: 50px;
+
+        padding: 3px 10px;
     }
 </style>
