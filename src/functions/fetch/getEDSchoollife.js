@@ -18,10 +18,10 @@ async function getEDSchoollife(forceReload) {
     const userID = JSON.parse(localStorage.UserCache).id;
 
     // construct url
-    let URL = `${EDAPI}/eleves/${userID}/viescolaire.awp?verbe=get`;
+    const URL = `${EDAPI}/eleves/${userID}/viescolaire.awp?verbe=get`;
 
 	let schoollife = {};
-	let cache = localStorage.getItem('EDSchoollifeCache');
+	const cache = localStorage.getItem('EDSchoollifeCache');
 	if (cache != null && !forceReload) {
 		schoollife = JSON.parse(cache).edschoollife;
 
@@ -31,10 +31,10 @@ async function getEDSchoollife(forceReload) {
 	}
 	else {
 
-        var requestOptions = {
+        const requestOptions = {
             headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": token },            
         };
-        let body = `data={}`
+        const body = `data={}`
 
 		return axios.post(URL, body, requestOptions)
 		.then((response) => {
@@ -59,8 +59,8 @@ async function getEDSchoollife(forceReload) {
 			schoollife = response.data.data;
 			schoollife = constructEDSchoollife(schoollife);
 			
-            let today = new Date();
-			let cacheElement = {
+            const today = new Date();
+			const cacheElement = {
 				date: today,
 				edschoollife: response.data.data
 			};
@@ -89,7 +89,7 @@ async function getEDSchoollife(forceReload) {
 
 // pronote : construct delays
 function constructEDSchoollife(schoollife) {
-	let schlife = {
+	const schlife = {
         "absences": [],
         "delays": [],
         "punishments": [],
@@ -186,7 +186,7 @@ function constructEDSchoollife(schoollife) {
     schoollife.sanctionsEncouragements.forEach((sctEncour) => {
 
         if(sctEncour.typeElement == "Punition") {
-            let newPunishment = {
+            const newPunishment = {
                 data: {
                     id: sctEncour.id,
                     reasons: { text: [ sctEncour.libelle || "Aucun motif fournit" ], circumstances: sctEncour.commentaire || sctEncour.motif || "Aucune circonstance" },
@@ -211,7 +211,7 @@ function constructEDSchoollife(schoollife) {
         }
 
         if(sctEncour.typeElement == "Encouragement") {
-            let newsctEncour = {
+            const newsctEncour = {
                 data: {
                     id: sctEncour.id,
                     isJustified: sctEncour.justifie,

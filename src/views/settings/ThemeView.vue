@@ -137,7 +137,7 @@
 			let defaultColor = this.availableColors[0];
 
 			if(localStorage.getItem('customizations')) {
-				let customizations = JSON.parse(localStorage.getItem('customizations'));
+				const customizations = JSON.parse(localStorage.getItem('customizations'));
 
 				if(customizations.color) {
 					defaultColor = customizations.color;
@@ -161,8 +161,8 @@
 					style: 'light'
 				});
 
-				let el = this.$refs[option];
-				let elChecked = el.$el.checked;
+				const el = this.$refs[option];
+				const elChecked = el.$el.checked;
 
 				localStorage.setItem(option, elChecked);
 
@@ -193,9 +193,9 @@
 					style: 'light'
 				});
 				
-				let colorHex = this.$refs.colorSelect.$el.value;
+				const colorHex = this.$refs.colorSelect.$el.value;
 
-				let color = this.availableColors.find((color) => color.color.hex == colorHex);
+				const color = this.availableColors.find((color) => color.color.hex == colorHex);
 
 				this.currentColorName = color.name;
 
@@ -203,14 +203,14 @@
 				document.body.style.setProperty('--ion-color-primary-rgb', color.color.rgb);
 
 				// save it in local storage
-				let customizations = JSON.parse(localStorage.getItem('customizations')) || {};
+				const customizations = JSON.parse(localStorage.getItem('customizations')) || {};
 
 				customizations.color = color;
 
 				localStorage.setItem('customizations', JSON.stringify(customizations));
 			},
 			changeThemeMode() {
-				let themeModeValue = this.$refs.themeMode.$el.value;
+				const themeModeValue = this.$refs.themeMode.$el.value;
 
 				localStorage.setItem('themeMode', themeModeValue);
 
@@ -218,24 +218,24 @@
 				document.dispatchEvent(new CustomEvent('settingsUpdated'));
 			},
 			tweakProgressBar() {
-				let tweakProgressBar = this.$refs.tweakProgressBar;
-				let tweakProgressBarChecked = tweakProgressBar.$el.checked;
+				const tweakProgressBar = this.$refs.tweakProgressBar;
+				const tweakProgressBarChecked = tweakProgressBar.$el.checked;
 
 				localStorage.setItem('tweakProgressBar', tweakProgressBarChecked);
 
 				document.dispatchEvent(new CustomEvent('settingsUpdated'));
 			},
 			tweakProgressBarShowPast() {
-				let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
-				let tweakProgressBarShowPastChecked = tweakProgressBarShowPast.$el.checked;
+				const tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
+				const tweakProgressBarShowPastChecked = tweakProgressBarShowPast.$el.checked;
 
 				localStorage.setItem('tweakProgressBarShowPast', tweakProgressBarShowPastChecked);
 
 				document.dispatchEvent(new CustomEvent('settingsUpdated'));
 			},
 			checkThemeMode() {
-				let themeMode = this.$refs.themeMode;
-				let customThemeMode = this.$refs.customThemeMode;
+				const themeMode = this.$refs.themeMode;
+				const customThemeMode = this.$refs.customThemeMode;
 				console.log(customThemeMode.$el.checked);
 
 				if (localStorage.getItem('customThemeMode') == 'true') {
@@ -254,8 +254,8 @@
 				}
 			},
 			checkColor() {
-				let colorSelect = this.$refs.colorSelect;
-				let colorHex = getComputedStyle(document.body).getPropertyValue('--ion-color-primary');
+				const colorSelect = this.$refs.colorSelect;
+				const colorHex = getComputedStyle(document.body).getPropertyValue('--ion-color-primary');
 
 				for (let i = 0; i < this.availableColors.length; i++) {
 					const elt = this.availableColors[i];
@@ -267,15 +267,15 @@
 		},
 		mounted() {		
 			// get useScolColors ref
-			let useScolColors = this.$refs.useScolColors;
+			const useScolColors = this.$refs.useScolColors;
 			useScolColors.$el.checked = localStorage.getItem('useScolColors') == 'true';
 
 			// get tweakProgressBar ref
-			let tweakProgressBar = this.$refs.tweakProgressBar;
+			const tweakProgressBar = this.$refs.tweakProgressBar;
 			tweakProgressBar.$el.checked = localStorage.getItem('tweakProgressBar') == 'true';
 
 			// get tweakProgressBarShowPast ref
-			let tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
+			const tweakProgressBarShowPast = this.$refs.tweakProgressBarShowPast;
 			tweakProgressBarShowPast.$el.checked = localStorage.getItem('tweakProgressBarShowPast') != 'false'; // default true
 
 			// check if custom theme mode is enabled
@@ -284,7 +284,7 @@
 
 			// check if there are customizations
 			if(localStorage.getItem('customizations')) {
-				let customizations = JSON.parse(localStorage.getItem('customizations'));
+				const customizations = JSON.parse(localStorage.getItem('customizations'));
 
 				if(customizations.color) {
 					this.currentColor = customizations.color;

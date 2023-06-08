@@ -44,7 +44,7 @@ function getSkolengoTimetable(date, forceReload) {
     if (cacheSearch.length > 0 && !forceReload) {
         // return cached timetable in promise
         return new Promise((resolve) => {
-            let timetable = JSON.parse(cacheSearch[0].timetable);
+            const timetable = JSON.parse(cacheSearch[0].timetable);
             resolve(constructSkolengoTimetable(timetable?.listeSeances || []));
         });
     } else {
@@ -55,8 +55,8 @@ function getSkolengoTimetable(date, forceReload) {
             const jour = calendrier.listeJourCdt.find(jour => jour.date.toISOString().split('T')[0] === dayString)
             const timetable = constructSkolengoTimetable(jour?.listeSeances || [])
 
-            let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
-            let cacheElement = {
+            const cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
+            const cacheElement = {
                 date: dayString,
                 token: token,
                 timetable: JSON.stringify(jour || [])
@@ -131,7 +131,7 @@ function getPronoteTimetable(date, forceReload) {
     const dayString = dayRequest.toISOString().split('T')[0];
 
     // construct url (date is a TEST date)
-    let URL = `${API}/timetable?dateString=${dayString}&token=${token}`;
+    const URL = `${API}/timetable?dateString=${dayString}&token=${token}`;
 
     // check if timetable is cached
     let cacheSearch = JSON.parse(localStorage.getItem('TimetableCache')) || [];
@@ -141,7 +141,7 @@ function getPronoteTimetable(date, forceReload) {
     if (cacheSearch.length > 0 && !forceReload) {
         // return cached timetable in promise
         return new Promise((resolve) => {
-            let timetable = JSON.parse(cacheSearch[0].timetable);
+            const timetable = JSON.parse(cacheSearch[0].timetable);
             resolve(constructPronoteTimetable(timetable));
         });
     } else {
@@ -155,8 +155,8 @@ function getPronoteTimetable(date, forceReload) {
                 timetable = constructPronoteTimetable(timetable);
 
                 // cache response
-                let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
-                let cacheElement = {
+                const cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
+                const cacheElement = {
                     date: dayString,
                     token: token,
                     timetable: JSON.stringify(response.data)
@@ -196,12 +196,12 @@ function getPronoteTimetable(date, forceReload) {
 // pronote : construct timetable
 function constructPronoteTimetable(timetable) {
     // declaring vars
-    let courses = [];
+    const courses = [];
 
     // for each course in timetable
     timetable.forEach((course) => {
         // construct course
-        let newCourse = {
+        const newCourse = {
             course: {
                 id: course.id,
                 color: subjectColor.getSubjectColor(course.subject.name, course.background_color),
@@ -282,7 +282,7 @@ function getEDTimetable(date, forceReload) {
     const userID = JSON.parse(localStorage.UserCache).id;
 
     // construct url (date is a TEST date)
-    let URL = `${EDAPI}/E/${userID}/emploidutemps.awp?verbe=get`;
+    const URL = `${EDAPI}/E/${userID}/emploidutemps.awp?verbe=get`;
 
     // check if timetable is cached
     let cacheSearch = JSON.parse(localStorage.getItem('TimetableCache')) || [];
@@ -292,16 +292,16 @@ function getEDTimetable(date, forceReload) {
     if (cacheSearch.length > 0 && !forceReload) {
         // return cached timetable in promise
         return new Promise((resolve) => {
-            let timetable = JSON.parse(cacheSearch[0].timetable);
+            const timetable = JSON.parse(cacheSearch[0].timetable);
             resolve(constructEDTimetable(timetable));
         });
     } else {
         // get timetable from API
 
-        var requestOptions = {
+        const requestOptions = {
             headers: {"Content-Type": "application/x-www-form-urlencoded", "X-Token": token},
         };
-        let body = `data={
+        const body = `data={
             "dateDebut": "${dayString}",
             "dateFin": "${dayString}",
             "avecTrous": false
@@ -330,8 +330,8 @@ function getEDTimetable(date, forceReload) {
                 timetable = constructEDTimetable(timetable);
 
                 // cache response
-                let cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
-                let cacheElement = {
+                const cache = JSON.parse(localStorage.getItem('TimetableCache')) || [];
+                const cacheElement = {
                     date: dayString,
                     token: token,
                     timetable: JSON.stringify(response.data.data)
@@ -366,12 +366,12 @@ function getEDTimetable(date, forceReload) {
 // ed : construct timetable
 function constructEDTimetable(timetable) {
     // declaring vars
-    let courses = [];
+    const courses = [];
 
     // for each course in timetable
     timetable.forEach((course) => {
         // construct course
-        let newCourse = {
+        const newCourse = {
             course: {
                 id: course.id,
                 color: subjectColor.getSubjectColor(course.matiere, course.color),

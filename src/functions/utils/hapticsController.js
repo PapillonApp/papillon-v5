@@ -10,7 +10,7 @@ async function impact(style) {
 
 async function confetti() {
     let repeat = 5;
-    let interval = setInterval(async () => {
+    const interval = setInterval(async () => {
         
         await Haptics.impact({ style: 'MEDIUM' });
 

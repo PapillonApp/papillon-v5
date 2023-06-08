@@ -41,7 +41,7 @@
             let backTitle = 'Retour';
 
 			// get current route
-			let currentRoute = this.$router.currentRoute.value;
+			const currentRoute = this.$router.currentRoute.value;
 
 			if(currentRoute.name == "Homework") {
 				backTitle = 'Devoirs';
@@ -65,10 +65,10 @@
                 });
             },
             async deleteHW() {
-                let customHomeworks = JSON.parse(localStorage.customHomeworks);
+                const customHomeworks = JSON.parse(localStorage.customHomeworks);
 
                 // find homework
-                let homework = customHomeworks.find((homework) => {
+                const homework = customHomeworks.find((homework) => {
                     return homework.homework.data.id == this.openedData.id;
                 });
 
@@ -84,13 +84,13 @@
 		mounted() {
             // if urlHw prop is set
             if(this.urlHw) {
-                let encoded = this.urlHw;
+                const encoded = this.urlHw;
 
                 // decode url
-                let decoded = decodeURIComponent(encoded);
+                const decoded = decodeURIComponent(encoded);
 
                 // parse json
-                let parsed = JSON.parse(decoded);
+                const parsed = JSON.parse(decoded);
                 // open urlHw
                 this.openedHw = parsed;
                 this.openedData = parsed.data;

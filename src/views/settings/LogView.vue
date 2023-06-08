@@ -77,7 +77,7 @@
 				
 				this.logs = this.baseLogs.filter(log => {
 					try {
-						let lowerLog = log.message.toLowerCase();
+						const lowerLog = log.message.toLowerCase();
 						return lowerLog.includes(query);
 					}
 					catch {
@@ -92,8 +92,8 @@
 			},
 			getAccountInfo() {
 				try {
-					let loginData = JSON.parse(atob(localStorage.getItem('loginData')));
-					let userData = JSON.parse(localStorage.getItem('userData'));
+					const loginData = JSON.parse(atob(localStorage.getItem('loginData')));
+					const userData = JSON.parse(localStorage.getItem('userData'));
 
 					this.account.name = userData.student.name;
 					this.account.etab = userData.class.school;
@@ -141,12 +141,12 @@
 			getApiVersion() {
 				const API = this.$api;
 
-				let cacheApiVersion = localStorage.getItem('apiVersion');
+				const cacheApiVersion = localStorage.getItem('apiVersion');
 
 				fetch(API + "/infos")
 					.then(response => response.json())
 					.then(result => {
-						let apiVer = result.version;
+						const apiVer = result.version;
 						localStorage.setItem('apiVersion', apiVer);
 						this.apiVersion = apiVer;
 					});
@@ -159,11 +159,11 @@
 					displayToast.presentNativeToast("Préparation des logs...");
 
 					// Post logs to hastebin (https://logs.getpapillon.xyz)
-					let response = await fetch("https://cors.api.getpapillon.xyz/https://logs.getpapillon.xyz/documents", {
+					const response = await fetch("https://cors.api.getpapillon.xyz/https://logs.getpapillon.xyz/documents", {
 						method: "POST",
 						body: this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} - ${log.message}`; }).join("\n")
 					});
-					let result = await response.json();
+					const result = await response.json();
 
 					// Get the link
 					link = `https://logs.getpapillon.xyz/${result.key}`;

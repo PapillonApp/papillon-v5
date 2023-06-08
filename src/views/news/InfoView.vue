@@ -41,7 +41,7 @@
 			let backTitle = 'Retour';
 
 			// get current route
-			let currentRoute = this.$router.currentRoute.value;
+			const currentRoute = this.$router.currentRoute.value;
 
 			if(currentRoute.name == "News") {
 				backTitle = 'Actualités';
@@ -66,7 +66,7 @@
 					name = name.split(' ').slice(1).join(' ');
 				}
 
-				let shortName = name.match(/\b(\w)/g).join('');
+				const shortName = name.match(/\b(\w)/g).join('');
 
 				// if shortName > 2, return first 2 letters
 				if (shortName.length > 2) {
@@ -79,13 +79,13 @@
 		mounted() {
 			// if urlNews prop is set
 			if(this.urlNews) {
-				let encoded = this.urlNews;
+				const encoded = this.urlNews;
 
 				// decode url
-				let decoded = decodeURIComponent(encoded);
+				const decoded = decodeURIComponent(encoded);
 
 				// parse json
-				let parsed = JSON.parse(decoded);
+				const parsed = JSON.parse(decoded);
 
 				// open urlNews
 				this.openedNews = parsed;

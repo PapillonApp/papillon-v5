@@ -26,7 +26,7 @@ function getPronoteRecap(force) {
         // vars
         let timetable = []
         let homeworks = []
-        let grades = {
+        const grades = {
             full: [],
             last: []
         }
@@ -35,7 +35,7 @@ function getPronoteRecap(force) {
         let requestsDone = 0;
         let errorsDone = 0;
 
-        let errors = [];
+        const errors = [];
 
         // timetable
         getTimetable(new Date(), force).then((response) => {
@@ -48,9 +48,9 @@ function getPronoteRecap(force) {
             }
         })
         // homeworks
-        let today = new Date();
+        const today = new Date();
 
-        let endDate = new Date();
+        const endDate = new Date();
         endDate.setDate(endDate.getDate() + 3);
 
         getHomeworks(today, endDate, force).then((response) => {
@@ -73,10 +73,10 @@ function getPronoteRecap(force) {
                 requestsDone++;
 
                 // get all grades in all subjects
-                let allGrades = [];
+                const allGrades = [];
                 for (let i = 0; i < grades.full.marks.length; i++) {
                     for (let j = 0; j < grades.full.marks[i].marks.length; j++) {
-                        let newGrade = grades.full.marks[i].marks[j];
+                        const newGrade = grades.full.marks[i].marks[j];
                         // add subject data
                         newGrade.subject = {
                             name: grades.full.marks[i].name,
@@ -114,7 +114,7 @@ function getPronoteRecap(force) {
         })
 
         // wait for all requests to be done
-        let interval = setInterval(() => {
+        const interval = setInterval(() => {
             if (requestsDone == 4) {
                 clearInterval(interval);
 
@@ -148,7 +148,7 @@ function getEDRecap(force) {
         // vars
         let timetable = []
         let homeworks = []
-        let grades = {
+        const grades = {
             full: [],
             last: []
         }
@@ -163,9 +163,9 @@ function getEDRecap(force) {
         });
 
         // homeworks
-        let today = new Date();
+        const today = new Date();
 
-        let endDate = new Date();
+        const endDate = new Date();
         endDate.setDate(endDate.getDate() + 3);
 
         getHomeworks(today, endDate, force).then((response) => {
@@ -179,10 +179,10 @@ function getEDRecap(force) {
 			requestsDone++;
 
             // get all grades in all subjects
-            let allGrades = [];
+            const allGrades = [];
             for (let i = 0; i < grades.full.marks.length; i++) {
                 for (let j = 0; j < grades.full.marks[i].marks.length; j++) {
-                    let newGrade = grades.full.marks[i].marks[j];
+                    const newGrade = grades.full.marks[i].marks[j];
                     // add subject data
                     newGrade.subject = {
                         name: grades.full.marks[i].name,
@@ -214,7 +214,7 @@ function getEDRecap(force) {
 		});
 
         // wait for all requests to be done
-        let interval = setInterval(() => {
+        const interval = setInterval(() => {
             if (requestsDone == 4) {
                 clearInterval(interval);
 

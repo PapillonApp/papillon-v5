@@ -24,11 +24,11 @@ async function getPronotePunishments(forceReload) {
 	const token = localStorage.getItem('token');
 
 	// construct url
-	let URL = `${API}/punishments?token=${token}`;
+	const URL = `${API}/punishments?token=${token}`;
 
-	let cache = localStorage.getItem('PunishmentsCache');
+	const cache = localStorage.getItem('PunishmentsCache');
 	if (cache != null && !forceReload) {
-		let punishments = JSON.parse(cache).punishments;
+		const punishments = JSON.parse(cache).punishments;
 
 		return new Promise((resolve) => {
 			resolve(constructPronotePunishments(punishments));
@@ -41,8 +41,8 @@ async function getPronotePunishments(forceReload) {
 
 			punishments = constructPronotePunishments(punishments);
 			
-			let today = new Date();
-			let cacheElement = {
+			const today = new Date();
+			const cacheElement = {
 				date: today,
 				punishments: response.data
 			};
@@ -76,10 +76,10 @@ async function getPronotePunishments(forceReload) {
 
 // pronote : construct punishments
 function constructPronotePunishments(punishments) {
-	let punish = []
+	const punish = []
 
 	punishments.forEach((punishment) => {
-		let newPunishment = {
+		const newPunishment = {
 			data: {
 				id: punishment.id,
 				reasons: punishment.reason,

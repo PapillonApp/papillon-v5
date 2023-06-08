@@ -55,7 +55,7 @@
 			let backTitle = 'Retour';
 
 			// get current route
-			let currentRoute = this.$router.currentRoute.value;
+			const currentRoute = this.$router.currentRoute.value;
 
 			if(currentRoute.name == "Timetable") {
 				backTitle = 'Emp. du temps';
@@ -117,25 +117,25 @@
 								return;
 							}
 
-							let selectedCalendar = result.availableCalendars[selected.index];
+							const selectedCalendar = result.availableCalendars[selected.index];
 
 							// get data
-							let id = this.openCours_course.id;
+							const id = this.openCours_course.id;
 
-							let subject = this.openCours_data.subject;
-							let teachers = this.teachers;
-							let rooms = this.rooms;
+							const subject = this.openCours_data.subject;
+							const teachers = this.teachers;
+							const rooms = this.rooms;
 
 							let status = "Le cours se déroule normalement.";
 							if(this.openCours_status.status) {
 								status = this.openCours_status.status;
 							}
 
-							let finalStatus = `Vous êtes avec ${teachers} en ${rooms}. ${status}`;
+							const finalStatus = `Vous êtes avec ${teachers} en ${rooms}. ${status}`;
 
-							let startMillis = new Date(this.openCours_time.start).getTime();
+							const startMillis = new Date(this.openCours_time.start).getTime();
 
-							let endMillis = new Date(this.openCours_time.end).getTime();
+							const endMillis = new Date(this.openCours_time.end).getTime();
 
 							// use default calendar
 							await CapacitorCalendar.createEvent({
@@ -208,16 +208,16 @@
 				});
 			},
 			getStringToAsciiArray(string) {
-				let charCodeArr = [];
+				const charCodeArr = [];
 				for(let i = 0; i < string.length; i++){
-					let code = string.charCodeAt(i);
+					const code = string.charCodeAt(i);
 					charCodeArr.push(code);
 				}
 
 				return charCodeArr;
 			},
 			async shareCours() {
-				let sharedCourse = {
+				const sharedCourse = {
 					name: this.openedCours.data.subject,
 					teachers: this.openedCours.data.teachers.join(', ') || "Aucun professeur",
 					rooms: this.openedCours.data.rooms.join(', ') || "Aucune salle",
@@ -260,7 +260,7 @@
 				urlElems += sharedCourse.memo;
 
 				// base64 encode urlElems
-				let url = "https://getpapillon.xyz/course?c=" + btoa(urlElems);
+				const url = "https://getpapillon.xyz/course?c=" + btoa(urlElems);
 
 				// share url
 				await Share.share({
@@ -269,14 +269,14 @@
 				});
 			},
 			async setNotif() {
-				let course = this.openedCours;
+				const course = this.openedCours;
 
 				try {
-					let subject = course.data.subject;
-					let room = course.data.rooms[0] || "salle inconnue";
-					let teacher = course.data.teachers[0];
+					const subject = course.data.subject;
+					const room = course.data.rooms[0] || "salle inconnue";
+					const teacher = course.data.teachers[0];
 
-					let time = new Date(course.time.start);
+					const time = new Date(course.time.start);
 					time.setMinutes(time.getMinutes() - 5);
 
 					// check if time is in the future
@@ -333,18 +333,18 @@
 				}
 			},
 			async unsetNotif() {
-				let course = this.openedCours;
+				const course = this.openedCours;
 
 				// find notification
 				await LocalNotifications.getPending().then((res) => {
-					let notifs = res.notifications;
+					const notifs = res.notifications;
 
-					let time = new Date(course.time.start);
+					const time = new Date(course.time.start);
 					time.setMinutes(time.getMinutes() - 5);
 
 					// check if time = schedule.at
 					notifs.forEach(async (notif) => {
-						let notifTime = new Date(notif.schedule.at);
+						const notifTime = new Date(notif.schedule.at);
 
 						if(notifTime.getTime() == time.getTime()) {
 							await LocalNotifications.cancel({ notifications: [notif] });
@@ -367,13 +367,13 @@
 		async mounted() {
 			// if urlNews prop is set
 			if(this.urlCours) {
-				let encoded = this.urlCours;
+				const encoded = this.urlCours;
 
 				// decode url
-				let decoded = decodeURIComponent(encoded);
+				const decoded = decodeURIComponent(encoded);
 
 				// parse json
-				let parsed = JSON.parse(decoded);
+				const parsed = JSON.parse(decoded);
 
 				// open urlNews
 				this.openedCours = parsed;
@@ -403,14 +403,14 @@
 				// check notifs
 
 				await LocalNotifications.getPending().then((res) => {
-					let notifs = res.notifications;
+					const notifs = res.notifications;
 
-					let time = new Date(this.openCours_time.start);
+					const time = new Date(this.openCours_time.start);
 					time.setMinutes(time.getMinutes() - 5);
 
 					// check if time = schedule.at
 					notifs.forEach((notif) => {
-						let notifTime = new Date(notif.schedule.at);
+						const notifTime = new Date(notif.schedule.at);
 
 						if(notifTime.getTime() == time.getTime()) {
 							this.notificationEnabled = true;

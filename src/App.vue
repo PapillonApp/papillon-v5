@@ -173,9 +173,9 @@ export default defineComponent({
 
 		// ECOLEDIRECTE
 		if (localStorage.getItem("loginService") === "ecoledirecte") {
-			let usercache = localStorage.getItem("UserCache");
+			const usercache = localStorage.getItem("UserCache");
 			if (usercache != null) {
-				let JSONUserCache = JSON.parse(usercache);
+				const JSONUserCache = JSON.parse(usercache);
 				JSONUserCache.modules.forEach((module1: any) => {
 					switch (module1.code) {
 						case "VIE_SCOLAIRE":
@@ -331,11 +331,11 @@ export default defineComponent({
 							}
 							else if (JSON.stringify(lastGrades[0]) == JSON.stringify(recapGrades[0])) {
 								// get last grade
-								let lastGrade = recapGrades[0];
+								const lastGrade = recapGrades[0];
 								let description = lastGrade.info.description
 
 								// get grade as 20
-								let gradeAs20 = Math.round((lastGrade.grade.value / lastGrade.grade.out_of) * 20);
+								const gradeAs20 = Math.round((lastGrade.grade.value / lastGrade.grade.out_of) * 20);
 
 								const reactions = {
 									0: 'Bon... 💀',
@@ -552,7 +552,7 @@ export default defineComponent({
 		},
 		setSelectedIndex(path: string) {
 			// find index of page in appPages
-			let index = this.appPages.findIndex((page) => {
+			const index = this.appPages.findIndex((page) => {
 				return page.url == path;
 			});
 
@@ -562,7 +562,7 @@ export default defineComponent({
 	},
 	watch: {
 		$route(to, /*from*/) {
-			let path = to.path;
+			const path = to.path;
 			this.setSelectedIndex(path);
 		}
 	},
@@ -595,7 +595,7 @@ export default defineComponent({
 		let lastRefesh = new Date();
 
 		document.addEventListener('connectionState', (e: any) => {
-			let state = e.detail;
+			const state = e.detail;
 			this.connectedToServer = state;
 
 			lastRefesh = new Date();
@@ -603,9 +603,9 @@ export default defineComponent({
 
 		// check if lastRefesh is older than 5 minutes
 		setInterval(() => {
-			let now = new Date();
-			let diff = now.getTime() - lastRefesh.getTime();
-			let minutes = Math.floor((diff / 1000) / 60);
+			const now = new Date();
+			const diff = now.getTime() - lastRefesh.getTime();
+			const minutes = Math.floor((diff / 1000) / 60);
 
 			if (minutes >= 5) {
 				this.connectedToServer = "paused";
@@ -682,7 +682,7 @@ export default defineComponent({
 
 		// apply customizations
 		if (localStorage.getItem('customizations')) {
-			let customizations = JSON.parse(localStorage.getItem('customizations') as string);
+			const customizations = JSON.parse(localStorage.getItem('customizations') as string);
 
 			if (customizations.color) {
 				document.body.style.setProperty('--ion-color-primary', customizations.color.color.hex);

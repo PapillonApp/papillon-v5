@@ -24,7 +24,7 @@ async function getPronoteConversations(forceReload) {
 	const token = localStorage.getItem('token');
 
 	// construct url
-	let URL = `${API}/discussions?token=${token}`;
+	const URL = `${API}/discussions?token=${token}`;
 
 	// check if cached
     let convCache = localStorage.getItem('ConversationsCache');
@@ -33,8 +33,8 @@ async function getPronoteConversations(forceReload) {
         // grade is cached, check if it's up to date
         convCache = JSON.parse(convCache);
 
-        let today = new Date();
-        let cacheDate = new Date(convCache.date);
+        const today = new Date();
+        const cacheDate = new Date(convCache.date);
 
         if(today.toDateString() == cacheDate.toDateString()) {
             // grade is up to date, return it
@@ -50,8 +50,8 @@ async function getPronoteConversations(forceReload) {
 			Conversations = response.data;
 
 			// save conversations to localstorage cache with today's date
-            let today = new Date();
-            let convCache = {
+            const today = new Date();
+            const convCache = {
                 date: today,
                 conversations: response.data
             }

@@ -29,8 +29,8 @@ function getSkolengoNews(forceReload) {
     if (newsCache != null && !forceReload) {
         newsCache = JSON.parse(newsCache);
 
-        let today = new Date();
-        let cacheDate = new Date(newsCache.date);
+        const today = new Date();
+        const cacheDate = new Date(newsCache.date);
 
         if (today.toDateString() == cacheDate.toDateString()) {
             return new Promise((resolve) => {
@@ -88,7 +88,7 @@ function getPronoteNews(forceReload) {
     const token = localStorage.getItem('token');
 
     // construct url (date is a TEST date)
-    let URL = `${API}/news?token=${token}`;
+    const URL = `${API}/news?token=${token}`;
 
     // check if timetable is cached
     let newsCache = localStorage.getItem('NewsCache');
@@ -97,8 +97,8 @@ function getPronoteNews(forceReload) {
         // timetable is cached, check if it's up to date
         newsCache = JSON.parse(newsCache);
 
-        let today = new Date();
-        let cacheDate = new Date(newsCache.date);
+        const today = new Date();
+        const cacheDate = new Date(newsCache.date);
 
         if(today.toDateString() == cacheDate.toDateString()) {
             // timetable is up to date, return it
@@ -117,8 +117,8 @@ function getPronoteNews(forceReload) {
             }
 
             // save timetable to localstorage cache with today's date
-            let today = new Date();
-            let newsCache = {
+            const today = new Date();
+            const newsCache = {
                 date: today,
                 news: response.data
             }
@@ -146,19 +146,19 @@ function getPronoteNews(forceReload) {
 
 // pronote : construct timetable
 function constructPronoteNews(news) {
-    let newsArray = [];
+    const newsArray = [];
 
     // for each news in news
     for(let i = 0; i < news.length; i++) {
         // get news
-        let newsItem = news[i];
+        const newsItem = news[i];
 
         // if no title, set it to "Sans titre"
         if(newsItem.title == null) {
             newsItem.title = "Sans titre";
         }
 
-        let newsReturn = {
+        const newsReturn = {
             title: newsItem.title,
             content: newsItem.content,
             htmlContent: newsItem.html_content[0].texte.V,

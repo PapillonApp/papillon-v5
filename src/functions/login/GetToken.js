@@ -35,21 +35,21 @@ function getPronoteLogin() {
             }
     
             // get username and password
-            let username = loginData.username;
-            let password = loginData.password;
-            let cas = loginData.cas;
-            let url = loginData.url;
+            const username = loginData.username;
+            const password = loginData.password;
+            const cas = loginData.cas;
+            const url = loginData.url;
     
-            var myHeaders = new Headers();
+            const myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
                         
-            var urlencoded = new URLSearchParams();
+            const urlencoded = new URLSearchParams();
             urlencoded.append("url", url);
             urlencoded.append("ent", cas);
             urlencoded.append("username", username);
             urlencoded.append("password", password);
     
-            var requestOptions = {
+            const requestOptions = {
                 method: 'POST',
                 headers: myHeaders,
                 body: urlencoded,
@@ -130,15 +130,15 @@ function getEDLogin() {
             }
     
             // get username and password
-            let username = loginData.username;
-            let password = loginData.password;
+            const username = loginData.username;
+            const password = loginData.password;
     
-            var requestOptions = {
+            const requestOptions = {
                 headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": ""},            
             };
     
             // encodeURIComponent because Ecoledirect needs urlencode on any field !
-            let body = `data={
+            const body = `data={
                 "uuid": "",
                 "identifiant": "${encodeURIComponent(username)}",
                 "motdepasse": "${encodeURIComponent(password)}",

@@ -43,7 +43,7 @@
 			let backTitle = 'Retour';
 
 			// get current route
-			let currentRoute = this.$router.currentRoute.value;
+			const currentRoute = this.$router.currentRoute.value;
 
 			if(currentRoute.name == "Grades") {
 				backTitle = 'Notes';
@@ -79,7 +79,7 @@
 				});
 			},
 			getAverage(grades, classAvg) {
-				let allGrades = {};
+				const allGrades = {};
 
 				for (let i = 0; i < grades.length; i++) {
 					if(grades[i].info.significant === false && grades[i].info.significantZero === false) continue;
@@ -88,9 +88,9 @@
 
 					if(classAvg) val = parseFloat(grades[i].grade.average);
 
-					let out_of = parseInt(grades[i].grade.out_of);
+					const out_of = parseInt(grades[i].grade.out_of);
 
-					let out20 = (val / out_of) * 20;
+					const out20 = (val / out_of) * 20;
 
 					// create key if not exists
 					if(!allGrades[grades[i].info.subject]) {
@@ -121,7 +121,7 @@
 				return total / count;
 			},
 			getSimpleAverage(grades) {
-				let allGrades = {
+				const allGrades = {
 					grades: 0,
 					count: 0
 				};
@@ -129,11 +129,11 @@
 				for (let i = 0; i < grades.length; i++) {
 					if(grades[i].info.significant === false && grades[i].info.significantZero === false) continue;
 
-					let val = parseFloat(grades[i].grade.value);
+					const val = parseFloat(grades[i].grade.value);
 
-					let out_of = parseInt(grades[i].grade.out_of);
+					const out_of = parseInt(grades[i].grade.out_of);
 
-					let out20 = (val / out_of) * 20;
+					const out20 = (val / out_of) * 20;
 
 					allGrades.grades += out20 * grades[i].grade.coefficient;
 					allGrades.count += grades[i].grade.coefficient;
@@ -143,53 +143,53 @@
 			},
 			getAverageInfluence() {
 				// get current average
-				let currentAverage = this.getAverage(this.grades, false);
+				const currentAverage = this.getAverage(this.grades, false);
 
 				// get average without current mark
-				let newGrades = this.grades.filter((grade) => {
+				const newGrades = this.grades.filter((grade) => {
 					return grade.id !== this.currentGrade.id;
 				});
 
-				let newAverage = this.getAverage(newGrades, false);
+				const newAverage = this.getAverage(newGrades, false);
 
 				// get difference
-				let difference = currentAverage - newAverage;
+				const difference = currentAverage - newAverage;
 
 				this.diffAvg = difference;
 			},
 			getAverageClassInfluence() {
 				// get current average
-				let currentAverage = this.getAverage(this.grades, true);
+				const currentAverage = this.getAverage(this.grades, true);
 
 				// get average without current mark
-				let newGrades = this.grades.filter((grade) => {
+				const newGrades = this.grades.filter((grade) => {
 					return grade.id !== this.currentGrade.id;
 				});
 
-				let newAverage = this.getAverage(newGrades, true);
+				const newAverage = this.getAverage(newGrades, true);
 
 				// get difference
-				let difference = currentAverage - newAverage;
+				const difference = currentAverage - newAverage;
 
 				this.diffClassAvg = difference;
 			},
 			getAverageSubjectInfluence() {
-				let subjectGrades = this.grades.filter((grade) => {
+				const subjectGrades = this.grades.filter((grade) => {
 					return grade.info.subject === this.currentGrade.info.subject;
 				});
 
 				// get current average
-				let currentAverage = this.getSimpleAverage(subjectGrades, false);
+				const currentAverage = this.getSimpleAverage(subjectGrades, false);
 
 				// get average without current mark
-				let newGrades = subjectGrades.filter((grade) => {
+				const newGrades = subjectGrades.filter((grade) => {
 					return grade.id !== this.currentGrade.id;
 				});
 
-				let newAverage = this.getSimpleAverage(newGrades, false);
+				const newAverage = this.getSimpleAverage(newGrades, false);
 
 				// get difference
-				let difference = currentAverage - newAverage;
+				const difference = currentAverage - newAverage;
 
 				this.diffSubjectAvg = difference;
 			}
