@@ -20,7 +20,7 @@ const config: CapacitorConfig = {
 			resize: KeyboardResize.Ionic,
 		},
 		"CapacitorHttp": {
-			"enabled": true
+			"enabled": false
 		}
 	},
 	/*server : {
