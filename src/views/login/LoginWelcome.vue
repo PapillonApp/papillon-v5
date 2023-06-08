@@ -11,7 +11,7 @@
     import { Browser } from '@capacitor/browser';
 
     import { StatusBar, Style } from '@capacitor/status-bar';
-    import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
+    import { NavigationBar } from '@mauricewegner/capacitor-navigation-bar';
 
     import LoginSelect from './LoginSelect.vue';
 

@@ -9,9 +9,9 @@ let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: 
 let themeMode = localStorage.getItem('themeMode');
 
 // safe area
-SafeArea.getSafeAreaInsets().then((result) => {
+SafeArea.getSafeAreaInsets().then(async (result) => {
 	const insets = result.insets;
-
+	
 	// set safe area
 	document.documentElement.style.setProperty('--papillon-safe-area-top', insets.top + 'px');
 	document.documentElement.style.setProperty('--papillon-safe-area-right', insets.right + 'px');
@@ -57,7 +57,7 @@ function setStyle() {
 }
 
 // Navigation bar (Android only)
-import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
+import { NavigationBar } from '@mauricewegner/capacitor-navigation-bar';
 
 function setNavigationBarStyle() {
 	if (themeMode === 'dark' || (isDarkMode && themeMode !== 'light')) {
