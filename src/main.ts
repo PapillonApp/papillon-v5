@@ -8,6 +8,8 @@ import VueLazyload from "vue-lazyload";
 
 import { IonicVue } from '@ionic/vue';
 
+import { Capacitor } from '@capacitor/core';
+
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
 
@@ -45,3 +47,5 @@ router.isReady().then(() => {
 // Global vars in Vue
 app.config.globalProperties.$rn = new Date;
 app.config.globalProperties.$api = localStorage.getItem('customApiUrl') || "https://api.getpapillon.xyz";
+
+app.config.globalProperties.$proxyPrefix = Capacitor.isNativePlatform() ? "" : "https://cors.api.getpapillon.xyz/"; 

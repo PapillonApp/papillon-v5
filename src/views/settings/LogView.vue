@@ -26,6 +26,7 @@
 		IonSearchbar
 	} from '@ionic/vue';
 
+	import {app} from '@/main.ts'
 	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 
@@ -162,7 +163,7 @@
 					displayToast.presentNativeToast("Préparation des logs...");
 
 					// Post logs to hastebin (https://logs.getpapillon.xyz)
-					let response = await fetch("https://cors.api.getpapillon.xyz/https://logs.getpapillon.xyz/documents", {
+					let response = await fetch(app.config.globalProperties.$proxyPrefix + "https://logs.getpapillon.xyz/documents", {
 						method: "POST",
 						body: this.logs.map(log => { return `[${log.type}] - ${log.date.replace('T', ' ')} - ${log.message}`; }).join("\n")
 					});

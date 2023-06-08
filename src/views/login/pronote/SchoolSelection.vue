@@ -6,9 +6,10 @@
 	import axios from 'axios';
 
 	import { App } from '@capacitor/app';
-	
+
 	import { linkOutline, linkSharp, qrCodeOutline, qrCodeSharp, schoolOutline, schoolSharp, businessOutline, businessSharp, navigateOutline, navigateSharp, personCircleOutline, personCircleSharp, serverOutline, serverSharp } from 'ionicons/icons';
 
+	import {app} from '@/main.ts'
 	import displayToast from '@/functions/utils/displayToast.js';
 	import { fetchDaysOffAndHolidays } from '@/functions/utils/datetimePicker.js';
 
@@ -172,7 +173,7 @@
 				this.terms = postal;
 				this.isLoading = true;
 				
-				axios.get('https://cors.api.getpapillon.xyz/https://positionstack.com/geo_api.php?query=france+' + postal, {
+				axios.get(app.config.globalProperties.$proxyPrefix + 'https://positionstack.com/geo_api.php?query=france+' + postal, {
 					headers: {
 						'Access-Control-Allow-Origin': '*',
 						'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',

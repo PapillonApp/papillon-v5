@@ -19,6 +19,11 @@ const config: CapacitorConfig = {
 		Keyboard: {
 			resize: KeyboardResize.Ionic,
 		},
+		"CapacitorHttp": {
+			// https://capacitorjs.com/docs/apis/http#configuration
+			// patch Fetch and XHR to use native libs without CORS restrictions
+			"enabled": true
+		}
 	},
 	/* server: {
 		url: "http://192.168.1.22:8100",

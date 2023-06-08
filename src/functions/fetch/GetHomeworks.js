@@ -40,7 +40,7 @@ async function getSkolengoHomeWork(dateFrom, dateTo, forceReload) {
         try {
             const token = localStorage.getItem('token');
             const ent = localStorage.getItem('ent');
-            const etudiant = new Kdecole(token, ApiVersion[ent], 0, 'https://cors.api.getpapillon.xyz/' + ApiUrl[ent])
+            const etudiant = new Kdecole(token, ApiVersion[ent], 0, app.config.globalProperties.$proxyPrefix + ApiUrl[ent])
 
             console.log("[REQUEST] [HOMEWORK] Requesting homeworks...")
             const taf = await etudiant.getTravailAFaire(undefined, new Date(dateFrom))
