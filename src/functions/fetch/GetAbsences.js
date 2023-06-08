@@ -24,10 +24,10 @@ async function getPronoteAbsences(forceReload) {
 	const token = localStorage.getItem('token');
 
 	// construct url
-	let URL = `${API}/absences?token=${token}`;
+	const URL = `${API}/absences?token=${token}`;
 
 	let absences = {};
-	let cache = localStorage.getItem('AbsencesCache');
+	const cache = localStorage.getItem('AbsencesCache');
 	if (cache != null && !forceReload) {
 		absences = JSON.parse(cache).absences;
 
@@ -43,8 +43,8 @@ async function getPronoteAbsences(forceReload) {
 
 			absences = constructPronoteAbsences(absences);
 			
-            let today = new Date();
-			let cacheElement = {
+            const today = new Date();
+			const cacheElement = {
 				date: today,
 				absences: response.data
 			};
@@ -78,10 +78,10 @@ async function getPronoteAbsences(forceReload) {
 
 // pronote : construct absences
 function constructPronoteAbsences(absences) {
-	let abs = []
+	const abs = []
 
 	absences.forEach((absence) => {
-		let newAbsence = {
+		const newAbsence = {
 			data: {
 				id: absence.id,
 				isJustified: absence.justified,

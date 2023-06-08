@@ -12,12 +12,12 @@ async function getEDPeriods(userid, token) {
 	if(!token) token = localStorage.getItem('token')
 	const EDAPI = "https://api.ecoledirecte.com/v3"
 
-	let URL = `${EDAPI}/eleves/${userid}/notes.awp?verbe=get`;
+	const URL = `${EDAPI}/eleves/${userid}/notes.awp?verbe=get`;
 
-	var requestOptions = {
+	const requestOptions = {
 		headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": token },            
 	};
-	let body = `data={}`
+	const body = `data={}`
 
 	// send request
 	return axios.post(URL, body, requestOptions).then((response) => {
@@ -36,11 +36,11 @@ async function getEDPeriods(userid, token) {
 				});
 			}
 		}
-		let periodes = response.data.data.periodes;
+		const periodes = response.data.data.periodes;
 
-        let periods = [];
+        const periods = [];
 		periodes.forEach(prd => {
-			let period = {
+			const period = {
 				start: prd.dateDebut,
 				end: prd.dateFin,
 				name: prd.periode,

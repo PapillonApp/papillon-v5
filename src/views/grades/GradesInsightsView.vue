@@ -46,14 +46,14 @@
             let backTitle = 'Retour';
 
 			// get current route
-			let currentRoute = this.$router.currentRoute.value;
+			const currentRoute = this.$router.currentRoute.value;
 
 			if(currentRoute.name == "Grades") {
 				backTitle = 'Notes';
 			}
 
             // get --ion-color-primary-rgb
-            let primaryColor = getComputedStyle(document.body).getPropertyValue('--ion-color-primary-rgb');
+            const primaryColor = getComputedStyle(document.body).getPropertyValue('--ion-color-primary-rgb');
 
             // grades data
             const data = {
@@ -124,15 +124,15 @@
 		methods: {
             getWeekNumber(date) {
                 // return week number of date
-                let d = new Date(date);
+                const d = new Date(date);
                 d.setHours(0, 0, 0, 0);
                 d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-                let yearStart = new Date(d.getFullYear(), 0, 1);
-                let weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+                const yearStart = new Date(d.getFullYear(), 0, 1);
+                const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
                 return weekNo;
             },
 			getAverage(grades, classAvg) {
-				let allGrades = {};
+				const allGrades = {};
 
 				for (let i = 0; i < grades.length; i++) {
 					if(grades[i].info.significant === false && grades[i].info.significantZero === false) continue;
@@ -141,9 +141,9 @@
 
 					if(classAvg) val = parseFloat(grades[i].grade.average);
 
-					let out_of = parseInt(grades[i].grade.out_of);
+					const out_of = parseInt(grades[i].grade.out_of);
 
-					let out20 = (val / out_of) * 20;
+					const out20 = (val / out_of) * 20;
 
 					// create key if not exists
 					if(!allGrades[grades[i].info.subject]) {
@@ -175,10 +175,10 @@
 			},
             getAverageEvolution() {
                 // get average of all grades
-                let labels = [];
-                let values = [];
+                const labels = [];
+                const values = [];
 
-                let indexes = [];
+                const indexes = [];
 
                 let lastAverage = 0;
                 let i = 0;
@@ -188,11 +188,11 @@
 
                 // get average of 15 last days
                 while(i < max) {
-                    let date = new Date();
+                    const date = new Date();
                     date.setDate(date.getDate() - i);
 
-                    let average = this.getAverage(this.grades.filter((grade) => {
-                        let gradeDate = new Date(grade.info.date);
+                    const average = this.getAverage(this.grades.filter((grade) => {
+                        const gradeDate = new Date(grade.info.date);
 
                         return gradeDate.getTime() <= date.getTime();
                     }), false).toFixed(2);
@@ -205,7 +205,7 @@
                         indexes.push(i);
                         lastAverage = average;
 
-                        let dayStr = date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+                        const dayStr = date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
 
                         labels.push(dayStr);
                         values.push(average);
@@ -224,7 +224,7 @@
                 this.$refs.chart.chart.update();
             },
             changeScale($event) {
-                let scale = $event.target.value;
+                const scale = $event.target.value;
 
                 this.scale = (this.grades.length - 10) - Math.round(scale);
 

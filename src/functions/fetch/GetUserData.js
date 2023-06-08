@@ -31,9 +31,9 @@ async function getSkolengoUser(force) {
     const ent = localStorage.getItem('ent');
 
     // check if user is in cache
-    let cache = JSON.parse(localStorage.getItem('UserCache')) || [];
+    const cache = JSON.parse(localStorage.getItem('UserCache')) || [];
     if (cache.user && !force) {
-        let user = JSON.parse(cache.user);
+        const user = JSON.parse(cache.user);
         return new Promise((resolve) => {
             resolve(constructSkolengoUser(user));
         });
@@ -82,13 +82,13 @@ async function getPronoteUser(force) {
     const token = localStorage.getItem('token');
 
     // construct url
-    let URL = `${API}/user?token=${token}`;
+    const URL = `${API}/user?token=${token}`;
 
     // check if user is in cache
-    let cache = JSON.parse(localStorage.getItem('UserCache')) || [];
+    const cache = JSON.parse(localStorage.getItem('UserCache')) || [];
     if (cache.user && !force) {
         // get user
-        let user = JSON.parse(cache.user);
+        const user = JSON.parse(cache.user);
 
         // return user in promise
         return new Promise((resolve) => {
@@ -99,14 +99,14 @@ async function getPronoteUser(force) {
         return axios.get(URL)
             .then((response) => {
                 // get user
-                let user = response.data;
+                const user = response.data;
 
                 // cache avatar
-                let avatar = user.profile_picture;
+                const avatar = user.profile_picture;
 
                 // if avatar is null or undefined, set default avatar
                 if (avatar == null || avatar == undefined) {
-                    let avatarBase64 = defaultAvatar
+                    const avatarBase64 = defaultAvatar
 
                     // save in cache
                     localStorage.setItem('avatarCache', 'data:image/png;base64,' + avatarBase64);
@@ -114,23 +114,23 @@ async function getPronoteUser(force) {
                     return constructPronoteUser(user);
                 }
                 // download avatar
-                let url = `https://cors.api.getpapillon.xyz/` + avatar;
+                const url = `https://cors.api.getpapillon.xyz/` + avatar;
                 axios.get(url, {responseType: 'blob'})
                     .then((response) => {
                         // get blob
-                        let blob = response.data;
+                        const blob = response.data;
 
                         // create reader
-                        let reader = new FileReader();
+                        const reader = new FileReader();
                         reader.readAsDataURL(blob);
 
                         // read blob
                         reader.onloadend = async function () {
                             // get base64
-                            let base64 = reader.result;
+                            const base64 = reader.result;
 
                             // save in cache
-                            let avatarURL = `${base64}`;
+                            const avatarURL = `${base64}`;
 
                             // get average color
                             fac.getColorAsync(avatarURL)
@@ -213,10 +213,10 @@ async function getEDUser(force) {
     */
 
     // construct url
-    let URL = `${EDAPI}/login.awp`;
+    const URL = `${EDAPI}/login.awp`;
 
     // check if user is in cache
-    let cache = JSON.parse(localStorage.getItem('UserCache')) || [];
+    const cache = JSON.parse(localStorage.getItem('UserCache')) || [];
     if (cache && !force) {
         // get user
         // return user in promise
@@ -224,7 +224,7 @@ async function getEDUser(force) {
 
             cache.profile.photo = undefined;
             if(cache.profile.photo == null || cache.profile.photo == undefined) {
-                let avatarBase64 = defaultAvatar
+                const avatarBase64 = defaultAvatar
                 
                 localStorage.setItem('avatarCache', 'data:image/png;base64,' + avatarBase64);
             }
@@ -241,14 +241,14 @@ async function getEDUser(force) {
                 }
 
                 // get user
-                let user = response.data.accounts[0];
+                const user = response.data.accounts[0];
 
                 // cache avatar
-                let avatar = user.profile.photo;
+                const avatar = user.profile.photo;
 
                 // if avatar is null or undefined, set default avatar
                 if (avatar == null || avatar == undefined) {
-                    let avatarBase64 = defaultAvatar
+                    const avatarBase64 = defaultAvatar
 
                     // save in cache
                     localStorage.setItem('avatarCache', 'data:image/png;base64,' + avatarBase64);

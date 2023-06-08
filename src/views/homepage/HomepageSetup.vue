@@ -10,7 +10,7 @@
 
     import { StatusBar, Style } from '@capacitor/status-bar';
 
-    let inner = true;
+    const inner = true;
   
     export default {
       components: { IonNav, IonPage },

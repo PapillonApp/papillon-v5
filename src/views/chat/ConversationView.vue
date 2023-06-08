@@ -91,7 +91,7 @@
                     }
 
 					// filter conversation res with this.conversationID
-                    let conversation = res.filter((conv) => {
+                    const conversation = res.filter((conv) => {
                         return conv.id === this.conversationID;
                     });
 
@@ -111,15 +111,15 @@
                 const API = this.$api;
 				const token = localStorage.getItem('token');
 
-				var myHeaders = new Headers();
+				const myHeaders = new Headers();
 				myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 								
-				var urlencoded = new URLSearchParams();
+				const urlencoded = new URLSearchParams();
 				urlencoded.append("token", token);
 				urlencoded.append("content", message);
 				urlencoded.append("discussionId", this.conversationID);
 
-				var requestOptions = {
+				const requestOptions = {
 					method: 'POST',
 					headers: myHeaders,
 					body: urlencoded,
@@ -148,7 +148,7 @@
             // for each message
             this.messages.forEach((mess) => {
                 // parse urls
-                let urlRegex = /(https?:\/\/[^\s]+)/g;
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
                 // check if there's already a <a> tag
                 if(mess.content.match(/<a/g)) {
                     mess.content = mess.content.replace(/<a/g, '<a target="_blank"');

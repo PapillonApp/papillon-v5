@@ -29,7 +29,7 @@
             goNormalStatusBar() {
                 setTimeout(() => {
                     if (Capacitor.getPlatform() === 'android') {
-                        let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                        const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
                 
                         if (isDarkMode) {
                             StatusBar.setBackgroundColor({color: "#1C1B1F"});

@@ -19,7 +19,7 @@ async function getContributors(limit = 100) {
 		axios.get(github_api_url + "/contributors")
 			.then((response) => {
 				// return limit 
-				let res = response.data.filter(contributor => {
+				const res = response.data.filter(contributor => {
 					return contributor.type === "User"
 				})
 

@@ -52,8 +52,8 @@
 		},
 		methods: {
 			decodeEntities(encodedString) {
-				var translate_re = /&(nbsp|amp|quot|lt|gt|Eacute|eacute|Egrave|egrave);/g;
-				var translate = {
+				const translate_re = /&(nbsp|amp|quot|lt|gt|Eacute|eacute|Egrave|egrave);/g;
+				const translate = {
 					"nbsp": " ",
 					"amp" : "&",
 					"quot": "\"",
@@ -67,7 +67,7 @@
 				return encodedString.replace(translate_re, function(match, entity) {
 					return translate[entity];
 				}).replace(/&#(\d+);/gi, function(match, numStr) {
-					var num = parseInt(numStr, 10);
+					const num = parseInt(numStr, 10);
 					return String.fromCharCode(num);
 				});
 			},
@@ -103,20 +103,20 @@
 						this.permissionDeny = true
 					}
 				})
-				let lat = coordinates.coords.latitude;
-				let lon = coordinates.coords.longitude;
+				const lat = coordinates.coords.latitude;
+				const lon = coordinates.coords.longitude;
 
 				this.isLoading = true;
 				this.findEstablishments(lat, lon)
 			},     
 			async createEntPicker(multipleEnts) {
-				let options = [];
+				const options = [];
 
 				for (let i = 0; i < multipleEnts.cas.length; i++) {
 					options.push({
 						text: multipleEnts.cas[i].name,
 						handler: () => {
-							let selected = {
+							const selected = {
 								etab : multipleEnts.etab.toLowerCase(),
 								cas : multipleEnts.cas[i].py,
 								cas_name : multipleEnts.cas[i].name,
@@ -181,10 +181,10 @@
 					}
 				})
 				.then(response => {                      
-					let data = response.data.data;
+					const data = response.data.data;
 
-					let lat = data[0].latitude;
-					let lon = data[0].longitude;
+					const lat = data[0].latitude;
+					const lon = data[0].longitude;
 
 					this.foundCity = data[0].locality;
 
@@ -370,7 +370,7 @@
 					// end loading
 					this.isLoading = false;
 					loading.dismiss()
-					let resp = response.data.url;
+					const resp = response.data.url;
 					let cas_host = resp.split('/')[2];
 					cas_host = cas_host.split('/')[0] || cas_host;
 					if(cas_host.includes("index-education.net")) {
@@ -381,7 +381,7 @@
 						cas_host = "www.toutatice.fr";
 					}
 
-					let all_cas_same_host = this.ents.filter(cas => {
+					const all_cas_same_host = this.ents.filter(cas => {
 						if(cas.url.includes("*.")) {
 							cas_host = cas_host.split('.')[1];
 							cas.url = cas.url.split('.')[1];
@@ -418,7 +418,7 @@
 							educonnect: false,
 						})
 
-						let listToChoose = {
+						const listToChoose = {
 							etab : etab.toLowerCase(),
 							cas : all_cas_same_host,
 						};
@@ -436,7 +436,7 @@
 						// put etab to lowercase
 						etab = etab.toLowerCase();
 
-						let selected = {
+						const selected = {
 							etab : etab,
 							cas : cas,
 							cas_name : all_cas_same_host[0].name,
@@ -528,25 +528,25 @@
 			async login() {
 				const API = this.$api;
 
-				let username = this.$refs.user.$el.value;
-				let password = this.$refs.pass.$el.value;
-				let cas = this.etabCas;
+				const username = this.$refs.user.$el.value;
+				const password = this.$refs.pass.$el.value;
+				const cas = this.etabCas;
 				let url = this.etabUrl;
 
 				if (cas == '') {
 					url = url + '?login=true'
 				}
 
-				var myHeaders = new Headers();
+				const myHeaders = new Headers();
 				myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 				
-				var urlencoded = new URLSearchParams();
+				const urlencoded = new URLSearchParams();
 				urlencoded.append("url", url);
 				urlencoded.append("ent", cas);
 				urlencoded.append("username", username);
 				urlencoded.append("password", password);
 
-				var requestOptions = {
+				const requestOptions = {
 					method: 'POST',
 					headers: myHeaders,
 					body: urlencoded,
@@ -577,7 +577,7 @@
 							}
 						}
 						else {
-							let token = result.token;
+							const token = result.token;
 
 							// save token
 							localStorage.token = token;

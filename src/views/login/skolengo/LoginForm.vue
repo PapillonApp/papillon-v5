@@ -74,8 +74,8 @@ export default defineComponent({
     },
     methods: {
         decodeEntities(encodedString) {
-            var translate_re = /&(nbsp|amp|quot|lt|gt|Eacute|eacute|Egrave|egrave);/g;
-            var translate = {
+            const translate_re = /&(nbsp|amp|quot|lt|gt|Eacute|eacute|Egrave|egrave);/g;
+            const translate = {
                 "nbsp": " ",
                 "amp": "&",
                 "quot": "\"",
@@ -89,7 +89,7 @@ export default defineComponent({
             return encodedString.replace(translate_re, function (match, entity) {
                 return translate[entity];
             }).replace(/&#(\d+);/gi, function (match, numStr) {
-                var num = parseInt(numStr, 10);
+                const num = parseInt(numStr, 10);
                 return String.fromCharCode(num);
             });
         },

@@ -43,7 +43,7 @@
             let backTitle = 'Retour';
 
 			// get current route
-			let currentRoute = this.$router.currentRoute.value;
+			const currentRoute = this.$router.currentRoute.value;
 
 			if(currentRoute.name == "Settings") {
 				backTitle = 'Paramètres';
@@ -67,14 +67,14 @@
                         readData: true
                     });
 
-                    let base64Data = result.files[0].data;
+                    const base64Data = result.files[0].data;
 
-                    let base64URL = 'data:image/jpeg;base64,' + base64Data;
+                    const base64URL = 'data:image/jpeg;base64,' + base64Data;
 
                     // resize image to 200px width using canvas
-                    let canvas = document.createElement('canvas');
-                    let ctx = canvas.getContext('2d');
-                    let img = new Image();
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
                     img.src = base64URL;
 
                     img.onload = function () {
@@ -83,7 +83,7 @@
 
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                        let newImage = canvas.toDataURL('image/jpeg');
+                        const newImage = canvas.toDataURL('image/jpeg');
 
                         localStorage.setItem('customAvatar', newImage);
                         document.dispatchEvent(new CustomEvent('userDataUpdated'));
