@@ -232,11 +232,11 @@ function constructPronoteGrades(grades) {
 	// for each mark, add it to the corresponding subject in the array
 	marks.forEach(mark => {
 		// check if subject exists
-		const { subject, subjectName, subjectId, grouped, excluded } = groupSubjects(mark.subject, markArray);
+		let { subject, subjectName, subjectId, grouped, excluded } = groupSubjects(mark.subject, markArray);
 
 		if(subject == undefined) {
 			// subject doesn't exist, create it
-			const subject = {
+			subject = {
 				name: subjectName,
 				id: subjectId,
 				grouped: grouped,
