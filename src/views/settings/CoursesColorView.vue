@@ -1,6 +1,6 @@
 <script>
 import { defineComponent } from 'vue';
-import { IonHeader, IonContent, IonList, IonToggle, IonToolbar, IonTitle, IonButtons, IonLabel, IonItem, IonBackButton, IonItemOption, IonItemOptions, IonItemSliding, IonChip} from '@ionic/vue';
+import { IonHeader, IonContent, IonList, IonToolbar, IonTitle, IonButtons, IonLabel, IonItem, IonBackButton, IonItemOption, IonItemOptions, IonItemSliding, IonChip} from '@ionic/vue';
 import hapticsController from '@/functions/utils/hapticsController.js';
 
 export default defineComponent({
