@@ -751,7 +751,6 @@ export default defineComponent({
 							</div>
 						</div>
 					</div>
-					<div class="completeMenuNavBar"></div>
 				</ion-header>
 				<ion-content>
 					<ion-list id="inbox-list">
@@ -760,7 +759,7 @@ export default defineComponent({
 							<ion-label>{{ p.title }}</ion-label>
 						</ion-item>
 					</ion-list>
-
+					<div class="completeMenuNavBar"></div>
 					<ion-list id="bottomActionsList">
 						<ion-item @click="openURL('https://docs.getpapillon.xyz')" button mode="md" lines="none"
 							:detail="false">
