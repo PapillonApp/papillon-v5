@@ -57,7 +57,7 @@ function setStyle() {
 }
 
 // Navigation bar (Android only)
-import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
+import { NavigationBar } from '@mauricewegner/capacitor-navigation-bar';
 
 function setNavigationBarStyle() {
 	if (themeMode === 'dark' || (isDarkMode && themeMode !== 'light')) {

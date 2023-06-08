@@ -48,7 +48,7 @@ PODS:
     - Capacitor
   - CapawesomeCapacitorFilePicker (0.6.3):
     - Capacitor
-  - HugotomaziCapacitorNavigationBar (2.0.1):
+  - mauricewegnerCapacitorNavigationBar (2.0.1):
     - Capacitor
   - TransistorsoftCapacitorBackgroundFetch (1.0.3):
     - Capacitor
@@ -79,7 +79,7 @@ DEPENDENCIES:
   - "CapacitorToast (from `../../node_modules/@capacitor/toast`)"
   - CapacitorWidgetsbridgePlugin (from `../../node_modules/capacitor-widgetsbridge-plugin`)
   - "CapawesomeCapacitorFilePicker (from `../../node_modules/@capawesome/capacitor-file-picker`)"
-  - "HugotomaziCapacitorNavigationBar (from `../../node_modules/@hugotomazi/capacitor-navigation-bar`)"
+  - "mauricewegnerCapacitorNavigationBar (from `../../node_modules/@mauricewegner/capacitor-navigation-bar`)"
   - "TransistorsoftCapacitorBackgroundFetch (from `../../node_modules/@transistorsoft/capacitor-background-fetch`)"
 
 EXTERNAL SOURCES:
@@ -133,8 +133,8 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/capacitor-widgetsbridge-plugin"
   CapawesomeCapacitorFilePicker:
     :path: "../../node_modules/@capawesome/capacitor-file-picker"
-  HugotomaziCapacitorNavigationBar:
-    :path: "../../node_modules/@hugotomazi/capacitor-navigation-bar"
+  mauricewegnerCapacitorNavigationBar:
+    :path: "../../node_modules/@mauricewegner/capacitor-navigation-bar"
   TransistorsoftCapacitorBackgroundFetch:
     :path: "../../node_modules/@transistorsoft/capacitor-background-fetch"
 
@@ -164,7 +164,7 @@ SPEC CHECKSUMS:
   CapacitorToast: 81855a3f8035e002c16f7eb5c753eb42660330a7
   CapacitorWidgetsbridgePlugin: 7ef9650b7bea59096efbbdc4aa2738779841a3ce
   CapawesomeCapacitorFilePicker: f354c9ec6e4722908876032939a85ffb94642630
-  HugotomaziCapacitorNavigationBar: 9220af908152f38caa3963b8de23c36bf43d2468
+  mauricewegnerCapacitorNavigationBar: 9220af908152f38caa3963b8de23c36bf43d2468
   TransistorsoftCapacitorBackgroundFetch: da495604cebf93b9e530d473669bf80e11133b1c
 
 PODFILE CHECKSUM: 6da942849b5e537db71ddb2239dbf48161f25d0f
