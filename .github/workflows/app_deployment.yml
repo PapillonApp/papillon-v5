@@ -5,6 +5,12 @@ on:
     branches:
       - master
       - beta
+  workflow_dispatch:
+    inputs:
+      deploy_type:
+        description: 'Type of deployment'
+        required: true
+        default: 'alpha'
 
 jobs:
   initialize:
@@ -54,6 +60,7 @@ jobs:
 
 
   deploy_android:
+    if: ${{ inputs.deploy_type != 'alpha' }}
     needs: initialize
     runs-on: macos-latest
     steps:
@@ -173,6 +180,7 @@ jobs:
 
 
   deploy_ios:
+    if: ${{ inputs.deploy_type != 'alpha' }}
     needs: initialize
     runs-on: macos-latest
     steps:
@@ -301,6 +309,7 @@ jobs:
   
 
   summary_and_release:
+    if: ${{ inputs.deploy_type != 'alpha' }}
     needs: [initialize, deploy_android, deploy_ios]
     runs-on: macos-latest
     steps:
@@ -370,3 +379,115 @@ jobs:
           echo "---" >> $GITHUB_STEP_SUMMARY
           echo "Fin de rapport de déploiement" >> $GITHUB_STEP_SUMMARY
           echo "(c) 2023 - PapillonApp" >> $GITHUB_STEP_SUMMARY
+
+  deploy_alpha:
+    if: ${{ inputs.deploy_type == 'alpha' }}
+    needs: initialize
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        run: |
+          brew tap AdoptOpenJDK/openjdk
+          brew install --cask adoptopenjdk15
+
+          echo "JAVA_HOME=$(/usr/libexec/java_home -v 15)" >> $GITHUB_ENV
+          echo ${{ env.JAVA_HOME }}
+          java -version
+
+      - name: Setup Android CLI
+        run: |
+          brew install --cask android-commandlinetools
+          sdkmanager --update
+          set +o pipefail
+
+          yes | sdkmanager --licenses
+          yes | sdkmanager --install "platform-tools"
+          yes | sdkmanager --install "build-tools;33.0.1"
+          yes | sdkmanager --install "platforms;android-33"
+
+          sdkmanager --list_installed
+          set -o pipefail
+
+      - name: Setup Android Builder
+        run: |
+          echo "ANDROID_HOME=$(brew --prefix)/share/android-commandlinetools" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$(brew --prefix)/share/android-commandlinetools" >> $GITHUB_ENV
+          echo "APP_VERSION_CODE=${{ needs.initialize.outputs.VERSION_CODE  }}" >> $GITHUB_ENV
+          echo "APP_VERSION_NUMBER=${{ needs.initialize.outputs.VERSION_NUMBER }}" >> $GITHUB_ENV
+          chmod +x ./android/gradlew;
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+
+      - name: Setup dependencies
+        run: |
+          npm i -g @ionic/cli
+          npm i --prefer-offline --no-audit
+
+      - name: Update release canal
+        uses: maxgfr/github-change-json@main
+        with:
+          path: "package.json"
+          key: "canal"
+          value: ${{ needs.initialize.outputs.DEPLOY_TYPE }}
+
+      - name: Update version number
+        uses: maxgfr/github-change-json@main
+        with:
+          path: "package.json"
+          key: "version"
+          value: ${{ needs.initialize.outputs.VERSION_NUMBER }}
+
+      - name: Ionic Capacitor Sync
+        run: |
+          ionic capacitor sync android --prod
+     
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.2
+          bundler-cache: true
+
+      - name: Cache bundle dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-gems-
+
+      - name: Decrypt Android keys
+        run: sh ./.github/scripts/decrypt_android_keys.sh
+        env:
+          KEYS_SECRET_PASSPHRASE: ${{ secrets.KEYS_SECRET_PASSPHRASE }}  
+
+      - name: Export Data to Fastlane
+        run: |
+          echo "KEY_STORE=$GITHUB_WORKSPACE/android/fastlane/logi12-prnplus.jks" >> $GITHUB_ENV
+          echo "KEY_STORE_PASSWORD=${{ secrets.KEY_STORE_PASSWORD}}" >> $GITHUB_ENV
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
+          echo "PLAY_CREDENTIALS_JSON=$GITHUB_WORKSPACE/android/fastlane/play_store.json" >> $GITHUB_ENV
+          echo "GRADLE_FILE=$GITHUB_WORKSPACE/android/app/build.gradle" >> $GITHUB_ENV
+
+      - name: Download bundle dependencies
+        run: |
+          gem install bundler:2.0.2
+          bundle config path vendor/bundle
+          bundle install
+          bundle exec gem install "fastlane-plugin-versioning_android"
+        working-directory: android/fastlane
+
+      - name: Build and deploy
+        run: |
+          echo "LC_ALL=fr_FR.UTF-8" >> $GITHUB_ENV
+          echo "LANG=fr_FR.UTF-8" >> $GITHUB_ENV
+          bundle exec fastlane alpha
+        working-directory: android/fastlane

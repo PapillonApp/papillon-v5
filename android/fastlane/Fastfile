@@ -77,6 +77,23 @@ begin
     )
   end
 
+  lane :alpha do
+    build()
+
+    supply(
+      track: 'alpha',
+      package_name: ENV['APP_PACKAGE_NAME'],
+      version_code: ENV['APP_VERSION_CODE'],
+      release_status: "draft",
+      aab: "#{AAB_LOCATION}",
+      skip_upload_images: true,
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_screenshots: true,
+      skip_upload_apk: true,
+      json_key: ENV['PLAY_CREDENTIALS_JSON']
+    )
+
   lane :test do
     desc("Build and deploy for test (Android) | It doesn't send app to play store")
 
