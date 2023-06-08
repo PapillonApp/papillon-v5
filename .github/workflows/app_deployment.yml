@@ -71,10 +71,10 @@ jobs:
 
       - name: Setup Java
         run: |
-          brew tap AdoptOpenJDK/openjdk
-          brew install --cask adoptopenjdk15
+          brew tap homebrew/cask-versions
+          brew install --cask temurin17
 
-          echo "JAVA_HOME=$(/usr/libexec/java_home -v 15)" >> $GITHUB_ENV
+          echo "JAVA_HOME=$(/usr/libexec/java_home -v 17)" >> $GITHUB_ENV
           echo ${{ env.JAVA_HOME }}
           java -version
 
@@ -392,10 +392,10 @@ jobs:
 
       - name: Setup Java
         run: |
-          brew tap AdoptOpenJDK/openjdk
-          brew install --cask adoptopenjdk15
+          brew tap homebrew/cask-versions
+          brew install --cask temurin17
 
-          echo "JAVA_HOME=$(/usr/libexec/java_home -v 15)" >> $GITHUB_ENV
+          echo "JAVA_HOME=$(/usr/libexec/java_home -v 17)" >> $GITHUB_ENV
           echo ${{ env.JAVA_HOME }}
           java -version
 
