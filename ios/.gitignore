@@ -1,5 +1,6 @@
 App/build
 App/Pods
+App/output
 App/App/public
 DerivedData
 xcuserdata
@@ -15,3 +16,4 @@ App/fastlane/report.xml
 App/fastlane/README.md
 
 App/AuthKey_QV8QQ622WD.p8
+
