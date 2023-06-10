@@ -285,8 +285,8 @@ Contient **${this.logs.length}** logs
                     <span class="material-symbols-outlined mdls" slot="start">live_help</span>
                     <IonLabel class="ion-text-wrap">
                         <h2>Aidez les développeurs !</h2>
-                        <p>Partagez vos logs sur le <a href="https://discord.gg/9bS5C9Fnvj" style="color:black;">Discord</a> ou sur le <a href="https://github.com/PapillonApp/Papillon" style="color:black;">Github</a> aux développeurs en cas de problème.</p>
-                    </IonLabel>
+                        <p>Partagez vos logs sur le <a href="https://discord.gg/9bS5C9Fnvj" style="color:black;">Discord</a> ou sur le <a href="https://github.com/PapillonApp/Papillon" style="color:black;">Github</a> en cas de problème.</p>
+                    </IonLabel>d
                 </IonItem>
 		<div class="NoCours" v-if="logs.length == 0 && !searching">
 			<span class="material-symbols-outlined mdls">developer_mode</span>
