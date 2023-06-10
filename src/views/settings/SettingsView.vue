@@ -211,7 +211,7 @@
 				<ion-nav-link router-direction="forward" :component="UserView">
 					<IonItem button>
 						<img :src="userAvatar" slot="start" class="avatar" />
-						<IonLabel>
+						<IonLabel class="ion-text-wrap">
 							<h2>{{ userName }}</h2>
 							<p>{{ userClass }} - {{ userSchool }}</p>
 						</IonLabel>
