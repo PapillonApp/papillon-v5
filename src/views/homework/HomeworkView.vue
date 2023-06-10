@@ -402,11 +402,7 @@
             </ion-refresher>
 
             <div id="noTouchZone"></div>
-            <IonFab slot="fixed" vertical="bottom" horizontal="end" class="newCoursBtnFab">
-				<ion-button @click="addHomework($event)" size="large" shape="round" class="newCoursBtn" mode="md" aria-label="Ajouter un devoir">
-					<span class="material-symbols-outlined mdls" slot="icon-only">add</span>
-				</ion-button>
-			</IonFab>
+
             <swiper class="swiper" ref="swiper" :modules="[Virtual]" virtual :initialSlide="baseIndex" :speed="200" :spaceBetween="10" :preventClicks="true">
                 <swiper-slide class="slide"
                 v-for="(slideContent, index) in slides"
@@ -458,6 +454,18 @@
                             <IonSpinner></IonSpinner>
                         </div>
                     </div>
+
+                    <IonList inset class="hwListItem add">
+                        <IonItem button detail="false" @click="addHomework($event)">
+                            <span class="material-symbols-outlined mdls" slot="start">add</span>
+                            <IonNavLink class="navLink" router-direction="forward" :component="AddHomeworkView">
+                                <IonLabel>
+                                    <h2>Ajouter un devoir</h2>
+                                    <p>Ajouter un devoir manuellement</p>
+                                </IonLabel>
+                            </IonNavLink>
+                        </IonItem>
+                    </IonList>
 
                 </swiper-slide>
             </swiper>
