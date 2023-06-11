@@ -57,9 +57,9 @@
                 HomeworkItemView: HomeworkItemView,
 				slides,
                 currentIndex: this.baseIndex,
-                rnButtonString: this.createDateString(this.$rn),
-                loadedrnButtonString: this.createDateString(this.$rn),
-                rnCalendarString: this.$rn.toISOString().split('T')[0],
+                rnButtonString2: this.createDateString(this.$rn),
+                loadedrnButtonString2: this.createDateString(this.$rn),
+                rnCalendarString2: this.$rn.toISOString().split('T')[0],
                 days: [],
                 connected: false,
                 shouldResetSwiper: false,
@@ -171,23 +171,23 @@
                     const indexDiff = this.baseIndex - index;
 
                     // get rn
-                    let selectedRN = new Date(this.baseRn);
+                    let selectedRN2 = new Date(this.baseRn);
 
                     if(goTo) {
-                        selectedRN = new Date(this.$rn);
+                        selectedRN2 = new Date(this.$rn);
                     }
 
-                    selectedRN.setDate(selectedRN.getDate() - indexDiff);
+                    selectedRN2.setDate(selectedRN2.getDate() - indexDiff);
 
                     // if i is 1
                     if(i == 1) {
-                        this.$rn = selectedRN;
-                        this.rnButtonString = this.createDateString(this.$rn);
-                        this.rnCalendarString = this.$rn.toISOString().split('T')[0];
+                        this.$rn = selectedRN2;
+                        this.rnButtonString2 = this.createDateString(this.$rn);
+                        this.rnCalendarString2 = this.$rn.toISOString().split('T')[0];
                     }
 
                     // get homeworks for rn
-                    GetHomeworks(selectedRN, selectedRN, force).then((homeworks) => {
+                    GetHomeworks(selectedRN2, selectedRN2, force).then((homeworks) => {
                         if(i == 2) {
                             clearTimeout(startloading);
                             this.isLoading = false;
@@ -212,7 +212,7 @@
                         }
                         else {
                             this.days[index] = this.editHomeworks(homeworks);
-                            this.loadedrnButtonString = this.createDateString(this.$rn);
+                            this.loadedrnButtonString2 = this.createDateString(this.$rn);
                             if(this.days[index]) {
                                 this.days[index].loading = false;
                             }
@@ -226,8 +226,11 @@
                     // set homework to edit
                     const homework = homeworks[i];
 
-                    // remove <br/> tags from homework.homework.content
-                    homeworks[i].homework.shortContent = homework.homework.shortContent.replace(/[<]br[^>]*[>]/gi,"");
+                    // if homeworks[i].homework.shortContent exists
+                    if(homework.homework.shortContent) {
+                        // remove <br/> tags from homework.homework.shortContent
+                        homeworks[i].homework.shortContent = homework.homework.shortContent.replace(/[<]br[^>]*[>]/gi,"");
+                    }
                 }
 
                 // set homeworks to edit
@@ -337,7 +340,7 @@
             this.swiper = this.$refs.swiper.$el.swiper;
 
             document.addEventListener('rnChanged', (e) => {
-                this.rnButtonString = this.createDateString(e.detail);
+                this.rnButtonString2 = this.createDateString(e.detail);
                 this.getHomeworks(false, e.detail);
             });
 
@@ -379,7 +382,7 @@
                     <ion-button id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
                     <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
-                    <p>{{ rnButtonString }}</p>
+                    <p>{{ rnButtonString2 }}</p>
                     </ion-button>
                 </ion-buttons>
 
@@ -485,7 +488,7 @@
                         presentation="date"
                         ref="rnInput"
                         size="cover"
-                        :value="rnCalendarString"
+                        :value="rnCalendarString2"
                         :firstDayOfWeek="1"
                         :min="minDate"
                         :max="maxDate"

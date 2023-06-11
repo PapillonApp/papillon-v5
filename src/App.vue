@@ -276,28 +276,27 @@ export default defineComponent({
 	},
 	methods: {
 		checkAndroidShortcuts() {
-			/*
-			AndroidShortcuts.isDynamicSupported().then((result) => {
-				if (result) {
-					AndroidShortcuts.addListener('shortcut', (response: any) => {
-						switch (response.data) {
-							case "timetable":
-								this.$router.push('/timetable');
-								break;
-							case "homework":
-								this.$router.push('/homework');
-								break;
-							case "grades":
-								this.$router.push('/grades');
-								break;
-							default:
-								break;
-						}
-					});
-				}
-			})
-			*/
-			return false;
+			if(Capacitor.getPlatform() == "android") {
+				AndroidShortcuts.isDynamicSupported().then((result) => {
+					if (result) {
+						AndroidShortcuts.addListener('shortcut', (response: any) => {
+							switch (response.data) {
+								case "timetable":
+									this.$router.push('/timetable');
+									break;
+								case "homework":
+									this.$router.push('/homework');
+									break;
+								case "grades":
+									this.$router.push('/grades');
+									break;
+								default:
+									break;
+							}
+						});
+					}
+				})
+			}
 		},
 		async notify(title: string, body: string) {
 			LocalNotifications.schedule({
@@ -506,19 +505,21 @@ export default defineComponent({
 			return animation;
 		},
 		async menuOpened(isOpen: boolean) {
-			if (isOpen) {
-				StatusBar.setStyle({ style: Style.Dark })
-			}
-			else {
-				if (this.changeStatusTimeout) {
-					StatusBar.setStyle({ style: Style.Default })
+			if(Capacitor.getPlatform() !== 'web') {
+				if (isOpen) {
+					StatusBar.setStyle({ style: Style.Dark })
 				}
-
-				setTimeout(() => {
-					if (this.isMenuOpened == true) {
-						StatusBar.setStyle({ style: Style.Dark })
+				else {
+					if (this.changeStatusTimeout) {
+						StatusBar.setStyle({ style: Style.Default })
 					}
-				}, 500);
+
+					setTimeout(() => {
+						if (this.isMenuOpened == true) {
+							StatusBar.setStyle({ style: Style.Dark })
+						}
+					}, 500);
+				}
 			}
 		},
 		async displayDevMsg() {
