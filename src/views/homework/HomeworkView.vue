@@ -96,7 +96,7 @@
                         {
                             text: 'Ajouter',
                             handler: async (data) => {
-                                let text = data.content;
+                                const text = data.content;
                                 let subject = data.subject;
 
                                 if (!subject) {
@@ -108,7 +108,7 @@
                                 }
 
                                 // get --ion-color-primary
-                                let color = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-primary');
+                                const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-primary');
 
                                 // get homework description
                                 let shortText = text;
@@ -117,7 +117,7 @@
                                     shortText = shortText.substring(0, 80) + '...';
                                 }
 
-                                let newHomework = {
+                                const newHomework = {
                                     data: {
                                         id: "custom_" + Math.random().toString(36).substr(2, 9),
                                         date: this.$rn.toISOString().split('T')[0].replace(/-/g, "/") + " 00:00",
@@ -160,15 +160,15 @@
               return localStorage.loginService === 'ecoledirecte'
             },
             getHomeworks(force, goTo, event) {
-                let startloading = setTimeout(() => {
+                const startloading = setTimeout(() => {
                     this.isLoading = true;
                 }, 500);
 
                 for (let i = 0; i < 3; i++) {
-                    let index = this.swiper.realIndex + (i - 1);
+                    const index = this.swiper.realIndex + (i - 1);
 
                     // get index diff
-                    let indexDiff = this.baseIndex - index;
+                    const indexDiff = this.baseIndex - index;
 
                     // get rn
                     let selectedRN = new Date(this.baseRn);
@@ -224,7 +224,7 @@
                 // for each homework
                 for (let i = 0; i < homeworks.length; i++) {
                     // set homework to edit
-                    let homework = homeworks[i];
+                    const homework = homeworks[i];
 
                     // remove <br/> tags from homework.homework.content
                     homeworks[i].homework.shortContent = homework.homework.shortContent.replace(/[<]br[^>]*[>]/gi,"");
@@ -234,15 +234,15 @@
                 return homeworks;
             },
             createDateString(date) {
-                let dateObject = new Date(date);
-                let day_string = dateObject.toLocaleString('default', { weekday: 'long' }).slice(0, 3);
+                const dateObject = new Date(date);
+                const day_string = dateObject.toLocaleString('default', { weekday: 'long' }).slice(0, 3);
                 // return string like "jeu. 1"
                 return day_string + ". " + dateObject.getDate();
             },
 			rnInputChanged() {
                 if(!this.isChangingDate) {
                     // get new date from rnInput
-                    let newDate = new Date(this.$refs.rnInput.$el.value);
+                    const newDate = new Date(this.$refs.rnInput.$el.value);
 
                     // update rn
                     this.$rn = newDate;
@@ -279,11 +279,11 @@
                 hapticsController.notification('success');
 
                 // vars
-                let homeworkID = hw.data.id;
-                let dateSet = new Date(this.$rn)
+                const homeworkID = hw.data.id;
+                const dateSet = new Date(this.$rn)
 
-                let checkboxID = `checkbox_${hw.data.id}`;
-                let checkbox = document.getElementById(checkboxID);
+                const checkboxID = `checkbox_${hw.data.id}`;
+                const checkbox = document.getElementById(checkboxID);
 
                 // new send request
                 if(!this.dontRetryCheck) {

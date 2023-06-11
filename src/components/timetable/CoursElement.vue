@@ -121,7 +121,7 @@
 				//check in localstorage if progress bar is enabled
 				if (localStorage.getItem("tweakProgressBar") != "true") return false;
 
-				let now = new Date();
+				const now = new Date();
 
 				if (`${now.getUTCDate()}-${now.getMonth()}` != `${this.start.getUTCDate()}-${this.start.getMonth()}`) {
 					if (this.classes.includes("progressDivEnabled")) {
@@ -142,7 +142,7 @@
 				}
 			},
 			updateProgressDiv() {
-				let now = new Date();
+				const now = new Date();
 
 				// if is not today clear interval and reset progress bar to 0
 				if (`${now.getUTCDate()}-${now.getMonth()}` != `${this.start.getUTCDate()}-${this.start.getMonth()}`) {
@@ -190,7 +190,7 @@
 					this.end.getMinutes() * 60 +
 					this.end.getSeconds()
 				) {
-					let coursPourcent =
+					const coursPourcent =
 						((now.getHours() * 3600 +
 								now.getMinutes() * 60 +
 								now.getSeconds() -

@@ -94,23 +94,23 @@
 				}
 			},
 			startConversation() {
-				let subject = this.$refs.newChatSubject.$el.value;
-				let content = this.$refs.newChatMsg.$el.value;
-				let recipientsId = this.checkedRecipients;
+				const subject = this.$refs.newChatSubject.$el.value;
+				const content = this.$refs.newChatMsg.$el.value;
+				const recipientsId = this.checkedRecipients;
 
 				const API = this.$api;
 				const token = localStorage.getItem('token');
 
-				var myHeaders = new Headers();
+				const myHeaders = new Headers();
 				myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 								
-				var urlencoded = new URLSearchParams();
+				const urlencoded = new URLSearchParams();
 				urlencoded.append("token", token);
 				urlencoded.append("content", content);
 				urlencoded.append("recipientsId", JSON.stringify(recipientsId));
 				urlencoded.append("subject", subject);
 
-				var requestOptions = {
+				const requestOptions = {
 					method: 'POST',
 					headers: myHeaders,
 					body: urlencoded,

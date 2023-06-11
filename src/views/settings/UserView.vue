@@ -15,9 +15,8 @@
 	} from '@ionic/vue';
 
 	import displayToast from '@/functions/utils/displayToast.js';
-    import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
-    import { checkmarkOutline, informationOutline, warningOutline } from 'ionicons/icons';
+    import { checkmarkOutline, informationOutline, closeOutline } from 'ionicons/icons';
 
     const FastAverageColor = require('fast-average-color').FastAverageColor;
     const fac = new FastAverageColor();
@@ -43,7 +42,7 @@
             let backTitle = 'Retour';
 
 			// get current route
-			let currentRoute = this.$router.currentRoute.value;
+			const currentRoute = this.$router.currentRoute.value;
 
 			if(currentRoute.name == "Settings") {
 				backTitle = 'Paramètres';
@@ -67,14 +66,14 @@
                         readData: true
                     });
 
-                    let base64Data = result.files[0].data;
+                    const base64Data = result.files[0].data;
 
-                    let base64URL = 'data:image/jpeg;base64,' + base64Data;
+                    const base64URL = 'data:image/jpeg;base64,' + base64Data;
 
                     // resize image to 200px width using canvas
-                    let canvas = document.createElement('canvas');
-                    let ctx = canvas.getContext('2d');
-                    let img = new Image();
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const img = new Image();
                     img.src = base64URL;
 
                     img.onload = function () {
@@ -83,7 +82,7 @@
 
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-                        let newImage = canvas.toDataURL('image/jpeg');
+                        const newImage = canvas.toDataURL('image/jpeg');
 
                         localStorage.setItem('customAvatar', newImage);
                         document.dispatchEvent(new CustomEvent('userDataUpdated'));
@@ -103,19 +102,16 @@
                 }
                 catch (error) {
                     console.error("[Change Avatar]: " + error);
-                    displayToast.presentNativeToast(
-                        'Erreur lors du changement de photo de profil.'
-                    );
+                    displayToast.presentToastFull('Erreur lors du changement de photo de profil.', "Veuillez réessayer.", "danger", closeOutline, true, String(error));
                 }
             },
             tweakDeleteAvatar() {
+                if(!localStorage.getItem('customAvatar')) return displayToast.presentToastSmall("Photo de profil non définie", "tertiary", informationOutline)
                 localStorage.removeItem('customAvatar');
                 localStorage.removeItem('averageColorCustom');
                 document.dispatchEvent(new CustomEvent('userDataUpdated'));
 
-                displayToast.presentNativeToast(
-                    'Photo de profil supprimée.'
-                );
+                displayToast.presentToastSmall("Photo de profil supprimée", "success", checkmarkOutline)
             },
             tweakChangeName() {
                 // get current name
@@ -138,19 +134,19 @@
                         localStorage.setItem('customName', result.value);
                         document.dispatchEvent(new CustomEvent('userDataUpdated'));
 
-                        displayToast.presentNativeToast(
-                            'Nom modifié pour ' + result.value + '.'
-                        );
+                        displayToast.presentToastSmall("Nom modifié", "success", checkmarkOutline)
+                    }
+                    else {
+                        displayToast.presentToastSmall("Annulé", "tertiary", informationOutline)
                     }
                 });
             },
             tweakDeleteName() {
+                if(!localStorage.getItem('customName')) return displayToast.presentToastSmall("Aucun nom défini", "tertiary", informationOutline)
                 localStorage.removeItem('customName');
                 document.dispatchEvent(new CustomEvent('userDataUpdated'));
 
-                displayToast.presentNativeToast(
-                    'Nom supprimé.'
-                );
+                displayToast.presentToastSmall("Nom supprimé", "success", checkmarkOutline)
             }
 		},
 		mounted() {

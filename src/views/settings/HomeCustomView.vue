@@ -29,8 +29,8 @@ export default defineComponent({
         changeTick(option) {
             this.tickClick();
 
-            let el = this.$refs[option][0].$el;
-            let elChecked = el.checked;
+            const el = this.$refs[option][0].$el;
+            const elChecked = el.checked;
             localStorage.setItem(this.toggles[option.split('toggle')[1]].name, elChecked);
 
             document.dispatchEvent(new CustomEvent('settingsUpdated'));
@@ -38,7 +38,7 @@ export default defineComponent({
         checkToggles() {
             let i = 0;
             this.toggles.forEach(toggle => {
-                let toggleRef = this.$refs['toggle' + i][0].$el;
+                const toggleRef = this.$refs['toggle' + i][0].$el;
                 toggleRef.checked = localStorage.getItem(toggle.name) == 'true';
                 i++;
             })

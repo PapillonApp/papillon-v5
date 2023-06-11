@@ -27,7 +27,7 @@ import { NotificationBadge } from 'capacitor-notification-badge';
 
 import hapticsController from '@/functions/utils/hapticsController.js';
 
-import { StatusBar, Style } from '@capacitor/status-bar';
+//import { StatusBar, Style } from '@capacitor/status-bar';
 
 import { tickHomework } from "@/functions/fetch/GetHomeworks.js";
 
@@ -120,11 +120,11 @@ export default defineComponent({
 			this.$router.push(url);
 		},
 		randomEmoji() {
-			let list = ["😊", "😎", "😴", "👌", "🌞", "📚", "💪", "💤", "😉", "🥱"]
+			const list = ["😊", "😎", "😴", "👌", "🌞", "📚", "💪", "💤", "😉", "🥱"]
 			return list[Math.floor(Math.random() * list.length)];
 		},
 		randomMsg() {
-			let list = [
+			const list = [
 				"Temps calme",
 				"Pas de cours, on révise ?",
 				"C'est la sieste (ou pas)",
@@ -142,20 +142,20 @@ export default defineComponent({
 			return list[Math.floor(Math.random() * list.length)];
 		},
 		editTimetable(timetable) {
-			let now = new Date();
+			const now = new Date();
 			let lessons = []
 
 			timetable = timetableEdit(timetable);
 
 			// add custom courses
-			let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
+			const customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
 			customCourses.forEach((customCourse) => {
 				// if course is in the same day
-				let customDay = new Date(customCourse.day);
-				let currentDay = new Date(this.$rn);
+				const customDay = new Date(customCourse.day);
+				const currentDay = new Date(this.$rn);
 
-				let st = new Date(customCourse.course.time.start);
-				let en = new Date(customCourse.course.time.end);
+				const st = new Date(customCourse.course.time.start);
+				const en = new Date(customCourse.course.time.end);
 
 				// make st and en the same day as currentDay
 				st.setDate(currentDay.getDate());
@@ -188,12 +188,12 @@ export default defineComponent({
 
 			// get next lesson (cours.time.start)
 			lessons = timetable.filter((lesson) => {
-				let lessonStart = new Date(lesson.time.start);
-				let lessonEnd = new Date(lesson.time.end);
+				const lessonStart = new Date(lesson.time.start);
+				const lessonEnd = new Date(lesson.time.end);
 
 				// get minutes before next lesson
 				let mins = Math.floor((lessonStart - now) / 1000 / 60);
-				let gap = -((Math.floor((lessonEnd - lessonStart) / 1000 / 60)) / 2);
+				const gap = -((Math.floor((lessonEnd - lessonStart) / 1000 / 60)) / 2);
 
 				if (lessons.length != 0) {
 					return false;
@@ -221,14 +221,14 @@ export default defineComponent({
 					this.nextCoursStarted = true;
 
 					// get percentage of lesson done
-					let lessonTime = lessonEnd - lessonStart;
-					let lessonTimeDone = now - lessonStart;
-					let percentage = Math.floor((lessonTimeDone / lessonTime) * 100);
+					const lessonTime = lessonEnd - lessonStart;
+					const lessonTimeDone = now - lessonStart;
+					const percentage = Math.floor((lessonTimeDone / lessonTime) * 100);
 
 					this.nextCoursCompletion = percentage;
 
 					// get minutes before lesson ends
-					let endMins = Math.floor((lessonEnd - now) / 1000 / 60);
+					const endMins = Math.floor((lessonEnd - now) / 1000 / 60);
 
 					this.nextCoursTime = `${endMins} min rest.`;
 				} else {
@@ -265,14 +265,14 @@ export default defineComponent({
 			// if lessons is empty but not timetable, get last lesson
 			if (lessons.length == 0 && timetable.length > 0) {
 				for (let i = timetable.length - 1; i >= 0; i--) {
-					let lesson = timetable[i];
+					const lesson = timetable[i];
 
-					let lessonEnd = new Date(lesson.time.end);
-					let lessonStart = new Date(lesson.time.start);
-					let endMins = Math.floor((lessonEnd - now) / 1000 / 60);
-					let startMins = Math.floor((lessonStart - now) / 1000 / 60);
+					const lessonEnd = new Date(lesson.time.end);
+					const lessonStart = new Date(lesson.time.start);
+					const endMins = Math.floor((lessonEnd - now) / 1000 / 60);
+					const startMins = Math.floor((lessonStart - now) / 1000 / 60);
 
-					let lessonDuration = -(Math.floor((lessonEnd - lessonStart) / 1000 / 60));
+					const lessonDuration = -(Math.floor((lessonEnd - lessonStart) / 1000 / 60));
 
 					if (endMins < -120) {
 						continue;
@@ -282,9 +282,9 @@ export default defineComponent({
 						this.nextCoursStarted = true;
 
 						// get percentage of lesson done
-						let lessonTime = lessonEnd - lessonStart;
-						let lessonTimeDone = now - lessonStart;
-						let percentage = Math.floor((lessonTimeDone / lessonTime) * 100);
+						const lessonTime = lessonEnd - lessonStart;
+						const lessonTimeDone = now - lessonStart;
+						const percentage = Math.floor((lessonTimeDone / lessonTime) * 100);
 
 						this.nextCoursCompletion = percentage;
 
@@ -361,13 +361,13 @@ export default defineComponent({
 			this.newsLoading = false;
 		},
 		formatHomeworks(homeworks) {
-			let homeworkDays = [];
-			let today = new Date();
+			const homeworkDays = [];
+			const today = new Date();
 
 			// sort homeworks by day
 			for (let i = 0; i < homeworks.length; i++) {
-				let homework = homeworks[i];
-				let date = new Date(homework.data.date);
+				const homework = homeworks[i];
+				const date = new Date(homework.data.date);
 
 				homeworks[i].homework.content = homeworks[i].homework.content.replace('<br/>', ' ');
 
@@ -396,12 +396,12 @@ export default defineComponent({
 			return homeworkDays;
 		},
 		reorder() {
-			let order = ["comp-hw", "comp-tt"]
+			const order = ["comp-hw", "comp-tt"]
 
-			let components = document.getElementById("components");
+			const components = document.getElementById("components");
 			if (components) {
 				for (let i = 0; i < order.length; i++) {
-					let comp = document.getElementById(order[i]);
+					const comp = document.getElementById(order[i]);
 					if (comp) {
 						components.appendChild(comp);
 					}
@@ -410,13 +410,13 @@ export default defineComponent({
 		},
 		changeDone(hw, event) {
 			// vars
-			let homeworkID = hw.data.id;
-			let dateSet = new Date(hw.data.date)
+			const homeworkID = hw.data.id;
+			const dateSet = new Date(hw.data.date)
 
 			// add one day to date
 			dateSet.setDate(dateSet.getDate() + 1);
 
-			let disableConfetti = localStorage.getItem("disableConfetti");
+			const disableConfetti = localStorage.getItem("disableConfetti");
 
 			// if checked
 			if (event.target.checked) {
@@ -462,12 +462,12 @@ export default defineComponent({
 		},
 		checkUndone() {
 			// get number of undone homeworks (for badge)
-			let homeworkDays = this.homeworks;
+			const homeworkDays = this.homeworks;
 
-			let tomorrowDate = new Date(this.$rn);
+			const tomorrowDate = new Date(this.$rn);
 			tomorrowDate.setDate(tomorrowDate.getDate() + 1);
 
-			let tomorrow = homeworkDays.find((day) => {
+			const tomorrow = homeworkDays.find((day) => {
 				return day.date == tomorrowDate.toDateString();
 			});
 
@@ -539,8 +539,8 @@ export default defineComponent({
 			this.userFullName = JSON.parse(localStorage.userData).student.name;
 
 			// put last word of userFullName first
-			let name = this.userFullName.split(" ");
-			let lastName = name[name.length - 1];
+			const name = this.userFullName.split(" ");
+			const lastName = name[name.length - 1];
 			name.pop();
 			name.unshift(lastName);
 			this.userFullName = name.join(" ");
@@ -573,7 +573,7 @@ export default defineComponent({
 
 		if (localStorage.getItem('userData')) {
 			// get first name
-			let name = JSON.parse(localStorage.getItem('userData')).student.name;
+			const name = JSON.parse(localStorage.getItem('userData')).student.name;
 			// get last word of name
 			this.firstName = name.split(' ').pop();
 		}
@@ -585,7 +585,7 @@ export default defineComponent({
 
 		// get data
 		if (localStorage.getItem('recap')) {
-			let recap = JSON.parse(localStorage.getItem('recap'));
+			const recap = JSON.parse(localStorage.getItem('recap'));
 			this.useRecap(recap);
 		}
 

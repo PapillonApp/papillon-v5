@@ -25,10 +25,10 @@ async function getPronoteDelays(forceReload) {
 	const token = localStorage.getItem('token');
 
 	// construct url
-	let URL = `${API}/delays?token=${token}`;
+	const URL = `${API}/delays?token=${token}`;
 
 	let delays = {};
-	let cache = localStorage.getItem('DelaysCache');
+	const cache = localStorage.getItem('DelaysCache');
 	if (cache != null && !forceReload) {
 		delays = JSON.parse(cache).delays;
 
@@ -42,8 +42,8 @@ async function getPronoteDelays(forceReload) {
 			delays = response.data;
 			delays = constructPronoteDelays(delays);
 			
-            let today = new Date();
-			let cacheElement = {
+            const today = new Date();
+			const cacheElement = {
 				date: today,
 				delays: response.data
 			};
@@ -77,15 +77,16 @@ async function getPronoteDelays(forceReload) {
 
 // pronote : construct delays
 function constructPronoteDelays(delays) {
-	let dly = []
+	const dly = []
 
 	delays.forEach((delay) => {
-		let newDelay = {
+		const newDelay = {
 			data: {
 				id: delay.id,
 				isJustified: delay.justified,
 				justification: delay.justification,
 				reasons: delay.reasons,
+				type: "Retard"
 			},
 			date: {
 				date: new Date(delay.date),

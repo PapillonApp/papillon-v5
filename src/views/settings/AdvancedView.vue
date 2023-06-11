@@ -19,7 +19,6 @@
 	import displayToast from '@/functions/utils/displayToast.js';
 	import GetToken from '@/functions/login/GetToken.js';
 	import { fetchDaysOffAndHolidays } from '@/functions/utils/datetimePicker.js';
-	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	import { Dialog } from '@capacitor/dialog';
 
@@ -89,8 +88,8 @@
 			getLocalStorageSize() {
 				let total = 0;
 				for (let i = 0; i < localStorage.length; i++) {
-					let key = localStorage.key(i);
-					let value = localStorage.getItem(key);
+					const key = localStorage.key(i);
+					const value = localStorage.getItem(key);
 					total += value.length;
 				}
 				return total / 1024;
@@ -155,7 +154,7 @@
 						confirmButtonText: 'OK',
 					});
 				}
-				if(!value) {
+				if(!value && !cancelled) {
 					displayToast.presentToastSmall("L'API utilisée a été réinitialisée.", "warning", warningOutline)
 					localStorage.removeItem('customApiUrl');
 					await Dialog.alert({

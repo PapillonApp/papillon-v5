@@ -6,7 +6,7 @@ import hapticsController from './hapticsController';
 async function presentToast(msg, color) {
 	const toast = await toastController.create({
 		message: msg,
-		duration: 2000,
+		duration: 5000,
 		position: "bottom",
 		color: color
 	});
@@ -25,7 +25,7 @@ async function presentNativeToast(msg) {
 async function presentToastIcon(msg, color, icon) {
 	const toast = await toastController.create({
 		message: msg,
-		duration: 2000,
+		duration: 5000,
 		position: "bottom",
 		color: color,
 		icon: icon
@@ -64,7 +64,7 @@ async function presentToastFull(header, msg, color, icon, error = false, btn_con
 	const toast = await toastController.create({
 		header: header,
 		message: msg,
-		duration: 2000,
+		duration: 5000,
 		position: "bottom",
 		color: color,
 		icon: icon,
@@ -88,7 +88,7 @@ async function presentToastSmall(header, color, icon) {
 
 	const toast = await toastController.create({
 		header: header,
-		duration: 2000,
+		duration: 5000,
 		position: "top",
 		color: color,
 		icon: icon,
@@ -106,7 +106,7 @@ async function presentError(msg, color, error) {
 	
 	const toast = await toastController.create({
 		message: msg,
-		duration: 2000,
+		duration: 5000,
 		position: "bottom",
 		color: color,
 		buttons: [{

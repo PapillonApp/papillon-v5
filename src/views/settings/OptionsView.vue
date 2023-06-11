@@ -6,7 +6,6 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
 		IonLabel,
 		IonToggle,
@@ -19,7 +18,6 @@
 
 	import displayToast from '@/functions/utils/displayToast.js';
 	import hapticsController from '@/functions/utils/hapticsController.js';
-	import PapillonBackButton from '@/components/PapillonBackButton.vue';
 
 	export default defineComponent({
 		name: 'FolderPage',
@@ -52,8 +50,8 @@
 			changeTick(option) {
 				this.tickClick();
 
-				let el = this.$refs[option];
-				let elChecked = el.$el.checked;
+				const el = this.$refs[option];
+				const elChecked = el.$el.checked;
 
 				localStorage.setItem(option, elChecked);
 
@@ -140,27 +138,27 @@
 		},
 		mounted() {
 			// get tweakGrades20 ref
-			let tweakGrades20 = this.$refs.tweakGrades20;
+			const tweakGrades20 = this.$refs.tweakGrades20;
 			tweakGrades20.$el.checked = localStorage.getItem('tweakGrades20') == 'true';
 
 			// get viescolaireEnabled ref
-			let viescolaireEnabled = this.$refs.viescolaireEnabled;
+			const viescolaireEnabled = this.$refs.viescolaireEnabled;
 			viescolaireEnabled.$el.checked = localStorage.getItem('viescolaireEnabled') == 'true';
 
 			// get groupSubjects ref
-			let groupSubjects = this.$refs.groupSubjects;
+			const groupSubjects = this.$refs.groupSubjects;
 			groupSubjects.$el.checked = localStorage.getItem('groupSubjects') == 'true';
 
 			// get disableHolidays ref
-			let disableHolidays = this.$refs.disableHolidays;
+			const disableHolidays = this.$refs.disableHolidays;
 			disableHolidays.$el.checked = localStorage.getItem('disableHolidays') == 'true';
 
 			// get disableConfetti ref
-			let disableConfetti = this.$refs.disableConfetti;
+			const disableConfetti = this.$refs.disableConfetti;
 			disableConfetti.$el.checked = localStorage.getItem('disableConfetti') == 'true';
 
 			// get disableShowGroup ref
-			let disableShowGroup = this.$refs.disableShowGroup;
+			const disableShowGroup = this.$refs.disableShowGroup;
 			disableShowGroup.$el.checked = localStorage.getItem('disableShowGroup') == 'true';
 		}
 	});

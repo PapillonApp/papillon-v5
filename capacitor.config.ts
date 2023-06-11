@@ -19,11 +19,13 @@ const config: CapacitorConfig = {
 		Keyboard: {
 			resize: KeyboardResize.Ionic,
 		},
+		"CapacitorHttp": {
+			"enabled": false
+		}
 	},
-	/* server: {
-		url: "http://192.168.1.22:8100",
-		cleartext: true
-	}, */
+	/*server : {
+		url: "http://localhost:8100/" // Address of the server running locally
+	},*/
 };
 
 export default config;

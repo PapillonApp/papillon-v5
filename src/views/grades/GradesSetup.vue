@@ -6,7 +6,7 @@
   
 <script lang="ts">
     import { IonNav, IonPage } from '@ionic/vue';
-    import HomepageView from './HomepageView.vue';
+    import GradesView from './GradesView.vue';
 
     //import { StatusBar, Style } from '@capacitor/status-bar';
 
@@ -16,7 +16,7 @@
       components: { IonNav, IonPage },
       data() {
         return {
-          component: HomepageView,
+          component: GradesView,
           changeTimeout: null as any
         };
       },

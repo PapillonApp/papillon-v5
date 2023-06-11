@@ -52,23 +52,23 @@
 		methods: {
 			login() {
 				const API = this.$api;
-				let loginData = JSON.parse(localStorage.loginData);
+				const loginData = JSON.parse(localStorage.loginData);
 
-				let username = loginData.username;
-				let password = loginData.password;
-				let url = loginData.url;
-				let cas = loginData.cas;
+				const username = loginData.username;
+				const password = loginData.password;
+				const url = loginData.url;
+				const cas = loginData.cas;
 
-				var myHeaders = new Headers();
+				const myHeaders = new Headers();
 				myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-				var urlencoded = new URLSearchParams();
+				const urlencoded = new URLSearchParams();
 				urlencoded.append("url", url);
 				urlencoded.append("ent", cas);
 				urlencoded.append("username", username);
 				urlencoded.append("password", password);
 
-				var requestOptions = {
+				const requestOptions = {
 					method: 'POST',
 					headers: myHeaders,
 					body: urlencoded,

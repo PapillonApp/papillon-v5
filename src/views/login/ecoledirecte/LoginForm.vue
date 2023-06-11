@@ -50,8 +50,8 @@
 		},
 		methods: {
 			decodeEntities(encodedString) {
-				var translate_re = /&(nbsp|amp|quot|lt|gt|Eacute|eacute|Egrave|egrave);/g;
-				var translate = {
+				const translate_re = /&(nbsp|amp|quot|lt|gt|Eacute|eacute|Egrave|egrave);/g;
+				const translate = {
 					"nbsp": " ",
 					"amp" : "&",
 					"quot": "\"",
@@ -65,7 +65,7 @@
 				return encodedString.replace(translate_re, function(match, entity) {
 					return translate[entity];
 				}).replace(/&#(\d+);/gi, function(match, numStr) {
-					var num = parseInt(numStr, 10);
+					const num = parseInt(numStr, 10);
 					return String.fromCharCode(num);
 				});
 			},
@@ -73,15 +73,15 @@
 			async login() {
 				const EDAPI = "https://api.ecoledirecte.com/v3"
 
-				let username = this.$refs.user.$el.value;
-				let password = this.$refs.pass.$el.value;
+				const username = this.$refs.user.$el.value;
+				const password = this.$refs.pass.$el.value;
 
-				var requestOptions = {
+				const requestOptions = {
 					headers: { "Content-Type": "application/x-www-form-urlencoded", "x-token": "" },
 				};
 
         // encodeURIComponent because Ecoledirect needs urlencode on any field !
-				var body = `data={
+				const body = `data={
 						"uuid": "",
 						"identifiant": "${encodeURIComponent(username)}",
 						"motdepasse": "${encodeURIComponent(password)}",
@@ -96,7 +96,7 @@
 
 				axios.post(EDAPI + "/login.awp", body, requestOptions)
 				.then(async (data) => {
-					let rsp = data.data
+					const rsp = data.data
 					if(!rsp.token) {
 						loading.dismiss()
 						if(rsp.code == 505) {
@@ -106,8 +106,8 @@
 						}
 					}
 					else {
-						let token = rsp.token;
-						let user = rsp.data.accounts[0];
+						const token = rsp.token;
+						const user = rsp.data.accounts[0];
 
 						//FETCH PERIODS
 						await getEDPeriods(user.id, token).then(periods => {

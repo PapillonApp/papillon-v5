@@ -33,7 +33,7 @@ async function getSkolengoHomeWork(dateFrom, dateTo, forceReload) {
     if (cacheSearch.length > 0 && !forceReload) {
         // return cached homework in promise
         return new Promise((resolve) => {
-            let homework = JSON.parse(cacheSearch[0].homework);
+            const homework = JSON.parse(cacheSearch[0].homework);
             resolve(constructSkolengoHomework(homework));
         });
     } else {
@@ -56,8 +56,8 @@ async function getSkolengoHomeWork(dateFrom, dateTo, forceReload) {
 
             const all_homeworks = constructSkolengoHomework(homeworks)
 
-            let cache = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
-            let cacheElement = {
+            const cache = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
+            const cacheElement = {
                 dateFrom: dayString,
                 token: token,
                 homework: JSON.stringify(homeworks)
@@ -105,7 +105,7 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
     const dayStringTo = dayRequestTo.toISOString().split('T')[0];
 
     // construct url (date is a TEST date)
-    let URL = `${API}/homework?dateFrom=${dayString}&dateTo=${dayStringTo}&token=${token}`;
+    const URL = `${API}/homework?dateFrom=${dayString}&dateTo=${dayStringTo}&token=${token}`;
 
     // check if homework is cached
     let cacheSearch = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
@@ -115,7 +115,7 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
     if (cacheSearch.length > 0 && !forceReload) {
         // return cached homework in promise
         return new Promise((resolve) => {
-            let homework = JSON.parse(cacheSearch[0].homework);
+            const homework = JSON.parse(cacheSearch[0].homework);
             resolve(constructPronoteHomework(homework, dateFrom));
         });
     } else {
@@ -130,7 +130,7 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
 
                 // cache response
                 let cache = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
-                let cacheElement = {
+                const cacheElement = {
                     dateFrom: dayString,
                     dateTo: dayStringTo,
                     token: token,
@@ -170,7 +170,7 @@ function getPronoteHomework(dateFrom, dateTo, forceReload) {
 // pronote : construct homework
 function constructPronoteHomework(hw, dateFrom) {
     // declaring vars
-    let homeworkArray = [];
+    const homeworkArray = [];
 
     // for each course in homework
     hw.forEach((homework) => {
@@ -204,7 +204,7 @@ function constructPronoteHomework(hw, dateFrom) {
         homework.description = homework.description.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
 
         // construct course
-        let newHomework = {
+        const newHomework = {
             data: {
                 id: homework.id,
                 date: homework.date.replace(/-/g, "/"),
@@ -226,13 +226,13 @@ function constructPronoteHomework(hw, dateFrom) {
     });
 
     // add custom homework
-    let customHomework = JSON.parse(localStorage.getItem('customHomeworks')) || [];
+    const customHomework = JSON.parse(localStorage.getItem('customHomeworks')) || [];
 
     customHomework.forEach((homework) => {
-        let homeworkDate = new Date(homework.date);
+        const homeworkDate = new Date(homework.date);
         homeworkDate.setHours(0, 0, 0, 0);
 
-        let searchDate = new Date(dateFrom);
+        const searchDate = new Date(dateFrom);
         searchDate.setHours(0, 0, 0, 0);
 
         // check if homework is in date range
@@ -254,7 +254,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
     const dayRequest = new moment(dateFrom);
     const dayRequestTo = new moment(dateTo);
 
-    let newDayRequest = dayRequest.format("YYYY-MM-DD").replace("/", "-").replace("/", "-").replace("/", "-")
+    const newDayRequest = dayRequest.format("YYYY-MM-DD").replace("/", "-").replace("/", "-").replace("/", "-")
 
     // get token
     const token = localStorage.getItem('token');
@@ -265,7 +265,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
     const dayStringTo = dayRequestTo.toISOString().split('T')[0];
 
     // construct url (date is a TEST date)
-    let URL = `${EDAPI}/Eleves/${userID}/cahierdetexte.awp?verbe=get`;
+    const URL = `${EDAPI}/Eleves/${userID}/cahierdetexte.awp?verbe=get`;
     // check if homework is cached
     let cacheSearch = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
     cacheSearch = cacheSearch.filter((element) => {
@@ -274,16 +274,16 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
     if (cacheSearch.length > 0 && !forceReload) {
         // return cached homework in promise
         return new Promise((resolve) => {
-            let homework = JSON.parse(cacheSearch[0].homework);
+            const homework = JSON.parse(cacheSearch[0].homework);
             resolve(constructEDHomework(homework));
         });
     } else {
         // get homework from API
 
-        var requestOptions = {
+        const requestOptions = {
             headers: {"Content-Type": "application/x-www-form-urlencoded", "X-Token": token},
         };
-        let body = `data={}`
+        const body = `data={}`
 
         console.log("[REQUEST] [HOMEWORK] Requesting homeworks...")
 
@@ -306,9 +306,9 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                 }
 
                 // get homework
-                let homeworksdate = response.data.data;
+                const homeworksdate = response.data.data;
 
-                var all_homeworks = [];
+                let all_homeworks = [];
 
                 console.log("[REQUEST] [HOMEWORK] Requesting content homeworks...")
 
@@ -316,7 +316,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                     return new Promise((resolve) => {
                         Object.keys(homeworksdate).forEach(async date => {
 
-                            let URL2 = `${EDAPI}/Eleves/${userID}/cahierdetexte/${date}.awp?verbe=get`;
+                            const URL2 = `${EDAPI}/Eleves/${userID}/cahierdetexte/${date}.awp?verbe=get`;
         
                             await axios.post(URL2, body, requestOptions).then(response2 => {
                                 if (response.data.data.code) {
@@ -333,7 +333,7 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
                                     }
                                 }
         
-                                let homework = response2.data.data;
+                                const homework = response2.data.data;
                                 all_homeworks[date] = homework.matieres;
 
                                 resolve(all_homeworks)
@@ -347,8 +347,8 @@ function getEDHomework(dateFrom, dateTo, forceReload) {
 
 
                 // cache response
-                let cache = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
-                let cacheElement = {
+                const cache = JSON.parse(localStorage.getItem('HomeworkCache')) || [];
+                const cacheElement = {
                     dateFrom: dayString,
                     dateTo: dayStringTo,
                     newDayRequest: newDayRequest,
@@ -369,7 +369,7 @@ function constructEDHomework(hw) {
 
     console.log("Building homeworks...")
     // declaring vars
-    let homeworkArray = [];
+    const homeworkArray = [];
     
     /*
     ===============================================
@@ -393,7 +393,7 @@ function constructEDHomework(hw) {
         //2023-03-17
         hw[date].forEach((homework) => {
             // get homework
-            let hws = homework;
+            const hws = homework;
             //foreach documents
             if(!hws.aFaire) {
                 console.warn("Skip construct of homework because doesn't contain any \"aFaire\" var")
@@ -432,7 +432,7 @@ function constructEDHomework(hw) {
 
 
             // construct course
-            let newHomework = {
+            const newHomework = {
                 data: {
                     id: hws.id,
                     //date: hws.aFaire.donneLe.replace(/-/g, "/"),
@@ -479,10 +479,10 @@ async function tickHomework(id) {
 }
 
 async function tickCustomHomework(id) {
-    let customHomeworks = JSON.parse(localStorage.customHomeworks);
+    const customHomeworks = JSON.parse(localStorage.customHomeworks);
 
     // find homework
-    let homework = customHomeworks.find((homework) => {
+    const homework = customHomeworks.find((homework) => {
         return homework.homework.data.id == id;
     });
 
@@ -498,17 +498,17 @@ async function tickCustomHomework(id) {
 
 // tick pronote homework
 async function tickPronoteHomework(data) {
-    let homeworkID = data[0];
-    let dateSet = data[1];
+    const homeworkID = data[0];
+    const dateSet = data[1];
 
     // get token
     const token = localStorage.getItem('token');
     const API = app.config.globalProperties.$api;
 
-    let dayRequest = new Date(dateSet);
-    let dayString = dayRequest.toISOString().split('T')[0];
+    const dayRequest = new Date(dateSet);
+    const dayString = dayRequest.toISOString().split('T')[0];
 
-    let URL = `${API}/homework/changeState`;
+    const URL = `${API}/homework/changeState`;
 
     return axios.post(URL, {
         token: token,
@@ -524,9 +524,9 @@ async function tickEDHomework(data) {
     const studentId = JSON.parse(localStorage.getItem('UserCache')).id;
     const homework = data[2].homework
 
-    let homeworkID = data[0]
+    const homeworkID = data[0]
 
-    let requestOptions = {
+    const requestOptions = {
         headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": `${token}`},
     };
 
@@ -543,12 +543,12 @@ async function tickEDHomework(data) {
     done = [homeworkID]
     undone = []
 
-    let body = `data={
+    const body = `data={
                 "idDevoirsEffectues": [${done}],
                 "idDevoirsNonEffectues": [${undone}]
             }`
 
-    let URL = `${EDAPI}/Eleves/${studentId}/cahierdetexte.awp?verbe=put`;
+    const URL = `${EDAPI}/Eleves/${studentId}/cahierdetexte.awp?verbe=put`;
 
     return axios.post(URL, body, requestOptions)
 }

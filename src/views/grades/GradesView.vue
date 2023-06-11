@@ -28,7 +28,6 @@
 
 	import MarkView from './MarkView.vue';
 	import GradesInsightsView from './GradesInsightsView.vue';
-
 	import GetGrades from '@/functions/fetch/GetGrades.js';
 	import ChangePeriod from '@/functions/login/ChangePeriod.js';
 
@@ -45,8 +44,8 @@
 			IonTitle,
 			IonMenuButton,
 			IonPage,
-			IonChip,
 			IonButtons,
+			IonChip,
 			IonCard,
 			IonItem,
 			IonLabel,
@@ -61,9 +60,9 @@
 			IonSpinner
 		},
 		data() {
-			let gradesDisplay = localStorage.getItem('gradesDisplay') || 'Liste';
+			const gradesDisplay = localStorage.getItem('gradesDisplay') || 'Liste';
 
-			let isAndroid = Capacitor.getPlatform() !== "ios";
+			const isAndroid = Capacitor.getPlatform() !== "ios";
 
 			console.log(isAndroid);
 
@@ -98,7 +97,7 @@
 		},
 		methods: {
 			getPeriods() {
-				let allPeriods = JSON.parse(localStorage.getItem('userData')).periods;
+				const allPeriods = JSON.parse(localStorage.getItem('userData')).periods;
 
 				// find period with actual = true
 				let actualPeriod = allPeriods.find(period => period.actual == true);
@@ -130,10 +129,10 @@
 			},
 			segChange() {
 				if (!this.segChangeTimeout) {
-					let newSegment = this.$refs.segment.$el.value;
+					const newSegment = this.$refs.segment.$el.value;
 
 					// get corresponding period name from id
-					let newPeriod = this.periods.find(period => period.id == newSegment);
+					const newPeriod = this.periods.find(period => period.id == newSegment);
 
 					// save in localstorage
 					localStorage.setItem('currentPeriod', JSON.stringify(newPeriod));
@@ -149,7 +148,7 @@
 				}
 			},
 			getClosestGradeEmoji(subjectName) {
-				let gradeEmojiList = {
+				const gradeEmojiList = {
 					'numerique': '💻',
 					'moral': '⚖️',
 					'sport': '🏀',
@@ -177,7 +176,7 @@
 				}
 
 				// get emoji with key in subject name
-				let closest = Object.keys(gradeEmojiList).reduce((a, b) => {
+				const closest = Object.keys(gradeEmojiList).reduce((a, b) => {
 					return subjectName.toLowerCase().includes(a) ? a : b
 				});
 
@@ -198,7 +197,7 @@
 				this.$refs.averageModal.$el.present(subject);
 			},
 			editMarks(grades) {
-				let out_of_20 = this.out_of_20;
+				const out_of_20 = this.out_of_20;
 
 				grades.forEach(subject => {
 					subject.marks.forEach(mark => {
@@ -216,7 +215,7 @@
 				return grades;
 			},
 			changeDisplay(e) {
-				let val = e.detail.value;
+				const val = e.detail.value;
 
 				this.display = val;
 				localStorage.setItem('gradesDisplay', val);
@@ -262,16 +261,16 @@
 				})
 			},
 			getStringToAsciiArray(string) {
-				let charCodeArr = [];
+				const charCodeArr = [];
 				for(let i = 0; i < string.length; i++){
-					let code = string.charCodeAt(i);
+					const code = string.charCodeAt(i);
 					charCodeArr.push(code);
 				}
 
 				return charCodeArr;
 			},
 			async shareGrade(grade, color) {
-				let sharedGrade = {
+				const sharedGrade = {
 					grade: {
 						value: grade.grade.value,
 						out_of: grade.grade.out_of,
@@ -328,7 +327,7 @@
 				urlElems += sharedGrade.grade.min;
 
 				// base64 encode urlElems
-				let url = "https://getpapillon.xyz/grade?g=" + btoa(urlElems);
+				const url = "https://getpapillon.xyz/grade?g=" + btoa(urlElems);
 
 				// share url
 				await Share.share({
@@ -348,14 +347,14 @@
 				});
 			},
 			searchGrades() {
-				let search1 = this.$refs.searchBarIos.$el.value;
-				let search2 = this.$refs.searchBarMd.$el.value;
+				const search1 = this.$refs.searchBarIos.$el.value;
+				const search2 = this.$refs.searchBarMd.$el.value;
 
 
 				if (search1 == "" && search2 == "") {
 					this.grades = this.fullGrades;
 				} else {
-					let search = search1 == "" ? search2 : search1;
+					const search = search1 == "" ? search2 : search1;
 					this.grades = this.fullGrades.filter(subject => {
 						return subject.name.toLowerCase().includes(search.toLowerCase());
 					});
@@ -369,6 +368,16 @@
 				this.selectedGradeSet = true;
 				this.$refs.gradeModal.$el.present();
 			},
+			async displayBiasedMsg() {
+				const alert = await alertController.create({
+						header: 'Comprendre la moyenne +/-',
+						message: 'Les moyennes maximales et minimales de la classe sont calculées à partir des moyennes maximales et minimales de chaque groupe, uniquement pour les enseignements que vous suivez. Cela peut fausser les chiffres qui ne sont affichés qu\'à titre indicatif uniquement.',
+						mode: 'md',
+						buttons: ['Je comprends']
+					});
+	
+				await alert.present();
+			}
 		},
 		mounted() {
 			this.isLoading = true;
@@ -409,16 +418,6 @@
 					this.classAverages = data.averages.class;
 				});
 			});
-		},
-		async displayBiasedMsg() {
-			const alert = await alertController.create({
-					header: 'Comprendre la moyenne +/-',
-					message: 'Les moyennes maximales et minimales de la classe sont calculées à partir des moyennes maximales et minimales de chaque groupe, uniquement pour les enseignements que vous suivez. Cela peut fausser les chiffres qui ne sont affichés qu\'à titre indicatif uniquement.',
-					mode: 'md',
-					buttons: ['Je comprends']
-				});
-	
-				await alert.present();
 		}
 	});
 </script>
@@ -622,7 +621,7 @@
 							<h2>Papillon Insights <ion-chip class="small_chip" color="warning">Nouveau</ion-chip></h2>
 							<p>Statistiques, analyses et données complémentaires sur vos notes</p>  
 						</IonLabel>
-						
+
 					</IonItem>
 				</IonNavLink>
 			</ion-list>
