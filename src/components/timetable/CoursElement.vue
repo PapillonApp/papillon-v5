@@ -486,7 +486,6 @@
 		opacity: 0.7;
 
 		width: fit-content;
-		max-width: 55%;
 
 		overflow: hidden;
 		text-overflow: ellipsis;
