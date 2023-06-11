@@ -385,8 +385,9 @@
 
 				this.teachers = parsed.data.teachers.join(', ');
 				this.rooms = parsed.data.rooms.join(', ');
-				this.groupNames = parsed.data.groupNames.join(', ').replace(/[[\]]/g, '');
+				this.groupNames = parsed.data.groupNames.join(', ');
 
+				this.groupNames = this.groupNames.replace(/[[\]]/g, '');
 				this.pageTitle = this.openCours_data.subject;
 
 				// if this.pageTitle is over 11 chars
