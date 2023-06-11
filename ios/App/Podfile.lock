@@ -1,56 +1,54 @@
 PODS:
-  - Capacitor (4.7.3):
+  - Capacitor (5.0.4):
     - CapacitorCordova
-  - CapacitorActionSheet (4.1.0):
+  - CapacitorActionSheet (5.0.2):
     - Capacitor
-  - CapacitorApp (4.1.1):
+  - CapacitorApp (5.0.2):
     - Capacitor
-  - CapacitorBrowser (4.1.1):
+  - CapacitorBrowser (5.0.2):
     - Capacitor
   - CapacitorCalendar (1.0.6):
     - Capacitor
-  - CapacitorClipboard (4.1.0):
+  - CapacitorClipboard (5.0.2):
     - Capacitor
-  - CapacitorCommunityAppIcon (3.1.0-beta.1):
+  - CapacitorCommunityAppIcon (4.1.0):
     - Capacitor
-  - CapacitorCordova (4.7.3)
-  - CapacitorDevice (4.1.0):
+  - CapacitorCordova (5.0.4)
+  - CapacitorDevice (5.0.2):
     - Capacitor
-  - CapacitorDialog (4.1.0):
+  - CapacitorDialog (5.0.2):
     - Capacitor
-  - CapacitorFilesystem (4.1.4):
+  - CapacitorFilesystem (5.0.2):
     - Capacitor
-  - CapacitorGeolocation (4.1.0):
+  - CapacitorGeolocation (5.0.2):
     - Capacitor
-  - CapacitorHaptics (4.1.0):
+  - CapacitorHaptics (5.0.2):
     - Capacitor
-  - CapacitorKeyboard (4.1.1):
+  - CapacitorKeyboard (5.0.2):
     - Capacitor
-  - CapacitorLocalNotifications (4.1.5):
+  - CapacitorLocalNotifications (5.0.2):
     - Capacitor
-  - CapacitorNetwork (4.1.0):
+  - CapacitorNetwork (5.0.2):
     - Capacitor
   - CapacitorNotificationBadge (1.0.6):
     - Capacitor
-  - CapacitorPluginSafeArea (1.0.1):
+  - CapacitorPluginSafeArea (2.0.5):
     - Capacitor
-  - CapacitorPreferences (4.0.2):
+  - CapacitorPreferences (5.0.2):
     - Capacitor
-  - CapacitorShare (4.1.1):
+  - CapacitorShare (5.0.2):
     - Capacitor
-  - CapacitorSplashScreen (4.2.0):
+  - CapacitorSplashScreen (5.0.2):
     - Capacitor
-  - CapacitorStatusBar (4.1.1):
+  - CapacitorStatusBar (5.0.2):
     - Capacitor
-  - CapacitorToast (4.1.0):
+  - CapacitorToast (5.0.2):
     - Capacitor
-  - CapacitorWidgetsbridgePlugin (0.1.0):
+  - CapawesomeCapacitorFilePicker (5.0.0):
     - Capacitor
-  - CapawesomeCapacitorFilePicker (0.6.3):
+  - MauricewegnerCapacitorNavigationBar (2.0.1):
     - Capacitor
-  - mauricewegnerCapacitorNavigationBar (2.0.1):
-    - Capacitor
-  - TransistorsoftCapacitorBackgroundFetch (1.0.3):
+  - TransistorsoftCapacitorBackgroundFetch (5.0.0):
     - Capacitor
 
 DEPENDENCIES:
@@ -77,9 +75,8 @@ DEPENDENCIES:
   - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
   - "CapacitorToast (from `../../node_modules/@capacitor/toast`)"
-  - CapacitorWidgetsbridgePlugin (from `../../node_modules/capacitor-widgetsbridge-plugin`)
   - "CapawesomeCapacitorFilePicker (from `../../node_modules/@capawesome/capacitor-file-picker`)"
-  - "mauricewegnerCapacitorNavigationBar (from `../../node_modules/@mauricewegner/capacitor-navigation-bar`)"
+  - "MauricewegnerCapacitorNavigationBar (from `../../node_modules/@mauricewegner/capacitor-navigation-bar`)"
   - "TransistorsoftCapacitorBackgroundFetch (from `../../node_modules/@transistorsoft/capacitor-background-fetch`)"
 
 EXTERNAL SOURCES:
@@ -129,44 +126,41 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/status-bar"
   CapacitorToast:
     :path: "../../node_modules/@capacitor/toast"
-  CapacitorWidgetsbridgePlugin:
-    :path: "../../node_modules/capacitor-widgetsbridge-plugin"
   CapawesomeCapacitorFilePicker:
     :path: "../../node_modules/@capawesome/capacitor-file-picker"
-  mauricewegnerCapacitorNavigationBar:
+  MauricewegnerCapacitorNavigationBar:
     :path: "../../node_modules/@mauricewegner/capacitor-navigation-bar"
   TransistorsoftCapacitorBackgroundFetch:
     :path: "../../node_modules/@transistorsoft/capacitor-background-fetch"
 
 SPEC CHECKSUMS:
-  Capacitor: 736ef58c1aff08d3142fe3be9c7d928e47ee461d
-  CapacitorActionSheet: ee4d0df75bdf0de950a3a33d71bcb1c4e2832ab4
-  CapacitorApp: acd42fe8561fe751ad5b5f459aa85e6acd7bee24
-  CapacitorBrowser: b7d161fb82d591294cb81fcb12f950ae73470035
+  Capacitor: d3d4463573438b9fa65326d1f3549da6f4c21634
+  CapacitorActionSheet: 5f96ede9bde29ba734a5a31b70cfdaaa7855689f
+  CapacitorApp: 28fef1fd75b2b3686e875216806fb8416d421097
+  CapacitorBrowser: 7986ee35377383fc40f7c1a0a793e0d9a49fe527
   CapacitorCalendar: c950f49840de2656adc9336488227bee8481aed6
-  CapacitorClipboard: 4c092a2608520afb799429e63820256c3a59f1e5
-  CapacitorCommunityAppIcon: 8715eb30eee1e9a4177b54b40cd6e9ad3ed3f205
-  CapacitorCordova: e8ed29bd616c9f5a81498d47c0b84179b9c6a5a6
-  CapacitorDevice: 63e8ef8837176b8caf67dc0717b8b1123754a955
-  CapacitorDialog: c8a6558d29767e76a32a056bb5e0fc9104b985b0
-  CapacitorFilesystem: 3d665e5b3719d9f6e240480a7468861b0bb35f93
-  CapacitorGeolocation: e792888b4eca5cf31ed984491b645d42666278cb
-  CapacitorHaptics: 213b3a1f3efd6dbf6e6b76a1b2bb0399cf43b213
-  CapacitorKeyboard: 16121a97b56c8609ec518ebcdc64d6386c84e5c8
-  CapacitorLocalNotifications: 50bc296e9304af2b524053bbec9892e80c28415c
-  CapacitorNetwork: 7126b3d2d23ca60d5ac0d8d2ecccfab0b1f305c6
+  CapacitorClipboard: a198f34cd0ed4d1777da5edae13445227ec05be3
+  CapacitorCommunityAppIcon: c2d7ddab91cbdb2e5b68b84703e1882676ba6a37
+  CapacitorCordova: b1fe6bf1f36974a8e4a9044b342d22d49c0996d6
+  CapacitorDevice: 980e172f6fbfa0a945c73f908adc74b5a031e7d4
+  CapacitorDialog: 01c49f7f4b37e7ad59e38fd317a6e5f006f23cdc
+  CapacitorFilesystem: 3a7bb944feb5b7e9473adeb08662c73141510aa8
+  CapacitorGeolocation: 8532cd1585dbf0b5b721fa65ea51a36bf9a71e92
+  CapacitorHaptics: 864585542a435bd41eaabf7f30d9ff5ec03024d3
+  CapacitorKeyboard: e628d4e66d621c69e449945ebabded17c5b9c2e8
+  CapacitorLocalNotifications: db01feb38f85b4fd8c0a0d0fa94a4a6410239563
+  CapacitorNetwork: 77c00ce41b4e014cbc6fdcb233462e7fce4b4755
   CapacitorNotificationBadge: 47b0f3cabf527f72f9dfad8c4164fc0ee5cedb4b
-  CapacitorPluginSafeArea: 4ba777224157405686e420ff815a32ee58b0b58c
-  CapacitorPreferences: 1d66dc32299f55ed632c5611f312878979275ea5
-  CapacitorShare: 964682279c7ba28ac13c435de29e705a2ce8f487
-  CapacitorSplashScreen: 6b1c832e6f822ad1ef05073dc31dfeca02bc03a3
-  CapacitorStatusBar: 65933e554bb5d65b361deaa936a93616086a2608
-  CapacitorToast: 81855a3f8035e002c16f7eb5c753eb42660330a7
-  CapacitorWidgetsbridgePlugin: 7ef9650b7bea59096efbbdc4aa2738779841a3ce
-  CapawesomeCapacitorFilePicker: f354c9ec6e4722908876032939a85ffb94642630
-  mauricewegnerCapacitorNavigationBar: 9220af908152f38caa3963b8de23c36bf43d2468
-  TransistorsoftCapacitorBackgroundFetch: da495604cebf93b9e530d473669bf80e11133b1c
+  CapacitorPluginSafeArea: bfdd714827dbd89fb44fea286beec996e1b0c5c4
+  CapacitorPreferences: 0ad8838944f900284900d9647d9b0145c89ca27d
+  CapacitorShare: 931224a0e17615e799d35b26286ab1d05f37d8fb
+  CapacitorSplashScreen: bd2a056394ba0b8807e7bb3e746424f67c426e03
+  CapacitorStatusBar: 48f2899f6846cc7d8431b251ebfc58e1c10e3d58
+  CapacitorToast: d785c9169585b9267b8392094298de7cb0eaa16e
+  CapawesomeCapacitorFilePicker: ec211560d209c2efa0e47dad3308bf497e6ce388
+  MauricewegnerCapacitorNavigationBar: c75121f82d02082c261dafab0cccc0cc91cf5001
+  TransistorsoftCapacitorBackgroundFetch: 88c994671b9a6e9b0a9106a173d96c095be8bcc2
 
-PODFILE CHECKSUM: 6da942849b5e537db71ddb2239dbf48161f25d0f
+PODFILE CHECKSUM: a15ca2e1bd79dcf829b3ad4ef28ced5041d2f021
 
-COCOAPODS: 1.12.0
+COCOAPODS: 1.12.1
