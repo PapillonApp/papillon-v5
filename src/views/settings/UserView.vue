@@ -182,7 +182,7 @@
             <IonList class="listGroup" lines="inset">
                 <IonItem button @click="tweakChangeAvatar()">
                     <span class="material-symbols-outlined mdls" slot="start">person_pin</span>
-                    <IonLabel>
+                    <IonLabel class="ion-text-wrap">
                         <h2>Changer de photo de profil</h2>
                         <p>Utiliser une photo différente dans l'application</p>
                     </IonLabel>
@@ -190,7 +190,7 @@
 
                 <IonItem button @click="tweakDeleteAvatar()">
                     <span class="material-symbols-outlined mdls" slot="start">delete</span>
-                    <IonLabel>
+                    <IonLabel class="ion-text-wrap">
                         <h2>Supprimer la photo de profil personnalisée</h2>
                         <p>Utiliser la photo de profil par défaut</p>
                     </IonLabel>
@@ -204,14 +204,14 @@
             <IonList class="listGroup" lines="inset">
                 <IonItem button @click="tweakChangeName()">
                     <span class="material-symbols-outlined mdls" slot="start">drive_file_rename_outline</span>
-                    <IonLabel>
+                    <IonLabel class="ion-text-wrap">
                         <h2>Changer de nom</h2>
                         <p>Utiliser un nom différent dans l'application</p>
                     </IonLabel>
                 </IonItem>
                 <IonItem button @click="tweakDeleteName()">
                     <span class="material-symbols-outlined mdls" slot="start">delete</span>
-                    <IonLabel>
+                    <IonLabel class="ion-text-wrap">
                         <h2>Réinitialiser le nom utilisé</h2>
                     </IonLabel>
                 </IonItem>
