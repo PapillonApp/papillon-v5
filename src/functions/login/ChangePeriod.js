@@ -17,14 +17,14 @@ function changePronotePeriod(name) {
     const API = app.config.globalProperties.$api;
     const token = localStorage.getItem('token');
 
-    var myHeaders = new Headers();
+    const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
                     
-    var urlencoded = new URLSearchParams();
+    const urlencoded = new URLSearchParams();
     urlencoded.append("token", token);
     urlencoded.append("periodName", name);
 
-    var requestOptions = {
+    const requestOptions = {
         method: 'POST',
         headers: myHeaders,
         body: urlencoded,
@@ -38,7 +38,7 @@ function changePronotePeriod(name) {
 
 
 function changeEDPeriod(name) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         resolve({ "status": "ok", "period": name })
     });
 }

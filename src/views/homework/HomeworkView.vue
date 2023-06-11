@@ -57,9 +57,9 @@
                 HomeworkItemView: HomeworkItemView,
 				slides,
                 currentIndex: this.baseIndex,
-                rnButtonString: this.createDateString(this.$rn),
-                loadedrnButtonString: this.createDateString(this.$rn),
-                rnCalendarString: this.$rn.toISOString().split('T')[0],
+                rnButtonString2: this.createDateString(this.$rn),
+                loadedrnButtonString2: this.createDateString(this.$rn),
+                rnCalendarString2: this.$rn.toISOString().split('T')[0],
                 days: [],
                 connected: false,
                 shouldResetSwiper: false,
@@ -96,7 +96,7 @@
                         {
                             text: 'Ajouter',
                             handler: async (data) => {
-                                let text = data.content;
+                                const text = data.content;
                                 let subject = data.subject;
 
                                 if (!subject) {
@@ -108,7 +108,7 @@
                                 }
 
                                 // get --ion-color-primary
-                                let color = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-primary');
+                                const color = getComputedStyle(document.documentElement).getPropertyValue('--ion-color-primary');
 
                                 // get homework description
                                 let shortText = text;
@@ -117,7 +117,7 @@
                                     shortText = shortText.substring(0, 80) + '...';
                                 }
 
-                                let newHomework = {
+                                const newHomework = {
                                     data: {
                                         id: "custom_" + Math.random().toString(36).substr(2, 9),
                                         date: this.$rn.toISOString().split('T')[0].replace(/-/g, "/") + " 00:00",
@@ -160,34 +160,34 @@
               return localStorage.loginService === 'ecoledirecte'
             },
             getHomeworks(force, goTo, event) {
-                let startloading = setTimeout(() => {
+                const startloading = setTimeout(() => {
                     this.isLoading = true;
                 }, 500);
 
                 for (let i = 0; i < 3; i++) {
-                    let index = this.swiper.realIndex + (i - 1);
+                    const index = this.swiper.realIndex + (i - 1);
 
                     // get index diff
-                    let indexDiff = this.baseIndex - index;
+                    const indexDiff = this.baseIndex - index;
 
                     // get rn
-                    let selectedRN = new Date(this.baseRn);
+                    let selectedRN2 = new Date(this.baseRn);
 
                     if(goTo) {
-                        selectedRN = new Date(this.$rn);
+                        selectedRN2 = new Date(this.$rn);
                     }
 
-                    selectedRN.setDate(selectedRN.getDate() - indexDiff);
+                    selectedRN2.setDate(selectedRN2.getDate() - indexDiff);
 
                     // if i is 1
                     if(i == 1) {
-                        this.$rn = selectedRN;
-                        this.rnButtonString = this.createDateString(this.$rn);
-                        this.rnCalendarString = this.$rn.toISOString().split('T')[0];
+                        this.$rn = selectedRN2;
+                        this.rnButtonString2 = this.createDateString(this.$rn);
+                        this.rnCalendarString2 = this.$rn.toISOString().split('T')[0];
                     }
 
                     // get homeworks for rn
-                    GetHomeworks(selectedRN, selectedRN, force).then((homeworks) => {
+                    GetHomeworks(selectedRN2, selectedRN2, force).then((homeworks) => {
                         if(i == 2) {
                             clearTimeout(startloading);
                             this.isLoading = false;
@@ -212,7 +212,7 @@
                         }
                         else {
                             this.days[index] = this.editHomeworks(homeworks);
-                            this.loadedrnButtonString = this.createDateString(this.$rn);
+                            this.loadedrnButtonString2 = this.createDateString(this.$rn);
                             if(this.days[index]) {
                                 this.days[index].loading = false;
                             }
@@ -224,25 +224,28 @@
                 // for each homework
                 for (let i = 0; i < homeworks.length; i++) {
                     // set homework to edit
-                    let homework = homeworks[i];
+                    const homework = homeworks[i];
 
-                    // remove <br/> tags from homework.homework.content
-                    homeworks[i].homework.shortContent = homework.homework.shortContent.replace(/[<]br[^>]*[>]/gi,"");
+                    // if homeworks[i].homework.shortContent exists
+                    if(homework.homework.shortContent) {
+                        // remove <br/> tags from homework.homework.shortContent
+                        homeworks[i].homework.shortContent = homework.homework.shortContent.replace(/[<]br[^>]*[>]/gi,"");
+                    }
                 }
 
                 // set homeworks to edit
                 return homeworks;
             },
             createDateString(date) {
-                let dateObject = new Date(date);
-                let day_string = dateObject.toLocaleString('default', { weekday: 'long' }).slice(0, 3);
+                const dateObject = new Date(date);
+                const day_string = dateObject.toLocaleString('default', { weekday: 'long' }).slice(0, 3);
                 // return string like "jeu. 1"
                 return day_string + ". " + dateObject.getDate();
             },
 			rnInputChanged() {
                 if(!this.isChangingDate) {
                     // get new date from rnInput
-                    let newDate = new Date(this.$refs.rnInput.$el.value);
+                    const newDate = new Date(this.$refs.rnInput.$el.value);
 
                     // update rn
                     this.$rn = newDate;
@@ -279,11 +282,11 @@
                 hapticsController.notification('success');
 
                 // vars
-                let homeworkID = hw.data.id;
-                let dateSet = new Date(this.$rn)
+                const homeworkID = hw.data.id;
+                const dateSet = new Date(this.$rn)
 
-                let checkboxID = `checkbox_${hw.data.id}`;
-                let checkbox = document.getElementById(checkboxID);
+                const checkboxID = `checkbox_${hw.data.id}`;
+                const checkbox = document.getElementById(checkboxID);
 
                 // new send request
                 if(!this.dontRetryCheck) {
@@ -337,7 +340,7 @@
             this.swiper = this.$refs.swiper.$el.swiper;
 
             document.addEventListener('rnChanged', (e) => {
-                this.rnButtonString = this.createDateString(e.detail);
+                this.rnButtonString2 = this.createDateString(e.detail);
                 this.getHomeworks(false, e.detail);
             });
 
@@ -379,7 +382,7 @@
                     <ion-button id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
                     <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
-                    <p>{{ rnButtonString }}</p>
+                    <p>{{ rnButtonString2 }}</p>
                     </ion-button>
                 </ion-buttons>
 
@@ -485,7 +488,7 @@
                         presentation="date"
                         ref="rnInput"
                         size="cover"
-                        :value="rnCalendarString"
+                        :value="rnCalendarString2"
                         :firstDayOfWeek="1"
                         :min="minDate"
                         :max="maxDate"

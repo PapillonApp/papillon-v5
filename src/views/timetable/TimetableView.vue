@@ -2,7 +2,7 @@
   import { defineComponent } from 'vue';
   import { IonButtons, IonButton, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar, IonList, IonModal, IonItem, IonDatetime, IonRefresher, IonRefresherContent, IonLabel, IonSpinner, IonFab, IonInput, IonProgressBar, alertController, IonNavLink, IonPopover } from '@ionic/vue';
 
-  import { Share } from '@capacitor/share';
+  //import { Share } from '@capacitor/share';
   import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
   import { Dialog } from '@capacitor/dialog';
 
@@ -77,15 +77,15 @@
 	},
 	methods: {
 		createDateString(date) {
-			let dateObject = new Date(date);
-			let day_string = dateObject.toLocaleString('default', { weekday: 'long' }).slice(0, 3);
+			const dateObject = new Date(date);
+			const day_string = dateObject.toLocaleString('default', { weekday: 'long' }).slice(0, 3);
 			// return string like "jeu. 1"
 			return day_string + ". " + dateObject.getDate();
 		},
 		rnInputChanged() {
 			if(!this.isChangingDate) {
 				// get new date from rnInput
-				let newDate = new Date(this.$refs.rnInput.$el.value);
+				const newDate = new Date(this.$refs.rnInput.$el.value);
 
 				// update rn
 				this.$rn = newDate;
@@ -114,14 +114,14 @@
 			timetable = timetableEdit(timetable);
 
 			// add custom courses
-			let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
+			const customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
 			customCourses.forEach((customCourse) => {
 				// if course is in the same day
-				let customDay = new Date(customCourse.day);
-				let currentDay = new Date(date);
+				const customDay = new Date(customCourse.day);
+				const currentDay = new Date(date);
 
-				let st = new Date(customCourse.course.time.start);
-				let en = new Date(customCourse.course.time.end);
+				const st = new Date(customCourse.course.time.start);
+				const en = new Date(customCourse.course.time.end);
 
 				// make st and en the same day as currentDay
 				st.setDate(currentDay.getDate());
@@ -142,8 +142,8 @@
 
 			// order timetable by time
 			timetable.sort((a, b) => {
-				let aStart = new Date(a.time.start);
-				let bStart = new Date(b.time.start);
+				const aStart = new Date(a.time.start);
+				const bStart = new Date(b.time.start);
 
 				return aStart - bStart;
 			});
@@ -158,15 +158,15 @@
 			this.day2.error = "STILL_LOADING";
 		},
 		async getTimetables(force, goTo, event) {
-			let startloading = setTimeout(() => {
+			const startloading = setTimeout(() => {
 				this.isLoading = true;
 			}, 500);
 
 			for (let i = 0; i < 3; i++) {
-				let index = this.swiper.realIndex + (i - 1);
+				const index = this.swiper.realIndex + (i - 1);
 
 				// get index diff
-				let indexDiff = this.baseIndex - index;
+				const indexDiff = this.baseIndex - index;
 
 				// get rn
 				let selectedRN = new Date(this.baseRn);
@@ -227,9 +227,9 @@
 			this.getTimetables(true, false, event);
 		},
 		getStringToAsciiArray(string) {
-			let charCodeArr = [];
+			const charCodeArr = [];
 			for(let i = 0; i < string.length; i++){
-				let code = string.charCodeAt(i);
+				const code = string.charCodeAt(i);
 				charCodeArr.push(code);
 			}
 
@@ -239,10 +239,10 @@
 			this.newCoursModalOpen = state;
 		},
 		addNewCours() {
-			let st = new Date();
-			let en = new Date();
+			const st = new Date();
+			const en = new Date();
 
-			let stValue = this.$refs.newCoursStartRef.$el.value;
+			const stValue = this.$refs.newCoursStartRef.$el.value;
 
 			// this.$refs.newCoursStart.value returns HH:mm
 			st.setHours(stValue.split(':')[0]);
@@ -258,13 +258,13 @@
 				return;
 			}
 
-			let color = this.$refs.newCoursColorRef.value;
+			const color = this.$refs.newCoursColorRef.value;
 			if(color !== "#000000") {
 				subjectColor.getSubjectColor(this.$refs.newCoursNameRef.$el.value, color, true);
 			}
 
 			// create new cours
-			let newCourse = {
+			const newCourse = {
 				course: {
 					id: Math.floor(Math.random() * 10000000),
 					color: color,
@@ -294,13 +294,13 @@
 				}
 			};
 
-			let customCourse = {
+			const customCourse = {
 				"day": this.$rn,
 				"course": newCourse
 			};
 
 			// save to local storage
-			let customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
+			const customCourses = JSON.parse(localStorage.getItem('customCourses')) || [];
 			customCourses.push(customCourse);
 			localStorage.setItem('customCourses', JSON.stringify(customCourses));
 
@@ -332,14 +332,14 @@
 		async unsetNotif(course) {
 			// find notification
 			await LocalNotifications.getPending().then((res) => {
-				let notifs = res.notifications;
+				const notifs = res.notifications;
 
-				let time = new Date(course.time.start);
+				const time = new Date(course.time.start);
 				time.setMinutes(time.getMinutes() - 5);
 
 				// check if time = schedule.at
 				notifs.forEach(async (notif) => {
-					let notifTime = new Date(notif.schedule.at);
+					const notifTime = new Date(notif.schedule.at);
 
 					if(notifTime.getTime() == time.getTime()) {
 						await LocalNotifications.cancel({ notifications: [notif] });
@@ -407,10 +407,10 @@
 							return;
 						}
 
-						let selectedCalendar = result.availableCalendars[selected.index];
+						const selectedCalendar = result.availableCalendars[selected.index];
 
 						// for each course of the day
-						let todayCourses = this.days[this.currentIndex];
+						const todayCourses = this.days[this.currentIndex];
 
 						if(todayCourses.length <= 0) {
 							await Dialog.alert({
@@ -427,13 +427,13 @@
 						for (const course of todayCourses) {
 							if(!course.status.isCancelled) {
 								// create event
-								let id = course.course.id;
-								let subject = course.data.subject;
-								let rooms = course.data.rooms.join(', ');
-								let teachers = course.data.teachers.join(', ');
+								const id = course.course.id;
+								const subject = course.data.subject;
+								const rooms = course.data.rooms.join(', ');
+								const teachers = course.data.teachers.join(', ');
 								
-								let startMillis = new Date(course.time.start).getTime();
-								let endMillis = new Date(course.time.end).getTime();
+								const startMillis = new Date(course.time.start).getTime();
+								const endMillis = new Date(course.time.end).getTime();
 
 								let status = "Le cours se déroule normalement.";
 								if(course.status.status) {

@@ -11,7 +11,7 @@
     import { Browser } from '@capacitor/browser';
 
     import { StatusBar, Style } from '@capacitor/status-bar';
-    import { NavigationBar } from '@hugotomazi/capacitor-navigation-bar';
+    import { NavigationBar } from '@mauricewegner/capacitor-navigation-bar';
 
     import LoginSelect from './LoginSelect.vue';
 
@@ -29,7 +29,7 @@
             goNormalStatusBar() {
                 setTimeout(() => {
                     if (Capacitor.getPlatform() === 'android') {
-                        let isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                        const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
                 
                         if (isDarkMode) {
                             StatusBar.setBackgroundColor({color: "#1C1B1F"});

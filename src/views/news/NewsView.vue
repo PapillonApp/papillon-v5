@@ -57,16 +57,16 @@
                 })
             },
             searchNews() {
-                let search1 = this.$refs.searchBar.$el.value;
-                let search2 = this.$refs.searchBar.$el.value;
-                let news = this.fullNews;
+                const search1 = this.$refs.searchBar.$el.value;
+                const search2 = this.$refs.searchBar.$el.value;
+                const news = this.fullNews;
 
                 if (search1 == "" && search2 == "") {
                     this.news = news;
                 } else {
-                    let search = search1 == "" ? search2 : search1;
+                    const search = search1 == "" ? search2 : search1;
                     // filter news by name, content and author
-                    let filteredNews = news.filter((news) => {
+                    const filteredNews = news.filter((news) => {
                         return news.title.toLowerCase().includes(search.toLowerCase()) || news.content.toLowerCase().includes(search.toLowerCase()) || news.author.toLowerCase().includes(search.toLowerCase());
                     });
 

@@ -1,6 +1,6 @@
 <script>
 	import { defineComponent } from 'vue';
-	import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonListHeader, IonLabel, IonItem, actionSheetController, IonNavLink, IonChip, IonSkeletonText, IonAvatar } from '@ionic/vue';
+	import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonButtons, IonList, IonLabel, IonItem, actionSheetController, IonNavLink, IonChip, IonSkeletonText, IonAvatar } from '@ionic/vue';
 
 	import { Browser } from '@capacitor/browser';
 
@@ -107,12 +107,12 @@
 			getApiVersion() {
 				const API = this.$api;
 
-				let cacheApiVersion = localStorage.getItem('apiVersion');
+				const cacheApiVersion = localStorage.getItem('apiVersion');
 
 				fetch(API + "/infos")
 					.then(response => response.json())
 					.then(result => {
-						let apiVer = result.version;
+						const apiVer = result.version;
 						localStorage.setItem('apiVersion', apiVer);
 						this.apiVersion = apiVer;
 					});
@@ -137,7 +137,7 @@
 				document.dispatchEvent(new CustomEvent('showChangelog'));
 			},
 			getUserData() {
-				let userData = JSON.parse(localStorage.getItem('userData'));
+				const userData = JSON.parse(localStorage.getItem('userData'));
 
 				if (userData) {
 					this.userName = userData.student.name;

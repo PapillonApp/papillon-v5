@@ -6,7 +6,6 @@
 		IonHeader,
 		IonToolbar,
 		IonList,
-		IonListHeader,
 		IonItem,
 		IonChip,
 		IonPage,
@@ -19,6 +18,8 @@
 	import GetDelays from '@/functions/fetch/GetDelays.js';
 
 	import getEDSchoollife from '@/functions/fetch/getEDSchoollife.js'
+
+	import SchoollifeAbsItemView from "./SchoollifeAbsItemView.vue"
 
 	export default defineComponent({
 		name: 'FolderPage',
@@ -109,12 +110,14 @@
 		},
 		data() {
 			return {
+				SchoollifeAbsItemView: SchoollifeAbsItemView,
 				absences: [],
 				absError: false,
 				punishments: [],
 				punishmentsError: false,
 				delays: [],
-				delaysError: false
+				delaysError: false,
+				loginService: localStorage.getItem("loginService")
 			}
 		},
 		mounted() {
@@ -184,27 +187,31 @@
 					</ion-label>
 				</ion-item>
 
-				<ion-item v-for="(miss, i) in absences" :key="i">
-					<span class="material-symbols-outlined mdls" slot="start">door_open</span>
+				<IonList v-for="(miss, i) in absences" :key="i">
+					<ion-nav-link router-direction="forward" :component="SchoollifeAbsItemView" :componentProps="{evenement1: encodeURIComponent(JSON.stringify(miss))}">
+						<IonItem button>
+							<span class="material-symbols-outlined mdls" slot="start">door_open</span>
 
-					<ion-label>
-						<h2 v-if="miss.data.reasons.length !== 0">{{ miss.data.reasons[0] }}</h2>
-						<h2 v-else>Absence non justifiée</h2>
+							<ion-label>
+								<h2 v-if="miss.data.reasons.length !== 0">{{ miss.data.reasons[0] }}</h2>
+								<h2 v-else>Absence non justifiée</h2>
 
-						<p>{{ miss.data.hours }} heures manquées</p>
+								<p>{{ miss.data.hours }} {{ this.loginService === "ecoledirecte" ? "" : "heures" }} manquées</p>
+								<h3>le {{ new Date(miss.date.from).toLocaleDateString('fr-FR', { weekday: 'long', month: 'long', day: 'numeric' }) }} à {{ new Date (miss.date.from).toLocaleDateString('fr-FR', {hour: '2-digit', minute: '2-digit'}).split(' ')[1] }}</h3>
+								<!-- <h3 v-else>le {{ new Date(miss.date.from).toLocaleDateString('fr-FR', { weekday: 'long', month: 'long', day: 'numeric' }) }} à {{  }}</h3> -->
+							</ion-label>
 
-						<h3>le {{ new Date (miss.date.from).toLocaleDateString('fr-FR', { weekday: 'long', month: 'long', day: 'numeric' }) }} à {{ new Date (miss.date.from).toLocaleDateString('fr-FR', {hour: '2-digit', minute: '2-digit'}).split(' ')[1] }}</h3>
-					</ion-label>
-
-					<ion-chip slot="end" v-if="!miss.data.isJustified" color="warning">
-						<span class="material-symbols-outlined mdls">error</span>
-						Injustifié
-					</ion-chip>
-					<ion-chip slot="end" v-else color="success">
-						<span class="material-symbols-outlined mdls">check</span>
-						Justifié
-					</ion-chip>
-				</ion-item>
+							<ion-chip slot="end" v-if="!miss.data.isJustified" color="warning">
+								<span class="material-symbols-outlined mdls">error</span>
+								Injustifié
+							</ion-chip>
+							<ion-chip slot="end" v-else color="success">
+								<span class="material-symbols-outlined mdls">check</span>
+								Justifié
+							</ion-chip>
+						</IonItem>
+					</ion-nav-link>
+				</IonList>
 			</ion-list>
 
 			<IonLabel class="listGroupTitle">
@@ -214,7 +221,7 @@
 			<ion-list class="listGroup">
 				<ion-item v-if="punishmentsError">
 					<ion-label>
-						<p>Impossible de récupérer les absences pour le moment.</p>
+						<p>Impossible de récupérer les punitions pour le moment.</p>
 					</ion-label>
 				</ion-item>
 

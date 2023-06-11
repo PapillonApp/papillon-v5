@@ -25,7 +25,7 @@ async function getPronoteRecipients(forceReload) {
 	const token = localStorage.getItem('token');
 
 	// construct url
-	let URL = `${API}/recipients?token=${token}`;
+	const URL = `${API}/recipients?token=${token}`;
 
 	// check if cached
     let recipientsCache = localStorage.getItem('RecipientsCache');
@@ -34,8 +34,8 @@ async function getPronoteRecipients(forceReload) {
         // grade is cached, check if it's up to date
         recipientsCache = JSON.parse(recipientsCache);
 
-        let today = new Date();
-        let cacheDate = new Date(recipientsCache.date);
+        const today = new Date();
+        const cacheDate = new Date(recipientsCache.date);
 
         if(today.toDateString() == cacheDate.toDateString()) {
             // grade is up to date, return it
@@ -51,8 +51,8 @@ async function getPronoteRecipients(forceReload) {
 			Recipients = response.data;
 
 			// save Recipients to localstorage cache with today's date
-            let today = new Date();
-            let recipientsCache = {
+            const today = new Date();
+            const recipientsCache = {
                 date: today,
                 Recipients: response.data
             }

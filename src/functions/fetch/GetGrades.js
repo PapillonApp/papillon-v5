@@ -33,7 +33,7 @@ function getPronoteGrades(forceReload) {
 	const token = localStorage.getItem('token');
 
 	// construct url (date is a TEST date)
-	let URL = `${API}/grades?token=${token}`;
+	const URL = `${API}/grades?token=${token}`;
 
 	// check if grade is cached
 	let gradeCache = localStorage.getItem('GradeCache');
@@ -42,8 +42,8 @@ function getPronoteGrades(forceReload) {
 		// grade is cached, check if it's up to date
 		gradeCache = JSON.parse(gradeCache);
 
-		let today = new Date();
-		let cacheDate = new Date(gradeCache.date);
+		const today = new Date();
+		const cacheDate = new Date(gradeCache.date);
 
 		if(today.toDateString() == cacheDate.toDateString()) {
 			// grade is up to date, return it
@@ -62,8 +62,8 @@ function getPronoteGrades(forceReload) {
 			}
 
 			// save grades to localstorage cache with today's date
-			let today = new Date();
-			let gradeCache = {
+			const today = new Date();
+			const gradeCache = {
 				date: today,
 				grades: response.data
 			}
@@ -90,7 +90,7 @@ function getPronoteGrades(forceReload) {
 }
 
 function determineSignificant(significant, service) {
-	let result = {
+	const result = {
 		significant: true,
 		significantReason: null,
 		significantZero: false,
@@ -181,7 +181,7 @@ function groupSubjects(subjectData, markArray) {
 		subjectId = subjectData.id;
 	} else {
 		if (localStorage.getItem('excludedGroupSubjects') != null) {
-			let excludedGroupSubjects = JSON.parse(localStorage.getItem('excludedGroupSubjects'));
+			const excludedGroupSubjects = JSON.parse(localStorage.getItem('excludedGroupSubjects'));
 			for (let i = 0; i < excludedGroupSubjects.length; i++) {
 				if (subjectData.name.split(' > ')[0] == excludedGroupSubjects[i]) {
 					excluded = true;
@@ -219,10 +219,10 @@ function groupSubjects(subjectData, markArray) {
 
 // pronote : construct grades
 function constructPronoteGrades(grades) {    
-	let averages = grades.averages;
-	let marks = grades.grades;
+	const averages = grades.averages;
+	const marks = grades.grades;
 
-	let markArray = [];
+	const markArray = [];
 
 	// order marks by date
 	marks.sort((a, b) => {
@@ -248,7 +248,7 @@ function constructPronoteGrades(grades) {
 		}
 
 		// add mark to subject
-		let newMark = {
+		const newMark = {
 			id: mark.id,
 			info: {
 				subject: subjectName,
@@ -259,7 +259,7 @@ function constructPronoteGrades(grades) {
 		}
 
 		// determine if mark is significant
-		let significant = determineSignificant(mark.grade.significant, 'pronote');
+		const significant = determineSignificant(mark.grade.significant, 'pronote');
 		newMark.info.significant = significant.significant;
 		newMark.info.significantReason = significant.significantReason;
 		newMark.info.significantZero = significant.significantZero;
@@ -312,11 +312,11 @@ function constructPronoteGrades(grades) {
 	averages.forEach(average => {
 		// check if subject exists
 		
-		let { subject, subjectName, subjectId, grouped } = groupSubjects(average.subject, markArray);
+		const { subject, subjectName, subjectId, grouped } = groupSubjects(average.subject, markArray);
 
 		if(subject == undefined) {
 			// subject doesn't exist, create it
-			subject = {
+			const subject = {
 				name: subjectName,
 				id: subjectId,
 				grouped: grouped,
@@ -327,7 +327,7 @@ function constructPronoteGrades(grades) {
 		}
 
 		// determine if average is significant
-		let significant = determineSignificant(average.significant, 'pronote');
+		const significant = determineSignificant(average.significant, 'pronote');
 		subject.significant = significant.significant;
 		subject.significantReason = significant.significantReason;
 		subject.significantZero = significant.significantZero;
@@ -358,7 +358,7 @@ function constructPronoteGrades(grades) {
 			let classMax = 0;
 
 			subject.marks.forEach(mark => {
-				let coef = mark.grade.coefficient;
+				const coef = mark.grade.coefficient;
 
 				studentAverage += mark.grade.value * coef;
 				classAverage += mark.grade.average * coef;
@@ -399,7 +399,7 @@ function constructPronoteGrades(grades) {
 		classAverage = grades.class_overall_average;
 	}
 
-	let avgs = {
+	const avgs = {
 		average: studentAverage,
 		class: {
 			average: classAverage,
@@ -414,7 +414,7 @@ function constructPronoteGrades(grades) {
 	});
 
 
-	let finalArray = {
+	const finalArray = {
 		marks: markArray,
 		averages: avgs
 	}
@@ -433,7 +433,7 @@ function getEDGrades(forceReload) {
 
 	const userID = JSON.parse(localStorage.UserCache).id;
 	// construct url (date is a TEST date)
-	let URL = `${EDAPI}/eleves/${userID}/notes.awp?verbe=get`;
+	const URL = `${EDAPI}/eleves/${userID}/notes.awp?verbe=get`;
 
 	// check if grade is cached
 	let gradeCache = localStorage.getItem('GradeCache');
@@ -442,8 +442,8 @@ function getEDGrades(forceReload) {
 		// grade is cached, check if it's up to date
 		gradeCache = JSON.parse(gradeCache);
 
-		let today = new Date();
-		let cacheDate = new Date(gradeCache.date);
+		const today = new Date();
+		const cacheDate = new Date(gradeCache.date);
 
 		if(today.toDateString() == cacheDate.toDateString()) {
 			// grade is up to date, return it
@@ -453,10 +453,10 @@ function getEDGrades(forceReload) {
 		}
 	}
 
-	var requestOptions = {
+	const requestOptions = {
 		headers: { "Content-Type": "application/x-www-form-urlencoded", "X-Token": token },            
 	};
-	let body = `data={}`
+	const body = `data={}`
 
 	// send request
 	return axios.post(URL, body, requestOptions).then((response) => {
@@ -477,8 +477,8 @@ function getEDGrades(forceReload) {
 		}
 
 		// save grades to localstorage cache with today's date
-		let today = new Date();
-		let gradeCache = {
+		const today = new Date();
+		const gradeCache = {
 			date: today,
 			grades: response.data.data
 		}
@@ -562,7 +562,7 @@ function groupEDSubjects(subjectData, markArray) {
 // ecoledirecte : construct grades
 function constructEDGrades(grades) {   
 	console.log("Building grades") 
-	let marks = grades.notes;
+	const marks = grades.notes;
 	if(!grades.periodes){
 		displayToast.presentError("Impossible de construire les notes.", "danger", "[ED] Auth failed. Essayez d'actualiser manuellement pour résoudre le problème.")
 		return {
@@ -570,20 +570,20 @@ function constructEDGrades(grades) {
 			averages: []
 		}
 	} 
-	let allPeriods = JSON.parse(localStorage.getItem('periodsCache'));
-	let actualPeriodID = allPeriods.find(period => period.actual == true).id;
-	let actualPeriod = grades.periodes.find(period => period.idPeriode == actualPeriodID);
+	const allPeriods = JSON.parse(localStorage.getItem('periodsCache'));
+	const actualPeriodID = allPeriods.find(period => period.actual == true).id;
+	const actualPeriod = grades.periodes.find(period => period.idPeriode == actualPeriodID);
 
-	let matieres = actualPeriod.ensembleMatieres.disciplines
+	const matieres = actualPeriod.ensembleMatieres.disciplines
 
-	let markArray = [];
+	const markArray = [];
 
 	// order marks by date
 	marks.sort((a, b) => {
 		return new Date(b.date) - new Date(a.date);
 	});
 	matieres.forEach(matiere => {
-		let subject = {
+		const subject = {
 			data: matiere,
 			codeMatiere: matiere.codeMatiere,
 			name: matiere.discipline,
@@ -597,12 +597,30 @@ function constructEDGrades(grades) {
 		}
 		markArray.push(subject);
 	})
-
+	let currentPeriod;
+	if(localStorage.getItem("currentPeriod")) {
+		let currentPeriodConstruct = JSON.parse(localStorage.getItem("currentPeriod"))
+		let currentPeriodConstruct1 = grades.periodes.filter(p => p.idPeriode === currentPeriodConstruct.id)
+		currentPeriod = {
+			...currentPeriodConstruct,
+			...currentPeriodConstruct1
+		}
+	}
+	else {
+		let allPeriods = JSON.parse(localStorage.getItem('userData')).periods;
+		let actualPeriod = allPeriods.find(period => period.actual == true);
+		let actualPeriod1 = grades.periodes.filter(p => p.idPeriode === actualPeriod.id)
+		currentPeriod = {
+			...actualPeriod,
+			...actualPeriod1
+		}
+	}
+	
 	// for each mark, add it to the corresponding subject in the array
 	marks.forEach(mark => {
-		if(mark.codePeriode != JSON.parse(localStorage.getItem("currentPeriod")).id) return;
+		if(mark.codePeriode != currentPeriod.id) return;
 		// add mark to subject
-		let newMark = {
+		const newMark = {
 			id: mark.id,
 			info: {
 				subject: mark.libelleMatiere,
@@ -615,7 +633,7 @@ function constructEDGrades(grades) {
 		}
 
 		// determine if mark is significant
-		let significant = determineSignificant(mark, 'ecoledirecte');
+		const significant = determineSignificant(mark, 'ecoledirecte');
 		newMark.info.significant = significant.significant;
 		newMark.info.significantReason = significant.significantReason;
 		newMark.info.significantZero = significant.significantZero;
@@ -657,7 +675,7 @@ function constructEDGrades(grades) {
 			newMark.grade.max = parseFloat(newMark.grade.max).toFixed(2);
 		}
 
-		let subject = markArray.find(matiere => matiere.codeMatiere == mark.codeMatiere)
+		const subject = markArray.find(matiere => matiere.codeMatiere == mark.codeMatiere)
 		subject.marks.push(newMark);
 	});
 	
@@ -687,7 +705,7 @@ function constructEDGrades(grades) {
 
 		} else {
 			subject.marks.forEach(mark => {
-				let coef = mark.grade.coefficient;
+				const coef = mark.grade.coefficient;
 
 				studentAverage += mark.grade.value * coef;
 				classAverage += mark.grade.average * coef;
@@ -704,14 +722,12 @@ function constructEDGrades(grades) {
 	});
 
 	// calculate averages for each subject in markArray
-	let period = grades.periodes.filter(p => p.cloture === false)
-	period = period[0]
 	
-	let studentAverage = parseFloat(period.ensembleMatieres.moyenneGenerale.replace(",", "."));
-	let classAverage = parseFloat(period.ensembleMatieres.moyenneClasse.replace(",", "."));
-	let classMin = parseFloat(period.ensembleMatieres.moyenneMin.replace(",", "."));
-	let classMax = parseFloat(period.ensembleMatieres.moyenneMax.replace(",", "."));
-	let averagesCalculate = [moment(period.ensembleMatieres.dateCalcul).format("DD/MM/YYYY"), period.ensembleMatieres.dateCalcul.split(' ')[1] ]//moment(period.ensembleMatieres.dateCalcul).format("HH:MM")]
+	let studentAverage = parseFloat(currentPeriod[0].ensembleMatieres.moyenneGenerale.replace(",", "."));
+	let classAverage = parseFloat(currentPeriod[0].ensembleMatieres.moyenneClasse.replace(",", "."));
+	let classMin = parseFloat(currentPeriod[0].ensembleMatieres.moyenneMin.replace(",", "."));
+	let classMax = parseFloat(currentPeriod[0].ensembleMatieres.moyenneMax.replace(",", "."));
+	let averagesCalculate = [moment(currentPeriod[0].ensembleMatieres.dateCalcul).format("DD/MM/YYYY"), currentPeriod[0].ensembleMatieres.dateCalcul.split(' ')[1] ]//moment(period.ensembleMatieres.dateCalcul).format("HH:MM")]
 	/*
 	markArray.forEach(subject => {
 		studentAverage += subject.average;
@@ -733,7 +749,7 @@ function constructEDGrades(grades) {
 		classAverage = grades.class_overall_average;
 	}
 */
-	let avgs = {
+	const avgs = {
 		average: studentAverage,
 		class: {
 			average: classAverage,
@@ -751,7 +767,7 @@ function constructEDGrades(grades) {
 	});
 
 
-	let finalArray = {
+	const finalArray = {
 		marks: markArray,
 		averages: avgs
 	}

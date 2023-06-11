@@ -1,6 +1,6 @@
 <script>
 import { defineComponent } from 'vue';
-import { IonHeader, IonContent, IonList, IonToggle, IonToolbar, IonTitle, IonButtons, IonLabel, IonItem, IonBackButton, IonItemOption, IonItemOptions, IonItemSliding, IonChip} from '@ionic/vue';
+import { IonHeader, IonContent, IonList, IonToolbar, IonTitle, IonButtons, IonLabel, IonItem, IonBackButton, IonItemOption, IonItemOptions, IonItemSliding, IonChip} from '@ionic/vue';
 import hapticsController from '@/functions/utils/hapticsController.js';
 
 export default defineComponent({
@@ -28,7 +28,7 @@ export default defineComponent({
             this.SubjectColors = localStorage.getItem('SubjectColors') ? JSON.parse(localStorage.getItem('SubjectColors')) : [];
         },
         deleteSubject(subject) {
-            let subjectColors = JSON.parse(localStorage.getItem('SubjectColors'));
+            const subjectColors = JSON.parse(localStorage.getItem('SubjectColors'));
             delete subjectColors[subject];
             localStorage.setItem('SubjectColors', JSON.stringify(subjectColors));
             
@@ -36,8 +36,8 @@ export default defineComponent({
             this.refreshColors();
         },
         inputColor(e, subject) {
-            let newColor = e.target.value;
-            let subjectColors = JSON.parse(localStorage.getItem('SubjectColors'));
+            const newColor = e.target.value;
+            const subjectColors = JSON.parse(localStorage.getItem('SubjectColors'));
 
             subjectColors[subject] = newColor;
             localStorage.setItem('SubjectColors', JSON.stringify(subjectColors));
@@ -46,10 +46,10 @@ export default defineComponent({
             this.refreshColors();
         },
         contrastCheck(hex) {
-            let r = parseInt(hex.substr(1, 2), 16);
-            let g = parseInt(hex.substr(3, 2), 16);
-            let b = parseInt(hex.substr(5, 2), 16);
-            let yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+            const r = parseInt(hex.substr(1, 2), 16);
+            const g = parseInt(hex.substr(3, 2), 16);
+            const b = parseInt(hex.substr(5, 2), 16);
+            const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
 
             return (yiq >= 180) ? 'black' : 'white';
         }
