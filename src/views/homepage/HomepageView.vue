@@ -1029,6 +1029,7 @@ export default defineComponent({
 
 .nextCours .timeChip ion-chip {
 	font-weight: 500;
+	padding-top: 1px;
 }
 
 .nextCours .progression {
@@ -1077,21 +1078,16 @@ export default defineComponent({
 }
 
 .nextStatus {
-	width: calc(100% - 12px * 2);
+	width: 100%;
 	background: var(--courseColor) !important;
 
 	display: flex;
 	align-items: center;
 	gap: 12px;
 
-	margin: 0px 12px;
 	padding: 8px 24px;
 
-	margin-top: -11px;
-	margin-bottom: 10px;
 	color: #fff;
-
-	border-radius: 0 0 12px 12px !important;
 }
 
 .nextStatus * {
@@ -1105,6 +1101,7 @@ export default defineComponent({
 .nextStatus p {
 	font-size: 15px;
 	font-weight: 500;
+	font-family: var(--papillon-font);
 }
 
 .nextStatus.cancelled {
