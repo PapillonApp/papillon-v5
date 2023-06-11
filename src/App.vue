@@ -276,6 +276,7 @@ export default defineComponent({
 	},
 	methods: {
 		checkAndroidShortcuts() {
+			/*
 			AndroidShortcuts.isDynamicSupported().then((result) => {
 				if (result) {
 					AndroidShortcuts.addListener('shortcut', (response: any) => {
@@ -295,6 +296,8 @@ export default defineComponent({
 					});
 				}
 			})
+			*/
+			return false;
 		},
 		async notify(title: string, body: string) {
 			LocalNotifications.schedule({
