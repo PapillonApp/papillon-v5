@@ -473,7 +473,7 @@
 							<h2>{{rooms || "Pas de salle" }}</h2>
 						</ion-label>
 					</ion-item>
-					<ion-item class="info-item" v-if="groupNames">
+					<ion-item class="info-item" v-if="disableShowGroup == 'true' && groupNames.length">
 						<span class="material-symbols-outlined mdls" slot="start">groups</span>
 						<ion-label>
 							<p>Groupe</p>
