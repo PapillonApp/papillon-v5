@@ -386,7 +386,7 @@
 				this.teachers = parsed.data.teachers.join(', ');
 				this.rooms = parsed.data.rooms.join(', ');
 				this.groupNames = parsed.data.groupNames.join(', ');
-				this.groupNames = this.groupNames.startsWith("[") ? this.groupNames.slice(1, -1).replace(/_/g, ' ') : this.groupNames.replace(/_/g, ' ')
+				this.groupNames = this.groupNames.startsWith("[") ? groupNames.slice(1, -1).replace(/_/g, ' ').replace(/],\s*\[/g, ', ') : groupNames.replace(/_/g, ' ')
 
 				this.pageTitle = this.openCours_data.subject;
 
