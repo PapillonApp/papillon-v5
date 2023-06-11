@@ -93,6 +93,7 @@ begin
       skip_upload_apk: true,
       json_key: ENV['PLAY_CREDENTIALS_JSON']
     )
+  end
 
   lane :test do
     desc("Build and deploy for test (Android) | It doesn't send app to play store")
