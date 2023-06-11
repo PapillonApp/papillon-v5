@@ -14,6 +14,9 @@ Please check if your PR fulfills the following requirements:
 - [ ] Details of the issue or feature are documented below
 - [ ] This PR is **not** a **breaking change** (e.g. changes that would cause existing functionality to change)
 
+## Explain changes
+
+
 ## Proposed changelog
 
 | Français `fr` |
