@@ -1,6 +1,6 @@
 <script>
 	import { defineComponent } from 'vue';
-	import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonLabel, IonItem, IonNavLink, IonRefresher, IonRefresherContent, IonCheckbox, IonButton, IonModal, IonDatetime, alertController } from '@ionic/vue';
+	import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonLabel, IonItem, IonNavLink, IonRefresher, IonRefresherContent, IonCheckbox, IonButton, IonModal, IonFab, IonDatetime, alertController } from '@ionic/vue';
 
     import { alertCircle } from 'ionicons/icons';
 
@@ -37,7 +37,8 @@
             IonDatetime,
             IonItem,
             IonLabel,
-            IonNavLink
+            IonNavLink,
+            IonFab
 		},
 		setup() {
 			return { 
@@ -401,12 +402,16 @@
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
 
-            <div id="noTouchZone"></div>
-            <IonFab slot="fixed" vertical="bottom" horizontal="end" class="newCoursBtnFab">
-				<ion-button @click="addHomework($event)" size="large" shape="round" class="newCoursBtn" mode="md" aria-label="Ajouter un devoir">
+            <IonFab slot="fixed" vertical="bottom" horizontal="end" class="newHomeworksBtnFab">
+				<ion-button @click="addHomework($event)" size="large" shape="round" class="newHomeworksBtn" mode="md" aria-label="Ajouter un devoir">
 					<span class="material-symbols-outlined mdls" slot="icon-only">add</span>
 				</ion-button>
 			</IonFab>
+
+
+
+            <div id="noTouchZone"></div>
+
             <swiper class="swiper" ref="swiper" :modules="[Virtual]" virtual :initialSlide="baseIndex" :speed="200" :spaceBetween="10" :preventClicks="true">
                 <swiper-slide class="slide"
                 v-for="(slideContent, index) in slides"
@@ -600,6 +605,11 @@
         border: 1px solid var(--ion-color-step-100) !important;
         --background: transparent !important;
     }
+
+    .newHomeworksBtn {
+		width: 56px;
+		height: 56px;
+	}
 
     .ios .hwListItem.add ion-item::part(native) {
         border-radius: 12px !important;
