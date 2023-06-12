@@ -511,10 +511,13 @@
 			isChangingDate: false,
 			isLoading: true,
 			swiper: null,
+			loaded: false,
 		}
 	},
 	mounted() {
 		this.swiper = this.$refs.swiper.$el.swiper;
+
+		this.loaded = true;
 		
 		// sets presentingElement
 		this.presentingElement = this.$refs.pageHere.$el;
@@ -618,36 +621,42 @@
 				:virtualIndex="index"
 				>
 				<IonList>
-					<IonNavLink v-for="cours in days[`${index}`]" :key="cours.id" router-direction="forward" :component="CoursView" :componentProps="{urlCours: encodeURIComponent(JSON.stringify(cours))}">
-						<CoursElement
-							:subject="cours.data.subject"
-							:teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
-							:rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
-							:groupNames="cours.data.groupNames.join(', ') || null"
-							:memo="cours.data.hasMemo"
-							:start="cours.time.start"
-							:end="cours.time.end"
-							:color="cours.course.color"
-							:sameTime="cours.course.sameTime"
-							:status="cours.status.status"
-							:isCancelled="cours.status.isCancelled"
-							:isDetention="cours.status.isDetention"
-							:isExempted="cours.status.isExempted"
-							:isOuting="cours.status.isOuting"
-							:isTest="cours.status.isTest"
-							:distance="cours.course.distance"
-							:lengthCours="cours.course.lengthCours"
-						/>
-					</IonNavLink>
+					<transition-group name="CoursAnim" tag="div" id="DayData">
+						<div v-if="currentIndex == index && loaded && days[index].length > 0">
+							<IonNavLink v-for="cours in days[`${index}`]" :key="cours.id" router-direction="forward" :component="CoursView" :componentProps="{urlCours: encodeURIComponent(JSON.stringify(cours))}">
+								<CoursElement
+									:subject="cours.data.subject"
+									:teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
+									:rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
+									:groupNames="cours.data.groupNames.join(', ') || null"
+									:memo="cours.data.hasMemo"
+									:start="cours.time.start"
+									:end="cours.time.end"
+									:color="cours.course.color"
+									:sameTime="cours.course.sameTime"
+									:status="cours.status.status"
+									:isCancelled="cours.status.isCancelled"
+									:isDetention="cours.status.isDetention"
+									:isExempted="cours.status.isExempted"
+									:isOuting="cours.status.isOuting"
+									:isTest="cours.status.isTest"
+									:distance="cours.course.distance"
+									:lengthCours="cours.course.lengthCours"
+								/>
+							</IonNavLink>
+						</div>
+					</transition-group>
 
 						<div v-if="days[`${index}`]">
-							<div class="NoCours" v-if="days[`${index}`].length == 0 && !days[`${index}`].error && !days[`${index}`].loading">
-								<h1>😌</h1>
-								<h2>Aucun cours aujourd'hui</h2>
-								<p>Sélectionnez un autre jour dans le calendrier ou balayez l’écran pour changer de journée.</p>
+							<Transition name="CoursAnim">
+								<div class="NoCours" v-if="days[`${index}`].length == 0 && !days[`${index}`].error && !days[`${index}`].loading && currentIndex == index && loaded">
+									<h1>😌</h1>
+									<h2>Aucun cours aujourd'hui</h2>
+									<p>Sélectionnez un autre jour dans le calendrier ou balayez l’écran pour changer de journée.</p>
 
-								<ion-button mode="md" fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
-							</div>
+									<ion-button mode="md" fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
+								</div>
+							</Transition>
 
 							<div class="NoCours" v-if="days[`${index}`].length == 0 && days[`${index}`].error == 'ERR_NETWORK' && !days[`${index}`].loading && !connected">
 								<h1>🌏</h1>

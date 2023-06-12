@@ -506,7 +506,7 @@
 				</ion-card>
 			</div> -->
 
-			<transition-group name="ElemAnim" tag="div" id="NotesData">
+			<transition-group name="CoursAnimLower" tag="div" id="NotesData">
 				<ion-item v-if="loginService === 'ecoledirecte'">
 					<div class="alphaMessage">
 						<span class="material-symbols-outlined mdls icon">warning</span>

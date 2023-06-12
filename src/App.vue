@@ -491,12 +491,18 @@ export default defineComponent({
 			const enteringAnimation = createAnimation()
 				.addElement(opts.enteringEl)
 				.fromTo('opacity', 0, 1)
-				.duration(100);
+				.fromTo('transform', 'scale(0.9)', 'scale(1)')
+				.fromTo('filter', 'blur(15px)', 'blur(0px)')
+				.easing('cubic-bezier(.66,-0.01,0,1)')
+				.duration(400);
 
 			const leavingAnimation = createAnimation()
 				.addElement(opts.leavingEl)
 				.fromTo('opacity', 1, 0)
-				.duration(100);
+				.fromTo('transform', 'scale(1)', 'scale(1.05)')
+				.fromTo('filter', 'blur(0px)', 'blur(15px)')
+				.easing('cubic-bezier(1,0,1,.99)')
+				.duration(200);
 
 			const animation = createAnimation()
 				.addAnimation(enteringAnimation)
@@ -1072,7 +1078,7 @@ a:not(.selected) ion-menu-toggle ion-item:hover {
 
 .fade-enter,
 .fade-leave-active {
-	opacity: 0
+	opacity: 0;
 }
 
 /* updates */

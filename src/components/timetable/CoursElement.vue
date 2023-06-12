@@ -250,8 +250,8 @@
 	<div class="dist" v-if="distance && !sameTime"></div>
 	<div :class="classes + isCancelled" :style="`--backgroundColor: ${color};`" v-if="!sameTime" @click="openCours()">
 		<div class="CoursTime">
-			<p class="start">{{ start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</p>
-			<p class="end">{{ end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</p>
+			<a class="text start">{{ start.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</a>
+			<a class="text end">{{ end.toLocaleString('fr-FR', { hour: '2-digit', minute: '2-digit' }) }}</a>
 		</div>
 		<div class="cours">
 			<ion-ripple-effect></ion-ripple-effect>
@@ -262,20 +262,20 @@
 
 			<ion-label>
 				<div class="CoursData">
-					<h3 class="CoursName">{{ subject }}</h3>
+					<a class="text CoursName">{{ subject }}</a>
 
 					<div>
 						<div class="CoursInfoContainer">
 							<div class="CoursInfo room" v-if="rooms !== null">
 								<span class="material-symbols-outlined smol" slot="start">location_on</span>
 
-								<p>{{ rooms }}</p>
+								<a class="text">{{ rooms }}</a>
 							</div>
 							<div class="separator" v-if="rooms !== null"></div>
 							<div class="CoursInfo">
 								<span class="material-symbols-outlined smol" slot="start">face</span>
 
-								<p>{{ teachers }}</p>
+								<a class="text">{{ teachers }}</a>
 							</div>
 						</div>
 
@@ -283,32 +283,32 @@
 							<div class="CoursInfo">
 								<span class="material-symbols-outlined smol" slot="start">groups</span>
 
-								<p>{{ groupNames.replace(/[[\]]/g, '').replace(/_/g, ' ') }}</p>
+								<a class="text">{{ groupNames.replace(/[[\]]/g, '').replace(/_/g, ' ') }}</a>
 							</div>
 						</div>
 					</div>
 
-					<p class="CoursInfo Status" v-if="status">
+					<a class="text CoursInfo Status" v-if="status">
 						<span v-if="!isCancelled" class="material-symbols-outlined smol" slot="start">info</span>
 						<span v-if="isCancelled" class="material-symbols-outlined smol" slot="start">error</span>
 
 						{{ status }}
-					</p>
+					</a>
 
-					<p class="CoursInfo Status" v-if="isTest">
+					<a class="text CoursInfo Status" v-if="isTest">
 						<span class="material-symbols-outlined smol" slot="start">quiz</span>
 						Vous avez un contrôle
-					</p>
+					</a>
 
-					<p class="CoursInfo Status" v-if="isOuting">
+					<a class="text CoursInfo Status" v-if="isOuting">
 						<span class="material-symbols-outlined smol" slot="start">directions_walk</span>
 						Sortie scolaire
-					</p>
+					</a>
 
-					<p class="CoursInfo Status" v-if="memo">
+					<a class="text CoursInfo Status" v-if="memo">
 						<span class="material-symbols-outlined smol" slot="start">sticky_note_2</span>
 						Contient un mémo
-					</p>
+					</a>
 				</div>
 			</ion-label>
 		</div>
@@ -419,6 +419,8 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		width: calc(100vw - 145px);
+		font-family: var(--papillon-font);
+		margin-bottom: 4px;
 	}
 
 	.light .cours {
@@ -501,10 +503,15 @@
 		filter: brightness(1);
 	}
 
-	.CoursInfo p {
+	a.text {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	.CoursInfo .text {
 		font-family: var(--papillon-font) !important;
 		font-size: 16px;
-		line-height: 16px;
+		line-height: 18px;
 	}
 
 	.CoursInfo span {

@@ -417,34 +417,40 @@
                 v-for="(slideContent, index) in slides"
                 :key="index"
                 :virtualIndex="index">
-                    <IonList v-for="homework in days[`${index}`]" :key="homework.id" inset class="hwListItem">
-                        <IonItem button >
-                            <div slot="start">
-                                <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
-                            </div>
-                            
-                            <IonNavLink class="navLink"  router-direction="forward" :component="HomeworkItemView" :componentProps="{urlHw: encodeURIComponent(JSON.stringify(homework))}">
-                                <IonLabel :style="`--courseColor: ${homework.data.color};`" class="ion-text-wrap">
-                                    <p><span class="courseColor"></span> {{ homework.homework.subject }}</p>
-                                    <h5 v-if="isED()" v-html="homework.homework.shortContent" class="hwContent"></h5>
-                                    <h5 v-else class="hwContent">{{ homework.homework.shortContent }}</h5>
+                    <transition-group name="CoursAnim" tag="div" id="DayData">
+                        <div v-if="currentIndex == index && days[index].length > 0">
+                            <IonList v-for="homework in days[`${index}`]" :key="homework.id" inset class="hwListItem">
+                                <IonItem button >
+                                    <div slot="start">
+                                        <ion-checkbox :id="`checkbox_${homework.data.id}`" :checked="homework.data.done" @ionChange="changeDone(homework)"></ion-checkbox>
+                                    </div>
+                                    
+                                    <IonNavLink class="navLink"  router-direction="forward" :component="HomeworkItemView" :componentProps="{urlHw: encodeURIComponent(JSON.stringify(homework))}">
+                                        <IonLabel :style="`--courseColor: ${homework.data.color};`" class="ion-text-wrap">
+                                            <p><span class="courseColor"></span> {{ homework.homework.subject }}</p>
+                                            <h5 v-if="isED()" v-html="homework.homework.shortContent" class="hwContent"></h5>
+                                            <h5 v-else class="hwContent">{{ homework.homework.shortContent }}</h5>
 
-                                    <p v-if="homework.files.length > 0">
-                                        <span>{{ homework.files[0].name }}</span>
-                                    </p>
-                                </IonLabel>
-                            </IonNavLink>
-                        </IonItem>
-                    </IonList>
+                                            <p v-if="homework.files.length > 0">
+                                                <span>{{ homework.files[0].name }}</span>
+                                            </p>
+                                        </IonLabel>
+                                    </IonNavLink>
+                                </IonItem>
+                            </IonList>
+                        </div>
+                    </transition-group>
 
                     <div v-if="days[`${index}`]">
-                        <div class="NoCours" v-if="days[`${index}`].length == 0 && !days[`${index}`].error && !days[`${index}`].loading">
-                            <h1>😎</h1>
-                            <h2>Aucun devoir pour ce jour</h2>
-                            <p>Sélectionnez un autre jour dans le calendrier ou balayez l’écran pour changer de journée.</p>
+                        <Transition name="CoursAnim">
+                            <div class="NoCours" v-if="days[`${index}`].length == 0 && !days[`${index}`].error && !days[`${index}`].loading && currentIndex == index">
+                                <h1>😎</h1>
+                                <h2>Aucun devoir pour ce jour</h2>
+                                <p>Sélectionnez un autre jour dans le calendrier ou balayez l’écran pour changer de journée.</p>
 
-                            <ion-button mode="md" fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
-                        </div>
+                                <ion-button mode="md" fill="clear" @click="changernPickerModalOpen(true)" class="changeDayButton">Ouvrir le calendrier</ion-button>
+                            </div>
+                        </Transition>
 
                         <div class="NoCours" v-if="days[`${index}`].length == 0 && days[`${index}`].error == 'ERR_NETWORK' && !days[`${index}`].loading && !connected">
                             <h1>🌏</h1>

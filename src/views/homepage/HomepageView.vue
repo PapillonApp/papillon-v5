@@ -335,7 +335,7 @@ export default defineComponent({
 				this.showLoading = false;
 			}, this.fakeTime);
 
-			this.fakeTime = 0;
+			this.fakeTime = 100;
 
 			// timetable
 			const timetable = recap.timetable;
