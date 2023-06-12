@@ -68,6 +68,11 @@ ion-content::part(scroll) {
     right: 16px;
 }
 
+.newHomeworksBtnFab {
+    bottom: calc(20px + var(--ion-safe-area-bottom) * 0.8) !important;
+    right: 16px;
+}
+
 ion-list-header ion-button {
     margin-top: 1px !important;
 }
