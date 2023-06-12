@@ -201,7 +201,7 @@ Contient **${this.logs.length}** logs
 
 **Voir les logs** : *${link}*
 > NB. Les logs sont supprimés après 48h de nos serveurs.`,
-						dialogTitle: 'Partager les logs sur Github ou Discord à l\'équipe de développement'
+						dialogTitle: 'Partager les logs sur GitHub ou Discord à l\'équipe de développement'
 					});
 				}
 				catch (e) {
