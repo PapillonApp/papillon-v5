@@ -1060,6 +1060,11 @@
 		padding: 0;
 	}
 
+	#selectionMode {
+		height: 32px;
+		padding-right: 2px !important;
+	}
+
 	#selectionMode * {
 		margin: 0;
 	}
