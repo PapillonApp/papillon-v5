@@ -545,6 +545,24 @@ ion-alert.md .btn_secondary {
     margin: 5px 16px;
 }
 
+.ElemScale-enter-active {
+    transition: 0.2s cubic-bezier(.5,0,0,1);
+}
+
+.ElemScale-leave-active {
+    transition: 0.2s cubic-bezier(.5,0,0,1);
+}
+
+.ElemScale-enter-from, .ElemScale-leave-to {
+    opacity: 0;
+    transform: scale(0.7);
+
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+}
+
 /* links */
 a.inherit {
     color: inherit;

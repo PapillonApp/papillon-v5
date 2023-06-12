@@ -445,7 +445,9 @@
 						</ion-select>
 					</div>
 
-					<ion-spinner v-if="isLoading"></ion-spinner>
+					<Transition name="ElemScale">
+						<ion-spinner v-if="isLoading"></ion-spinner>
+					</Transition>
 				</ion-buttons>
 			</IonToolbar>
 			<IonToolbar v-if="md">
