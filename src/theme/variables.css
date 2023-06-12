@@ -209,6 +209,10 @@ http://ionicframework.com/docs/theming/ */
   
 	  --ion-toolbar-background: #ffffff !important;
 	}
+
+	.ios body.light {
+		--ion-background-color: #F2F1F6;
+	}
 	
   body {
 	  --ion-item-background: var(--ion-background-color);
