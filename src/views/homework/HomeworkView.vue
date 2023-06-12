@@ -1,6 +1,6 @@
 <script>
 	import { defineComponent } from 'vue';
-	import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonLabel, IonItem, IonNavLink, IonRefresher, IonRefresherContent, IonCheckbox, IonButton, IonModal, IonDatetime, alertController } from '@ionic/vue';
+	import { IonHeader, IonContent, IonToolbar, IonTitle, IonMenuButton, IonPage, IonButtons, IonList, IonLabel, IonItem, IonNavLink, IonRefresher, IonRefresherContent, IonCheckbox, IonButton, IonModal, IonFab, IonDatetime, alertController } from '@ionic/vue';
 
     import { alertCircle } from 'ionicons/icons';
 
@@ -37,7 +37,8 @@
             IonDatetime,
             IonItem,
             IonLabel,
-            IonNavLink
+            IonNavLink,
+            IonFab
 		},
 		setup() {
 			return { 
@@ -57,9 +58,9 @@
                 HomeworkItemView: HomeworkItemView,
 				slides,
                 currentIndex: this.baseIndex,
-                rnButtonString2: this.createDateString(this.$rn),
-                loadedrnButtonString2: this.createDateString(this.$rn),
-                rnCalendarString2: this.$rn.toISOString().split('T')[0],
+                rnButtonString: this.createDateString(this.$rn),
+                loadedrnButtonString: this.createDateString(this.$rn),
+                rnCalendarString: this.$rn.toISOString().split('T')[0],
                 days: [],
                 connected: false,
                 shouldResetSwiper: false,
@@ -171,23 +172,23 @@
                     const indexDiff = this.baseIndex - index;
 
                     // get rn
-                    let selectedRN2 = new Date(this.baseRn);
+                    let selectedRN = new Date(this.baseRn);
 
                     if(goTo) {
-                        selectedRN2 = new Date(this.$rn);
+                        selectedRN = new Date(this.$rn);
                     }
 
-                    selectedRN2.setDate(selectedRN2.getDate() - indexDiff);
+                    selectedRN.setDate(selectedRN.getDate() - indexDiff);
 
                     // if i is 1
                     if(i == 1) {
-                        this.$rn = selectedRN2;
-                        this.rnButtonString2 = this.createDateString(this.$rn);
-                        this.rnCalendarString2 = this.$rn.toISOString().split('T')[0];
+                        this.$rn = selectedRN;
+                        this.rnButtonString = this.createDateString(this.$rn);
+                        this.rnCalendarString = this.$rn.toISOString().split('T')[0];
                     }
 
                     // get homeworks for rn
-                    GetHomeworks(selectedRN2, selectedRN2, force).then((homeworks) => {
+                    GetHomeworks(selectedRN, selectedRN, force).then((homeworks) => {
                         if(i == 2) {
                             clearTimeout(startloading);
                             this.isLoading = false;
@@ -212,7 +213,7 @@
                         }
                         else {
                             this.days[index] = this.editHomeworks(homeworks);
-                            this.loadedrnButtonString2 = this.createDateString(this.$rn);
+                            this.loadedrnButtonString = this.createDateString(this.$rn);
                             if(this.days[index]) {
                                 this.days[index].loading = false;
                             }
@@ -226,11 +227,8 @@
                     // set homework to edit
                     const homework = homeworks[i];
 
-                    // if homeworks[i].homework.shortContent exists
-                    if(homework.homework.shortContent) {
-                        // remove <br/> tags from homework.homework.shortContent
-                        homeworks[i].homework.shortContent = homework.homework.shortContent.replace(/[<]br[^>]*[>]/gi,"");
-                    }
+                    // remove <br/> tags from homework.homework.content
+                    homeworks[i].homework.shortContent = homework.homework.shortContent.replace(/[<]br[^>]*[>]/gi,"");
                 }
 
                 // set homeworks to edit
@@ -340,7 +338,7 @@
             this.swiper = this.$refs.swiper.$el.swiper;
 
             document.addEventListener('rnChanged', (e) => {
-                this.rnButtonString2 = this.createDateString(e.detail);
+                this.rnButtonString = this.createDateString(e.detail);
                 this.getHomeworks(false, e.detail);
             });
 
@@ -382,7 +380,7 @@
                     <ion-button id="rnPickerModalButton" color="dark" @click="changernPickerModalOpen(true)">
                     <span class="material-symbols-outlined mdls" slot="start">calendar_month</span>
 
-                    <p>{{ rnButtonString2 }}</p>
+                    <p>{{ rnButtonString }}</p>
                     </ion-button>
                 </ion-buttons>
 
@@ -403,6 +401,14 @@
             <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
                 <ion-refresher-content></ion-refresher-content>
             </ion-refresher>
+
+            <IonFab slot="fixed" vertical="bottom" horizontal="end" class="newHomeworksBtnFab">
+				<ion-button @click="addHomework($event)" size="large" shape="round" class="newHomeworksBtn" mode="md" aria-label="Ajouter un devoir">
+					<span class="material-symbols-outlined mdls" slot="icon-only">add</span>
+				</ion-button>
+			</IonFab>
+
+
 
             <div id="noTouchZone"></div>
 
@@ -458,18 +464,6 @@
                         </div>
                     </div>
 
-                    <IonList inset class="hwListItem add">
-                        <IonItem button detail="false" @click="addHomework($event)">
-                            <span class="material-symbols-outlined mdls" slot="start">add</span>
-                            <IonNavLink class="navLink" router-direction="forward" :component="AddHomeworkView">
-                                <IonLabel>
-                                    <h2>Ajouter un devoir</h2>
-                                    <p>Ajouter un devoir manuellement</p>
-                                </IonLabel>
-                            </IonNavLink>
-                        </IonItem>
-                    </IonList>
-
                 </swiper-slide>
             </swiper>
 
@@ -488,7 +482,7 @@
                         presentation="date"
                         ref="rnInput"
                         size="cover"
-                        :value="rnCalendarString2"
+                        :value="rnCalendarString"
                         :firstDayOfWeek="1"
                         :min="minDate"
                         :max="maxDate"
@@ -611,6 +605,11 @@
         border: 1px solid var(--ion-color-step-100) !important;
         --background: transparent !important;
     }
+
+    .newHomeworksBtn {
+		width: 56px;
+		height: 56px;
+	}
 
     .ios .hwListItem.add ion-item::part(native) {
         border-radius: 12px !important;
