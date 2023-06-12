@@ -46,7 +46,7 @@ PODS:
     - Capacitor
   - CapawesomeCapacitorFilePicker (5.0.0):
     - Capacitor
-  - MauricewegnerCapacitorNavigationBar (2.0.1):
+  - MauricewegnerCapacitorNavigationBar (2.0.3):
     - Capacitor
   - TransistorsoftCapacitorBackgroundFetch (5.0.0):
     - Capacitor
@@ -158,7 +158,7 @@ SPEC CHECKSUMS:
   CapacitorStatusBar: 48f2899f6846cc7d8431b251ebfc58e1c10e3d58
   CapacitorToast: d785c9169585b9267b8392094298de7cb0eaa16e
   CapawesomeCapacitorFilePicker: ec211560d209c2efa0e47dad3308bf497e6ce388
-  MauricewegnerCapacitorNavigationBar: c75121f82d02082c261dafab0cccc0cc91cf5001
+  MauricewegnerCapacitorNavigationBar: 37f1308a961a8d8cd00f6362e30bad03a73728f7
   TransistorsoftCapacitorBackgroundFetch: 88c994671b9a6e9b0a9106a173d96c095be8bcc2
 
 PODFILE CHECKSUM: a15ca2e1bd79dcf829b3ad4ef28ced5041d2f021
