@@ -254,7 +254,7 @@
 
 			// check if cours is valid
 			if(stValue == "" || this.$refs.newCoursEndRef.$el.value == "" || this.$refs.newCoursNameRef.$el.value == "" || this.$refs.newCoursTeacherRef.$el.value == "" || this.$refs.newCoursRoomRef.$el.value == "") {
-				displayToast.presentError("Veuillez remplir tous les champs", "danger", "Tous les champs sont obligatoires");
+				displayToast.presentError("Veuillez remplir tous les champs", "danger", "Tous les champs sont obligatoires à l'exception du groupe");
 				return;
 			}
 
@@ -274,7 +274,7 @@
 					subject: this.$refs.newCoursNameRef.$el.value,
 					teachers: [this.$refs.newCoursTeacherRef.$el.value],
 					rooms: [this.$refs.newCoursRoomRef.$el.value],
-					groupNames: [],
+					groupNames: [this.$refs.newCoursGroupRef.$el.value],
 					memo: null,
 					hasMemo: false,
 					linkVirtual: null,
@@ -623,7 +623,7 @@
 							:subject="cours.data.subject"
 							:teachers="cours.data.teachers.join(', ') || 'Pas de professeur'"
 							:rooms="cours.data.rooms.join(', ') || 'Pas de salle'"
-							:groupNames="cours.data.groupNames.join('') || null"
+							:groupNames="cours.data.groupNames.join(', ') || null"
 							:memo="cours.data.hasMemo"
 							:start="cours.time.start"
 							:end="cours.time.end"
@@ -677,16 +677,19 @@
 							<ion-button @click="setNewCoursModalOpen(false)">Annuler</ion-button>
 						</ion-buttons>
 
-						<ion-title>
-							<ion-input type="text" name="CourseTitle" ref="newCoursNameRef" placeholder="Nom du cours"></ion-input>
-						</ion-title>
-
 						<ion-buttons slot="end">
 							<ion-button @click="addNewCours()" color="primary">Ajouter</ion-button>
 						</ion-buttons>
 					</IonToolbar>
 				</IonHeader>
 				<ion-content>
+					<ion-list inset>
+						<ion-item class="textInput">
+							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:15px">school</span>
+							<ion-input type="text" name="CourseTitle" ref="newCoursNameRef" placeholder="Nom du cours"></ion-input>
+						</ion-item>
+					</ion-list>
+
 					<ion-list inset>
 						<ion-item class="textInput">
 							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:15px">location_on</span>
@@ -696,6 +699,11 @@
 						<ion-item class="textInput">
 							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:15px">face</span>
 							<ion-input type="text" name="Person" ref="newCoursTeacherRef" placeholder="Professeur"></ion-input>
+						</ion-item>
+
+						<ion-item class="textInput">
+							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:15px">groups</span>
+							<ion-input type="text" name="Group" ref="newCoursGroupRef" placeholder="Groupe (optionnel)"></ion-input>
 						</ion-item>
 					</ion-list>
 

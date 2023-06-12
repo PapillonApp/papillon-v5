@@ -283,7 +283,7 @@
 							<div class="CoursInfo">
 								<span class="material-symbols-outlined smol" slot="start">groups</span>
 
-								<p>{{ groupNames.startsWith("[") ? groupNames.slice(1, -1).replace(/_/g, ' ') : groupNames.replace(/_/g, ' ') }}</p>
+								<p>{{ groupNames.replace(/[[\]]/g, '').replace(/_/g, ' ') }}</p>
 							</div>
 						</div>
 					</div>
@@ -486,7 +486,6 @@
 		opacity: 0.7;
 
 		width: fit-content;
-		max-width: 55%;
 
 		overflow: hidden;
 		text-overflow: ellipsis;
