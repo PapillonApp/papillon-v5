@@ -254,7 +254,7 @@
 
 			// check if cours is valid
 			if(stValue == "" || this.$refs.newCoursEndRef.$el.value == "" || this.$refs.newCoursNameRef.$el.value == "" || this.$refs.newCoursTeacherRef.$el.value == "" || this.$refs.newCoursRoomRef.$el.value == "") {
-				displayToast.presentError("Veuillez remplir tous les champs", "danger", "Tous les champs sont obligatoires");
+				displayToast.presentError("Veuillez remplir tous les champs", "danger", "Tous les champs sont obligatoires à l'exception du groupe");
 				return;
 			}
 
@@ -274,7 +274,7 @@
 					subject: this.$refs.newCoursNameRef.$el.value,
 					teachers: [this.$refs.newCoursTeacherRef.$el.value],
 					rooms: [this.$refs.newCoursRoomRef.$el.value],
-					groupNames: [],
+					groupNames: [this.$refs.newCoursGroupRef.$el.value],
 					memo: null,
 					hasMemo: false,
 					linkVirtual: null,
@@ -696,6 +696,11 @@
 						<ion-item class="textInput">
 							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:15px">face</span>
 							<ion-input type="text" name="Person" ref="newCoursTeacherRef" placeholder="Professeur"></ion-input>
+						</ion-item>
+
+						<ion-item class="textInput">
+							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:15px">groups</span>
+							<ion-input type="text" name="Group" ref="newCoursGroupRef" placeholder="Groupe (optionnel)"></ion-input>
 						</ion-item>
 					</ion-list>
 
