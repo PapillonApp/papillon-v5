@@ -1,10 +1,9 @@
 <br/>
 <p align="center">
   <a href="https://github.com/PapillonApp/Papillon">
-    <img src="https://i.ibb.co/BL8qgJQ/image.png" alt="Logo" width="80" height="80">
+    <img src="https://i.ibb.co/BL8qgJQ/image.png" alt="Logo" width="96" height="96">
   </a>
-
-  <h3 align="center">Papillon — Votre vie scolaire</h3>
+  <h1 align="center">Papillon — Votre vie scolaire</h1>
 
   <p align="center">
     Your timetable, homeworks, grades, news and more in a fresh new UI for any French school service.
