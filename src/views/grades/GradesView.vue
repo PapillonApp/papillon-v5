@@ -1014,6 +1014,13 @@
 		background: var(--ion-color-step-50);
 	}
 
+	@media screen and (min-width: 900px) {
+		#NotesData {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
 	.ios .gradeItem {
 		--border-color: var(--ion-color-step-150);
 	}
