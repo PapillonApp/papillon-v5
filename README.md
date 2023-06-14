@@ -10,9 +10,6 @@
     <br/>
     <br/>
     <a href="https://docs.getpapillon.xyz/"><strong>Voir la documentation »</strong></a><br><br>
-  <a href="https://github.com/PapillonApp/Papillon/README_EN.md">
-    <img src="https://emojigraph.org/media/facebook/flag-united-kingdom_1f1ec-1f1e7.png" alt="English flag" width="48" height="48">
-  	  Documentation in English<a/>
   </p>
 
   <div class="badges" align="center">
@@ -27,6 +24,8 @@
         <a href="https://www.instagram.com/thepapillonapp/">
             <img src="https://img.shields.io/badge/Instagram-thepapillonapp-E4405F?style=flat&amp;logo=instagram&amp;logoColor=white" alt="Nous suivre sur instagram">
         </a>
+	        <a href="https://github.com/PapillonApp/Papillon/README_EN.md" align="center">
+  	  🇬🇧 The Readme is also available in english<a/>
     </div>
 </p>
 
