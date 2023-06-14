@@ -151,11 +151,11 @@ Distribué sous licence GPL-3.0. Allez voir [LICENSE](https://github.com/Papillo
 
 ## Auteurs
 
-* **Vince Linise** - *Étudiante français au lycée* - [Vince Linise](https://github.com/ecnivtwelve/) - *Créateur de Papillon*
-* **Lucas** - *Étudiante français au lycée* - [Lucas](https://github.com/lucas-luchack) - *Développeur actif*
-* **Lucas** - *Étudiante français au collège* - [Lucas](https://github.com/tryon-dev) - *Gestion du serveur*
-* **Nicolas** - *Étudiante français en BTS SIO* - [Nicolas](https://github.com/andronedev) - *Développeur actif*
-* **Astrow** - *Étudiante français au lycée* - [Astrow](https://github.com/Astrow25) - *Développeur et testeur*
+* **Vince Linise** - *Étudiant français au lycée* - [Vince Linise](https://github.com/ecnivtwelve/) - *Créateur de Papillon*
+* **Lucas** - *Étudiant français au lycée* - [Lucas](https://github.com/lucas-luchack) - *Développeur actif*
+* **Lucas** - *Étudiant français au collège* - [Lucas](https://github.com/tryon-dev) - *Gestion du serveur*
+* **Nicolas** - *Étudiant français en BTS SIO* - [Nicolas](https://github.com/andronedev) - *Développeur actif*
+* **Astrow** - *Étudiant français au lycée* - [Astrow](https://github.com/Astrow25) - *Développeur et testeur*
 
 ## Remerciements
 
