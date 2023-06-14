@@ -38,7 +38,7 @@
 - [À propos du projet](#a-propos-du-projet)
 - [Screenshots](#screenshots)
 - [Construit avec](#construit-avec)
-- [Getting Started](#pour-commencer)
+- [Pour commencer](#pour-commencer)
 	- [Prérequis](#prérequis)
 	- [Installation](#installation)
 - [Usage](#usage)
