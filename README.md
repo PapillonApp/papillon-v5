@@ -118,7 +118,7 @@ Les outils de ligne de commande Android SDK ou Xcode doivent être configurés. 
 ```sh
 npm run build
 npx cap sync
-# then build using Android Studio or Xcode
+# ensuite, construisez en utilisant Xcode ou Android Studio
 ```
 
 ## Usage
