@@ -113,8 +113,8 @@ Pour lancer papillon, exécutez simplement
 npm run serve
 ```
 
-To build papillon, you need **Android Studio** or *Xcode** installed.
-Android SDK or Xcode command line tools needs to be configured. All the prerequisites for building are available on https://capacitorjs.com/docs/getting-started/environment-setup
+Pour construire papillon, vous devez installer **Android Studio** ou **Xcode (et le cli tools)**.
+Les outils de ligne de commande Android SDK ou Xcode doivent être configurés. Tous les prérequis pour la construction sont disponibles sur https://capacitorjs.com/docs/getting-started/environment-setup
 ```sh
 npm run build
 npx cap sync
