@@ -196,7 +196,7 @@
 								<h2 v-if="miss.data.reasons.length !== 0">{{ miss.data.reasons[0] }}</h2>
 								<h2 v-else>Absence non justifiée</h2>
 
-								<p v-if="miss.data.hours !== '0h00'">{{ miss.data.hours }} {{ this.loginService === 'ecoledirecte' ? '' : 'heures' }} manquées</p>
+								<p v-if="miss.data.hours !== '0h00'">{{ miss.data.hours }} {{ this.loginService === 'ecoledirecte' ? '' : miss.data.hours === '1h00' ? 'heure' : 'heures'  }} {{ miss.data.hours === '1h00' ? 'manquée' : 'manquées' }}</p>
 								<h3>le {{ new Date(miss.date.from).toLocaleDateString('fr-FR', { weekday: 'long', month: 'long', day: 'numeric' }) }} à {{ new Date (miss.date.from).toLocaleDateString('fr-FR', {hour: '2-digit', minute: '2-digit'}).split(' ')[1] }}</h3>
 								<!-- <h3 v-else>le {{ new Date(miss.date.from).toLocaleDateString('fr-FR', { weekday: 'long', month: 'long', day: 'numeric' }) }} à {{  }}</h3> -->
 							</ion-label>
