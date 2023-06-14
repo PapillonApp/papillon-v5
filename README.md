@@ -62,7 +62,7 @@
         + Devoirs personnalisés
     - 🎓 Notes et compétences
         + Moyenne générale et moyenne par classe
-        + Remise à zéro automatique des notes sur 20
+        + Remise automatique des notes sur 20
         + Affichage intuitif en grille
         + Influence sur la moyenne
     - 📂 Contenu du cours et fichiers
