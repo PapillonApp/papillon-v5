@@ -135,7 +135,7 @@ Les contributions sont ce qui fait de la communauté open source un endroit extr
 * Si vous avez des suggestions pour ajouter ou supprimer des projets, n'hésitez pas à [ouvrir un problème] (https://github.com/PapillonApp/Papillon/issues/new) pour en discuter, ou créez directement une pull request après avoir édité le fichier *README.md* avec les changements nécessaires.
 * Veillez à vérifier votre orthographe et votre grammaire.
 * Créez des PR individuelles pour chaque suggestion.
-* Veuillez également lire le [Code de conduite] (https://github.com/PapillonApp/Papillon/blob/development/CODE_OF_CONDUCT.md) avant de publier votre première idée.
+* Veuillez également lire le [Code de conduite](https://github.com/PapillonApp/Papillon/blob/development/CODE_OF_CONDUCT.md) avant de publier votre première idée.
 
 ### Créer une Pull Request
 
