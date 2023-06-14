@@ -127,7 +127,7 @@ Papillon est utile à tout étudiant utilisant Pronote ou EcoleDirecte. Si leur 
 
 ## Avancement
 
-Allez voir [problèmes ouverts](https://github.com/PapillonApp/Papillon/issues) pour une liste des fonctionnalités proposées (et des problèmes connus).
+Allez voir les [problèmes ouverts](https://github.com/PapillonApp/Papillon/issues) pour une liste des fonctionnalités proposées (et des problèmes connus).
 
 ## Contribuer
 
