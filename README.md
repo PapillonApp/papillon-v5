@@ -12,8 +12,7 @@
     <a href="https://docs.getpapillon.xyz/"><strong>Voir la documentation »</strong></a><br><br>
   <a href="https://github.com/PapillonApp/Papillon/README_EN.md">
     <img src="https://emojigraph.org/media/facebook/flag-united-kingdom_1f1ec-1f1e7.png" alt="English flag" width="48" height="48">
-  	  
-Documentation in English<a/>
+  	  Documentation in English<a/>
   </p>
 
   <div class="badges" align="center">
