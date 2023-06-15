@@ -36,7 +36,7 @@
 - [Sommaire](#sommaire)
 - [À propos du projet](#a-propos-du-projet)
 - [Screenshots](#screenshots)
-- [Construit avec](#construit-avec)
+- [Développé avec](#développé-avec)
 - [Pour commencer](#pour-commencer)
 	- [Prérequis](#prérequis)
 	- [Installation](#installation)
@@ -84,7 +84,7 @@
 |--|--|--|--|--|
 |![Home](https://media.discordapp.net/attachments/1001198944220627025/1110961162067116072/IMG_3352.png)|![image](https://media.discordapp.net/attachments/1001198944220627025/1110961162360729600/IMG_3353.png)|![image](https://media.discordapp.net/attachments/1001198944220627025/1110961162729816204/IMG_3354.png)|![image](https://media.discordapp.net/attachments/1001198944220627025/1110961163065372743/IMG_3356.png)|![image](https://media.discordapp.net/attachments/1001198944220627025/1110961163413487636/IMG_3357.png)|
 
-## Construit avec
+## Développé avec
 
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 ![Ionic](https://img.shields.io/badge/Ionic-%233880FF.svg?style=for-the-badge&logo=Ionic&logoColor=white)
@@ -94,7 +94,7 @@
 
 ## Pour commencer
 
-Pour mettre en place une copie locale et la faire fonctionner, suivez ces étapes simples.
+Pour avoir une copie locale et la faire fonctionner, suivez ces étapes simples.
 
 ### Prérequis
 
@@ -126,12 +126,12 @@ Papillon est utile à tout étudiant utilisant Pronote ou EcoleDirecte. Si leur 
 
 ## Avancement
 
-Allez voir les [problèmes ouverts](https://github.com/PapillonApp/Papillon/issues) pour une liste des fonctionnalités proposées (et des problèmes connus).
+Allez voir les [issues ouverts](https://github.com/PapillonApp/Papillon/issues) pour une liste des fonctionnalités proposées (et des problèmes connus).
 
 ## Contribuer
 
 Les contributions sont ce qui fait de la communauté open source un endroit extraordinaire pour être, apprendre, inspirer et créer. Toutes vos contributions sont **très appréciées**.
-* Si vous avez des suggestions pour ajouter ou supprimer des projets, n'hésitez pas à [ouvrir un problème](https://github.com/PapillonApp/Papillon/issues/new) pour en discuter, ou créez directement une pull request après avoir édité le fichier *README.md* avec les changements nécessaires.
+* Si vous avez des suggestions pour ajouter ou supprimer des projets, n'hésitez pas à [ouvrir une issue](https://github.com/PapillonApp/Papillon/issues/new) pour en discuter, ou créez directement une pull request après avoir édité le fichier *README.md* avec les changements nécessaires.
 * Veillez à vérifier votre orthographe et votre grammaire.
 * Créez des PR individuelles pour chaque suggestion.
 * Veuillez également lire le [Code de conduite](https://github.com/PapillonApp/Papillon/blob/development/CODE_OF_CONDUCT.md) avant de publier votre première idée.
@@ -146,7 +146,7 @@ Les contributions sont ce qui fait de la communauté open source un endroit extr
 
 ## License
 
-Distribué sous licence GPL-3.0. Allez voir [LICENSE](https://github.com/PapillonApp/Papillon/blob/development/LICENSE) pour plus d'information
+Distribué sous licence GPL-3.0. Rendez vous sur [LICENSE](https://github.com/PapillonApp/Papillon/blob/development/LICENSE) pour plus d'informations.
 
 ## Auteurs
 
