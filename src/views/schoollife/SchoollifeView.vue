@@ -231,10 +231,10 @@
 					</ion-label>
 				</ion-item>
 
-				<ion-item v-for="(punish, i) in punishments" :key="i">
+					<ion-item v-for="(punish, i) in punishments" :key="i" >
 					<span class="material-symbols-outlined mdls" slot="start">gavel</span>
 
-					<ion-label>
+					<ion-label class="ion-text-wrap">
 						<h2>{{ punish.homeworks.text }}</h2>
 
 						<p>{{ punish.data.reasons.text[0] }} - {{ punish.data.reasons.circumstances }}</p>
