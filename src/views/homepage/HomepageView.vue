@@ -911,10 +911,6 @@ export default defineComponent({
 	padding: 0;
 }
 
-.profile {
-	/* margin-top: -2.5px; */
-}
-
 .profile p {
 	font-size: 15px;
 	opacity: 0.5;
