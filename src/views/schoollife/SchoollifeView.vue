@@ -161,7 +161,7 @@
 			</ion-refresher>
 
 			<ion-list inset>
-				<ion-item color="primary">
+				<ion-item color="primary" id="DevSchoolLifeBanner">
 					<span class="material-symbols-outlined mdls" slot="start">gavel</span>
 					<ion-label class="ion-text-wrap">
 						<h2>L'onglet vie scolaire est en développement</h2>
@@ -294,5 +294,9 @@
 <style scoped>
 	ion-chip span {
 		margin-right: 5px;
+	}
+
+	#DevSchoolLifeBanner * {
+		color: #fff;
 	}
 </style>
