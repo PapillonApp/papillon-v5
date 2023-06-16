@@ -258,7 +258,7 @@
 
 		<ion-content :fullscreen="true">
             <IonList inset>
-                <IonItem color="primary">
+                <IonItem color="primary" id="DevInsightsBanner">
                     <span class="material-symbols-outlined mdls" slot="start">query_stats</span>
                     <IonLabel class="ion-text-wrap">
                         <h2>Insights est une fonctionnalité expérimentale</h2>
@@ -320,5 +320,9 @@
         border-radius: 50px;
 
         padding: 3px 10px;
+    }
+
+    #DevInsightsBanner * {
+        color: #fff;
     }
 </style>

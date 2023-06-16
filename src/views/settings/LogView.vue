@@ -344,15 +344,7 @@ Contient **${this.logs.length}** logs
 		font-weight: 500;
 	}
 
-	#DevHelpBanner .ion-text-wrap {
-		color: #fff;
-	}
-
-	#DevHelpBanner a {
-		color: #fff;
-	}
-
-	#DevHelpBanner span {
+	#DevHelpBanner * {
 		color: #fff;
 	}
 </style>
