@@ -9,7 +9,8 @@
     Your timetable, homeworks, grades, news and more in a fresh new UI for any French school service.
     <br/>
     <br/>
-    <a href="https://docs.getpapillon.xyz/"><strong>Explore the docs »</strong></a>
+    <a href="https://docs.getpapillon.xyz/"><strong>Explore the docs »</strong></a><br><br>
+    <i>Read this in other languages: <a href="https://github.com/Ahhj93/Papillon/blob/development/README.md" align="center">Français<a/>, <a href="https://github.com/Ahhj93/Papillon/blob/development/README.en.md" align="center">English<a/></i>
   </p>
 
   <div class="badges" align="center">
