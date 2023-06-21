@@ -10,6 +10,7 @@
     <br/>
     <br/>
     <a href="https://docs.getpapillon.xyz/"><strong>Voir la documentation »</strong></a><br><br>
+    <i>Read this in other languages: <a href="https://github.com/PapillonApp/Papillon/blob/development/README.md" align="center">Français<a/>, <a href="https://github.com/PapillonApp/Papillon/blob/development/README.en.md" align="center">English<a/></i>
   </p>
 
   <div class="badges" align="center">
