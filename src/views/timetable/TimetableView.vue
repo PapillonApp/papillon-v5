@@ -686,9 +686,7 @@
 							<ion-button @click="setNewCoursModalOpen(false)">Annuler</ion-button>
 						</ion-buttons>
 
-						<IonTitle>
-							<ion-input type="text" name="CourseTitle" ref="newCoursNameRef" placeholder="Nom du cours"></ion-input>
-						</IonTitle>
+						<IonTitle>Ajouter un cours</IonTitle>
 
 						<ion-buttons slot="end">
 							<ion-button @click="addNewCours()" color="primary">Ajouter</ion-button>
@@ -696,6 +694,13 @@
 					</IonToolbar>
 				</IonHeader>
 				<ion-content>
+					<ion-list inset>
+						<ion-item class="textInput">
+							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:15px">school</span>
+							<ion-input type="text" name="CourseTitle" ref="newCoursNameRef" placeholder="Nom du cours"></ion-input>
+						</ion-item>
+					</ion-list>
+
 					<ion-list inset>
 						<ion-item class="textInput">
 							<span class="material-symbols-outlined mdls" slot="start" style="margin-right:15px">location_on</span>
