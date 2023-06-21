@@ -1075,7 +1075,7 @@ export default defineComponent({
 
 .nextStatus {
 	width: 100%;
-	background: var(--courseColor) !important;
+	background: linear-gradient(90deg, #00000055 0%, #00000055 100%), var(--courseColor) !important;
 
 	display: flex;
 	align-items: center;
