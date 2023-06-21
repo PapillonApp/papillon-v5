@@ -6,81 +6,85 @@
   <h1 align="center">Papillon — Votre vie scolaire</h1>
 
   <p align="center">
-    Your timetable, homeworks, grades, news and more in a fresh new UI for any French school service.
+    Votre emploi du temps, votre agenda, vos notes, vos news et bien plus encore en un clin d’œil grâce à la nouvelle app Papillon.
     <br/>
     <br/>
-    <a href="https://docs.getpapillon.xyz/"><strong>Explore the docs »</strong></a>
+    <a href="https://docs.getpapillon.xyz/"><strong>Voir la documentation »</strong></a><br><br>
   </p>
 
   <div class="badges" align="center">
-        <img alt="Downloads" src="https://img.shields.io/github/downloads/PapillonApp/Papillon/total">
-        <img alt="Contributors" src="https://img.shields.io/github/contributors/PapillonApp/Papillon?color=dark-green">
-        <img alt="Issues" src="https://img.shields.io/github/issues/PapillonApp/Papillon">
+        <img alt="Téléchargements" src="https://img.shields.io/github/downloads/PapillonApp/Papillon/total">
+        <img alt="Contributeurs" src="https://img.shields.io/github/contributors/PapillonApp/Papillon?color=dark-green">
+        <img alt="Problèmes" src="https://img.shields.io/github/issues/PapillonApp/Papillon">
         <img alt="License" src="https://img.shields.io/github/license/PapillonApp/Papillon">
         <br />
         <a href="https://discord.gg/vFmCwSzvAp">
-            <img src="https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=flat&amp;logo=discord&amp;logoColor=white" alt="Join our Discord server">
+            <img src="https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=flat&amp;logo=discord&amp;logoColor=white" alt="Rejoindre notre serveut Discord">
         </a>
         <a href="https://www.instagram.com/thepapillonapp/">
-            <img src="https://img.shields.io/badge/Instagram-thepapillonapp-E4405F?style=flat&amp;logo=instagram&amp;logoColor=white" alt="Follow us on Instagram">
+            <img src="https://img.shields.io/badge/Instagram-thepapillonapp-E4405F?style=flat&amp;logo=instagram&amp;logoColor=white" alt="Nous suivre sur instagram">
         </a>
+	        <a href="https://github.com/PapillonApp/Papillon/README_EN.md" align="center">
+  	  🇬🇧 The Readme is also available in english<a/>
     </div>
 </p>
 
 
 
-## Table Of Contents
+## Sommaire
 
-- [Table Of Contents](#table-of-contents)
-- [About The Project](#about-the-project)
+- [Sommaire](#sommaire)
+- [À propos du projet](#a-propos-du-projet)
 - [Screenshots](#screenshots)
-- [Built With](#built-with)
-- [Getting Started](#getting-started)
-	- [Prerequisites](#prerequisites)
+- [Développé avec](#développé-avec)
+- [Pour commencer](#pour-commencer)
+	- [Prérequis](#prérequis)
 	- [Installation](#installation)
 - [Usage](#usage)
-- [Roadmap](#roadmap)
-- [Contributing](#contributing)
-	- [Creating A Pull Request](#creating-a-pull-request)
+- [Avancement](#avancement)
+- [Contribuer](#contribuer)
+	- [Créer une Pull Request](#créer-une-pull-request)
 - [License](#license)
-- [Authors](#authors)
-- [Acknowledgements](#acknowledgements)
+- [Auteurs](#auteurs)
+- [Remerciements](#remerciements)
 
-## About The Project
+## A propos du projet
 
-* **Features of Pronote**
-    - 📆 Timetable
-        + Intuitive time management
-        + Addition to the calendar
-        + Customised courses
-        + Notifications
-    - 📑 Homeworks
-        + Intuitive management of your work schedule
-    - 🎓 Grades and skills
-        + Overall and class averages
-        + Automatic resetting of scores out of 20
-        + Intuitive grid display
-    - 📂 Course content and files
+* **Fonctionnalités de papillon**
+    - 📆 Emploi du temps
+        + Gestion intuitive du temps
+        + Ajout au calendrier
+        + Cours personnalisés
+        + Notifications *(bientôt)*
+    - 📑 Devoirs
+        + Gestion intuitive de votre emploi du temps
+        + Devoirs personnalisés
+    - 🎓 Notes et compétences
+        + Moyenne générale et moyenne par classe
+        + Remise automatique des notes sur 20
+        + Affichage intuitif en grille
+        + Influence sur la moyenne
+    - 📂 Contenu du cours et fichiers
     - 📰 News
-    - 🚪 Absences, lateness and sanctions
-* **An incredible interface**
-    - 🎨 Designed with care and precision
-    - ✋ Ready for one-handed use
-        + Use of intuitive gestures
-    - ✨ Continuously improves with regular updates
-    - 📱 Native look for iOS and Android
-* **Extensions and customisation**
-    - 🕺 Customisable font and interface colour
-    - 🤯 Extends the functionality of the app
+    - 🚪 Absences, retards et sanctions
+* **Une interface incroyable**
+    - 🎨 Conçu avec soin et précision
+    - ✋ Prêt à être utilisé d'une seule main
+        + Utilisation de gestes intuitifs
+    - ✨ Amélioration continue grâce à des mises à jour régulières
+    - 📱 Look natif pour iOS et Android
+* **Extensions et personnalisation**
+    - 🕺 Police et couleur de l'interface personnalisables
+    - 🤯 Extension des fonctionnalités de l'application
 
 ## Screenshots
 
 ### iPhone XR (iOS 16.3.1) (version 5.7.0 - light mode)
-|Home|Timetable|Homework|Grades|Settings|
+|Accueil|Emploi du temps|Devoirs|Notes|Paramètres|
 |--|--|--|--|--|
 |![Home](https://media.discordapp.net/attachments/1001198944220627025/1110961162067116072/IMG_3352.png)|![image](https://media.discordapp.net/attachments/1001198944220627025/1110961162360729600/IMG_3353.png)|![image](https://media.discordapp.net/attachments/1001198944220627025/1110961162729816204/IMG_3354.png)|![image](https://media.discordapp.net/attachments/1001198944220627025/1110961163065372743/IMG_3356.png)|![image](https://media.discordapp.net/attachments/1001198944220627025/1110961163413487636/IMG_3357.png)|
 
-## Built With
+## Développé avec
 
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 ![Ionic](https://img.shields.io/badge/Ionic-%233880FF.svg?style=for-the-badge&logo=Ionic&logoColor=white)
@@ -88,71 +92,71 @@
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 
-## Getting Started
+## Pour commencer
 
-To get a local copy up and running, follow these simple steps.
+Pour avoir une copie locale et la faire fonctionner, suivez ces étapes simples.
 
-### Prerequisites
+### Prérequis
 
-First, grab a copy of this repo and install the needed dependencies to run Papillon locally.
+Tout d'abord, récupérez une copie de ce repo et installez les dépendances nécessaires à l'exécution locale de Papillon.
 
 ```sh
 npm i
 ```
 
 ### Installation
-*PS: In an older version of this file, you had to install the `@ionic/cli` package. This package is no longer needed, and if you installed it only for Papillon, you can remove it with `npm uninstall -g @ionic/cli`.*
-*We removed it to fix a bug with "Waiting for connectivity with vue-cli-service" message which was CPU intensive.*
-To run papillon, simply run
+*PS : Dans une ancienne version de ce fichier, vous deviez installer le paquet `@ionic/cli`. Ce paquet n'est plus nécessaire, et si vous l'avez installé uniquement pour Papillon, vous pouvez le supprimer avec `npm uninstall -g @ionic/cli`.*<br>
+Nous l'avons supprimé pour corriger un bug avec le message "Waiting for connectivity with vue-cli-service" qui était gourmand en ressources CPU.<br>
+Pour lancer papillon, exécutez simplement
 ```sh
 npm run serve
 ```
 
-To build papillon, you need **Android Studio** or *Xcode** installed.
-Android SDK or Xcode command line tools needs to be configured. All the prerequisites for building are available on https://capacitorjs.com/docs/getting-started/environment-setup
+Pour construire papillon, vous devez installer **Android Studio** ou **Xcode**.
+<ins>Les outils de ligne de commande (CLI) Android SDK ou Xcode doivent être configurés.</ins> Tous les prérequis pour la construction sont disponibles sur https://capacitorjs.com/docs/getting-started/environment-setup
 ```sh
 npm run build
 npx cap sync
-# then build using Android Studio or Xcode
+# ensuite, construisez en utilisant Xcode ou Android Studio
 ```
 
 ## Usage
 
-Papillon is useful to any student using Pronote or EcoleDirecte. If their official app is not enough for you, we're here to improve your digital school experience !
+Papillon est utile à tout étudiant utilisant Pronote ou EcoleDirecte. Si leur application officielle ne vous suffit pas, nous sommes là pour améliorer votre expérience de l'école numérique !
 
-## Roadmap
+## Avancement
 
-See the [open issues](https://github.com/PapillonApp/Papillon/issues) for a list of proposed features (and known issues).
+Allez voir les [issues ouverts](https://github.com/PapillonApp/Papillon/issues) pour une liste des fonctionnalités proposées (et des problèmes connus).
 
-## Contributing
+## Contribuer
 
-Contributions are what make the open source community such an amazing place to be, learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-* If you have suggestions for adding or removing projects, feel free to [open an issue](https://github.com/PapillonApp/Papillon/issues/new) to discuss it, or directly create a pull request after you edit the *README.md* file with necessary changes.
-* Please make sure you check your spelling and grammar.
-* Create individual PR for each suggestion.
-* Please also read through the [Code Of Conduct](https://github.com/PapillonApp/Papillon/blob/development/CODE_OF_CONDUCT.md) before posting your first idea as well.
+Les contributions sont ce qui fait de la communauté open source un endroit extraordinaire pour être, apprendre, inspirer et créer. Toutes vos contributions sont **très appréciées**.
+* Si vous avez des suggestions pour ajouter ou supprimer des projets, n'hésitez pas à [ouvrir une issue](https://github.com/PapillonApp/Papillon/issues/new) pour en discuter, ou créez directement une pull request après avoir édité le fichier *README.md* avec les changements nécessaires.
+* Veillez à vérifier votre orthographe et votre grammaire.
+* Créez des PR individuelles pour chaque suggestion.
+* Veuillez également lire le [Code de conduite](https://github.com/PapillonApp/Papillon/blob/development/CODE_OF_CONDUCT.md) avant de publier votre première idée.
 
-### Creating A Pull Request
+### Créer une Pull Request
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Créer une fourche (fork) du projet
+2. Créez votre branche de fonctionnalités (`git checkout -b feature/AmazingFeature`)
+3. Confirmez vos modifications (`git commit -m 'Add some AmazingFeature'`)
+4. Publiez vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrez une Pull Request
 
 ## License
 
-Distributed under the GPL-3.0 License. See [LICENSE](https://github.com/PapillonApp/Papillon/blob/development/LICENSE) for more information.
+Distribué sous licence GPL-3.0. Rendez vous sur [LICENSE](https://github.com/PapillonApp/Papillon/blob/development/LICENSE) pour plus d'informations.
 
-## Authors
+## Auteurs
 
-* **Vince Linise** - *French student in high school* - [Vince Linise](https://github.com/ecnivtwelve/) - *Creator of Papillon*
-* **Lucas** - *French student in high school* - [Lucas](https://github.com/lucas-luchack) - *Active developer*
-* **Lucas** - *French student in middle school* - [Lucas](https://github.com/tryon-dev) - *Server management*
-* **Nicolas** - *French student in BTS SIO* - [Nicolas](https://github.com/andronedev) - *Active developer*
-* **Astrow** - *French student in high school* - [Astrow](https://github.com/Astrow25) - *Developer and tester*
+* **Vince Linise** - *Étudiant français au lycée* - [Vince Linise](https://github.com/ecnivtwelve/) - *Créateur de Papillon*
+* **Lucas** - *Étudiant français au lycée* - [Lucas](https://github.com/lucas-luchack) - *Développeur actif*
+* **Lucas** - *Étudiant français au collège* - [Lucas](https://github.com/tryon-dev) - *Gestion du serveur*
+* **Nicolas** - *Étudiant français en BTS SIO* - [Nicolas](https://github.com/andronedev) - *Développeur actif*
+* **Astrow** - *Étudiant français au lycée* - [Astrow](https://github.com/Astrow25) - *Développeur et testeur*
 
-## Acknowledgements
+## Remerciements
 
 * [bain3/pronotepy](https://github.com/bain3/pronotepy/)
-* [Capacitor Community](https://github.com/capacitor-community)
+* [Communauté Capacitor](https://github.com/capacitor-community)
