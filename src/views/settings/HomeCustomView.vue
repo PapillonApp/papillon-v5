@@ -127,3 +127,18 @@ export default defineComponent({
         </IonList>
     </ion-content>
 </template>
+
+<style scoped>
+	ion-item .mdls[slot=start] {
+		width: auto;
+		padding: 7px;
+		background-color: #00000012;
+		border-radius: 300px;
+
+		margin-right: 20px;
+	}
+
+	.dark ion-item .mdls[slot=start] {
+		background-color: #ffffff22;
+	}
+</style>

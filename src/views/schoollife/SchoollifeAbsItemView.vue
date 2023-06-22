@@ -210,12 +210,6 @@
 				</div>
 			</div>
 			<div v-if="!this.loadingEDT && !this.errorGetEDT">
-				<IonItem button>
-					<IonLabel class="ion-text-wrap">
-						<h2><span class="courseColor" style="background: #0000ff;"></span>Français</h2>
-						<p>Le cours entier a été manqué</p>
-					</IonLabel>
-				</IonItem>
 				<IonItem button v-for="(cour, index) in this.coursManques" :key="index" :virtualIndex="index">
 					<IonLabel class="ion-text-wrap">
 						<h2><span class="courseColor" :style="`background: ${cour.course.color};`"></span> {{ cour.data.subject }} - de {{ new Date (cour.time.start).toLocaleDateString('fr-FR', {hour: '2-digit', minute: '2-digit'}).split(' ')[1] }} à {{ new Date (cour.time.end).toLocaleDateString('fr-FR', {hour: '2-digit', minute: '2-digit'}).split(' ')[1] }}</h2>

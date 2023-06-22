@@ -161,7 +161,7 @@
 			</ion-refresher>
 
 			<ion-list inset>
-				<ion-item color="primary">
+				<ion-item color="primary" id="DevSchoolLifeBanner">
 					<span class="material-symbols-outlined mdls" slot="start">gavel</span>
 					<ion-label class="ion-text-wrap">
 						<h2>L'onglet vie scolaire est en développement</h2>
@@ -196,7 +196,7 @@
 								<h2 v-if="miss.data.reasons.length !== 0">{{ miss.data.reasons[0] }}</h2>
 								<h2 v-else>Absence non justifiée</h2>
 
-								<p v-if="miss.data.hours !== '0h00'">{{ miss.data.hours }} {{ this.loginService === 'ecoledirecte' ? '' : 'heures' }} manquées</p>
+								<p v-if="miss.data.hours !== '0h00'">{{ miss.data.hours }} {{ this.loginService === 'ecoledirecte' ? '' : miss.data.hours === '1h00' ? 'heure' : 'heures'  }} {{ miss.data.hours === '1h00' ? 'manquée' : 'manquées' }}</p>
 								<h3>le {{ new Date(miss.date.from).toLocaleDateString('fr-FR', { weekday: 'long', month: 'long', day: 'numeric' }) }} à {{ new Date (miss.date.from).toLocaleDateString('fr-FR', {hour: '2-digit', minute: '2-digit'}).split(' ')[1] }}</h3>
 								<!-- <h3 v-else>le {{ new Date(miss.date.from).toLocaleDateString('fr-FR', { weekday: 'long', month: 'long', day: 'numeric' }) }} à {{  }}</h3> -->
 							</ion-label>
@@ -231,10 +231,10 @@
 					</ion-label>
 				</ion-item>
 
-				<ion-item v-for="(punish, i) in punishments" :key="i">
+					<ion-item v-for="(punish, i) in punishments" :key="i" >
 					<span class="material-symbols-outlined mdls" slot="start">gavel</span>
 
-					<ion-label>
+					<ion-label class="ion-text-wrap">
 						<h2>{{ punish.homeworks.text }}</h2>
 
 						<p>{{ punish.data.reasons.text[0] }} - {{ punish.data.reasons.circumstances }}</p>
@@ -294,5 +294,9 @@
 <style scoped>
 	ion-chip span {
 		margin-right: 5px;
+	}
+
+	#DevSchoolLifeBanner * {
+		color: #fff;
 	}
 </style>
