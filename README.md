@@ -25,8 +25,6 @@
         <a href="https://www.instagram.com/thepapillonapp/">
             <img src="https://img.shields.io/badge/Instagram-thepapillonapp-E4405F?style=flat&amp;logo=instagram&amp;logoColor=white" alt="Nous suivre sur instagram">
         </a>
-	        <a href="https://github.com/PapillonApp/Papillon/README_EN.md" align="center">
-  	  🇬🇧 The Readme is also available in english<a/>
     </div>
 </p>
 
