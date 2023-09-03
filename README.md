@@ -10,14 +10,14 @@
     <br/>
     <br/>
     <a href="https://docs.getpapillon.xyz/"><strong>Voir la documentation »</strong></a><br><br>
-    <i>Read this in other languages: <a href="https://github.com/PapillonApp/Papillon/blob/development/README.md" align="center">Français<a/>, <a href="https://github.com/PapillonApp/Papillon/blob/development/README.en.md" align="center">English<a/></i>
+    <i>Read this in other languages: <a href="/README.md" align="center">Français<a/>, <a href="/README.en.md" align="center">English<a/></i>
   </p>
 
   <div class="badges" align="center">
-        <img alt="Téléchargements" src="https://img.shields.io/github/downloads/PapillonApp/Papillon/total">
-        <img alt="Contributeurs" src="https://img.shields.io/github/contributors/PapillonApp/Papillon?color=dark-green">
-        <img alt="Problèmes" src="https://img.shields.io/github/issues/PapillonApp/Papillon">
-        <img alt="License" src="https://img.shields.io/github/license/PapillonApp/Papillon">
+        <img alt="Téléchargements" src="https://img.shields.io/github/downloads/PapillonApp/papillon-v5/total">
+        <img alt="Contributeurs" src="https://img.shields.io/github/contributors/PapillonApp/papillon-v5?color=dark-green">
+        <img alt="Problèmes" src="https://img.shields.io/github/issues/PapillonApp/papillon-v5">
+        <img alt="License" src="https://img.shields.io/github/license/PapillonApp/papillon-v5">
         <br />
         <a href="https://discord.gg/vFmCwSzvAp">
             <img src="https://img.shields.io/badge/Discord-Rejoindre-5865F2?style=flat&amp;logo=discord&amp;logoColor=white" alt="Rejoindre notre serveut Discord">
@@ -125,15 +125,15 @@ Papillon est utile à tout étudiant utilisant Pronote ou EcoleDirecte. Si leur 
 
 ## Avancement
 
-Allez voir les [issues ouverts](https://github.com/PapillonApp/Papillon/issues) pour une liste des fonctionnalités proposées (et des problèmes connus).
+Allez voir les [issues ouverts](https://github.com/PapillonApp/papillon-v5/issues) pour une liste des fonctionnalités proposées (et des problèmes connus).
 
 ## Contribuer
 
 Les contributions sont ce qui fait de la communauté open source un endroit extraordinaire pour être, apprendre, inspirer et créer. Toutes vos contributions sont **très appréciées**.
-* Si vous avez des suggestions pour ajouter ou supprimer des projets, n'hésitez pas à [ouvrir une issue](https://github.com/PapillonApp/Papillon/issues/new) pour en discuter, ou créez directement une pull request après avoir édité le fichier *README.md* avec les changements nécessaires.
+* Si vous avez des suggestions pour ajouter ou supprimer des projets, n'hésitez pas à [ouvrir une issue](https://github.com/PapillonApp/papillon-v5/issues/new) pour en discuter, ou créez directement une pull request après avoir édité le fichier *README.md* avec les changements nécessaires.
 * Veillez à vérifier votre orthographe et votre grammaire.
 * Créez des PR individuelles pour chaque suggestion.
-* Veuillez également lire le [Code de conduite](https://github.com/PapillonApp/Papillon/blob/development/CODE_OF_CONDUCT.md) avant de publier votre première idée.
+* Veuillez également lire le [Code de conduite](/CODE_OF_CONDUCT.md) avant de publier votre première idée.
 
 ### Créer une Pull Request
 
@@ -145,7 +145,7 @@ Les contributions sont ce qui fait de la communauté open source un endroit extr
 
 ## License
 
-Distribué sous licence GPL-3.0. Rendez vous sur [LICENSE](https://github.com/PapillonApp/Papillon/blob/development/LICENSE) pour plus d'informations.
+Distribué sous licence GPL-3.0. Rendez vous sur [LICENSE](/LICENSE) pour plus d'informations.
 
 ## Auteurs
 
